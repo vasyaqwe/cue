@@ -12,6 +12,7 @@
   "dependencies": {
     "@libsql/client": "^0.14.0",
     "@lucia-auth/adapter-drizzle": "^1.1.0",
+    "@radix-ui/react-avatar": "^1.1.0",
     "@t3-oss/env-core": "^0.11.1",
     "@tailwindcss/postcss": "^4.0.0-alpha.23",
     "@tanstack/react-query": "^5.56.2",
@@ -27,6 +28,7 @@
     "drizzle-orm": "^0.33.0",
     "drizzle-zod": "^0.5.1",
     "lucia": "^3.2.0",
+    "mitt": "^3.0.1",
     "ohash": "^1.1.4",
     "oslo": "^1.2.1",
     "react": "^18.3.1",
@@ -38,7 +40,8 @@
     "unstorage": "^1.12.0",
     "vaul": "^0.9.4",
     "vinxi": "^0.4.3",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.2",

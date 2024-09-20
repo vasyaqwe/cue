@@ -142,12 +142,13 @@
   }
 }
 
-.no-scrollbar {
+/* reset */
+.hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-.no-scrollbar::-webkit-scrollbar {
+.hide-scrollbar::-webkit-scrollbar {
   display: none !important;
 }
 
@@ -165,13 +166,18 @@ input[type="number"] {
 h1,
 h2,
 h3,
-h4,
-h5 {
+h4 {
   text-wrap: balance;
-  font-family: var(--font-family-secondary);
 }
 
 p {
-  max-width: var(--width-prose);
   text-wrap: pretty;
+}
+
+/* sonner */
+:where([data-sonner-toast]) :where([data-title]) {
+  line-height: 1.3 !important;
+}
+[data-sonner-toaster] {
+  --mobile-offset: 0 !important;
 }
