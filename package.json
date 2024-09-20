@@ -1,0 +1,53 @@
+{
+  "name": "cue",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "format-lint": "biome check",
+    "format-lint:fix": "biome check --write"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.14.0",
+    "@lucia-auth/adapter-drizzle": "^1.1.0",
+    "@t3-oss/env-core": "^0.11.1",
+    "@tailwindcss/postcss": "^4.0.0-alpha.23",
+    "@tanstack/react-query": "^5.56.2",
+    "@tanstack/react-router": "^1.58.3",
+    "@tanstack/react-router-with-query": "^1.58.3",
+    "@tanstack/start": "^1.58.5",
+    "@trpc/server": "11.0.0-rc.467",
+    "@vitejs/plugin-react": "^4.3.1",
+    "arctic": "^1.9.2",
+    "base-x": "^5.0.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.33.0",
+    "drizzle-zod": "^0.5.1",
+    "lucia": "^3.2.0",
+    "ohash": "^1.1.4",
+    "oslo": "^1.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sonner": "^1.5.0",
+    "superjson": "^2.2.1",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss-animate": "^1.0.7",
+    "unstorage": "^1.12.0",
+    "vaul": "^0.9.4",
+    "vinxi": "^0.4.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.2",
+    "@types/bun": "latest",
+    "@types/react": "^18.3.8",
+    "@types/react-dom": "^18.3.0",
+    "drizzle-kit": "^0.24.2",
+    "tailwindcss": "^4.0.0-alpha.23",
+    "typescript": "^5.6.2",
+    "vite-tsconfig-paths": "^5.0.1"
+  }
+}

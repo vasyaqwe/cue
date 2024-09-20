@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+@theme default {
+  --color-background: #ffffff;
+  --color-foreground: #18181b;
+  --color-primary: #0a0a0b;
+  --color-muted: #f9fafb;
+  --color-muted-foreground: #5d626f;
+  --color-border: #dde0e4;
+
+  --font-family-primary: "outfit", sans-serif;
+  --font-family-secondary: ui-serif, Georgia, Cambria, Times New Roman, Times, serif;
+
+  --font-size-sm: 0.845rem;
+  --font-size-sm--line-height: 1rem;
+  --font-size-base: 0.94rem;
+  --font-size-base--line-height: 1.4rem;
+}
+
+@layer components {
+  .squircle {
+    clip-path: polygon(
+      100% 50%,
+      99.94% 60.28%,
+      99.77% 65.26%,
+      99.49% 69.2%,
+      99.1% 72.58%,
+      98.59% 75.56%,
+      97.96% 78.25%,
+      97.22% 80.7%,
+      96.37% 82.94%,
+      95.39% 85%,
+      94.3% 86.91%,
+      93.08% 88.66%,
+      91.74% 90.26%,
+      90.26% 91.74%,
+      88.66% 93.08%,
+      86.91% 94.3%,
+      85% 95.39%,
+      82.94% 96.37%,
+      80.7% 97.22%,
+      78.25% 97.96%,
+      75.56% 98.59%,
+      72.58% 99.1%,
+      69.2% 99.49%,
+      65.26% 99.77%,
+      60.28% 99.94%,
+      50% 100%,
+      39.72% 99.94%,
+      34.74% 99.77%,
+      30.8% 99.49%,
+      27.42% 99.1%,
+      24.44% 98.59%,
+      21.75% 97.96%,
+      19.3% 97.22%,
+      17.06% 96.37%,
+      15% 95.39%,
+      13.09% 94.3%,
+      11.34% 93.08%,
+      9.74% 91.74%,
+      8.26% 90.26%,
+      6.92% 88.66%,
+      5.7% 86.91%,
+      4.61% 85%,
+      3.63% 82.94%,
+      2.78% 80.7%,
+      2.04% 78.25%,
+      1.41% 75.56%,
+      0.9% 72.58%,
+      0.51% 69.2%,
+      0.23% 65.26%,
+      0.06% 60.28%,
+      0% 50%,
+      0.06% 39.72%,
+      0.23% 34.74%,
+      0.51% 30.8%,
+      0.9% 27.42%,
+      1.41% 24.44%,
+      2.04% 21.75%,
+      2.78% 19.3%,
+      3.63% 17.06%,
+      4.61% 15%,
+      5.7% 13.09%,
+      6.92% 11.34%,
+      8.26% 9.74%,
+      9.74% 8.26%,
+      11.34% 6.92%,
+      13.09% 5.7%,
+      15% 4.61%,
+      17.06% 3.63%,
+      19.3% 2.78%,
+      21.75% 2.04%,
+      24.44% 1.41%,
+      27.42% 0.9%,
+      30.8% 0.51%,
+      34.74% 0.23%,
+      39.72% 0.06%,
+      50% 0%,
+      60.28% 0.06%,
+      65.26% 0.23%,
+      69.2% 0.51%,
+      72.58% 0.9%,
+      75.56% 1.41%,
+      78.25% 2.04%,
+      80.7% 2.78%,
+      82.94% 3.63%,
+      85% 4.61%,
+      86.91% 5.7%,
+      88.66% 6.92%,
+      90.26% 8.26%,
+      91.74% 9.74%,
+      93.08% 11.34%,
+      94.3% 13.09%,
+      95.39% 15%,
+      96.37% 17.06%,
+      97.22% 19.3%,
+      97.96% 21.75%,
+      98.59% 24.44%,
+      99.1% 27.42%,
+      99.49% 30.8%,
+      99.77% 34.74%,
+      99.94% 39.72%,
+      100% 50%
+    );
+  }
+
+  .container {
+    margin-inline: auto;
+    padding-inline: 0.985rem;
+    width: min(100%, 604px);
+  }
+
+  .button {
+    line-height: -1;
+  }
+  .button:hover {
+    scale: 104%;
+  }
+
+  .button:active {
+    scale: 99%;
+  }
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  text-wrap: balance;
+  font-family: var(--font-family-secondary);
+}
+
+p {
+  max-width: var(--width-prose);
+  text-wrap: pretty;
+}

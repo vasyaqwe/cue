@@ -1,0 +1,70 @@
+{
+   "$schema": "https://biomejs.dev/schemas/1.8.2/schema.json",
+   "formatter": {
+      "enabled": true,
+      "formatWithErrors": false,
+      "indentStyle": "space",
+      "indentWidth": 3,
+      "lineEnding": "lf",
+      "lineWidth": 80,
+      "attributePosition": "multiline"
+   },
+   "files": {
+      "ignore": [
+         ".vinxi",
+         "routeTree.gen.ts",
+         "migrations/meta"
+      ]
+   },
+   "javascript": {
+      "formatter": {
+         "jsxQuoteStyle": "double",
+         "trailingCommas": "all",
+         "semicolons": "asNeeded",
+         "arrowParentheses": "always",
+         "bracketSpacing": true,
+         "bracketSameLine": false,
+         "quoteStyle": "double",
+         "attributePosition": "multiline"
+      }
+   },
+   "organizeImports": {
+      "enabled": true
+   },
+   "linter": {
+      "enabled": true,
+      "rules": {
+         "recommended": true,
+         "security": {
+            "noDangerouslySetInnerHtml": "off"
+         },
+         "style": {
+            "useNumberNamespace": "off",
+            "noUnusedTemplateLiteral": "off",
+            "useNodejsImportProtocol": "off"
+         },
+         "correctness": {
+            "noUnusedVariables": "error",
+            "noUnusedImports": "error"
+         },
+         "a11y": {
+            "noAutofocus": "off",
+            "useMediaCaption": "off",
+            "noSvgWithoutTitle": "off",
+            "useKeyWithClickEvents": "off",
+            "useButtonType": "off"
+         },
+         "suspicious": {
+            "noArrayIndexKey": "off"
+         },
+         "nursery": {
+            "useSortedClasses": {
+               "level": "info",
+               "options": {
+                  "functions": ["clsx", "cva", "tw", "cn"]
+               }
+            }
+         }
+      }
+   }
+}
