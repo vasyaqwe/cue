@@ -12,7 +12,7 @@ import {
 } from "@tanstack/react-router"
 import { routerWithQueryClient } from "@tanstack/react-router-with-query"
 import type { TRPCError } from "@trpc/server"
-import SuperJSON from "superjson"
+import superjson from "superjson"
 
 type TRPCClientError = Error & {
    data: {
@@ -30,10 +30,10 @@ export function createRouter() {
    const queryClient = new QueryClient({
       defaultOptions: {
          dehydrate: {
-            serializeData: SuperJSON.serialize,
+            serializeData: superjson.serialize,
          },
          hydrate: {
-            deserializeData: SuperJSON.deserialize,
+            deserializeData: superjson.deserialize,
          },
          queries: {
             retry(failureCount, error) {
@@ -77,7 +77,7 @@ export function createRouter() {
          defaultPreload: "intent",
          defaultPendingMs: 150,
          defaultPreloadStaleTime: 0,
-         transformer: SuperJSON,
+         transformer: superjson,
          defaultErrorComponent: CatchBoundary,
          defaultNotFoundComponent: NotFound,
       }),

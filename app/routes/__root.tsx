@@ -55,6 +55,13 @@ export const Route = createRootRouteWithContext<{
    ],
    links: () => [
       { rel: "stylesheet", href: appCss },
+      {
+         rel: "preload",
+         href: "/fonts/satoshi.woff2",
+         as: "font",
+         type: "font/woff2",
+         crossOrigin: "anonymous",
+      },
       // {
       //    rel: "apple-touch-icon",
       //    sizes: "180x180",
@@ -95,7 +102,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
          <Body suppressHydrationWarning>
             <div
                className={cn(
-                  "min-h-screen bg-background font-mono text-base text-foreground antialiased",
+                  "min-h-screen bg-background font-primary text-base text-foreground tracking-[0.02em] antialiased",
                )}
             >
                {children}

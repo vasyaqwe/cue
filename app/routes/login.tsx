@@ -1,10 +1,13 @@
+import { logInWithGithubFn } from "@/auth/functions"
 import { Button, buttonVariants } from "@/ui/components/button"
 import { cardVariants } from "@/ui/components/card"
 import { Icons } from "@/ui/components/icons"
+import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
 import { useMountError } from "@/user-interactions/use-mount-error"
 import { useMutation } from "@tanstack/react-query"
 import { Link, createFileRoute } from "@tanstack/react-router"
+import { useServerFn } from "@tanstack/start"
 import { useState } from "react"
 
 export const Route = createFileRoute("/login")({
@@ -90,11 +93,13 @@ function Component() {
    //    }
    // }, [isSuccess])
 
+   const _logInWithGithubFn = useServerFn(logInWithGithubFn)
+
    const loginWithGithub = useMutation({
-      // mutationFn: () => useServerFn(loginWithGithubFn),
-      // onSuccess: (data) => {
-      //    window.location.href = data.url
-      //  },
+      mutationFn: () => _logInWithGithubFn(),
+      onSuccess: (res) => {
+         window.location.href = res.url
+      },
    })
 
    return (
@@ -240,7 +245,12 @@ function Component() {
                                     }
                                     onClick={() => loginWithGithub.mutate()}
                                  >
-                                    <Icons.github className="-mt-px size-[21px]" />
+                                    {loginWithGithub.isPending ||
+                                    loginWithGithub.isSuccess ? (
+                                       <Loading />
+                                    ) : (
+                                       <Icons.github className="-mt-px size-[18px]" />
+                                    )}
                                     Continue with Github
                                  </Button>
                               </div>

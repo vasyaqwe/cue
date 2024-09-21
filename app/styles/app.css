@@ -2,19 +2,27 @@
 
 @theme default {
   --color-background: #FEFCFB;
-  --color-foreground: #232124;
+  --color-foreground: #181818;
   --color-primary: #8347B9;
   --color-muted: #eeedee;
   --color-muted-foreground: #6c656c;
   --color-border: #dad8da;
 
-  --font-family-primary: "outfit", sans-serif;
+  --font-family-primary: "satoshi", sans-serif;
   --font-family-secondary: ui-serif, Georgia, Cambria, Times New Roman, Times, serif;
 
   --font-size-sm: 0.845rem;
   --font-size-sm--line-height: 1rem;
   --font-size-base: 0.94rem;
   --font-size-base--line-height: 1.4rem;
+}
+
+@font-face {
+  font-family: "satoshi";
+  src: url("/fonts/satoshi.woff2") format("woff2-variations");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400 800;
 }
 
 @layer components {
@@ -163,6 +171,7 @@ h2,
 h3,
 h4 {
   text-wrap: balance;
+  font-weight: 800;
 }
 
 p {

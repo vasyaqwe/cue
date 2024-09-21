@@ -1,11 +1,31 @@
-import { auth } from "@/auth"
+import { auth, github } from "@/auth"
 import { useStorage } from "@/lib/cache"
 import { createServerFn } from "@tanstack/start"
-import { TRPCError } from "@trpc/server"
+import { generateState } from "arctic"
+import { setCookie, setHeader } from "vinxi/http"
 
-export const authLoader = createServerFn("GET", async () => {
+export const authLoaderFn = createServerFn("GET", async () => {
    await useStorage().removeItem("cache:nitro:functions:auth:.json")
-   const session = await auth()
-   if (!session?.user) throw new TRPCError({ code: "UNAUTHORIZED" })
-   return session
+   return await auth()
+})
+
+export const logInWithGithubFn = createServerFn("POST", async () => {
+   const state = generateState()
+   const url = await github.createAuthorizationURL(state, {
+      scopes: ["user:email"],
+   })
+
+   setCookie("github_oauth_state", state, {
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 60 * 10,
+      sameSite: "lax",
+   })
+
+   setHeader("Location", url.toString())
+
+   return {
+      url: url.toString(),
+   }
 })

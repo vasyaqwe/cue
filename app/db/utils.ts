@@ -6,11 +6,6 @@ const prefixes = {
    user: "user",
    verification_code: "vc",
    oauth_account: "oa",
-   photo: "photo",
-   challenge_attempt: "ca",
-   file: "file",
-   friendship: "fshp",
-   referral: "ref",
 } as const
 
 const generateIdBase = (prefix: keyof typeof prefixes) => {

@@ -66,7 +66,9 @@ export const emailVerificationCodes = createTable(
    "email_verification_codes",
    {
       id: generateId("verification_code"),
-      expiresAt: integer("expires_at").notNull(),
+      expiresAt: integer("expires_at", {
+         mode: "timestamp",
+      }).notNull(),
       code: text("code").notNull(),
       userId: text("user_id").notNull(),
       email: text("email").notNull().unique(),
@@ -82,13 +84,16 @@ export const emailVerificationCodes = createTable(
 
 export const sessions = createTable("sessions", {
    id: text("id").primaryKey(),
-   expiresAt: integer("expires_at").notNull(),
+   expiresAt: integer("expires_at", {
+      mode: "timestamp",
+   }).notNull(),
    userId: text("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
 })
 
 export const selectUserParams = createSelectSchema(users)
+export const selectSessionParams = createSelectSchema(sessions)
 export const insertUserParams = z
    .object({
       email: z.string().email(),
@@ -115,4 +120,5 @@ export const verifyLoginCodeParams = createInsertSchema(
 })
 
 export type User = z.infer<typeof selectUserParams>
+export type Session = z.infer<typeof selectSessionParams>
 export type OauthProvider = z.infer<typeof oauthProviders>

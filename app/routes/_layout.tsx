@@ -1,16 +1,15 @@
-import { authLoader } from "@/auth/functions"
+import { authLoaderFn } from "@/auth/functions"
 import { ModalProvider } from "@/modals"
 import { Icons } from "@/ui/components/icons"
 import { cn } from "@/ui/utils"
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_layout")({
+   component: Component,
    beforeLoad: async () => {
-      return await authLoader().catch(() => {
-         throw redirect({
-            to: "/login",
-         })
-      })
+      const session = await authLoaderFn()
+      if (!session) throw redirect({ to: "/login" })
+      return session
    },
    pendingComponent: () => (
       <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full">
@@ -23,7 +22,6 @@ export const Route = createFileRoute("/_layout")({
          </h1>
       </div>
    ),
-   component: Component,
 })
 
 function Component() {

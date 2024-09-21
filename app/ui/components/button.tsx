@@ -3,14 +3,14 @@ import { type VariantProps, cva } from "class-variance-authority"
 import type { ComponentProps } from "react"
 
 const buttonVariants = cva(
-   `inline-flex items-center cursor-pointer justify-center whitespace-nowrap leading-none active:enabled:scale-[97%] gap-1.5
+   `inline-flex items-center cursor-pointer justify-center whitespace-nowrap leading-none active:enabled:scale-[97%] gap-1.5 font-medium
     duration-200 focus-visible:ring-3 focus-visible:ring-offset-2 focus-visible:ring-primary/30 focus-visible:outline-primary/80 
-   outline outline outline-transparent outline-offset-1 disabled:opacity-70 disabled:cursor-not-allowed border shadow-sm transition-all`,
+   outline outline outline-transparent outline-offset-1 disabled:opacity-75 disabled:cursor-not-allowed border shadow-sm transition-all`,
    {
       variants: {
          variant: {
             default: `bg-primary/90 hover:enabled:shadow-lg border-transparent focus-visible:ring-foreground/30 focus-visible:outline-foreground/80 
-                      text-background/95 hover:enabled:bg-primary disabled:bg-border disabled:text-foreground disabled:border-foreground/10 
+                      text-background/95 hover:enabled:bg-primary disabled:bg-background disabled:text-foreground disabled:border-foreground/20 
                       active:enabled:shadow-md hover:enabled:text-primary-foreground`,
             outline: `bg-background border border-border text-foreground data-[state=open]:border-border hover:enabled:border-border`,
             ghost: "border border-transparent aria-[current=page]:bg-muted hover:enabled:bg-muted/70",

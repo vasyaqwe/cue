@@ -1,29 +1,59 @@
 import { type Database, db } from "@/db"
-import { type User, emailVerificationCodes, sessions, users } from "@/db/schema"
+import {
+   type Session,
+   type User,
+   type User as UserType,
+   emailVerificationCodes,
+   sessions,
+   users,
+} from "@/db/schema"
 import { env } from "@/env"
 import { cachedFunction } from "@/lib/cache"
-import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle"
 import { GitHub } from "arctic"
 import { eq } from "drizzle-orm"
-import { Lucia, TimeSpan } from "lucia"
-import { createDate, isWithinExpirationDate } from "oslo"
+import type { DatabaseAdapter, SessionAndUser } from "lucia"
+import { Lucia, generateSessionId } from "lucia"
+import { TimeSpan, createDate, isWithinExpirationDate } from "oslo"
 import { alphabet, generateRandomString } from "oslo/crypto"
 import { parseCookies, setCookie } from "vinxi/http"
 
-const adapter = new DrizzleSQLiteAdapter(db, sessions, users)
+const adapter: DatabaseAdapter<Session, User> = {
+   getSessionAndUser: async (
+      sessionId: string,
+   ): Promise<SessionAndUser<Session, UserType>> => {
+      const result =
+         (await db
+            .select({
+               user: users,
+               session: sessions,
+            })
+            .from(sessions)
+            .innerJoin(users, eq(sessions.userId, users.id))
+            .where(eq(sessions.id, sessionId))
+            .get()) ?? null
+      if (result === null) {
+         return { session: null, user: null }
+      }
+      return result
+   },
+   deleteSession: async (sessionId: string): Promise<void> => {
+      db.delete(sessions).where(eq(sessions.id, sessionId)).run()
+   },
+   updateSessionExpiration: async (
+      sessionId: string,
+      expiresAt: Date,
+   ): Promise<void> => {
+      db.update(sessions)
+         .set({
+            expiresAt,
+         })
+         .where(eq(sessions.id, sessionId))
+         .run()
+   },
+}
 
 export const lucia = new Lucia(adapter, {
-   getUserAttributes: (attributes) => {
-      return {
-         id: attributes.id,
-         email: attributes.email,
-         name: attributes.name,
-         avatarUrl: attributes.avatarUrl,
-         onboardingCompleted: attributes.onboardingCompleted,
-         // createdAt: attributes.createdAt,
-         // updatedAt: attributes.updatedAt,
-      }
-   },
+   secureCookies: !import.meta.env.DEV,
 })
 
 export const github = new GitHub(
@@ -31,6 +61,16 @@ export const github = new GitHub(
    env.GITHUB_CLIENT_SECRET,
    {},
 )
+
+export const createSession = (userId: string) => {
+   const session: Session = {
+      id: generateSessionId(),
+      userId: userId,
+      expiresAt: lucia.getNewSessionExpiration(),
+   }
+   db.insert(sessions).values(session).run()
+   return session
+}
 
 export const auth = cachedFunction(async () => {
    const sessionId = parseCookies()[lucia.sessionCookieName]
@@ -44,17 +84,21 @@ export const auth = cachedFunction(async () => {
 
    const { session, user } = await lucia.validateSession(sessionId)
 
-   if (session?.fresh) {
-      const sessionCookie = lucia.createSessionCookie(session.id)
+   if (session !== null && Date.now() >= session.expiresAt.getTime()) {
+      const session = createSession(user.id)
+      const sessionCookie = lucia.createSessionCookie(
+         session.id,
+         session.expiresAt,
+      )
       setCookie(sessionCookie.name, sessionCookie.value, {
-         ...sessionCookie.attributes,
+         ...sessionCookie.npmCookieOptions(),
       })
    }
 
    if (!session) {
       const sessionCookie = lucia.createBlankSessionCookie()
       setCookie(sessionCookie.name, sessionCookie.value, {
-         ...sessionCookie.attributes,
+         ...sessionCookie.npmCookieOptions(),
       })
    }
 
@@ -85,7 +129,7 @@ export const generateEmailVerificationCode = async ({
       userId,
       email,
       code,
-      expiresAt: createDate(new TimeSpan(5, "m")).getTime(), // 5 minutes
+      expiresAt: createDate(new TimeSpan(5, "m")), // 5 minutes
    })
 
    return code
@@ -129,11 +173,4 @@ export const verifyVerificationCode = async (
    }
 
    return isValid
-}
-
-declare module "lucia" {
-   interface Register {
-      Lucia: typeof lucia
-      DatabaseUserAttributes: User
-   }
 }
