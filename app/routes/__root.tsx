@@ -14,16 +14,15 @@ import {
 import { Body, Head, Html, Meta, Scripts } from "@tanstack/start"
 import { lazy } from "react"
 
-const TanStackRouterDevtools =
-   import.meta.env.NODE_ENV === "production"
-      ? () => null
-      : lazy(() =>
-           import("@tanstack/router-devtools").then((res) => ({
-              default: res.TanStackRouterDevtools,
-              // For Embedded Mode
-              // default: res.TanStackRouterDevtoolsPanel
-           })),
-        )
+const TanStackRouterDevtools = import.meta.env.PROD
+   ? () => null
+   : lazy(() =>
+        import("@tanstack/router-devtools").then((res) => ({
+           default: res.TanStackRouterDevtools,
+           // For Embedded Mode
+           // default: res.TanStackRouterDevtoolsPanel
+        })),
+     )
 
 const title = "Cue"
 

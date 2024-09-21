@@ -30,7 +30,7 @@ export const client = globalForDb.client ?? createClient(config)
 if (env.NODE_ENV !== "production") globalForDb.client = client
 
 // if (env.DATABASE_CONNECTION_TYPE === "local-replica") {
-//   client.sync();
+//    client.sync()
 // }
 export const db = drizzle(client, { schema })
 export type Database = typeof db

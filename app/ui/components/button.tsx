@@ -11,6 +11,7 @@ const buttonVariants = cva(
          variant: {
             default: `bg-gradient-to-tr from-primary/85 font-medium to-primary/70 text-background border-primary`,
             outline: `bg-background hover:border-border border-border/70 backdrop-blur-md hover:bg-border/10 `,
+            link: "h-auto px-0",
          },
          size: {
             default: "h-9 rounded-[10px] px-2.5",

@@ -109,7 +109,7 @@ function CatchBoundary({ error }: ErrorComponentProps) {
       select: (state) => state.id === rootRouteId,
    })
 
-   if (import.meta.env.NODE_ENV === "development") {
+   if (import.meta.env.DEV === "development") {
       console.error(error)
    }
 

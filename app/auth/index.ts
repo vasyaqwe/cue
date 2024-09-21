@@ -20,7 +20,7 @@ export const lucia = new Lucia(adapter, {
          name: attributes.name,
          avatarUrl: attributes.avatarUrl,
          onboardingCompleted: attributes.onboardingCompleted,
-         createdAt: attributes.createdAt,
+         // createdAt: attributes.createdAt,
          // updatedAt: attributes.updatedAt,
       }
    },
