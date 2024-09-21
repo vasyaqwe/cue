@@ -140,6 +140,11 @@
   .button:active {
     scale: 99%;
   }
+  
+  .pattern {
+      background-size: 10px 10px;
+      background-image: repeating-linear-gradient(-45deg, #f5f5f5 0, transparent 1px, transparent 0, transparent 50%);
+  }
 }
 
 /* reset */

@@ -17,11 +17,6 @@ export const users = createTable(
       email: text("email"),
       name: text("name"),
       avatarUrl: text("avatar_url"),
-      emailVerified: integer("email_verified", {
-         mode: "boolean",
-      })
-         .notNull()
-         .default(false),
       onboardingCompleted: integer("onboarding_completed", {
          mode: "boolean",
       })
@@ -36,7 +31,7 @@ export const users = createTable(
    },
 )
 
-export const oauthProviders = ["github"] as const
+export const oauthProviders = z.enum(["github"])
 
 export const oauthAccounts = createTable(
    "oauth_accounts",
@@ -45,7 +40,7 @@ export const oauthAccounts = createTable(
          .notNull()
          .references(() => users.id, { onDelete: "cascade" }),
       providerId: text("provider_id", {
-         enum: oauthProviders,
+         enum: oauthProviders.options,
       }).notNull(),
       providerUserId: text("provider_user_id").notNull().unique(),
    },
@@ -120,6 +115,4 @@ export const verifyLoginCodeParams = createInsertSchema(
 })
 
 export type User = z.infer<typeof selectUserParams>
-export type OauthProvider = (typeof oauthProviders)[number]
-export type SendLoginCodeParams = z.infer<typeof insertUserParams>
-export type VerifyLoginCodeParams = z.infer<typeof verifyLoginCodeParams>
+export type OauthProvider = z.infer<typeof oauthProviders>

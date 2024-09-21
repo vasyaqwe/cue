@@ -19,7 +19,6 @@ export const lucia = new Lucia(adapter, {
          email: attributes.email,
          name: attributes.name,
          avatarUrl: attributes.avatarUrl,
-         // emailVerified: attributes.emailVerified,
          onboardingCompleted: attributes.onboardingCompleted,
          createdAt: attributes.createdAt,
          // updatedAt: attributes.updatedAt,
