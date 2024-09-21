@@ -129,17 +129,6 @@
     padding-inline: 0.985rem;
     width: min(100%, 604px);
   }
-
-  .button {
-    line-height: -1;
-  }
-  .button:hover {
-    scale: 104%;
-  }
-
-  .button:active {
-    scale: 99%;
-  }
   
   .pattern {
       background-size: 10px 10px;

@@ -35,7 +35,7 @@ export function createPushModal<T>({ modals }: CreatePushModalOptions<T>) {
    const emitter = mitt<EventHandlers>()
 
    function ModalProvider() {
-      const navigate = useNavigate({ from: "" })
+      const navigate = useNavigate({ from: "/" })
       const search = useSearch({ strict: false })
 
       // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

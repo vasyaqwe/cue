@@ -4,8 +4,7 @@ import { useEffect, useState } from "react"
 
 type WrapperProps = DialogProps
 type ContentProps = Omit<DialogContentProps, "onAnimationEnd"> & {
-   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-   onAnimationEnd?: (...args: any[]) => void
+   onAnimationEnd?: (...args: unknown[]) => void
 }
 type Options = {
    mobile: {

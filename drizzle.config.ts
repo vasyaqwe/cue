@@ -7,7 +7,10 @@ export default {
    dialect: "sqlite",
    driver: "turso",
    dbCredentials: {
-      url: env.TURSO_URL,
+      url:
+         env.NODE_ENV === "development"
+            ? "file:./app/db/db.sqlite"
+            : env.TURSO_URL,
       authToken: env.TURSO_AUTH_TOKEN,
    },
    verbose: true,
