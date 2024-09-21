@@ -92,14 +92,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
          <Head>
             <Meta />
          </Head>
-         <Body
-            className={cn("min-h-screen bg-background font-sans antialiased")}
-            suppressHydrationWarning
-         >
-            {children}
-            <Portal.Root>
-               <Toaster />
-            </Portal.Root>
+         <Body suppressHydrationWarning>
+            <div
+               className={cn(
+                  "min-h-screen bg-background font-mono text-base text-foreground antialiased",
+               )}
+            >
+               {children}
+               <Portal.Root>
+                  <Toaster />
+               </Portal.Root>
+            </div>
             <ScrollRestoration />
             <ReactQueryDevtools buttonPosition="bottom-left" />
             <TanStackRouterDevtools position="bottom-right" />

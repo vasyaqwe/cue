@@ -4,7 +4,7 @@ import { Icons } from "@/ui/components/icons"
 import { cn } from "@/ui/utils"
 import { useMountError } from "@/user-interactions/use-mount-error"
 import { useMutation } from "@tanstack/react-query"
-import { createFileRoute } from "@tanstack/react-router"
+import { Link, createFileRoute } from "@tanstack/react-router"
 import { useState } from "react"
 
 export const Route = createFileRoute("/login")({
@@ -100,38 +100,34 @@ function Component() {
    return (
       <>
          <header className="absolute z-[2] flex justify-between p-5">
-            <a
-               href="https://socialhunt.pages.dev"
+            <Link
+               to="/"
                className={buttonVariants({ variant: "outline", size: "sm" })}
             >
                {/* <ArrowLeftCircleIcon className="size-[18px]" /> */}
                Homepage
-            </a>
+            </Link>
          </header>
-         <main className="pattern h-svh px-7">
+         <main className=" h-svh px-7">
             <div className="isolate grid h-full place-items-center md:min-h-[92svh] max-md:pt-8">
                <div>
                   <h1 className="mb-5 flex items-center justify-center gap-3 pb-2 text-center font-bold text-[1.5rem] leading-none">
                      <Icons.logo
                         id="login"
-                        className="-mt-0.5 size-11"
+                        className="size-8"
                      />
-                     Log in to SocialHunt
+                     Log in to Cue
                   </h1>
                   <div
                      className={cn(
                         cardVariants(),
-                        "relative mx-auto my-7 flex w-full max-w-[385px] flex-col overflow-hidden rounded-2xl p-0 ring-8 ring-ring/15 dark:bg-popover dark:ring-ring/[0.12]",
+                        "relative mx-auto flex w-full max-w-[385px] flex-col overflow-hidden rounded-2xl p-0 py-6 md:py-8",
                      )}
                   >
-                     <div
-                        className="h-6 w-full"
-                        aria-hidden="true"
-                     />
                      <>
                         {isCodeSent ? (
                            <div
-                              className="flex h-full flex-col px-6"
+                              className="flex h-full flex-col px-6 md:px-8"
                               key={isCodeSent.toString()}
                            >
                               <p className="text-foreground/75 md:text-[1rem]">
@@ -228,15 +224,14 @@ function Component() {
                                  </Button>
                               </form> */}
 
-                              <div className="relative my-8 w-full">
-                                 <hr className="w-full bg-border" />
-                                 <span className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 bg-background p-2.5 font-medium text-foreground/50 dark:bg-popover">
+                              {/* <div className="relative my-8 w-full">
+                                 <hr className="w-full border-border" />
+                                 <span className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 bg-muted p-2.5 font-medium text-foreground/50 dark:bg-popover">
                                     OR
                                  </span>
-                              </div>
-                              <div className="px-6">
+                              </div> */}
+                              <div className="px-6 md:px-8">
                                  <Button
-                                    variant={"outline"}
                                     size={"lg"}
                                     className="w-full"
                                     disabled={
@@ -248,40 +243,10 @@ function Component() {
                                     <Icons.github className="-mt-px size-[21px]" />
                                     Continue with Github
                                  </Button>
-                                 <p className="mt-6 text-balance text-center text-[0.72rem] text-foreground/75">
-                                    By clicking continue, you acknowledge that
-                                    you have read and agree to SocialHunt's{" "}
-                                    <a
-                                       href="https://socialhunt.pages.dev/privacy-policy"
-                                       target="_blank"
-                                       rel="noreferrer"
-                                       className={buttonVariants({
-                                          variant: "link",
-                                       })}
-                                    >
-                                       Terms of Service{" "}
-                                    </a>{" "}
-                                    and{" "}
-                                    <a
-                                       href="https://socialhunt.pages.dev/privacy-policy"
-                                       target="_blank"
-                                       rel="noreferrer"
-                                       className={buttonVariants({
-                                          variant: "link",
-                                       })}
-                                    >
-                                       Privacy Policy
-                                    </a>
-                                    .
-                                 </p>
                               </div>
                            </div>
                         )}
                      </>
-                     <div
-                        className="h-7 w-full"
-                        aria-hidden="true"
-                     />
                   </div>
                </div>
             </div>

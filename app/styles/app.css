@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme default {
-  --color-background: #ffffff;
-  --color-foreground: #18181b;
-  --color-primary: #0a0a0b;
-  --color-muted: #f9fafb;
-  --color-muted-foreground: #5d626f;
-  --color-border: #dde0e4;
+  --color-background: #FEFCFB;
+  --color-foreground: #232124;
+  --color-primary: #8347B9;
+  --color-muted: #eeedee;
+  --color-muted-foreground: #6c656c;
+  --color-border: #dad8da;
 
   --font-family-primary: "outfit", sans-serif;
   --font-family-secondary: ui-serif, Georgia, Cambria, Times New Roman, Times, serif;
@@ -131,6 +131,7 @@
   }
   
   .pattern {
+/* color: hsl(300, 3%, 85%); */
       background-size: 10px 10px;
       background-image: repeating-linear-gradient(-45deg, #f5f5f5 0, transparent 1px, transparent 0, transparent 50%);
   }
