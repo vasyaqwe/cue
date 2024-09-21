@@ -1,11 +1,9 @@
 import { auth, github } from "@/auth"
-import { useStorage } from "@/lib/cache"
 import { createServerFn } from "@tanstack/start"
 import { generateState } from "arctic"
 import { setCookie, setHeader } from "vinxi/http"
 
 export const authLoaderFn = createServerFn("GET", async () => {
-   await useStorage().removeItem("cache:nitro:functions:auth:.json")
    return await auth()
 })
 

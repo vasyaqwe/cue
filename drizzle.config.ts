@@ -1,5 +1,6 @@
-import { env } from "@/env"
 import type { Config } from "drizzle-kit"
+
+import { env } from "@/env"
 
 export default {
    schema: "./app/db/schema/index.ts",
@@ -7,8 +8,8 @@ export default {
    dialect: "sqlite",
    driver: "turso",
    dbCredentials: {
-      url: env.NODE_ENV === "development" ? "file:./db.sqlite" : env.TURSO_URL,
-      authToken: env.TURSO_AUTH_TOKEN,
+      url: env.DATABASE_URL,
+      authToken: env.DATABASE_AUTH_TOKEN,
    },
    verbose: true,
 } satisfies Config

@@ -7,13 +7,13 @@ import * as schema from "./schema"
 const options = {
    local: { url: "file:db.sqlite" },
    remote: {
-      url: env.TURSO_URL,
-      authToken: env.TURSO_AUTH_TOKEN,
+      url: env.DATABASE_URL,
+      authToken: env.DATABASE_AUTH_TOKEN,
    },
    "local-replica": {
       url: "file:db.sqlite",
-      syncUrl: env.TURSO_URL,
-      authToken: env.TURSO_AUTH_TOKEN,
+      syncUrl: env.DATABASE_URL,
+      authToken: env.DATABASE_AUTH_TOKEN,
    },
 } satisfies Record<typeof env.DATABASE_CONNECTION_TYPE, Config>
 

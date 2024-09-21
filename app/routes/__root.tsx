@@ -1,9 +1,6 @@
 import "@/styles/app.css"
-// @ts-expect-error
 import appCss from "@/styles/app.css?url"
-import { Toaster } from "@/ui/components/toast"
 import { cn } from "@/ui/utils"
-import * as Portal from "@radix-ui/react-portal"
 import type { QueryClient } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import {
@@ -106,9 +103,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                )}
             >
                {children}
-               <Portal.Root>
+               {/* <Portal.Root>
                   <Toaster />
-               </Portal.Root>
+               </Portal.Root> */}
             </div>
             <ScrollRestoration />
             <ReactQueryDevtools buttonPosition="bottom-left" />

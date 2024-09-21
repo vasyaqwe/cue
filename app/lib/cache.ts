@@ -7,14 +7,14 @@ const globalForStorage = globalThis as unknown as {
 }
 export const storage = globalForStorage.storage ?? createStorage()
 
-export type CacheEntry<T = unknown> = {
+export interface CacheEntry<T = unknown> {
    value?: T
    expires?: number
    mtime?: number
    integrity?: string
 }
 
-export type CacheOptions<T = unknown> = {
+export interface CacheOptions<T = unknown> {
    name?: string
    getKey?: (...args: unknown[]) => string | Promise<string>
    transform?: (entry: CacheEntry<T>, ...args: unknown[]) => unknown
@@ -32,9 +32,9 @@ export type CacheOptions<T = unknown> = {
    base?: string
 }
 
-export const useStorage = <T extends StorageValue = StorageValue>(
+export function useStorage<T extends StorageValue = StorageValue>(
    base = "",
-): Storage<T> => {
+): Storage<T> {
    return base ? prefixStorage<T>(storage, base) : storage
 }
 
@@ -45,10 +45,10 @@ const defaultCacheOptions = {
    maxAge: 1,
 }
 
-export const defineCachedFunction = <T, ArgsT extends unknown[] = unknown[]>(
+export function defineCachedFunction<T, ArgsT extends unknown[] = unknown[]>(
    fn: (...args: ArgsT) => T | Promise<T>,
    _opts: CacheOptions<T> = {},
-): ((...args: ArgsT) => Promise<T>) => {
+): (...args: ArgsT) => Promise<T> {
    const opts = { ...defaultCacheOptions, ..._opts }
 
    const pending: { [key: string]: Promise<T> } = {}
@@ -165,7 +165,7 @@ export const defineCachedFunction = <T, ArgsT extends unknown[] = unknown[]>(
       return value as T
    }
 }
-
-const getKey = (...args: unknown[]) => (args.length > 0 ? hash(args, {}) : "")
-
+function getKey(...args: unknown[]) {
+   return args.length > 0 ? hash(args, {}) : ""
+}
 export const cachedFunction = defineCachedFunction

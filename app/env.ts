@@ -1,16 +1,15 @@
 import { createEnv } from "@t3-oss/env-core"
 import { z } from "zod"
-
 export const env = createEnv({
    server: {
       NODE_ENV: z
          .enum(["development", "test", "production"])
          .default("development"),
-      TURSO_URL: z.string().min(1),
+      DATABASE_URL: z.string().min(1),
       DATABASE_CONNECTION_TYPE: z
          .enum(["local", "remote", "local-replica"])
          .default("local"),
-      TURSO_AUTH_TOKEN: z
+      DATABASE_AUTH_TOKEN: z
          .string()
          .optional()
          .refine((s) => {
@@ -31,6 +30,7 @@ export const env = createEnv({
    clientPrefix: "VITE_",
 
    client: {
+      // PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
       // VITE_NODE_ENV: z
       //   .enum(['development', 'test', 'production'])
       //   .default('development'),
