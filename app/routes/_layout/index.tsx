@@ -1,14 +1,5 @@
-import { Button } from "@/ui/components/button"
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_layout/")({
-   component: Component,
+   component: () => <div>Hello /!</div>,
 })
-
-function Component() {
-   return (
-      <>
-         <Button variant={"outline"}>Hello home</Button>
-      </>
-   )
-}

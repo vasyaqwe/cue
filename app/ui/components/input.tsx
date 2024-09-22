@@ -4,10 +4,10 @@ import type { ComponentProps } from "react"
 import { buttonVariants } from "./button"
 
 const inputVariants = cva(
-   `block h-[42px] w-full rounded-xl transition-colors text-[0.975rem] border border-transparent focus:border-[var(--border-color)] px-3 bg-muted/40
-    focus:bg-muted/60 placeholder:text-foreground/40 focus:outline-none ring ring-transparent [--ring:var(--color-primary)]  
-    [--border-color:var(--color-muted)] has-[+button[data-clearinput]:active]:border-[var(--border-color)] 
-    has-[+button[data-clearinput]:active]:ring-[var(--color-primary)] appearance-none`,
+   `block h-10 w-full rounded-[10px] transition-all text-[0.95rem] border border-border focus:border-primary/90
+    px-3 bg-muted/50 focus:bg-muted/60 placeholder:text-foreground/40 outline-2 outline-transparent focus:outline-primary/30
+    has-[+button[data-clearinput]:active]:border-primary
+    has-[+button[data-clearinput]:active]:outline-primary/30 appearance-none`,
 )
 function Input({ className, ...props }: ComponentProps<"input">) {
    return (

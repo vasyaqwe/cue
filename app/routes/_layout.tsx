@@ -1,8 +1,12 @@
 import { authLoaderFn } from "@/auth/functions"
+import {} from "@/db/schema"
 import { ModalProvider } from "@/modals"
+import { CreateOrganization } from "@/organization/components/create-organization"
+import { organizationMembershipsQuery } from "@/organization/queries"
 import { Sidebar } from "@/routes/-components/sidebar"
-import { Icons } from "@/ui/components/icons"
+import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_layout")({
@@ -15,12 +19,18 @@ export const Route = createFileRoute("/_layout")({
          user: session.user,
       }
    },
+   loader: async ({ context }) => {
+      const memberships = await context.queryClient.ensureQueryData(
+         organizationMembershipsQuery(),
+      )
+
+      if (memberships.length > 0) {
+         throw redirect({ to: `/${memberships[0]?.organization.slug}` })
+      }
+   },
    pendingComponent: () => (
       <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full">
-         <Icons.logo
-            id="loading"
-            className="mx-auto size-12 animate-fade-in opacity-0 delay-150 duration-500"
-         />
+         <Logo className="mx-auto" />
          <h1 className="mt-4 animate-fade-in text-center font-medium text-foreground/80 text-lg opacity-0 delay-300 duration-500">
             Loading...
          </h1>
@@ -29,6 +39,12 @@ export const Route = createFileRoute("/_layout")({
 })
 
 function Component() {
+   const { data: memberships } = useSuspenseQuery(
+      organizationMembershipsQuery(),
+   )
+
+   if (memberships.length === 0) return <CreateOrganization />
+
    return (
       <>
          {/* <Presence /> */}

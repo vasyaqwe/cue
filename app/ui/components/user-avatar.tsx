@@ -4,7 +4,7 @@ import { cn } from "@/ui/utils"
 import type { ComponentProps } from "react"
 
 type UserAvatarProps = ComponentProps<typeof Avatar> & {
-   user: Partial<User>
+   user: Omit<Partial<User>, "createdAt" | "updatedAt">
    showActiveIndicator?: boolean
    size?: number
 }

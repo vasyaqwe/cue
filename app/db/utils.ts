@@ -1,9 +1,11 @@
 import baseX from "base-x"
+import { sql } from "drizzle-orm"
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 const b58 = baseX("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
 
 const prefixes = {
    user: "user",
+   organization: "org",
    verification_code: "vc",
    oauth_account: "oa",
 } as const
@@ -44,13 +46,15 @@ const generateId = (prefix: keyof typeof prefixes) =>
 const createTable = sqliteTable
 
 const lifecycleDates = {
-   createdAt: integer("created_at")
+   createdAt: integer("created_at", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
+   updatedAt: integer("updated_at", {
+      mode: "timestamp",
+   })
       .notNull()
-      .$defaultFn(() => Date.now()),
-   updatedAt: integer("updated_at")
-      .notNull()
-      .$defaultFn(() => Date.now())
-      .$onUpdateFn(() => new Date().getTime()),
+      .default(sql`(unixepoch())`)
+      .$onUpdateFn(() => new Date()),
 }
 
 export { createTable, lifecycleDates, generateId }

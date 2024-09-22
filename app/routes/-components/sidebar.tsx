@@ -12,10 +12,16 @@ import { Logo } from "@/ui/components/logo"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useMutation } from "@tanstack/react-query"
-import { Link, useLocation, useNavigate } from "@tanstack/react-router"
+import {
+   Link,
+   useLocation,
+   useNavigate,
+   useParams,
+} from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 
 export function Sidebar() {
+   const { slug } = useParams({ from: "/_layout/$slug/" })
    const { pathname } = useLocation()
    const { user } = useUser()
    const navigate = useNavigate()
@@ -64,14 +70,17 @@ export function Sidebar() {
                <ul className="space-y-1">
                   <li>
                      <Link
-                        to="/"
+                        to="/$slug"
+                        params={{ slug }}
                         className={cn(
                            "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
-                           pathname === "/"
+                           pathname === `/${slug}`
                               ? "border-border/75 bg-border/40 opacity-100"
                               : "",
                         )}
-                        aria-current={pathname === "/" ? "page" : undefined}
+                        aria-current={
+                           pathname === `/${slug}` ? "page" : undefined
+                        }
                      >
                         <Icons.home className="size-6" />
                         Home
@@ -79,15 +88,16 @@ export function Sidebar() {
                   </li>
                   <li>
                      <Link
-                        to="/settings"
+                        to="/$slug/settings"
+                        params={{ slug }}
                         className={cn(
                            "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
-                           pathname === "/settings"
+                           pathname === `/${slug}/settings`
                               ? "border-border/75 bg-border/40 opacity-100"
                               : "",
                         )}
                         aria-current={
-                           pathname === "/settings" ? "page" : undefined
+                           pathname === `/${slug}/settings` ? "page" : undefined
                         }
                      >
                         <Icons.settings className="size-6" />

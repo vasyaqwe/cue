@@ -37,10 +37,8 @@ export const protectedProcedure = serverFnProcedure.use(({ ctx, next }) => {
    return next({
       ctx: {
          // infers the `session` as non-nullable
-         auth: {
-            session: ctx?.auth?.session,
-            user: ctx?.auth?.user,
-         },
+         session: ctx?.auth?.session,
+         user: ctx?.auth?.user,
       },
    })
 })

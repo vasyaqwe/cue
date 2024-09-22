@@ -14,7 +14,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
-import { Route as LayoutSettingsImport } from './routes/_layout/settings'
+import { Route as LayoutSlugIndexImport } from './routes/_layout/$slug/index'
+import { Route as LayoutSlugSettingsImport } from './routes/_layout/$slug/settings'
 
 // Create/Update Routes
 
@@ -33,8 +34,13 @@ const LayoutIndexRoute = LayoutIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutSettingsRoute = LayoutSettingsImport.update({
-  path: '/settings',
+const LayoutSlugIndexRoute = LayoutSlugIndexImport.update({
+  path: '/$slug/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutSlugSettingsRoute = LayoutSlugSettingsImport.update({
+  path: '/$slug/settings',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -56,18 +62,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
-    '/_layout/settings': {
-      id: '/_layout/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof LayoutSettingsImport
-      parentRoute: typeof LayoutImport
-    }
     '/_layout/': {
       id: '/_layout/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof LayoutIndexImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/$slug/settings': {
+      id: '/_layout/$slug/settings'
+      path: '/$slug/settings'
+      fullPath: '/$slug/settings'
+      preLoaderRoute: typeof LayoutSlugSettingsImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/$slug/': {
+      id: '/_layout/$slug/'
+      path: '/$slug'
+      fullPath: '/$slug'
+      preLoaderRoute: typeof LayoutSlugIndexImport
       parentRoute: typeof LayoutImport
     }
   }
@@ -76,13 +89,15 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface LayoutRouteChildren {
-  LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutSlugSettingsRoute: typeof LayoutSlugSettingsRoute
+  LayoutSlugIndexRoute: typeof LayoutSlugIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
-  LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutSlugSettingsRoute: LayoutSlugSettingsRoute,
+  LayoutSlugIndexRoute: LayoutSlugIndexRoute,
 }
 
 const LayoutRouteWithChildren =
@@ -91,30 +106,39 @@ const LayoutRouteWithChildren =
 export interface FileRoutesByFullPath {
   '': typeof LayoutRouteWithChildren
   '/login': typeof LoginRoute
-  '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
+  '/$slug/settings': typeof LayoutSlugSettingsRoute
+  '/$slug': typeof LayoutSlugIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
-  '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
+  '/$slug/settings': typeof LayoutSlugSettingsRoute
+  '/$slug': typeof LayoutSlugIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_layout': typeof LayoutRouteWithChildren
   '/login': typeof LoginRoute
-  '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/$slug/settings': typeof LayoutSlugSettingsRoute
+  '/_layout/$slug/': typeof LayoutSlugIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/login' | '/settings' | '/'
+  fullPaths: '' | '/login' | '/' | '/$slug/settings' | '/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/settings' | '/'
-  id: '__root__' | '/_layout' | '/login' | '/_layout/settings' | '/_layout/'
+  to: '/login' | '/' | '/$slug/settings' | '/$slug'
+  id:
+    | '__root__'
+    | '/_layout'
+    | '/login'
+    | '/_layout/'
+    | '/_layout/$slug/settings'
+    | '/_layout/$slug/'
   fileRoutesById: FileRoutesById
 }
 
@@ -147,19 +171,24 @@ export const routeTree = rootRoute
     "/_layout": {
       "filePath": "_layout.tsx",
       "children": [
-        "/_layout/settings",
-        "/_layout/"
+        "/_layout/",
+        "/_layout/$slug/settings",
+        "/_layout/$slug/"
       ]
     },
     "/login": {
       "filePath": "login.tsx"
     },
-    "/_layout/settings": {
-      "filePath": "_layout/settings.tsx",
-      "parent": "/_layout"
-    },
     "/_layout/": {
       "filePath": "_layout/index.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/$slug/settings": {
+      "filePath": "_layout/$slug/settings.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/$slug/": {
+      "filePath": "_layout/$slug/index.tsx",
       "parent": "/_layout"
     }
   }
