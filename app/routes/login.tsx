@@ -105,18 +105,22 @@ function Component() {
       <>
          <main className=" h-svh px-7">
             <div className="isolate grid h-full place-items-center md:min-h-[92svh] max-md:pt-8">
-               <div className="w-full max-w-[320px]">
-                  <h1 className="mb-7 flex flex-col items-center justify-center gap-7 pb-2 text-center font-bold text-[1.5rem] leading-none">
-                     <Icons.logo
-                        id="login"
-                        className="size-10"
-                     />
+               <div className="flex w-full max-w-[320px] flex-col">
+                  <div className="mx-auto drop-shadow-[0px_3px_3px_rgba(24,24,24,.1)]">
+                     <div className="squircle mb-6 grid size-12 place-content-center bg-background bg-gradient-to-b from-foreground/70 to-foreground text-background">
+                        <Icons.logo
+                           id="login"
+                           className="size-7"
+                        />
+                     </div>
+                  </div>
+                  <h1 className="mb-6 gap-6 pb-2 text-center font-bold text-[1.5rem] leading-none">
                      Log in to Cue
                   </h1>
                   <div
                      className={cn(
                         cardVariants(),
-                        "pattern relative mx-auto flex flex-col overflow-hidden rounded-2xl p-0",
+                        "pattern relative mx-auto flex w-full flex-col overflow-hidden rounded-2xl p-0",
                      )}
                   >
                      <>

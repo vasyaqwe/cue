@@ -30,6 +30,6 @@
       },
       "types": ["vite/client"]
    },
-   "include": [".eslintrc.cjs", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.js"],
+   "include": ["**/*.ts", "**/*.tsx", "**/*.cjs"],
    "exclude": ["node_modules"]
 }
