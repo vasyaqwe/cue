@@ -1,17 +1,18 @@
-import { db } from "@/db"
-import { organizationMembers, organizations } from "@/db/schema"
+import {
+   insertOrganizationParams,
+   organizationMembers,
+   organizations,
+} from "@/db/schema"
 import { protectedProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
-import { and, eq } from "drizzle-orm"
+import { TRPCError } from "@trpc/server"
+import { eq } from "drizzle-orm"
 
-export const organizationMembershipsFn = createServerFn(
+export const memberships = createServerFn(
    "GET",
    protectedProcedure.query(async ({ ctx }) => {
-      return await db.query.organizationMembers.findMany({
-         where: and(
-            eq(organizationMembers.id, ctx.user.id),
-            eq(organizationMembers.organizationId, organizations.id),
-         ),
+      return await ctx.db.query.organizationMembers.findMany({
+         where: eq(organizationMembers.id, ctx.user.id),
          with: {
             organization: {
                columns: {
@@ -22,4 +23,36 @@ export const organizationMembershipsFn = createServerFn(
          },
       })
    }),
+)
+
+export const insert = createServerFn(
+   "POST",
+   protectedProcedure
+      .input(insertOrganizationParams)
+      .query(async ({ ctx, input }) => {
+         const existingOrg = await ctx.db.query.organizations.findFirst({
+            where: eq(organizations.slug, input.slug),
+         })
+
+         if (existingOrg) throw new TRPCError({ code: "CONFLICT" })
+
+         await ctx.db.transaction(async (transaction) => {
+            const [createdOrganization] = await transaction
+               .insert(organizations)
+               .values({
+                  name: input.name,
+                  slug: input.slug,
+               })
+               .returning({
+                  id: organizations.id,
+               })
+
+            if (!createdOrganization) throw new Error("Error")
+
+            await transaction.insert(organizationMembers).values({
+               organizationId: createdOrganization.id,
+               id: ctx.user.id,
+            })
+         })
+      }),
 )

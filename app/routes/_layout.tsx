@@ -1,5 +1,4 @@
 import { authLoaderFn } from "@/auth/functions"
-import {} from "@/db/schema"
 import { ModalProvider } from "@/modals"
 import { CreateOrganization } from "@/organization/components/create-organization"
 import { organizationMembershipsQuery } from "@/organization/queries"
@@ -14,15 +13,18 @@ export const Route = createFileRoute("/_layout")({
    beforeLoad: async () => {
       const session = await authLoaderFn()
       if (!session?.session || !session.user) throw redirect({ to: "/login" })
+      console.log(session, "hello")
 
       return {
          user: session.user,
       }
    },
-   loader: async ({ context }) => {
+   loader: async ({ context, params }) => {
       const memberships = await context.queryClient.ensureQueryData(
          organizationMembershipsQuery(),
       )
+
+      if ("slug" in params) return
 
       if (memberships.length > 0) {
          throw redirect({ to: `/${memberships[0]?.organization.slug}` })

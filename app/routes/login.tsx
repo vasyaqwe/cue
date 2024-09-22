@@ -1,4 +1,4 @@
-import { logInWithGithubFn } from "@/auth/functions"
+import * as auth from "@/auth/functions"
 import { Button } from "@/ui/components/button"
 import { cardVariants } from "@/ui/components/card"
 import { Icons } from "@/ui/components/icons"
@@ -94,9 +94,9 @@ function Component() {
    //    }
    // }, [isSuccess])
 
-   const _loginWithGithub = useServerFn(logInWithGithubFn)
+   const loginWithGithubFn = useServerFn(auth.logInWithGithub)
    const loginWithGithub = useMutation({
-      mutationFn: () => _loginWithGithub(),
+      mutationFn: () => loginWithGithubFn(),
       onSuccess: (url) => {
          window.location.href = url
       },

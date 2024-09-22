@@ -1,13 +1,51 @@
+import { organizationMembershipsQuery } from "@/organization/queries"
 import { Button } from "@/ui/components/button"
 import { Input } from "@/ui/components/input"
 import { Label } from "@/ui/components/label"
+import { Loading } from "@/ui/components/loading"
 import { Logo } from "@/ui/components/logo"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useNavigate } from "@tanstack/react-router"
+import { useServerFn } from "@tanstack/start"
+import type { TRPCError } from "@trpc/server"
 import { useState } from "react"
+import { toast } from "sonner"
+import * as organization from "../functions"
 
 const makeSlug = (name: string) => name.toLowerCase().replaceAll(" ", "-")
 
+const parseError = (error: Error) => {
+   try {
+      const parsedError = JSON.parse(error.message) as {
+         body: TRPCError
+      }
+
+      return parsedError
+   } catch (jsonError) {
+      console.error("Failed to parse error message as JSON:", jsonError)
+   }
+}
+
 export function CreateOrganization() {
    const [name, setName] = useState("")
+   const navigate = useNavigate()
+   const queryClient = useQueryClient()
+
+   const insertFn = useServerFn(organization.insert)
+   const insert = useMutation({
+      mutationFn: () => insertFn({ name, slug: makeSlug(name) }),
+      onSuccess: () => {
+         queryClient.invalidateQueries(organizationMembershipsQuery())
+         navigate({ to: `/${makeSlug(name)}` })
+      },
+      onError: (error) => {
+         const parsedError = parseError(error)
+         if (parsedError?.body?.code === "CONFLICT")
+            return toast.error("Organization URL is not available")
+
+         toast.error("An unknown error occurred")
+      },
+   })
 
    return (
       <div className="grid h-svh place-content-center">
@@ -22,6 +60,7 @@ export function CreateOrganization() {
             <form
                onSubmit={(e) => {
                   e.preventDefault()
+                  insert.mutate()
                }}
             >
                <Label htmlFor="name">Name</Label>
@@ -36,14 +75,20 @@ export function CreateOrganization() {
                   required
                />
                <p className="mt-2 text-foreground/75">
-                  {" "}
-                  {window.location.origin}/{makeSlug(name)}
+                  <u>
+                     {window.location.origin}/{makeSlug(name)}
+                  </u>
                </p>
                <Button
                   size={"lg"}
                   className="mt-5 w-full"
+                  disabled={insert.isPending || insert.isSuccess}
                >
-                  Create
+                  {insert.isPending || insert.isSuccess ? (
+                     <Loading />
+                  ) : (
+                     "Create"
+                  )}
                </Button>
             </form>
          </div>

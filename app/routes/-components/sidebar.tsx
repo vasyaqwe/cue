@@ -1,5 +1,6 @@
-import { logoutFn } from "@/auth/functions"
+import * as auth from "@/auth/functions"
 import { useUser } from "@/auth/hooks"
+import { organizationMembershipsQuery } from "@/organization/queries"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
    DropdownMenu,
@@ -11,7 +12,7 @@ import { Icons } from "@/ui/components/icons"
 import { Logo } from "@/ui/components/logo"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import {
    Link,
    useLocation,
@@ -25,21 +26,28 @@ export function Sidebar() {
    const { pathname } = useLocation()
    const { user } = useUser()
    const navigate = useNavigate()
+   const { data: memberships } = useSuspenseQuery(
+      organizationMembershipsQuery(),
+   )
 
-   const _logout = useServerFn(logoutFn)
+   const logoutFn = useServerFn(auth.logout)
    const logout = useMutation({
-      mutationFn: () => _logout(),
+      mutationFn: () => logoutFn(),
       onSuccess: () => {
          navigate({ to: "/login" })
       },
    })
+
+   const membership = memberships.find((m) => m.organization.slug === slug)
 
    return (
       <div className="w-60 max-md:hidden">
          <aside className="fixed flex h-full w-60 flex-col border-border/60 border-r p-5 shadow-sm">
             <div className="mb-5 flex items-center gap-3">
                <Logo className="size-8" />{" "}
-               <p className="font-bold text-xl">Cue</p>
+               <p className="font-bold text-xl">
+                  {membership?.organization.name}
+               </p>
             </div>
             <Button
                variant={"outline"}

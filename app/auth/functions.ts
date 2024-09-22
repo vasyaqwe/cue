@@ -7,7 +7,7 @@ export const authLoaderFn = createServerFn("GET", async () => {
    return await auth()
 })
 
-export const logInWithGithubFn = createServerFn("POST", async () => {
+export const logInWithGithub = createServerFn("POST", async () => {
    const state = generateState()
    const url = await github.createAuthorizationURL(state, {
       scopes: ["user:email"],
@@ -26,7 +26,7 @@ export const logInWithGithubFn = createServerFn("POST", async () => {
    return url.toString()
 })
 
-export const logoutFn = createServerFn("POST", async () => {
+export const logout = createServerFn("POST", async () => {
    const sessionId = parseCookies()[lucia.sessionCookieName]
    if (!sessionId) {
       return "OK"

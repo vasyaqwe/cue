@@ -20,7 +20,9 @@ type TRPCClientError = Error & {
    }
 }
 
-export const isTRPCClientError = (error: Error): error is TRPCClientError =>
+export const isTRPCError = (
+   error: Error & { body?: unknown },
+): error is TRPCClientError =>
    "data" in error &&
    error.data !== null &&
    typeof error.data === "object" &&
@@ -36,14 +38,7 @@ export function createRouter() {
             deserializeData: superjson.deserialize,
          },
          queries: {
-            retry(failureCount, error) {
-               if (
-                  isTRPCClientError(error) &&
-                  error.data?.code === "UNAUTHORIZED"
-               ) {
-                  return false
-               }
-
+            retry(failureCount) {
                // 2 max
                return failureCount < 1
             },
@@ -52,7 +47,8 @@ export function createRouter() {
          },
          mutations: {
             onError: (error) => {
-               if (isTRPCClientError(error)) {
+               console.log(error)
+               if (isTRPCError(error)) {
                   if (error.data?.code === "TOO_MANY_REQUESTS") {
                      return toast.error(
                         "Too many requests, please try again later",
@@ -62,7 +58,7 @@ export function createRouter() {
                   if (error.data?.code !== "INTERNAL_SERVER_ERROR")
                      return toast.error(error.message)
 
-                  return toast.error("An error occurred, please try again")
+                  toast.error("An unknown error occurred")
                }
 
                toast.error("An unknown error occurred")
