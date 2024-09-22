@@ -1,5 +1,6 @@
 import { authLoaderFn } from "@/auth/functions"
 import { ModalProvider } from "@/modals"
+import { Sidebar } from "@/routes/-components/sidebar"
 import { Icons } from "@/ui/components/icons"
 import { cn } from "@/ui/utils"
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router"
@@ -8,8 +9,11 @@ export const Route = createFileRoute("/_layout")({
    component: Component,
    beforeLoad: async () => {
       const session = await authLoaderFn()
-      if (!session) throw redirect({ to: "/login" })
-      return session
+      if (!session?.session || !session.user) throw redirect({ to: "/login" })
+
+      return {
+         user: session.user,
+      }
    },
    pendingComponent: () => (
       <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full">
@@ -29,9 +33,8 @@ function Component() {
       <>
          {/* <Presence /> */}
          <ModalProvider />
-
-         <div className="md:container md:flex lg:gap-8 md:gap-5">
-            {/* <Sidebar /> */}
+         <div className="md:flex lg:gap-8 md:gap-5">
+            <Sidebar />
             <div
                className={cn("flex-1 md:pt-5")}
                // style={{

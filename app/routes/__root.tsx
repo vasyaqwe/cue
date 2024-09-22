@@ -4,7 +4,6 @@ import { Toaster } from "@/ui/components/toast"
 import { cn } from "@/ui/utils"
 import * as Portal from "@radix-ui/react-portal"
 import type { QueryClient } from "@tanstack/react-query"
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import {
    Outlet,
    ScrollRestoration,
@@ -79,7 +78,7 @@ export const Route = createRootRouteWithContext<{
       //    href: "/favicon-16x16.png",
       // },
       // { rel: "manifest", href: "/site.webmanifest", color: "#fffff" },
-      // { rel: "icon", href: "/favicon.ico" },
+      { rel: "icon", href: "/favicon.ico" },
    ],
    component: RootComponent,
 })
@@ -101,7 +100,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
          <Body suppressHydrationWarning>
             <div
                className={cn(
-                  "min-h-screen bg-background font-primary text-base text-foreground tracking-[0.02em] antialiased",
+                  "min-h-screen bg-background text-base text-foreground tracking-[0.02em] antialiased",
                )}
             >
                {children}
@@ -109,11 +108,31 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   <Toaster />
                </Portal.Root>
             </div>
+            <BreakpointIndicator />
             <ScrollRestoration />
-            <ReactQueryDevtools buttonPosition="bottom-left" />
+            {/* <ReactQueryDevtools buttonPosition="bottom-left" /> */}
             <TanStackRouterDevtools position="bottom-right" />
             <Scripts />
          </Body>
       </Html>
+   )
+}
+
+function BreakpointIndicator() {
+   if (!import.meta.env.DEV) return null
+
+   return (
+      <div
+         className={`fixed bottom-4 left-20 z-50 font-mono font-semibold text-lg`}
+      >
+         <div className="rounded-full border border-border bg-background px-3 pt-1 pb-1.5 leading-none">
+            <span className="sm:hidden">xs</span>
+            <span className="hidden sm:inline md:hidden">sm</span>
+            <span className="hidden md:inline lg:hidden">md</span>
+            <span className="hidden lg:inline xl:hidden">lg</span>
+            <span className="hidden xl:inline 2xl:hidden">xl</span>
+            <span className="hidden 2xl:inline">2xl</span>
+         </div>
+      </div>
    )
 }

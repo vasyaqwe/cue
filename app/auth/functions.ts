@@ -1,7 +1,7 @@
-import { auth, github } from "@/auth"
+import { auth, github, lucia } from "@/auth"
 import { createServerFn } from "@tanstack/start"
 import { generateState } from "arctic"
-import { setCookie, setHeader } from "vinxi/http"
+import { parseCookies, setCookie, setHeader } from "vinxi/http"
 
 export const authLoaderFn = createServerFn("GET", async () => {
    return await auth()
@@ -24,4 +24,20 @@ export const logInWithGithubFn = createServerFn("POST", async () => {
    setHeader("Location", url.toString())
 
    return url.toString()
+})
+
+export const logoutFn = createServerFn("POST", async () => {
+   const sessionId = parseCookies()[lucia.sessionCookieName]
+   if (!sessionId) {
+      return "OK"
+   }
+
+   await lucia.invalidateSession(sessionId)
+   const sessionCookie = lucia.createBlankSessionCookie()
+
+   setCookie(sessionCookie.name, sessionCookie.value, {
+      ...sessionCookie.npmCookieOptions(),
+   })
+
+   return "OK"
 })
