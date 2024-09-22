@@ -23,7 +23,5 @@ export const logInWithGithubFn = createServerFn("POST", async () => {
 
    setHeader("Location", url.toString())
 
-   return {
-      url: url.toString(),
-   }
+   return url.toString()
 })

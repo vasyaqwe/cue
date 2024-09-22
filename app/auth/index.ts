@@ -62,14 +62,20 @@ export const github = new GitHub(
    {},
 )
 
-export const createSession = (userId: string) => {
+export const createSession = async (userId: string) => {
    const session: Session = {
       id: generateSessionId(),
       userId: userId,
       expiresAt: lucia.getNewSessionExpiration(),
    }
-   db.insert(sessions).values(session).run()
-   return session
+   await db.insert(sessions).values(session)
+
+   const sessionCookie = lucia.createSessionCookie(
+      session.id,
+      session.expiresAt,
+   )
+
+   return sessionCookie
 }
 
 export const auth = cachedFunction(async () => {
@@ -85,11 +91,7 @@ export const auth = cachedFunction(async () => {
    const { session, user } = await lucia.validateSession(sessionId)
 
    if (session !== null && Date.now() >= session.expiresAt.getTime()) {
-      const session = createSession(user.id)
-      const sessionCookie = lucia.createSessionCookie(
-         session.id,
-         session.expiresAt,
-      )
+      const sessionCookie = await createSession(user.id)
       setCookie(sessionCookie.name, sessionCookie.value, {
          ...sessionCookie.npmCookieOptions(),
       })

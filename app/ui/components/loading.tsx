@@ -3,7 +3,7 @@ import type { ComponentProps } from "react"
 export function Loading({ className, ...props }: ComponentProps<"svg">) {
    return (
       <svg
-         className="size-[18px] animate-spin"
+         className="size-[17px] animate-spin"
          xmlns="http://www.w3.org/2000/svg"
          fill="none"
          viewBox="0 0 24 24"

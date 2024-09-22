@@ -1,12 +1,12 @@
 import { logInWithGithubFn } from "@/auth/functions"
-import { Button, buttonVariants } from "@/ui/components/button"
+import { Button } from "@/ui/components/button"
 import { cardVariants } from "@/ui/components/card"
 import { Icons } from "@/ui/components/icons"
 import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
 import { useMountError } from "@/user-interactions/use-mount-error"
 import { useMutation } from "@tanstack/react-query"
-import { Link, createFileRoute } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { useState } from "react"
 
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/login")({
 })
 
 function Component() {
-   useMountError("Authentication failed, please try again")
+   useMountError("Login failed, please try again")
    // const navigate = useNavigate()
    // const search = Route.useSearch()
    // const otpInputRef = useRef<HTMLInputElement>(null)
@@ -93,46 +93,36 @@ function Component() {
    //    }
    // }, [isSuccess])
 
-   const _logInWithGithubFn = useServerFn(logInWithGithubFn)
-
+   const _loginWithGithub = useServerFn(logInWithGithubFn)
    const loginWithGithub = useMutation({
-      mutationFn: () => _logInWithGithubFn(),
-      onSuccess: (res) => {
-         window.location.href = res.url
+      mutationFn: () => _loginWithGithub(),
+      onSuccess: (url) => {
+         window.location.href = url
       },
    })
 
    return (
       <>
-         <header className="absolute z-[2] flex justify-between p-5">
-            <Link
-               to="/"
-               className={buttonVariants({ variant: "outline", size: "sm" })}
-            >
-               {/* <ArrowLeftCircleIcon className="size-[18px]" /> */}
-               Homepage
-            </Link>
-         </header>
          <main className=" h-svh px-7">
             <div className="isolate grid h-full place-items-center md:min-h-[92svh] max-md:pt-8">
-               <div>
-                  <h1 className="mb-5 flex items-center justify-center gap-3 pb-2 text-center font-bold text-[1.5rem] leading-none">
+               <div className="w-full max-w-[320px]">
+                  <h1 className="mb-7 flex flex-col items-center justify-center gap-7 pb-2 text-center font-bold text-[1.5rem] leading-none">
                      <Icons.logo
                         id="login"
-                        className="size-8"
+                        className="size-10"
                      />
                      Log in to Cue
                   </h1>
                   <div
                      className={cn(
                         cardVariants(),
-                        "relative mx-auto flex w-full max-w-[385px] flex-col overflow-hidden rounded-2xl p-0 py-6 md:py-8",
+                        "pattern relative mx-auto flex flex-col overflow-hidden rounded-2xl p-0",
                      )}
                   >
                      <>
                         {isCodeSent ? (
                            <div
-                              className="flex h-full flex-col px-6 md:px-8"
+                              className="flex h-full flex-col p-6 md:p-9"
                               key={isCodeSent.toString()}
                            >
                               <p className="text-foreground/75 md:text-[1rem]">
@@ -235,7 +225,7 @@ function Component() {
                                     OR
                                  </span>
                               </div> */}
-                              <div className="px-6 md:px-8">
+                              <div className="p-6 md:p-9">
                                  <Button
                                     size={"lg"}
                                     className="w-full"
@@ -249,9 +239,11 @@ function Component() {
                                     loginWithGithub.isSuccess ? (
                                        <Loading />
                                     ) : (
-                                       <Icons.github className="-mt-px size-[18px]" />
+                                       <>
+                                          <Icons.github className="-mt-px size-[18px]" />
+                                          Continue with Github
+                                       </>
                                     )}
-                                    Continue with Github
                                  </Button>
                               </div>
                            </div>

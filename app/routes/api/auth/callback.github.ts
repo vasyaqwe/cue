@@ -1,36 +1,23 @@
-import { createSession, github, lucia } from "@/auth"
+import { createSession, github } from "@/auth"
 import { db } from "@/db"
 import { oauthAccounts, users } from "@/db/schema"
 import { createAPIFileRoute } from "@tanstack/start/api"
-import { OAuth2RequestError } from "arctic"
 import { and, eq } from "drizzle-orm"
 import { parseCookies } from "vinxi/http"
 
-type GitHubUser = {
-   id: number
-   email: string
-   name?: string
-   avatar_url?: string
-   login: string
-   verified: boolean
-}
-
 export const Route = createAPIFileRoute("/api/auth/callback/github")({
    GET: async ({ request }) => {
-      console.log("########## GitHub OAuth callback ##########")
       const url = new URL(request.url)
       const code = url.searchParams.get("code")
       const state = url.searchParams.get("state")
       const cookies = parseCookies()
       const storedState = cookies.github_oauth_state
+
       if (!code || !state || !storedState || state !== storedState) {
          console.error(
             `Invalid state or code in GitHub OAuth callback: ${JSON.stringify({ code, state, storedState })}`,
          )
-         console.error(`Cookies: ${JSON.stringify(cookies)}`)
-         return new Response(null, {
-            status: 400,
-         })
+         throw new Error("Error")
       }
 
       try {
@@ -40,8 +27,16 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
                Authorization: `Bearer ${tokens.accessToken}`,
             },
          })
-         const githubUserProfile = (await userProfile.json()) as GitHubUser
-         // console.log(`GitHub user: ${JSON.stringify(githubUserProfile)}`);
+
+         const githubUserProfile = (await userProfile.json()) as {
+            id: number
+            email: string
+            name?: string
+            avatar_url?: string
+            login: string
+            verified: boolean
+         }
+
          //  email can be null if user has made it private.
          const existingAccount = await db.query.oauthAccounts.findFirst({
             where: (fields) =>
@@ -50,12 +45,9 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
                   eq(fields.providerUserId, githubUserProfile.id.toString()),
                ),
          })
+
          if (existingAccount) {
-            const session = await createSession(existingAccount.userId)
-            const sessionCookie = lucia.createSessionCookie(
-               session.id,
-               session.expiresAt,
-            )
+            const sessionCookie = await createSession(existingAccount.userId)
             return new Response(null, {
                status: 302,
                headers: {
@@ -64,6 +56,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
                },
             })
          }
+
          if (!githubUserProfile.email) {
             const emailResponse = await fetch(
                "https://api.github.com/user/emails",
@@ -73,20 +66,27 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
                   },
                },
             )
-            const emails = await emailResponse.json()
-            // [{"email":"email1@test.com","primary":true,"verified":true,"visibility":"public"},{"email":"email2@test.com","primary":false,"verified":true,"visibility":null}]
+            const emails = (await emailResponse.json()) as {
+               email: string
+               primary: boolean
+               verified: boolean
+               visibility: string
+            }[]
+
             const primaryEmail = emails.find(
                (email: { primary: boolean }) => email.primary,
             )
+
             // TODO verify the email if not verified
             if (primaryEmail) {
                githubUserProfile.email = primaryEmail.email
                githubUserProfile.verified = primaryEmail.verified
-            } else if (emails.length > 0) {
+            } else if (emails.length > 0 && emails[0]?.email) {
                githubUserProfile.email = emails[0].email
                githubUserProfile.verified = emails[0].verified
             }
          }
+
          // If no existing account check if the a user with the email exists and link the account.
          const newUser = await db.transaction(async (tx) => {
             const [newUser] = await tx
@@ -99,27 +99,20 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
                .returning({
                   id: users.id,
                })
-            if (!newUser) {
-               return null
-            }
+
+            if (!newUser) throw new Error("Error")
+
             await tx.insert(oauthAccounts).values({
                providerId: "github",
                providerUserId: githubUserProfile.id.toString(),
-               userId: newUser?.id,
+               userId: newUser.id,
             })
             return newUser
          })
-         if (!newUser) {
-            console.error("Failed to create user account")
-            return new Response(null, {
-               status: 500,
-            })
-         }
-         const session = await createSession(newUser.id)
-         const sessionCookie = lucia.createSessionCookie(
-            session.id,
-            session.expiresAt,
-         )
+
+         if (!newUser) throw new Error("Error")
+
+         const sessionCookie = await createSession(newUser.id)
          return new Response(null, {
             status: 302,
             headers: {
@@ -128,17 +121,17 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
             },
          })
       } catch (e) {
-         console.log(e)
-         if (e instanceof OAuth2RequestError) {
-            // bad verification code, invalid credentials, etc
-            return new Response(null, {
-               status: 400,
-            })
-         }
+         console.error(e)
+
+         const redirectUrl = new URL("/login", request.url)
+         redirectUrl.searchParams.set("error", "true")
+
          return new Response(null, {
-            status: 500,
+            status: 302,
+            headers: {
+               Location: redirectUrl.toString(),
+            },
          })
       }
-      // TODO: Handle error page
    },
 })
