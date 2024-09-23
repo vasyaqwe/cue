@@ -1,4 +1,5 @@
-import { useEffect, useLayoutEffect, useRef } from "react"
+import { useIsomorphicLayoutEffect } from "@/user-interactions/use-isomorphic-layout-effect"
+import { useEffect, useRef } from "react"
 import type { RefObject } from "react"
 
 // MediaQueryList Event based useEventListener interface
@@ -91,7 +92,7 @@ function useEventListener<
    // Create a ref that stores handler
    const savedHandler = useRef(handler)
 
-   useLayoutEffect(() => {
+   useIsomorphicLayoutEffect(() => {
       savedHandler.current = handler
    }, [handler])
 

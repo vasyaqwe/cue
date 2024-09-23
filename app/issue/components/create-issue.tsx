@@ -80,7 +80,7 @@ export function CreateIssue() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className={
-                     "!border-none !outline-none !bg-transparent mt-1 h-8 p-0"
+                     "!border-none !outline-none !bg-transparent mt-1 h-8 p-0 text-[1rem]"
                   }
                />
 

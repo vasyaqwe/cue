@@ -4,6 +4,8 @@ import { createInsertSchema } from "drizzle-zod"
 import { z } from "zod"
 import { createTable, generateId, lifecycleDates } from "../utils"
 
+const issueStatuses = ["backlog", "todo", "in progress", "done"] as const
+
 export const issues = createTable(
    "issues",
    {
@@ -11,7 +13,7 @@ export const issues = createTable(
       title: text("title").notNull(),
       description: text("description").notNull().default(""),
       status: text("status", {
-         enum: ["backlog", "todo", "in progress", "done"],
+         enum: issueStatuses,
       }).notNull(),
       label: text("label", {
          enum: ["bug", "feature", "improvement"],
@@ -38,3 +40,5 @@ export const byIdIssueParams = z.object({
    organizationId: z.string(),
    issueId: z.string(),
 })
+
+export type IssueStatus = (typeof issueStatuses)[number]
