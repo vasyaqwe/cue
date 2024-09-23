@@ -1,6 +1,7 @@
 import type { Auth } from "@/auth"
 import { auth } from "@/auth"
 import { db } from "@/db"
+import { organizationMembers } from "@/db/schema"
 import { isNotFound, isRedirect } from "@tanstack/react-router"
 import { TRPCError, getTRPCErrorFromUnknown, initTRPC } from "@trpc/server"
 import type {
@@ -10,7 +11,9 @@ import type {
    MaybePromise,
    Simplify,
 } from "@trpc/server/unstable-core-do-not-import"
+import { and, eq } from "drizzle-orm"
 import superjson from "superjson"
+import { z } from "zod"
 
 export const createTRPCContext = async (opts: { auth: Auth }) => {
    return {
@@ -41,6 +44,34 @@ export const protectedProcedure = serverFnProcedure.use(({ ctx, next }) => {
       },
    })
 })
+export const organizationProtectedProcedure = serverFnProcedure
+   .input(
+      z.object({
+         organizationId: z.string(),
+      }),
+   )
+   .use(({ ctx, input, next }) => {
+      if (!ctx.auth?.session || !ctx.auth.user) {
+         throw new TRPCError({ code: "UNAUTHORIZED" })
+      }
+
+      const membership = ctx.db.query.organizationMembers.findFirst({
+         where: and(
+            eq(organizationMembers.organizationId, input.organizationId),
+            eq(organizationMembers.id, ctx.auth.user.id),
+         ),
+      })
+
+      if (!membership) throw new TRPCError({ code: "FORBIDDEN" })
+
+      return next({
+         ctx: {
+            session: ctx?.auth?.session,
+            user: ctx?.auth?.user,
+            membership,
+         },
+      })
+   })
 
 /**
  * Lib code

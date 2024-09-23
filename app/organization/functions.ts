@@ -16,6 +16,7 @@ export const memberships = createServerFn(
          with: {
             organization: {
                columns: {
+                  id: true,
                   slug: true,
                   name: true,
                },

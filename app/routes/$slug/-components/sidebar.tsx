@@ -1,6 +1,7 @@
 import * as auth from "@/auth/functions"
 import { useUser } from "@/auth/hooks"
-import { organizationMembershipsQuery } from "@/organization/queries"
+import { pushModal } from "@/modals"
+import { useOrganization } from "@/organization/hooks"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
 import { Button, buttonVariants } from "@/ui/components/button"
@@ -14,7 +15,7 @@ import { Icons } from "@/ui/components/icons"
 import { Logo } from "@/ui/components/logo"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { Link, useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 
@@ -22,9 +23,7 @@ export function Sidebar() {
    const { user } = useUser()
    const navigate = useNavigate()
    const { slug } = useParams({ from: "/$slug/_layout" })
-   const { data: memberships } = useSuspenseQuery(
-      organizationMembershipsQuery(),
-   )
+   const { organization } = useOrganization()
 
    const logoutFn = useServerFn(auth.logout)
    const logout = useMutation({
@@ -34,18 +33,15 @@ export function Sidebar() {
       },
    })
 
-   const membership = memberships.find((m) => m.organization.slug === slug)
-
    return (
       <div className="h-svh w-60 max-md:hidden">
          <aside className="fixed flex h-full w-60 flex-col border-border/60 border-r p-5 shadow-sm">
             <div className="mb-5 flex items-center gap-3">
                <Logo className="size-8" />{" "}
-               <p className="font-bold text-xl">
-                  {membership?.organization.name}
-               </p>
+               <p className="font-bold text-xl">{organization.name}</p>
             </div>
             <Button
+               onClick={() => pushModal("create-issue")}
                variant={"outline"}
                className="mb-5 w-full font-semibold text-[0.95rem]"
             >

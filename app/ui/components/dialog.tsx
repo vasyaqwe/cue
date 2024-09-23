@@ -1,3 +1,5 @@
+import { buttonVariants } from "@/ui/components/button"
+import { Icons } from "@/ui/components/icons"
 import { cn } from "@/ui/utils"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { type VariantProps, cva } from "class-variance-authority"
@@ -13,8 +15,8 @@ const dialogVariants = cva(
    {
       variants: {
          variant: {
-            default: `max-w-lg data-[state=open]:slide-in-from-bottom-28 shadow-lg`,
-            alert: "data-[state=open]:slide-in-from-bottom-28 max-w-md shadow-lg",
+            default: `max-w-lg data-[state=open]:slide-in-from-bottom-14 shadow-lg`,
+            alert: "data-[state=open]:slide-in-from-bottom-14 max-w-md shadow-lg",
             overlay: "bg-transparent",
             command:
                "data-[state=closed]:!animate-none top-[20px] w-[90%] max-w-[430px] translate-y-0 animate-none bg-trasparent md:top-[75px]",
@@ -46,9 +48,6 @@ function DialogContent({
                        ? "bg-background/75"
                        : ""
                }
-               style={{
-                  animationDuration: "250ms",
-               }}
             />
          )}
          <DialogPrimitive.Content
@@ -76,20 +75,17 @@ function DialogContent({
                   className,
                }),
             )}
-            style={{
-               animationTimingFunction: `var(--ease)`,
-               animationDuration: "750ms",
-               ...props.style,
-            }}
             {...props}
          >
             {children}
             {(variant === "default" || !variant) && (
-               <DialogPrimitive.Close className="absolute top-3.5 right-3.5 grid size-7 place-content-center rounded-full bg-muted text-foreground/70 ring-offset-background transition-all disabled:pointer-events-none active:scale-95 hover:bg-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2">
-                  {/* <XMarkIcon
-               className="size-4"
-               strokeWidth={3}
-            /> */}
+               <DialogPrimitive.Close
+                  className={cn(
+                     buttonVariants({ variant: "ghost", size: "icon" }),
+                     "absolute top-2.5 right-2.5 size-8",
+                  )}
+               >
+                  <Icons.XMark className="size-5" />
                   <span className="sr-only">Close</span>
                </DialogPrimitive.Close>
             )}

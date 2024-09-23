@@ -12,7 +12,7 @@ function Toaster(props: ComponentProps<typeof Sonner>) {
                   viewBox="0 0 18 18"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                  className="-mt-px text-[#3dd68cdd]"
+                  className="-mt-px text-[#39c07fdd]"
                >
                   <path
                      fillRule="evenodd"

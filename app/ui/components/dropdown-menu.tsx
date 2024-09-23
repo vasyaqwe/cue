@@ -48,7 +48,7 @@ function DropdownMenuItem({
    return (
       <DropdownMenuPrimitive.Item
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-2 rounded-lg px-2.5 py-1.5 outline-none [&>svg]:size-5 data-[disabled]:cursor-not-allowed focus:bg-border/60 data-[disabled]:opacity-75",
+            "relative flex cursor-pointer select-none items-center gap-2 rounded-lg px-2.5 py-1.5 outline-none [&>svg]:size-5 data-[disabled]:cursor-not-allowed focus:bg-border/50 data-[disabled]:opacity-75",
             inset && "pl-8",
             destructive
                ? "focus:bg-destructive/95 focus:[--popover-icon:hsl(var(--popover-foreground))]"

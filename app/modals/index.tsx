@@ -1,4 +1,8 @@
-import { Content, ResponsiveModalWrapper } from "@/modals/dynamic"
+import { CreateIssue } from "@/issue/components/create-issue"
+import {
+   ResponsiveModalContent,
+   ResponsiveModalWrapper,
+} from "@/modals/dynamic"
 import { createPushModal } from "@/modals/factory"
 
 export const {
@@ -11,20 +15,21 @@ export const {
    ModalProvider,
 } = createPushModal({
    modals: {
-      "example-modal": {
+      "create-issue": {
          Wrapper: ResponsiveModalWrapper,
-         Component: ExampleModal,
+         Component: CreateIssue,
       },
    },
 })
 
+// biome-ignore lint/correctness/noUnusedVariables: <explanation>
 function ExampleModal() {
    return (
-      <Content>
+      <ResponsiveModalContent>
          <div className="p-4">
             Lorem ipsum dsolor sit, amet consectetur adipisicing elit. Dolores,
             asperiores.
          </div>
-      </Content>
+      </ResponsiveModalContent>
    )
 }

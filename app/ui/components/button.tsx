@@ -13,15 +13,15 @@ const buttonVariants = cva(
                       text-background/95 hover:enabled:bg-primary disabled:bg-background disabled:text-foreground disabled:border-foreground/20 
                       active:enabled:shadow-md hover:enabled:text-primary-foreground`,
             outline: `bg-popover !shadow-button border border-transparent text-foreground data-[state=open]:bg-border/[0.025] hover:enabled:bg-border/[0.025]`,
-            ghost: "border border-transparent shadow-none aria-[current=page]:bg-muted hover:enabled:bg-muted/70",
+            ghost: "border border-transparent shadow-none aria-[current=page]:bg-muted hover:enabled:bg-border/50",
             destructive: `bg-destructive/90 hover:enabled:bg-destructive text-destructive-foreground/90 hover:enabled:text-destructive-foreground`,
             link: "!h-auto !rounded-none !p-0 text-foreground/70 underline transition-none hover:enabled:text-foreground",
          },
          size: {
-            default: "h-8 rounded-lg px-3",
+            default: "h-8 rounded-lg px-3 text-[0.94rem]",
             sm: "h-7 rounded-[8px] px-2.5",
-            lg: "h-9 gap-2 rounded-[10px] px-3.5 text-[0.95rem]",
-            icon: "size-9 gap-0 rounded-lg",
+            lg: "h-9 gap-2 rounded-[10px] px-3.5",
+            icon: "size-8 gap-0 rounded-lg",
          },
       },
       defaultVariants: {
