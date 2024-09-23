@@ -9,6 +9,7 @@ export const issues = createTable(
    {
       id: generateId("issue"),
       title: text("title").notNull(),
+      description: text("description").notNull().default(""),
       status: text("status", {
          enum: ["backlog", "todo", "in progress", "done"],
       }).notNull(),

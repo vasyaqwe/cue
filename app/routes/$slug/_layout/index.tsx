@@ -48,7 +48,7 @@ function Component() {
                Object.entries(groupedIssues).map(([status, issues]) => {
                   return (
                      <div key={status}>
-                        <div className="border-border/75 border-y bg-border/30 py-2 first:border-t-transparent">
+                        <div className="border-border/75 border-y bg-border/25 py-2 first:border-t-transparent">
                            <div className="px-8">
                               <p className="font-semibold capitalize">
                                  {status}{" "}
@@ -62,12 +62,12 @@ function Component() {
                            {issues.map((issue) => (
                               <div
                                  key={issue.id}
-                                 className="flex gap-4 px-8 py-2 hover:bg-border/30"
+                                 className="flex gap-4 px-8 hover:bg-border/25"
                               >
                                  <Link
                                     to={issueIdRoute.to}
                                     params={{ issueId: issue.id, slug }}
-                                    className="flex gap-4"
+                                    className="flex w-full gap-4 py-2"
                                  >
                                     <p className="line-clamp-1">
                                        {issue.title}
