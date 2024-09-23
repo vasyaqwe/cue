@@ -76,7 +76,7 @@ export function CreateIssue() {
                <Input
                   name="description"
                   id="description"
-                  placeholder="Description"
+                  placeholder="Add description.."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className={

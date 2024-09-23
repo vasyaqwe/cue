@@ -49,7 +49,6 @@ function Component() {
          </Header>
          <main className="mx-auto max-w-6xl pt-10">
             <Input
-               autoComplete="off"
                autoFocus
                defaultValue={issue.title}
                name="title"
@@ -58,6 +57,16 @@ function Component() {
                required
                className={
                   "!border-none !outline-none !bg-transparent h-8 p-0 font-extrabold text-2xl"
+               }
+            />
+            <Input
+               defaultValue={issue.description}
+               name="description"
+               id="description"
+               placeholder="Add description.."
+               required
+               className={
+                  "!border-none !outline-none !bg-transparent mt-2 h-8 p-0 text-lg"
                }
             />
          </main>

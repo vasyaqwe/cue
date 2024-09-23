@@ -1,15 +1,26 @@
 import { useAuth } from "@/auth/hooks"
-import type { IssueStatus } from "@/db/schema"
+import { env } from "@/env"
+import { StatusIcon } from "@/issue/components/icons"
 import { issueListQuery } from "@/issue/queries"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Route as issueIdRoute } from "@/routes/$slug/_layout/issue/$issueId"
 import { Badge } from "@/ui/components/badge"
+import {
+   ContextMenu,
+   ContextMenuContent,
+   ContextMenuItem,
+   ContextMenuSeparator,
+   ContextMenuSub,
+   ContextMenuSubContent,
+   ContextMenuSubTrigger,
+   ContextMenuTrigger,
+} from "@/ui/components/context-menu"
+import { Icons } from "@/ui/components/icons"
 import { Loading } from "@/ui/components/loading"
-import { cn } from "@/ui/utils"
+import { useCopyToClipboard } from "@/user-interactions/use-copy-to-clipboard"
 import { formatDate } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { Link, createFileRoute, useParams } from "@tanstack/react-router"
-import type { ComponentProps } from "react"
 import * as R from "remeda"
 
 export const Route = createFileRoute("/$slug/_layout/")({
@@ -32,90 +43,11 @@ export const Route = createFileRoute("/$slug/_layout/")({
    ),
 })
 
-const StatusIcon = ({
-   status,
-   className,
-   ...props
-}: { status: IssueStatus } & ComponentProps<"svg">) => {
-   const iconProps = {
-      backlog: {
-         color: "var(--color-muted)",
-         outerDasharray: "1.4 1.74",
-         outerDashoffset: "0.65",
-         innerRadius: "2",
-         innerDasharray: "0 100",
-      },
-      todo: {
-         color: "var(--color-foreground)",
-         outerDasharray: "3.14 0",
-         outerDashoffset: "-0.7",
-         innerRadius: "2",
-         innerDasharray: "0 100",
-      },
-      "in progress": {
-         color: "#FFD60A",
-         outerDasharray: "3.14 0",
-         outerDashoffset: "-0.7",
-         innerRadius: "2",
-         innerDasharray: "6.2517693806436885 100",
-      },
-      done: {
-         color: "var(--color-brand)",
-         outerDasharray: "3.14 0",
-         outerDashoffset: "-0.7",
-         innerRadius: "3",
-         innerDasharray: "18.84955592153876 100",
-      },
-   }
-
-   const currentIcon = iconProps[status]
-
-   return (
-      <svg
-         viewBox="0 0 14 14"
-         fill="none"
-         className={cn("size-[18px] transition-all duration-300", className)}
-         {...props}
-      >
-         <circle
-            cx="7"
-            cy="7"
-            r="6"
-            fill="none"
-            stroke={currentIcon.color}
-            strokeWidth="2"
-            strokeDasharray={currentIcon.outerDasharray}
-            strokeDashoffset={currentIcon.outerDashoffset}
-            className="transition-all duration-300"
-         />
-         <circle
-            className="progress transition-all duration-300"
-            cx="7"
-            cy="7"
-            r={currentIcon.innerRadius}
-            fill="none"
-            stroke={currentIcon.color}
-            strokeWidth={status === "done" ? "6" : "4"}
-            strokeDasharray={currentIcon.innerDasharray}
-            strokeDashoffset="0"
-            transform="rotate(-90 7 7)"
-         />
-         {status === "done" && (
-            <path
-               className="icon transition-all duration-300"
-               stroke="none"
-               fill={currentIcon.color}
-               d="M10.951 4.24896C11.283 4.58091 11.283 5.11909 10.951 5.45104L5.95104 10.451C5.61909 10.783 5.0809 10.783 4.74896 10.451L2.74896 8.45104C2.41701 8.11909 2.41701 7.5809 2.74896 7.24896C3.0809 6.91701 3.61909 6.91701 3.95104 7.24896L5.35 8.64792L9.74896 4.24896C10.0809 3.91701 10.6191 3.91701 10.951 4.24896Z"
-            />
-         )}
-      </svg>
-   )
-}
-
 function Component() {
    const { organizationId } = useAuth()
    const { data: issues } = useSuspenseQuery(issueListQuery({ organizationId }))
    const { slug } = useParams({ from: "/$slug/_layout" })
+const {copy} = useCopyToClipboard()
 
    const groupedIssues = R.groupBy(issues, R.prop("status"))
 
@@ -135,7 +67,7 @@ function Component() {
                            <div className="px-8">
                               <p className="font-semibold capitalize">
                                  <StatusIcon
-                                    className="-mt-[2px] mr-2 inline-block"
+                                    className="-mt-1 mr-2 inline-block"
                                     status={status as never}
                                  />
                                  {status}{" "}
@@ -149,32 +81,110 @@ function Component() {
                            {issues.map((issue) => (
                               <div
                                  key={issue.id}
-                                 className="flex gap-4 px-8 hover:bg-border/25"
+                                 className="flex gap-4 px-8 has-data-[state=open]:bg-border/25 hover:bg-border/25"
                               >
-                                 <Link
-                                    to={issueIdRoute.to}
-                                    params={{ issueId: issue.id, slug }}
-                                    className="flex w-full gap-4 py-2"
-                                 >
-                                    <p className="line-clamp-1">
-                                       {issue.title}
-                                    </p>
-
-                                    <div className="ml-auto">
-                                       <Badge
-                                          variant={issue.label}
-                                          className="mr-4 capitalize"
+                                 <ContextMenu>
+                                    <ContextMenuTrigger asChild>
+                                       <Link
+                                          to={issueIdRoute.to}
+                                          params={{ issueId: issue.id, slug }}
+                                          className="flex w-full gap-4 py-2 "
                                        >
-                                          {issue.label}
-                                       </Badge>
-                                       <span className=" text-sm opacity-75 max-md:hidden">
-                                          {formatDate(
-                                             new Date(issue.createdAt as Date),
-                                             { month: "short", day: "numeric" },
-                                          )}
-                                       </span>
-                                    </div>
-                                 </Link>
+                                          <p className="line-clamp-1">
+                                             {issue.title}
+                                          </p>
+
+                                          <div className="ml-auto">
+                                             <Badge
+                                                variant={issue.label}
+                                                className="mr-4 capitalize"
+                                             >
+                                                {issue.label}
+                                             </Badge>
+                                             <span className=" text-sm opacity-75 max-md:hidden">
+                                                {formatDate(
+                                                   new Date(
+                                                      issue.createdAt as Date,
+                                                   ),
+                                                   {
+                                                      month: "short",
+                                                      day: "numeric",
+                                                   },
+                                                )}
+                                             </span>
+                                          </div>
+                                       </Link>
+                                    </ContextMenuTrigger>
+                                    <ContextMenuContent>
+                                       <ContextMenuSub>
+                                          <ContextMenuSubTrigger>
+                                          <svg
+                                                   viewBox="0 0 24 24"
+                                                   fill="none"
+                                                   xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                   <path
+                                                      d="M16.9018 16.9018C17.1375 16.8669 17.3474 16.8195 17.5451 16.7553C19.0673 16.2607 20.2607 15.0673 20.7553 13.5451C21 12.7919 21 11.8613 21 10C21 8.13872 21 7.20808 20.7553 6.45492C20.2607 4.93273 19.0673 3.73931 17.5451 3.24472C16.7919 3 15.8613 3 14 3C12.1387 3 11.2081 3 10.4549 3.24472C8.93273 3.73931 7.73931 4.93273 7.24472 6.45492C7.18049 6.65258 7.13312 6.86246 7.09819 7.09819M16.9018 16.9018C17 16.2393 17 15.3728 17 14C17 12.1387 17 11.2081 16.7553 10.4549C16.2607 8.93273 15.0673 7.73931 13.5451 7.24472C12.7919 7 11.8613 7 10 7C8.6272 7 7.76066 7 7.09819 7.09819M16.9018 16.9018C16.8669 17.1375 16.8195 17.3474 16.7553 17.5451C16.2607 19.0673 15.0673 20.2607 13.5451 20.7553C12.7919 21 11.8613 21 10 21C8.13872 21 7.20808 21 6.45492 20.7553C4.93273 20.2607 3.73931 19.0673 3.24472 17.5451C3 16.7919 3 15.8613 3 14C3 12.1387 3 11.2081 3.24472 10.4549C3.73931 8.93273 4.93273 7.73931 6.45492 7.24472C6.65258 7.18049 6.86246 7.13312 7.09819 7.09819"
+                                                      stroke="currentColor"
+                                                      strokeWidth="2"
+                                                      strokeLinecap="round"
+                                                      strokeLinejoin="round"
+                                                   />
+                                                </svg>
+                                             Copy
+                                          </ContextMenuSubTrigger>
+                                          <ContextMenuSubContent>
+                                             <ContextMenuItem onSelect={() => copy(issue.title)}>
+                                             <svg
+                                                   viewBox="0 0 24 24"
+                                                   fill="none"
+                                                   xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                   <path
+                                                      opacity="0.15"
+                                                      d="M3 14C3 12.1387 3 11.2081 3.24472 10.4549C3.73931 8.93273 4.93273 7.73931 6.45492 7.24472C6.65258 7.18049 6.86246 7.13312 7.09819 7.09819C7.76066 7 8.6272 7 10 7C11.8613 7 12.7919 7 13.5451 7.24472C15.0673 7.73931 16.2607 8.93273 16.7553 10.4549C17 11.2081 17 12.1387 17 14C17 15.3728 17 16.2393 16.9018 16.9018C16.8669 17.1375 16.8195 17.3474 16.7553 17.5451C16.2607 19.0673 15.0673 20.2607 13.5451 20.7553C12.7919 21 11.8613 21 10 21C8.13872 21 7.20808 21 6.45492 20.7553C4.93273 20.2607 3.73931 19.0673 3.24472 17.5451C3 16.7919 3 15.8613 3 14Z"
+                                                      fill="currentColor"
+                                                   />
+                                                   <path
+                                                      d="M16.9018 16.9018C17.1375 16.8669 17.3474 16.8195 17.5451 16.7553C19.0673 16.2607 20.2607 15.0673 20.7553 13.5451C21 12.7919 21 11.8613 21 10C21 8.13872 21 7.20808 20.7553 6.45492C20.2607 4.93273 19.0673 3.73931 17.5451 3.24472C16.7919 3 15.8613 3 14 3C12.1387 3 11.2081 3 10.4549 3.24472C8.93273 3.73931 7.73931 4.93273 7.24472 6.45492C7.18049 6.65258 7.13312 6.86246 7.09819 7.09819M16.9018 16.9018C17 16.2393 17 15.3728 17 14C17 12.1387 17 11.2081 16.7553 10.4549C16.2607 8.93273 15.0673 7.73931 13.5451 7.24472C12.7919 7 11.8613 7 10 7C8.6272 7 7.76066 7 7.09819 7.09819M16.9018 16.9018C16.8669 17.1375 16.8195 17.3474 16.7553 17.5451C16.2607 19.0673 15.0673 20.2607 13.5451 20.7553C12.7919 21 11.8613 21 10 21C8.13872 21 7.20808 21 6.45492 20.7553C4.93273 20.2607 3.73931 19.0673 3.24472 17.5451C3 16.7919 3 15.8613 3 14C3 12.1387 3 11.2081 3.24472 10.4549C3.73931 8.93273 4.93273 7.73931 6.45492 7.24472C6.65258 7.18049 6.86246 7.13312 7.09819 7.09819"
+                                                      stroke="currentColor"
+                                                      strokeWidth="2"
+                                                      strokeLinecap="round"
+                                                      strokeLinejoin="round"
+                                                   />
+                                                </svg>
+                                                Copy title
+                                             </ContextMenuItem>
+                                             <ContextMenuItem onSelect={() => copy(`${env.VITE_BASE_URL}/${slug}/issue/${issue.id}`)}>
+                                                <svg
+                                                   viewBox="0 0 24 24"
+                                                   fill="none"
+                                                   xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                   <path
+                                                      opacity="0.15"
+                                                      d="M3 14C3 12.1387 3 11.2081 3.24472 10.4549C3.73931 8.93273 4.93273 7.73931 6.45492 7.24472C6.65258 7.18049 6.86246 7.13312 7.09819 7.09819C7.76066 7 8.6272 7 10 7C11.8613 7 12.7919 7 13.5451 7.24472C15.0673 7.73931 16.2607 8.93273 16.7553 10.4549C17 11.2081 17 12.1387 17 14C17 15.3728 17 16.2393 16.9018 16.9018C16.8669 17.1375 16.8195 17.3474 16.7553 17.5451C16.2607 19.0673 15.0673 20.2607 13.5451 20.7553C12.7919 21 11.8613 21 10 21C8.13872 21 7.20808 21 6.45492 20.7553C4.93273 20.2607 3.73931 19.0673 3.24472 17.5451C3 16.7919 3 15.8613 3 14Z"
+                                                      fill="currentColor"
+                                                   />
+                                                   <path
+                                                      d="M16.9018 16.9018C17.1375 16.8669 17.3474 16.8195 17.5451 16.7553C19.0673 16.2607 20.2607 15.0673 20.7553 13.5451C21 12.7919 21 11.8613 21 10C21 8.13872 21 7.20808 20.7553 6.45492C20.2607 4.93273 19.0673 3.73931 17.5451 3.24472C16.7919 3 15.8613 3 14 3C12.1387 3 11.2081 3 10.4549 3.24472C8.93273 3.73931 7.73931 4.93273 7.24472 6.45492C7.18049 6.65258 7.13312 6.86246 7.09819 7.09819M16.9018 16.9018C17 16.2393 17 15.3728 17 14C17 12.1387 17 11.2081 16.7553 10.4549C16.2607 8.93273 15.0673 7.73931 13.5451 7.24472C12.7919 7 11.8613 7 10 7C8.6272 7 7.76066 7 7.09819 7.09819M16.9018 16.9018C16.8669 17.1375 16.8195 17.3474 16.7553 17.5451C16.2607 19.0673 15.0673 20.2607 13.5451 20.7553C12.7919 21 11.8613 21 10 21C8.13872 21 7.20808 21 6.45492 20.7553C4.93273 20.2607 3.73931 19.0673 3.24472 17.5451C3 16.7919 3 15.8613 3 14C3 12.1387 3 11.2081 3.24472 10.4549C3.73931 8.93273 4.93273 7.73931 6.45492 7.24472C6.65258 7.18049 6.86246 7.13312 7.09819 7.09819"
+                                                      stroke="currentColor"
+                                                      strokeWidth="2"
+                                                      strokeLinecap="round"
+                                                      strokeLinejoin="round"
+                                                   />
+                                                </svg>
+                                                Copy URL
+                                             </ContextMenuItem>
+                                          </ContextMenuSubContent>
+                                       </ContextMenuSub>
+                                       <ContextMenuSeparator />
+                                       <ContextMenuItem destructive>
+                                          <Icons.trash />
+                                          Delete
+                                       </ContextMenuItem>
+                                    </ContextMenuContent>
+                                 </ContextMenu>
                               </div>
                            ))}
                         </div>
