@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/start"
 import { generateState } from "arctic"
 import { parseCookies, setCookie, setHeader } from "vinxi/http"
 
-export const authLoaderFn = createServerFn("GET", async () => {
+export const me = createServerFn("GET", async () => {
    return await auth()
 })
 

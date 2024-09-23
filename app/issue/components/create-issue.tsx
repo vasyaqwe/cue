@@ -1,7 +1,7 @@
+import { useAuth } from "@/auth/hooks"
 import { issueListQuery } from "@/issue/queries"
 import { popModal } from "@/modals"
 import { ResponsiveModalContent } from "@/modals/dynamic"
-import { useOrganization } from "@/organization/hooks"
 import { Button } from "@/ui/components/button"
 import { DialogHeader, DialogTitle } from "@/ui/components/dialog"
 import { Input } from "@/ui/components/input"
@@ -13,15 +13,13 @@ import * as issue from "../functions"
 
 export function CreateIssue() {
    const queryClient = useQueryClient()
-   const { organization } = useOrganization()
+   const { organizationId } = useAuth()
 
    const insertFn = useServerFn(issue.insert)
    const insert = useMutation({
       mutationFn: insertFn,
       onSuccess: () => {
-         queryClient.invalidateQueries(
-            issueListQuery({ organizationId: organization.id }),
-         )
+         queryClient.invalidateQueries(issueListQuery({ organizationId }))
          popModal("create-issue")
          toast.success("Issue created", {
             action: {
@@ -49,7 +47,7 @@ export function CreateIssue() {
 
                   insert.mutate({
                      label: "bug",
-                     organizationId: organization.id,
+                     organizationId,
                      status: "todo",
                      title: formData.title as string,
                   })

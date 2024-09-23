@@ -8,7 +8,6 @@ import {
    users,
 } from "@/db/schema"
 import { env } from "@/env"
-import { cachedFunction } from "@/lib/cache"
 import { GitHub } from "arctic"
 import { eq } from "drizzle-orm"
 import type { DatabaseAdapter, SessionAndUser } from "lucia"
@@ -78,7 +77,7 @@ export const createSession = async (userId: string) => {
    return sessionCookie
 }
 
-export const auth = cachedFunction(async () => {
+export const auth = async () => {
    const sessionId = parseCookies()[lucia.sessionCookieName]
 
    if (!sessionId) {
@@ -108,7 +107,7 @@ export const auth = cachedFunction(async () => {
       user,
       session,
    }
-})
+}
 
 export type Auth = Awaited<ReturnType<typeof auth>>
 

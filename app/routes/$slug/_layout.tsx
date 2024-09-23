@@ -1,4 +1,4 @@
-import { authLoaderFn } from "@/auth/functions"
+import { meQuery } from "@/auth/queries"
 import { ModalProvider } from "@/modals"
 import { CreateOrganization } from "@/organization/components/create-organization"
 import { organizationMembershipsQuery } from "@/organization/queries"
@@ -15,29 +15,22 @@ import { Sidebar } from "./-components/sidebar"
 
 export const Route = createFileRoute("/$slug/_layout")({
    component: Component,
-   beforeLoad: async () => {
-      const session = await authLoaderFn()
+   beforeLoad: async ({ context, params }) => {
+      const session = await context.queryClient.ensureQueryData(meQuery())
       if (!session?.session || !session.user) throw redirect({ to: "/login" })
 
-      return {
-         user: session.user,
-      }
-   },
-   loader: async ({ context, params }) => {
       const memberships = await context.queryClient.ensureQueryData(
          organizationMembershipsQuery(),
       )
 
-      if ("slug" in params) {
-         if (!memberships.some((m) => m.organization.slug === params.slug))
-            throw notFound()
+      const organization = memberships.find(
+         (m) => m.organization.slug === params.slug,
+      )?.organization
 
-         return
-      }
+      if (!organization) throw notFound()
 
-      const firstSlug = memberships[0]?.organization.slug
-      if (firstSlug) {
-         throw redirect({ to: `/${firstSlug}` })
+      return {
+         organizationId: organization.id,
       }
    },
    pendingComponent: () => (

@@ -1,6 +1,7 @@
 import "@/styles/app.css"
 import appCss from "@/styles/app.css?url"
 import { Toaster } from "@/ui/components/toast"
+import { TooltipProvider } from "@/ui/components/tooltip"
 import { cn } from "@/ui/utils"
 import * as Portal from "@radix-ui/react-portal"
 import type { QueryClient } from "@tanstack/react-query"
@@ -107,10 +108,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   "min-h-screen bg-background text-base text-foreground tracking-[0.02em] antialiased",
                )}
             >
-               {children}
-               <Portal.Root>
-                  <Toaster />
-               </Portal.Root>
+               <TooltipProvider delayDuration={300}>
+                  {children}
+                  <Portal.Root>
+                     <Toaster />
+                  </Portal.Root>
+               </TooltipProvider>
             </div>
             <BreakpointIndicator />
             <ScrollRestoration />

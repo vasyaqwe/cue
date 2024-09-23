@@ -1,3 +1,5 @@
+import { buttonVariants } from "@/ui/components/button"
+import { cn } from "@/ui/utils"
 import type { ComponentProps } from "react"
 import { Toaster as Sonner, toast } from "sonner"
 
@@ -60,8 +62,14 @@ function Toaster(props: ComponentProps<typeof Sonner>) {
             style: {
                translate: "-50% 0",
             },
+            classNames: {
+               actionButton: cn(
+                  buttonVariants({ variant: "outline" }),
+                  "!-m-2.5 !ml-2.5 !h-[32px] !rounded-full !transition-all hover:!shadow-lg !bg-foreground !px-3 !text-white !text-sm !font-medium before:hidden before:border-foreground/[0.07] before:from-white/[0.1]",
+               ),
+            },
             className:
-               "!mx-auto !border-border !shadow-lg !font-primary !py-4 !select-none !w-max !max-w-[--width] !left-1/2 max-md:mb-[calc(env(safe-area-inset-bottom)+3.25rem)] !bg-popover !right-auto !text-base !justify-center !pointer-events-auto !rounded-full",
+               "!mx-auto !border-border !shadow-lg !font-primary !py-3.5 !select-none !w-max !max-w-[--width] !left-1/2 max-md:mb-[calc(env(safe-area-inset-bottom)+3.25rem)] !bg-popover !right-auto !text-base !justify-center !pointer-events-auto !rounded-full",
          }}
          expand
          position="bottom-center"

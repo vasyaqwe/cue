@@ -1,7 +1,6 @@
 import * as auth from "@/auth/functions"
-import { useUser } from "@/auth/hooks"
+import { useAuth } from "@/auth/hooks"
 import { pushModal } from "@/modals"
-import { useOrganization } from "@/organization/hooks"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
 import { Button, buttonVariants } from "@/ui/components/button"
@@ -20,10 +19,10 @@ import { Link, useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 
 export function Sidebar() {
-   const { user } = useUser()
+   const { user } = useAuth()
    const navigate = useNavigate()
    const { slug } = useParams({ from: "/$slug/_layout" })
-   const { organization } = useOrganization()
+   const { organization } = useAuth()
 
    const logoutFn = useServerFn(auth.logout)
    const logout = useMutation({
@@ -71,10 +70,10 @@ export function Sidebar() {
                   <li>
                      <Link
                         params={{ slug }}
-                        activeOptions={{ exact: true }}
+                        activeOptions={{ exact: true, includeSearch: false }}
                         activeProps={{
                            className:
-                              "!border-border/75 bg-border/30 opacity-100",
+                              "!border-border/80 bg-border/30 opacity-100",
                            "aria-current": "page",
                         }}
                         to={homeRoute.to}
@@ -91,7 +90,7 @@ export function Sidebar() {
                         params={{ slug }}
                         activeProps={{
                            className:
-                              "!border-border/75 bg-border/30 opacity-100",
+                              "!border-border/80 bg-border/30 opacity-100",
                            "aria-current": "page",
                         }}
                         to={settingsRoute.to}
