@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
+import { Route as IndexImport } from './routes/index'
 import { Route as SlugLayoutImport } from './routes/$slug/_layout'
 import { Route as SlugLayoutIndexImport } from './routes/$slug/_layout/index'
 import { Route as SlugLayoutSettingsImport } from './routes/$slug/_layout/settings'
@@ -31,6 +32,11 @@ const SlugRoute = SlugImport.update({
 
 const LoginRoute = LoginImport.update({
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRoute = IndexImport.update({
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,6 +59,13 @@ const SlugLayoutSettingsRoute = SlugLayoutSettingsImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -118,6 +131,7 @@ const SlugRouteChildren: SlugRouteChildren = {
 const SlugRouteWithChildren = SlugRoute._addFileChildren(SlugRouteChildren)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$slug': typeof SlugLayoutRouteWithChildren
   '/$slug/settings': typeof SlugLayoutSettingsRoute
@@ -125,6 +139,7 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$slug': typeof SlugLayoutIndexRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
@@ -132,6 +147,7 @@ export interface FileRoutesByTo {
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$slug': typeof SlugRouteWithChildren
   '/$slug/_layout': typeof SlugLayoutRouteWithChildren
@@ -141,11 +157,12 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/$slug' | '/$slug/settings' | '/$slug/'
+  fullPaths: '/' | '/login' | '/$slug' | '/$slug/settings' | '/$slug/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/$slug' | '/$slug/settings'
+  to: '/' | '/login' | '/$slug' | '/$slug/settings'
   id:
     | '__root__'
+    | '/'
     | '/login'
     | '/$slug'
     | '/$slug/_layout'
@@ -155,11 +172,13 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   SlugRoute: typeof SlugRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   SlugRoute: SlugRouteWithChildren,
 }
@@ -176,9 +195,13 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
+        "/",
         "/login",
         "/$slug"
       ]
+    },
+    "/": {
+      "filePath": "index.tsx"
     },
     "/login": {
       "filePath": "login.tsx"

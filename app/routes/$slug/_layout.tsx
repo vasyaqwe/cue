@@ -2,7 +2,6 @@ import { authLoaderFn } from "@/auth/functions"
 import { ModalProvider } from "@/modals"
 import { CreateOrganization } from "@/organization/components/create-organization"
 import { organizationMembershipsQuery } from "@/organization/queries"
-import { Sidebar } from "@/routes/-components/sidebar"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
 import { useSuspenseQuery } from "@tanstack/react-query"
@@ -12,6 +11,7 @@ import {
    notFound,
    redirect,
 } from "@tanstack/react-router"
+import { Sidebar } from "./-components/sidebar"
 
 export const Route = createFileRoute("/$slug/_layout")({
    component: Component,
@@ -35,8 +35,9 @@ export const Route = createFileRoute("/$slug/_layout")({
          return
       }
 
-      if (memberships.length > 0) {
-         throw redirect({ to: `/${memberships[0]?.organization.slug}` })
+      const firstSlug = memberships[0]?.organization.slug
+      if (firstSlug) {
+         throw redirect({ to: `/${firstSlug}` })
       }
    },
    pendingComponent: () => (

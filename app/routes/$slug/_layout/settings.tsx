@@ -1,4 +1,4 @@
-import { Header, HeaderTitle } from "@/routes/-components/header"
+import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/$slug/_layout/settings")({
