@@ -1,8 +1,8 @@
 import * as auth from "@/auth/functions"
 import { useUser } from "@/auth/hooks"
 import { organizationMembershipsQuery } from "@/organization/queries"
-import { Route as homeRoute } from "@/routes/_layout/$slug"
-import { Route as settingsRoute } from "@/routes/_layout/$slug/settings"
+import { Route as homeRoute } from "@/routes/$slug/_layout"
+import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
    DropdownMenu,
@@ -21,7 +21,7 @@ import { useServerFn } from "@tanstack/start"
 export function Sidebar() {
    const { user } = useUser()
    const navigate = useNavigate()
-   const { slug } = useParams({ strict: false })
+   const { slug } = useParams({ from: "/$slug/_layout" })
    const { data: memberships } = useSuspenseQuery(
       organizationMembershipsQuery(),
    )
@@ -33,8 +33,6 @@ export function Sidebar() {
          navigate({ to: "/login" })
       },
    })
-
-   if (!slug) return null
 
    const membership = memberships.find((m) => m.organization.slug === slug)
 

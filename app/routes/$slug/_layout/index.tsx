@@ -1,7 +1,7 @@
 import { Header, HeaderTitle } from "@/routes/-components/header"
 import { createFileRoute } from "@tanstack/react-router"
 
-export const Route = createFileRoute("/_layout/$slug/")({
+export const Route = createFileRoute("/$slug/_layout/")({
    component: Component,
 })
 

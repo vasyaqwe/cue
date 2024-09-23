@@ -1,4 +1,4 @@
-import { Route as homeRoute } from "@/routes/_layout/$slug"
+import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Button } from "@/ui/components/button"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
@@ -12,7 +12,7 @@ export function Header({
 }: ComponentProps<"header">) {
    const router = useRouter()
    const { pathname } = useLocation()
-   const { slug = "" } = useParams({ strict: false })
+   const { slug } = useParams({ from: "/$slug/_layout" })
 
    return (
       <header
@@ -45,7 +45,7 @@ export function Header({
                         onClick={() => router.history.back()}
                         variant={"ghost"}
                         size="icon"
-                        className="-ml-2 text-foreground/80"
+                        className="-ml-0.5 text-foreground/80"
                         aria-label="Go back"
                      >
                         <svg
