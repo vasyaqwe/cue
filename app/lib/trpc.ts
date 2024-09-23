@@ -36,7 +36,6 @@ export const protectedProcedure = serverFnProcedure.use(({ ctx, next }) => {
    }
    return next({
       ctx: {
-         // infers the `session` as non-nullable
          session: ctx?.auth?.session,
          user: ctx?.auth?.user,
       },
@@ -105,8 +104,7 @@ function tssCaller<TContext, TMeta>(
       }
 
       if (typeof config.artificalDelay === "number") {
-         // biome-ignore lint/style/noNonNullAssertion: <explanation>
-         await new Promise((r) => setTimeout(r, config.artificalDelay!))
+         await new Promise((r) => setTimeout(r, config.artificalDelay as never))
       }
 
       return await opts

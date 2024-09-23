@@ -30,17 +30,14 @@ export const env = createEnv({
    clientPrefix: "VITE_",
 
    client: {
-      // PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
-      // VITE_NODE_ENV: z
-      //   .enum(['development', 'test', 'production'])
-      //   .default('development'),
+      VITE_BASE_URL: z.string(),
    },
 
    /**
     * What object holds the environment variables at runtime. This is usually
     * `process.env` or `import.meta.env`.
     */
-   runtimeEnv: process.env,
+   runtimeEnv: { ...process.env, VITE_BASE_URL: "http://localhost:3000" },
 
    /**
     * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

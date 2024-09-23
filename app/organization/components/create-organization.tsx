@@ -1,3 +1,4 @@
+import { env } from "@/env"
 import { organizationMembershipsQuery } from "@/organization/queries"
 import { Button } from "@/ui/components/button"
 import { Input } from "@/ui/components/input"
@@ -48,8 +49,8 @@ export function CreateOrganization() {
    })
 
    return (
-      <div className="grid h-svh place-content-center">
-         <div className="mx-auto w-full max-w-2xl ">
+      <div className="grid h-svh place-items-center">
+         <div className="mx-auto w-full max-w-[22rem]">
             <div className="flex items-center gap-2.5">
                <Logo className="size-11" />{" "}
                <h1 className="text-2xl">Welcome to Cue,</h1>
@@ -62,6 +63,7 @@ export function CreateOrganization() {
                   e.preventDefault()
                   insert.mutate()
                }}
+               className="w-full"
             >
                <Label htmlFor="name">Name</Label>
                <Input
@@ -74,9 +76,9 @@ export function CreateOrganization() {
                   placeholder="Required"
                   required
                />
-               <p className="mt-2 text-foreground/75">
+               <p className="mt-2 break-all text-foreground/75">
                   <u>
-                     {window.location.origin}/{makeSlug(name)}
+                     {env.VITE_BASE_URL}/{makeSlug(name)}
                   </u>
                </p>
                <Button

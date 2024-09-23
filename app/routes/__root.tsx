@@ -22,35 +22,39 @@ const TanStackRouterDevtools = import.meta.env.PROD
         })),
      )
 
-const title = "Cue"
-
 export const Route = createRootRouteWithContext<{
    queryClient: QueryClient
 }>()({
-   meta: () => [
-      {
-         charSet: "utf-8",
-      },
-      {
-         name: "viewport",
-         content: "width=device-width, initial-scale=1",
-      },
-      { title },
-      //  { name: 'description', content: description },
-      //  { name: 'keywords', content: keywords },
-      //  { name: 'twitter:title', content: title },
-      //  { name: 'twitter:description', content: description },
-      //  { name: 'twitter:creator', content: '@vasyaqwee' },
-      //  { name: 'twitter:site', content: '@vasyaqwee' },
-      //  { name: 'og:type', content: 'website' },
-      //  { name: 'og:title', content: title },
-      //  { name: 'og:description', content: description },
-      //  [
-      //    { name: 'twitter:image', content: image },
-      //    { name: 'twitter:card', content: 'summary_large_image' },
-      //    { name: 'og:image', content: image },
-      //  ]
-   ],
+   meta: () => {
+      const title = "Cue"
+      return [
+         {
+            charSet: "utf-8",
+         },
+         {
+            name: "viewport",
+            content: "width=device-width, initial-scale=1",
+         },
+         { title },
+         // {
+         //    name: "description",
+         //    content: description,
+         // },
+         //  { name: 'keywords', content: keywords },
+         //  { name: 'twitter:title', content: title },
+         //  { name: 'twitter:description', content: description },
+         //  { name: 'twitter:creator', content: '@vasyaqwee' },
+         //  { name: 'twitter:site', content: '@vasyaqwee' },
+         //  { name: 'og:type', content: 'website' },
+         //  { name: 'og:title', content: title },
+         //  { name: 'og:description', content: description },
+         //  [
+         //    { name: 'twitter:image', content: image },
+         //    { name: 'twitter:card', content: 'summary_large_image' },
+         //    { name: 'og:image', content: image },
+         //  ]
+      ]
+   },
    links: () => [
       { rel: "stylesheet", href: appCss },
       {

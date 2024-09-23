@@ -6,14 +6,18 @@ import { Sidebar } from "@/routes/-components/sidebar"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router"
+import {
+   Outlet,
+   createFileRoute,
+   notFound,
+   redirect,
+} from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_layout")({
    component: Component,
    beforeLoad: async () => {
       const session = await authLoaderFn()
       if (!session?.session || !session.user) throw redirect({ to: "/login" })
-      console.log(session, "hello")
 
       return {
          user: session.user,
@@ -24,7 +28,12 @@ export const Route = createFileRoute("/_layout")({
          organizationMembershipsQuery(),
       )
 
-      if ("slug" in params) return
+      if ("slug" in params) {
+         if (!memberships.some((m) => m.organization.slug === params.slug))
+            throw notFound()
+
+         return
+      }
 
       if (memberships.length > 0) {
          throw redirect({ to: `/${memberships[0]?.organization.slug}` })
@@ -32,7 +41,7 @@ export const Route = createFileRoute("/_layout")({
    },
    pendingComponent: () => (
       <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full">
-         <Logo className="mx-auto" />
+         <Logo className="mx-auto animate-fade-in" />
          <h1 className="mt-4 animate-fade-in text-center font-medium text-foreground/80 text-lg opacity-0 delay-300 duration-500">
             Loading...
          </h1>
