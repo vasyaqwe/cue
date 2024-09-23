@@ -39,7 +39,7 @@ export function Sidebar() {
    const membership = memberships.find((m) => m.organization.slug === slug)
 
    return (
-      <div className="w-60 max-md:hidden">
+      <div className="h-svh w-60 max-md:hidden">
          <aside className="fixed flex h-full w-60 flex-col border-border/60 border-r p-5 shadow-sm">
             <div className="mb-5 flex items-center gap-3">
                <Logo className="size-8" />{" "}
@@ -88,8 +88,8 @@ export function Sidebar() {
                            "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
                         )}
                      >
-                        <Icons.home className="size-6" />
-                        Home
+                        <Icons.issues className="size-6" />
+                        Issues
                      </Link>
                   </li>
                   <li>

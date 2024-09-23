@@ -60,15 +60,13 @@ function Component() {
       <>
          {/* <Presence /> */}
          <ModalProvider />
-         <div className="md:flex lg:gap-8 md:gap-5">
+         <div className="md:flex">
             <Sidebar />
             <div
-               className={cn("flex-1 md:pt-5")}
-               // style={{
-               //    paddingBottom: isOnTagTimeFrenzyPage
-               //       ? "0px"
-               //       : `max(calc(env(safe-area-inset-bottom) + 8rem), 7rem)`,
-               // }}
+               className={cn("flex-1")}
+               style={{
+                  paddingBottom: `max(calc(env(safe-area-inset-bottom) + 8rem), 7rem)`,
+               }}
             >
                <Outlet />
             </div>

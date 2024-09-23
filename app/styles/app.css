@@ -2,6 +2,8 @@
 @plugin "tailwindcss-animate";
 
 @theme default {
+  --header-height: 51px;
+
   --color-background: #FEFCFB;
   --color-foreground: #120a1a;
   --color-brand: #1c0f29;
@@ -51,9 +53,8 @@ html {
   }
 
   .container {
-    margin-inline: auto;
-    padding-inline: 0.985rem;
-    width: min(100%, 604px);
+    padding-inline: 0.925rem;
+    width: 100%;
   }
   
   .pattern {
@@ -88,7 +89,6 @@ h2,
 h3,
 h4 {
   text-wrap: balance;
-  font-weight: 800;
 }
 
 p {

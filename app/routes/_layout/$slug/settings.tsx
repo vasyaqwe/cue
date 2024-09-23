@@ -1,4 +1,4 @@
-import { Button } from "@/ui/components/button"
+import { Header, HeaderTitle } from "@/routes/-components/header"
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_layout/$slug/settings")({
@@ -8,7 +8,10 @@ export const Route = createFileRoute("/_layout/$slug/settings")({
 function Component() {
    return (
       <>
-         <Button variant={"outline"}>Hello settings</Button>
+         <Header>
+            <HeaderTitle>Settings</HeaderTitle>
+         </Header>
+         <main>Hello settings</main>
       </>
    )
 }

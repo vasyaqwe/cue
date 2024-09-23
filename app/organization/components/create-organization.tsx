@@ -53,7 +53,7 @@ export function CreateOrganization() {
          <div className="mx-auto w-full max-w-[22rem]">
             <div className="flex items-center gap-2.5">
                <Logo className="size-11" />{" "}
-               <h1 className="text-2xl">Welcome to Cue,</h1>
+               <h1 className="font-extrabold text-2xl">Welcome to Cue,</h1>
             </div>
             <h2 className="my-5 font-bold text-foreground/90 text-xl">
                Create your first organization
