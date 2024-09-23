@@ -21,7 +21,7 @@ export function Header({
       >
          <div
             className={cn(
-               "fixed top-0 z-[11] flex h-[var(--header-height)] w-full items-center border-border border-b bg-background md:border-transparent max-md:shadow-sm",
+               "fixed top-0 z-[11] flex h-[var(--header-height)] w-full items-center border-border/60 border-b bg-background shadow-sm md:pl-[17px]",
             )}
          >
             <div
@@ -76,7 +76,10 @@ export function Header({
 export function HeaderTitle({ className, ...props }: ComponentProps<"h1">) {
    return (
       <h1
-         className={cn("text-nowrap text-center font-bold text-lg", className)}
+         className={cn(
+            "text-nowrap text-center font-bold text-lg md:text-[1.05rem]",
+            className,
+         )}
          {...props}
       />
    )

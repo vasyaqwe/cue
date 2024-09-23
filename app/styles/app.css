@@ -18,6 +18,7 @@
   --font-family-primary: "satoshi", sans-serif;
   --font-family-secondary: ui-serif, Georgia, Cambria, Times New Roman, Times, serif;
 
+  --font-size-xs: 0.8rem;
   --font-size-sm: 0.845rem;
   --font-size-sm--line-height: 1rem;
   --font-size-base: 0.925rem;

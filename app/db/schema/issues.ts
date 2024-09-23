@@ -30,6 +30,10 @@ export const issues = createTable(
 )
 
 export const insertIssueParams = createInsertSchema(issues)
-export const listIssuesParams = z.object({
+export const listIssueParams = z.object({
    organizationId: z.string(),
+})
+export const byIdIssueParams = z.object({
+   organizationId: z.string(),
+   issueId: z.string(),
 })
