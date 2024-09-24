@@ -3,7 +3,7 @@ import { useAuth } from "@/auth/hooks"
 import { pushModal } from "@/modals"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
-import { Button, buttonVariants } from "@/ui/components/button"
+import { buttonVariants } from "@/ui/components/button"
 import {
    DropdownMenu,
    DropdownMenuContent,
@@ -11,12 +11,15 @@ import {
    DropdownMenuTrigger,
 } from "@/ui/components/dropdown-menu"
 import { Icons } from "@/ui/components/icons"
+import { Kbd } from "@/ui/components/kbd"
 import { Logo } from "@/ui/components/logo"
+import { Tooltip } from "@/ui/components/tooltip"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useMutation } from "@tanstack/react-query"
 import { Link, useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
+import { useHotkeys } from "react-hotkeys-hook"
 
 export function Sidebar() {
    const { user } = useAuth()
@@ -32,6 +35,11 @@ export function Sidebar() {
       },
    })
 
+   useHotkeys("c", (e) => {
+      e.preventDefault()
+      pushModal("create-issue")
+   })
+
    return (
       <div className="h-svh w-60 max-md:hidden">
          <aside className="fixed flex h-full w-60 flex-col border-border/60 border-r p-5 shadow-sm">
@@ -39,32 +47,42 @@ export function Sidebar() {
                <Logo className="size-8" />{" "}
                <p className="font-bold text-xl">{organization.name}</p>
             </div>
-            <Button
-               onClick={() => pushModal("create-issue")}
-               variant={"outline"}
-               className="mb-5 w-full font-semibold text-[0.95rem]"
+            <Tooltip
+               content={
+                  <>
+                     New issue <Kbd className="ml-1">C</Kbd>{" "}
+                  </>
+               }
             >
-               <svg
-                  className="size-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+               <button
+                  onClick={() => pushModal("create-issue")}
+                  className={cn(
+                     buttonVariants({ variant: "outline" }),
+                     "mb-5 w-full font-semibold text-[0.95rem]",
+                  )}
                >
-                  <path
-                     opacity="0.28"
-                     d="M3.12568 17.5726C3.08011 17.7497 3.07546 17.9381 3.06616 18.3151L3 20.9955L5.72665 20.9999C6.11608 21.0005 6.31079 21.0008 6.49406 20.9568C6.65654 20.9178 6.81188 20.8534 6.95435 20.7658C7.11505 20.6669 7.25274 20.5287 7.52811 20.2521L20.5014 7.22177C20.5329 7.19018 20.5486 7.17439 20.5622 7.16005C21.0616 6.63294 21.1427 5.83327 20.7594 5.21582C20.2699 4.42508 19.6065 3.75508 18.8267 3.25131C18.204 2.84896 17.3862 2.93708 16.8626 3.46297L3.8099 16.573C3.54444 16.8396 3.41171 16.973 3.31544 17.1282C3.23007 17.2658 3.16608 17.4156 3.12568 17.5726Z"
-                     fill="currentColor"
-                  />
-                  <path
-                     d="M12 21C16.018 17.7256 16.0891 24.3574 21 19M3 20.9955L5.72665 20.9999C6.11608 21.0005 6.31079 21.0008 6.49406 20.9568C6.65654 20.9178 6.81188 20.8534 6.95435 20.7658C7.11505 20.6669 7.25274 20.5287 7.52811 20.2521L20.5014 7.22177C21.0315 6.68941 21.1632 5.86631 20.7594 5.21582C20.2713 4.42948 19.6037 3.75331 18.8267 3.25131C18.204 2.84896 17.3862 2.93708 16.8626 3.46297L3.8099 16.573C3.54444 16.8396 3.41171 16.973 3.31544 17.1282C3.23007 17.2658 3.16608 17.4156 3.12568 17.5726C3.08011 17.7497 3.07546 17.9381 3.06616 18.3151L3 20.9955Z"
-                     stroke="currentColor"
-                     strokeWidth="2"
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                  />
-               </svg>
-               New issue
-            </Button>
+                  <svg
+                     className="size-5"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     xmlns="http://www.w3.org/2000/svg"
+                  >
+                     <path
+                        opacity="0.28"
+                        d="M3.12568 17.5726C3.08011 17.7497 3.07546 17.9381 3.06616 18.3151L3 20.9955L5.72665 20.9999C6.11608 21.0005 6.31079 21.0008 6.49406 20.9568C6.65654 20.9178 6.81188 20.8534 6.95435 20.7658C7.11505 20.6669 7.25274 20.5287 7.52811 20.2521L20.5014 7.22177C20.5329 7.19018 20.5486 7.17439 20.5622 7.16005C21.0616 6.63294 21.1427 5.83327 20.7594 5.21582C20.2699 4.42508 19.6065 3.75508 18.8267 3.25131C18.204 2.84896 17.3862 2.93708 16.8626 3.46297L3.8099 16.573C3.54444 16.8396 3.41171 16.973 3.31544 17.1282C3.23007 17.2658 3.16608 17.4156 3.12568 17.5726Z"
+                        fill="currentColor"
+                     />
+                     <path
+                        d="M12 21C16.018 17.7256 16.0891 24.3574 21 19M3 20.9955L5.72665 20.9999C6.11608 21.0005 6.31079 21.0008 6.49406 20.9568C6.65654 20.9178 6.81188 20.8534 6.95435 20.7658C7.11505 20.6669 7.25274 20.5287 7.52811 20.2521L20.5014 7.22177C21.0315 6.68941 21.1632 5.86631 20.7594 5.21582C20.2713 4.42948 19.6037 3.75331 18.8267 3.25131C18.204 2.84896 17.3862 2.93708 16.8626 3.46297L3.8099 16.573C3.54444 16.8396 3.41171 16.973 3.31544 17.1282C3.23007 17.2658 3.16608 17.4156 3.12568 17.5726C3.08011 17.7497 3.07546 17.9381 3.06616 18.3151L3 20.9955Z"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                     />
+                  </svg>
+                  New issue
+               </button>
+            </Tooltip>
             <nav>
                <ul className="space-y-1">
                   <li>

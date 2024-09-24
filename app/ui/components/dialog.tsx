@@ -3,7 +3,7 @@ import { Icons } from "@/ui/components/icons"
 import { cn } from "@/ui/utils"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { type VariantProps, cva } from "class-variance-authority"
-import type { ComponentProps } from "react"
+import { type ComponentProps, type ElementRef, forwardRef } from "react"
 
 const Dialog = DialogPrimitive.Root
 const DialogTrigger = DialogPrimitive.Trigger
@@ -11,12 +11,12 @@ const DialogPortal = DialogPrimitive.Portal
 const DialogClose = DialogPrimitive.Close
 
 const dialogVariants = cva(
-   `data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed z-50 grid w-full inset-0 !h-max m-auto rounded-xl bg-background data-[state=open]:animate-in`,
+   `data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed z-50 grid w-full inset-0 !h-max m-auto rounded-xl bg-background data-[state=open]:animate-in data-[state=closed]:animate-out`,
    {
       variants: {
          variant: {
-            default: `max-w-lg data-[state=open]:slide-in-from-bottom-14 shadow-lg`,
-            alert: "data-[state=open]:slide-in-from-bottom-14 max-w-md shadow-lg",
+            default: `max-w-lg data-[state=closed]:zoom-out-[97%] data-[state=open]:zoom-in-[97%] shadow-lg`,
+            alert: "data-[state=closed]:zoom-out-[97%] data-[state=open]:zoom-in-[97%] max-w-md shadow-lg",
             overlay: "bg-transparent",
             command:
                "data-[state=closed]:!animate-none top-[20px] w-[90%] max-w-[430px] translate-y-0 animate-none bg-trasparent md:top-[75px]",
@@ -94,20 +94,21 @@ function DialogContent({
    )
 }
 
-function DialogOverlay({
-   className,
-   ...props
-}: ComponentProps<typeof DialogPrimitive.Overlay>) {
+const DialogOverlay = forwardRef<
+   ElementRef<typeof DialogPrimitive.Overlay>,
+   ComponentProps<typeof DialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => {
    return (
       <DialogPrimitive.Overlay
+         ref={ref}
          className={cn(
-            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/40 data-[state=open]:animate-in",
+            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/30 data-[state=closed]:animate-out data-[state=open]:animate-in",
             className,
          )}
          {...props}
       />
    )
-}
+})
 
 function DialogHeader({ className, ...props }: ComponentProps<"div">) {
    return (
@@ -122,10 +123,10 @@ function DialogFooter({ className, ...props }: ComponentProps<"div">) {
    return (
       <div
          style={{
-            paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 1rem)`,
+            paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.75rem)`,
          }}
          className={cn(
-            "flex flex-col-reverse border-t-2 border-dashed py-3 md:mt-0.5 sm:flex-row sm:justify-end sm:space-x-2",
+            "mt-3 flex items-center border-border border-t p-3",
             className,
          )}
          {...props}

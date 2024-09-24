@@ -3,12 +3,14 @@ import { issueListQuery } from "@/issue/queries"
 import { popModal } from "@/modals"
 import { ResponsiveModalContent } from "@/modals/dynamic"
 import { Button } from "@/ui/components/button"
-import { DialogHeader, DialogTitle } from "@/ui/components/dialog"
-import { Input } from "@/ui/components/input"
+import { DialogFooter, DialogHeader, DialogTitle } from "@/ui/components/dialog"
+import { Input, inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
+import { cn } from "@/ui/utils"
 import { useLocalStorage } from "@/user-interactions/use-local-storage"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
+import { useRef } from "react"
 import { toast } from "sonner"
 import * as issue from "../functions"
 
@@ -20,6 +22,7 @@ export function CreateIssue() {
       "create_issue_description",
       "",
    )
+   const titleRef = useRef<HTMLInputElement>(null)
 
    const insertFn = useServerFn(issue.insert)
    const insert = useMutation({
@@ -39,65 +42,71 @@ export function CreateIssue() {
    })
 
    return (
-      <ResponsiveModalContent>
+      <ResponsiveModalContent
+         onAnimationEndCapture={() => titleRef.current?.focus()}
+      >
          <DialogHeader>
             <DialogTitle>New issue</DialogTitle>
          </DialogHeader>
-         <div className="p-4 pt-3">
-            <form
-               onSubmit={(e) => {
-                  e.preventDefault()
-                  // const formData = Object.fromEntries(
-                  //    new FormData(e.target as HTMLFormElement),
-                  // )
+         <form
+            id="create-issue"
+            onSubmit={(e) => {
+               e.preventDefault()
+               // const formData = Object.fromEntries(
+               //    new FormData(e.target as HTMLFormElement),
+               // )
 
-                  insert.mutate({
-                     title,
-                     description,
-                     label: "bug",
-                     status: "todo",
-                     organizationId,
-                  })
-               }}
-               className="flex w-full flex-col"
+               insert.mutate({
+                  title,
+                  description,
+                  label: "bug",
+                  status: "todo",
+                  organizationId,
+               })
+            }}
+            className="flex w-full flex-col p-4 pt-3"
+         >
+            <input
+               ref={titleRef}
+               autoComplete="off"
+               name="title"
+               id="title"
+               placeholder="Issue title"
+               required
+               value={title}
+               onChange={(e) => setTitle(e.target.value)}
+               className={cn(
+                  inputVariants(),
+                  "!border-none !outline-none !bg-transparent h-8 p-0 font-bold text-xl",
+               )}
+            />
+            <Input
+               name="description"
+               id="description"
+               placeholder="Add description.."
+               value={description}
+               onChange={(e) => setDescription(e.target.value)}
+               className={
+                  "!border-none !outline-none !bg-transparent mt-1 h-8 p-0 text-[1rem]"
+               }
+            />
+         </form>
+         <DialogFooter className="justify-end">
+            <Button
+               type="submit"
+               disabled={insert.isPending || insert.isSuccess}
+               form="create-issue"
             >
-               <Input
-                  autoFocus
-                  name="title"
-                  id="title"
-                  placeholder="Issue title"
-                  required
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className={
-                     "!border-none !outline-none !bg-transparent h-8 p-0 font-bold text-xl"
-                  }
-               />
-               <Input
-                  name="description"
-                  id="description"
-                  placeholder="Add description.."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className={
-                     "!border-none !outline-none !bg-transparent mt-1 h-8 p-0 text-[1rem]"
-                  }
-               />
-
-               <div className="mt-5 flex items-center justify-end">
-                  <Button disabled={insert.isPending || insert.isSuccess}>
-                     {insert.isPending || insert.isSuccess ? (
-                        <>
-                           <Loading />
-                           Creating..
-                        </>
-                     ) : (
-                        "Create"
-                     )}
-                  </Button>
-               </div>
-            </form>
-         </div>
+               {insert.isPending || insert.isSuccess ? (
+                  <>
+                     <Loading />
+                     Creating..
+                  </>
+               ) : (
+                  "Create"
+               )}
+            </Button>
+         </DialogFooter>
       </ResponsiveModalContent>
    )
 }

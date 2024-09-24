@@ -30,6 +30,7 @@ export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
          </main>
       </>
    ),
+   preload: false,
 })
 
 function Component() {
@@ -47,7 +48,7 @@ function Component() {
          <Header>
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
-         <main className="mx-auto max-w-6xl pt-10">
+         <main className="mx-auto max-w-6xl px-4 pt-10 md:px-8">
             <Input
                autoFocus
                defaultValue={issue.title}

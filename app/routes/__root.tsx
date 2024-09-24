@@ -108,7 +108,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   "min-h-screen bg-background text-foreground tracking-[0.02em] antialiased",
                )}
             >
-               <TooltipProvider delayDuration={300}>
+               <TooltipProvider delayDuration={400}>
                   {children}
                   <Portal.Root>
                      <Toaster />
