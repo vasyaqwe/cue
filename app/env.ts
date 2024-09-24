@@ -19,8 +19,8 @@ export const env = createEnv({
                ? s && s.length > 0
                : true
          }),
-      GITHUB_CLIENT_ID: z.string().optional().default(""),
-      GITHUB_CLIENT_SECRET: z.string().optional().default(""),
+      GITHUB_CLIENT_ID: z.string().min(1),
+      GITHUB_CLIENT_SECRET: z.string().min(1),
    },
 
    /**
@@ -30,14 +30,19 @@ export const env = createEnv({
    clientPrefix: "VITE_",
 
    client: {
-      VITE_BASE_URL: z.string(),
+      VITE_PARTYKIT_URL: z.string().min(1),
+      VITE_BASE_URL: z.string().min(1),
    },
 
    /**
     * What object holds the environment variables at runtime. This is usually
     * `process.env` or `import.meta.env`.
     */
-   runtimeEnv: { ...process.env, VITE_BASE_URL: "http://localhost:3000" },
+   runtimeEnv: {
+      ...process.env,
+      VITE_BASE_URL: "http://localhost:3000",
+      VITE_PARTYKIT_URL: "test-cue.vasyaqwe.partykit.dev",
+   },
 
    /**
     * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

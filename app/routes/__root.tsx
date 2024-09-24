@@ -130,7 +130,7 @@ function BreakpointIndicator() {
 
    return (
       <div
-         className={`fixed bottom-4 left-4 z-50 font-mono font-semibold text-lg`}
+         className={`fixed bottom-4 left-16 z-50 font-mono font-semibold text-lg`}
       >
          <div className="rounded-full border border-border bg-background px-3 pt-1 pb-1.5 leading-none">
             <span className="sm:hidden">xs</span>

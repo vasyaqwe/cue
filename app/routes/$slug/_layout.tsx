@@ -2,6 +2,7 @@ import { meQuery } from "@/auth/queries"
 import { ModalProvider } from "@/modals"
 import { CreateOrganization } from "@/organization/components/create-organization"
 import { organizationMembershipsQuery } from "@/organization/queries"
+import { Presence } from "@/presence"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
 import { useSuspenseQuery } from "@tanstack/react-query"
@@ -52,7 +53,7 @@ function Component() {
 
    return (
       <>
-         {/* <Presence /> */}
+         <Presence />
          <ModalProvider />
          <div className="md:flex">
             <Sidebar />

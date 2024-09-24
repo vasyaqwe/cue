@@ -1,4 +1,6 @@
+import { useAuth } from "@/auth/hooks"
 import type { User } from "@/db/schema"
+import { usePresenceStore } from "@/presence/presence-store"
 import { Avatar, AvatarFallback } from "@/ui/components/avatar"
 import { cn } from "@/ui/utils"
 import type { ComponentProps } from "react"
@@ -15,10 +17,14 @@ export function UserAvatar({
    className,
    ...props
 }: UserAvatarProps) {
+   const { user: currentUser } = useAuth()
    const name =
       user.name && user.name !== ""
          ? user.name[0]?.toUpperCase()
          : user.email?.[0]?.toUpperCase() ?? "?"
+
+   const isUserOnline = usePresenceStore.use.isUserOnline()
+   const isOnline = user.id === currentUser.id || isUserOnline(user.id ?? "")
 
    return (
       <Avatar
@@ -47,7 +53,7 @@ export function UserAvatar({
                {name}
             </AvatarFallback>
          )}
-         {/* <span
+         <span
             title={"Online"}
             role="status"
             data-online-indicator
@@ -57,7 +63,7 @@ export function UserAvatar({
                   ? "visible scale-100 opacity-100"
                   : "invisible scale-0 opacity-0",
             )}
-         /> */}
+         />
       </Avatar>
    )
 }
