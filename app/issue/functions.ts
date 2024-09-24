@@ -38,6 +38,19 @@ export const insert = createServerFn(
    organizationProtectedProcedure
       .input(insertIssueParams)
       .query(async ({ ctx, input }) => {
-         await ctx.db.insert(issues).values(input)
+         return await ctx.db
+            .insert(issues)
+            .values(input)
+            .returning({ issueId: issues.id })
+            .get()
+      }),
+)
+
+export const deleteFn = createServerFn(
+   "POST",
+   organizationProtectedProcedure
+      .input(byIdIssueParams)
+      .mutation(async ({ ctx, input }) => {
+         await ctx.db.delete(issues).where(eq(issues.id, input.issueId))
       }),
 )

@@ -37,6 +37,7 @@
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.32.2",
     "drizzle-zod": "^0.5.1",
+    "immer": "^10.1.1",
     "lucia": "0.0.0-remove-adapter-package.20240719033400",
     "mitt": "^3.0.1",
     "oslo": "^1.2.1",

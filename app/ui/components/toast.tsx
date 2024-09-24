@@ -65,7 +65,7 @@ function Toaster(props: ComponentProps<typeof Sonner>) {
             classNames: {
                actionButton: cn(
                   buttonVariants({ variant: "outline" }),
-                  "!-m-2.5 !ml-2.5 !h-[32px] !rounded-full !transition-all hover:!shadow-lg !bg-foreground !px-3 !text-white !text-sm !font-medium before:hidden before:border-foreground/[0.07] before:from-white/[0.1]",
+                  "!-m-2 !-mr-[9px] !ml-2.5 !h-[34px] !rounded-full !transition-all hover:!shadow-lg !bg-foreground !px-3 !text-white !text-sm !font-medium before:hidden before:border-foreground/[0.07] before:from-white/[0.1]",
                ),
             },
             className:

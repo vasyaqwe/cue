@@ -34,7 +34,7 @@ export function CreateOrganization() {
 
    const insertFn = useServerFn(organization.insert)
    const insert = useMutation({
-      mutationFn: () => insertFn({ name, slug: makeSlug(name) }),
+      mutationFn: insertFn,
       onSuccess: () => {
          queryClient.invalidateQueries(organizationMembershipsQuery())
          navigate({ to: `/${makeSlug(name)}` })
@@ -61,7 +61,10 @@ export function CreateOrganization() {
             <form
                onSubmit={(e) => {
                   e.preventDefault()
-                  insert.mutate()
+                  insert.mutate({
+                     name,
+                     slug: makeSlug(name),
+                  })
                }}
                className="w-full"
             >

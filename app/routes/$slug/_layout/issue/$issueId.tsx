@@ -50,6 +50,7 @@ function Component() {
          </Header>
          <main className="mx-auto max-w-6xl px-4 pt-10 md:px-8">
             <Input
+               autoComplete="off"
                autoFocus
                defaultValue={issue.title}
                name="title"

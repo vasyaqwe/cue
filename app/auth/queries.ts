@@ -5,4 +5,5 @@ export const meQuery = () =>
    queryOptions({
       queryKey: ["me"],
       queryFn: () => auth.me(),
+      staleTime: Infinity,
    })

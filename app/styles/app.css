@@ -25,6 +25,7 @@
   --font-size-sm--line-height: 1rem;
   --font-size-base: 0.925rem;
   --font-size-base--line-height: 1.4rem;
+  --font-size-lg: 1.04rem;
 
   --animate-fade-in: fade-in 450ms var(--animation-delay, 0ms) ease forwards;
 

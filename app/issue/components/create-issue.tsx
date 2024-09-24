@@ -9,6 +9,7 @@ import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
 import { useLocalStorage } from "@/user-interactions/use-local-storage"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { useRef } from "react"
 import { toast } from "sonner"
@@ -16,7 +17,9 @@ import * as issue from "../functions"
 
 export function CreateIssue() {
    const queryClient = useQueryClient()
+   const navigate = useNavigate()
    const { organizationId } = useAuth()
+   const { slug } = useParams({ from: "/$slug/_layout" })
    const [title, setTitle] = useLocalStorage("create_issue_title", "")
    const [description, setDescription] = useLocalStorage(
       "create_issue_description",
@@ -27,7 +30,7 @@ export function CreateIssue() {
    const insertFn = useServerFn(issue.insert)
    const insert = useMutation({
       mutationFn: insertFn,
-      onSuccess: () => {
+      onSuccess: ({ issueId }) => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
          popModal("create-issue")
          toast.success("Issue created", {
@@ -35,8 +38,10 @@ export function CreateIssue() {
                label: "View",
                onClick: () => {
                   toast.dismiss()
+                  navigate({ to: `/${slug}/issue/${issueId}` })
                },
             },
+            duration: Infinity,
          })
       },
    })

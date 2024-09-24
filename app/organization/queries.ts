@@ -5,4 +5,5 @@ export const organizationMembershipsQuery = () =>
    queryOptions({
       queryKey: ["organizations_memberships"],
       queryFn: () => organization.memberships(),
+      staleTime: Infinity,
    })

@@ -1,6 +1,7 @@
 import { useAuth } from "@/auth/hooks"
 import { env } from "@/env"
 import { StatusIcon } from "@/issue/components/icons"
+import { useDeleteIssue } from "@/issue/mutations"
 import { issueListQuery } from "@/issue/queries"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Route as issueIdRoute } from "@/routes/$slug/_layout/issue/$issueId"
@@ -49,6 +50,8 @@ function Component() {
    const { data: issues } = useSuspenseQuery(issueListQuery({ organizationId }))
    const { slug } = useParams({ from: "/$slug/_layout" })
    const { copy } = useCopyToClipboard()
+
+   const { deleteIssue } = useDeleteIssue()
 
    const groupedIssues = R.groupBy(issues, R.prop("status"))
 
@@ -150,7 +153,15 @@ function Component() {
                                           </ContextMenuSubContent>
                                        </ContextMenuSub>
                                        <ContextMenuSeparator />
-                                       <ContextMenuItem destructive>
+                                       <ContextMenuItem
+                                          destructive
+                                          onSelect={() =>
+                                             deleteIssue.mutate({
+                                                issueId: issue.id,
+                                                organizationId,
+                                             })
+                                          }
+                                       >
                                           <Icons.trash />
                                           Delete
                                        </ContextMenuItem>
