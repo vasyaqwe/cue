@@ -3,6 +3,7 @@
    "main": "./app/party/index.ts",
    "compatibilityDate": "2023-10-10",
    "parties": {
-      "presence": "./app/presence/party.ts"
+      "presence": "./app/presence/party.ts",
+      "issue": "./app/issue/party.ts"
    }
 }

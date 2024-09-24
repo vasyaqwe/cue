@@ -16,16 +16,16 @@ export default class PresenceServer implements Party.Server {
       const url = new URL(context.request.url)
       const userId = url.searchParams.get("userId")
 
-      if (userId) {
-         this.onlineUsers.set(userId, connection.id)
+      if (!userId) return
 
-         const event = {
-            type: "user_online",
-            userId,
-         } satisfies PresenceEvent
+      this.onlineUsers.set(userId, connection.id)
 
-         this.room.broadcast(JSON.stringify(event))
-      }
+      const payload = {
+         type: "user_online",
+         userId,
+      } satisfies PresenceEvent
+
+      return this.room.broadcast(JSON.stringify(payload))
    }
 
    onClose(connection: Party.Connection) {
@@ -38,28 +38,29 @@ export default class PresenceServer implements Party.Server {
          }
       }
 
-      if (disconnectedUserId) {
-         this.onlineUsers.delete(disconnectedUserId)
+      if (!disconnectedUserId) return
 
-         const event = {
-            type: "user_offline",
-            userId: disconnectedUserId,
-         } satisfies PresenceEvent
-         this.room.broadcast(JSON.stringify(event))
-      }
+      this.onlineUsers.delete(disconnectedUserId)
+
+      const payload = {
+         type: "user_offline",
+         userId: disconnectedUserId,
+      } satisfies PresenceEvent
+
+      return this.room.broadcast(JSON.stringify(payload))
    }
 
    onMessage(message: string, _sender: Party.Connection<unknown>) {
-      const data: PresenceEvent = JSON.parse(message)
+      const event: PresenceEvent = JSON.parse(message)
 
-      if (data.type === "get_online_users") {
+      if (event.type === "get_online_users") {
          const onlineUsers = Array.from(this.onlineUsers.keys())
-         const event = {
+         const payload = {
             type: "online_users",
             onlineUsers,
          } satisfies PresenceEvent
 
-         this.room.broadcast(JSON.stringify(event))
+         return this.room.broadcast(JSON.stringify(payload))
       }
    }
 }

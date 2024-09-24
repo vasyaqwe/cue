@@ -50,7 +50,6 @@ function Component() {
    const { data: issues } = useSuspenseQuery(issueListQuery({ organizationId }))
    const { slug } = useParams({ from: "/$slug/_layout" })
    const { copy } = useCopyToClipboard()
-
    const { deleteIssue } = useDeleteIssue()
 
    const groupedIssues = R.groupBy(issues, R.prop("status"))
