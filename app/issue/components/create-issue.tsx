@@ -33,6 +33,8 @@ export function CreateIssue() {
       onSuccess: ({ issueId }) => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
          popModal("create-issue")
+         setTitle("")
+         setDescription("")
          toast.success("Issue created", {
             action: {
                label: "View",
