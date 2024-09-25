@@ -46,7 +46,7 @@ function DrawerContent({
             )}
             {...props}
          >
-            <div className="!p-0 mx-auto mt-1.5 min-h-1 w-[37px] rounded-full bg-foreground/80 group-[&[vaul-drawer-direction=right]]:hidden" />
+            <div className="!p-0 mx-auto mt-1.5 min-h-1 w-8 rounded-full bg-foreground/80 group-[&[vaul-drawer-direction=right]]:hidden" />
             {children}
          </DrawerPrimitive.Content>
       </DrawerPortal>

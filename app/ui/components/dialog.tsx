@@ -85,7 +85,7 @@ function DialogContent({
                      "absolute top-2.5 right-2.5 size-8",
                   )}
                >
-                  <Icons.XMark className="size-5" />
+                  <Icons.xMark className="size-5" />
                   <span className="sr-only">Close</span>
                </DialogPrimitive.Close>
             )}

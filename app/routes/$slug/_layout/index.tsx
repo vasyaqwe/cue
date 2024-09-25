@@ -61,7 +61,7 @@ function Component() {
          </Header>
          <main className="relative h-full">
             {issues.length === 0 ? (
-               <p className="absolute inset-0 m-auto">No issues</p>
+               <p className="absolute inset-0 m-auto size-fit">No issues</p>
             ) : (
                Object.entries(groupedIssues).map(([status, issues]) => {
                   return (

@@ -41,7 +41,7 @@ function ClearInputButton({
          {...props}
       >
          <span className="sr-only">Clear search</span>{" "}
-         {/* <XMarkIcon
+         {/* <xMarkIcon
             className="size-5"
             strokeWidth={2.5}
          /> */}

@@ -56,6 +56,7 @@ export const memberships = createServerFn(
                   id: true,
                   slug: true,
                   name: true,
+                  inviteCode: true,
                },
             },
          },

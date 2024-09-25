@@ -47,10 +47,10 @@ function Component() {
       toast.custom(
          () => (
             <div className="text-popover-foreground/90">
-               <p className="mb-2 line-clamp-1 font-medium text-[1rem]">
+               <p className="mb-2 line-clamp-1 font-medium font-semibold text-[1rem]">
                   You are invited
                </p>
-               <p className="max-sm:text-sm">
+               <p className="line-clamp-1">
                   Sign up to join <b>{organizationToJoin.name}</b> organization
                </p>
             </div>
@@ -58,7 +58,7 @@ function Component() {
          {
             duration: Infinity,
             className:
-               "rounded-xl h-[auto] px-3 py-2 !w-[90%] md:!w-full max-md:mb-[calc(env(safe-area-inset-bottom)+0.5rem)]",
+               "!rounded-xl h-[auto] border px-3 py-2 !w-[90%] md:!w-full max-md:mb-[calc(env(safe-area-inset-bottom)+0.5rem)]",
             position: "bottom-right",
          },
       )
