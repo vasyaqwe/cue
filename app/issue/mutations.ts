@@ -1,4 +1,5 @@
 import { useAuth } from "@/auth/hooks"
+import type { insertIssueParams } from "@/db/schema"
 import { env } from "@/env"
 import * as issue from "@/issue/functions"
 import { issueListQuery } from "@/issue/queries"
@@ -7,12 +8,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
 import { produce } from "immer"
 import usePartySocket from "partysocket/react"
+import type { z } from "zod"
 
 export function useDeleteIssue() {
    const queryClient = useQueryClient()
    const socket = useIssueSocket()
    const { organizationId, user } = useAuth()
-   const { deleteIssueFromCache } = useIssueQueryMutator()
+   const { deleteIssueFromQueryData } = useIssueQueryMutator()
 
    const deleteFn = useServerFn(issue.deleteFn)
    const deleteIssue = useMutation({
@@ -32,7 +34,7 @@ export function useDeleteIssue() {
             issueListQuery({ organizationId }).queryKey,
          )
 
-         deleteIssueFromCache({ issueId })
+         deleteIssueFromQueryData({ issueId })
 
          return { data }
       },
@@ -52,11 +54,11 @@ export function useDeleteIssue() {
    }
 }
 
-function useIssueQueryMutator() {
+export function useIssueQueryMutator() {
    const queryClient = useQueryClient()
    const { organizationId } = useAuth()
 
-   const deleteIssueFromCache = ({ issueId }: { issueId: string }) => {
+   const deleteIssueFromQueryData = ({ issueId }: { issueId: string }) => {
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
          (oldData) =>
@@ -66,12 +68,31 @@ function useIssueQueryMutator() {
       )
    }
 
-   return { deleteIssueFromCache }
+   const insertIssueToQueryData = ({
+      issue,
+   }: { issue: z.infer<typeof insertIssueParams> }) => {
+      queryClient.setQueryData(
+         issueListQuery({ organizationId }).queryKey,
+         (oldData) => [
+            ...(oldData ?? []),
+            {
+               ...issue,
+               id: crypto.randomUUID(),
+               description: issue.description ?? "",
+               createdAt: Date.now(),
+               updatedAt: Date.now(),
+            },
+         ],
+      )
+   }
+
+   return { deleteIssueFromQueryData, insertIssueToQueryData }
 }
 
-function useIssueSocket() {
+export function useIssueSocket() {
    const { organizationId, user } = useAuth()
-   const { deleteIssueFromCache } = useIssueQueryMutator()
+   const { deleteIssueFromQueryData, insertIssueToQueryData } =
+      useIssueQueryMutator()
 
    return usePartySocket({
       host: env.VITE_PARTYKIT_URL,
@@ -81,8 +102,12 @@ function useIssueSocket() {
          const message: IssueEvent = JSON.parse(event.data)
          if (message.senderId === user.id) return
 
+         if (message.type === "insert") {
+            return insertIssueToQueryData({ issue: message.issue })
+         }
+
          if (message.type === "delete") {
-            return deleteIssueFromCache({ issueId: message.issueId })
+            return deleteIssueFromQueryData({ issueId: message.issueId })
          }
       },
    })

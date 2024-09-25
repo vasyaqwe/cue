@@ -106,9 +106,7 @@ function Component() {
                                              </Badge>
                                              <span className=" text-sm opacity-75 max-md:hidden">
                                                 {formatDate(
-                                                   new Date(
-                                                      issue.createdAt as Date,
-                                                   ),
+                                                   new Date(issue.createdAt),
                                                    {
                                                       month: "short",
                                                       day: "numeric",

@@ -1,5 +1,4 @@
 import baseX from "base-x"
-import { sql } from "drizzle-orm"
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 const b58 = baseX("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
 
@@ -47,15 +46,11 @@ const generateId = (prefix: keyof typeof prefixes) =>
 const createTable = sqliteTable
 
 const lifecycleDates = {
-   createdAt: integer("created_at", { mode: "timestamp" })
-      .default(sql`(unixepoch())`)
-      .notNull(),
-   updatedAt: integer("updated_at", {
-      mode: "timestamp",
-   })
+   createdAt: integer("created_at").default(Date.now()).notNull(),
+   updatedAt: integer("updated_at")
       .notNull()
-      .default(sql`(unixepoch())`)
-      .$onUpdateFn(() => new Date()),
+      .default(Date.now())
+      .$onUpdateFn(() => Date.now()),
 }
 
 export { createTable, lifecycleDates, generateId }

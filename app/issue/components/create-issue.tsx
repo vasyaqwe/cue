@@ -1,5 +1,7 @@
 import { useAuth } from "@/auth/hooks"
+import { useIssueSocket } from "@/issue/mutations"
 import { issueListQuery } from "@/issue/queries"
+import type { IssueEvent } from "@/issue/types"
 import { popModal } from "@/modals"
 import { ResponsiveModalContent } from "@/modals/dynamic"
 import { Button } from "@/ui/components/button"
@@ -18,7 +20,7 @@ import * as issue from "../functions"
 export function CreateIssue() {
    const queryClient = useQueryClient()
    const navigate = useNavigate()
-   const { organizationId } = useAuth()
+   const { organizationId, user } = useAuth()
    const { slug } = useParams({ from: "/$slug/_layout" })
    const [title, setTitle] = useLocalStorage("create_issue_title", "")
    const [description, setDescription] = useLocalStorage(
@@ -26,21 +28,34 @@ export function CreateIssue() {
       "",
    )
    const titleRef = useRef<HTMLInputElement>(null)
+   const socket = useIssueSocket()
 
    const insertFn = useServerFn(issue.insert)
    const insert = useMutation({
       mutationFn: insertFn,
-      onSuccess: ({ issueId }) => {
+      onSuccess: (issue) => {
+         if (!issue) return
+
+         socket.send(
+            JSON.stringify({
+               type: "insert",
+               issue,
+               senderId: user.id,
+            } satisfies IssueEvent),
+         )
+
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
+
          popModal("create-issue")
          setTitle("")
          setDescription("")
+
          toast.success("Issue created", {
             action: {
                label: "View",
                onClick: () => {
                   toast.dismiss()
-                  navigate({ to: `/${slug}/issue/${issueId}` })
+                  navigate({ to: `/${slug}/issue/${issue.id}` })
                },
             },
             duration: Infinity,

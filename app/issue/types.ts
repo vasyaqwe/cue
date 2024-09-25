@@ -1,10 +1,9 @@
-import type { insertIssueParams } from "@/db/schema"
-import type { z } from "zod"
+import type * as issue from "./functions"
 
 export type IssueEvent =
    | {
         type: "insert"
-        issue: z.infer<typeof insertIssueParams>
+        issue: Awaited<ReturnType<typeof issue.list>>[number]
         senderId: string
      }
    | {

@@ -131,7 +131,7 @@ export const generateEmailVerificationCode = async ({
       userId,
       email,
       code,
-      expiresAt: createDate(new TimeSpan(5, "m")), // 5 minutes
+      expiresAt: createDate(new TimeSpan(5, "m")).getTime(), // 5 minutes
    })
 
    return code

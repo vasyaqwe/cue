@@ -34,11 +34,7 @@ export const insert = createServerFn(
    organizationProtectedProcedure
       .input(insertIssueParams)
       .mutation(async ({ ctx, input }) => {
-         return await ctx.db
-            .insert(issues)
-            .values(input)
-            .returning({ issueId: issues.id })
-            .get()
+         return await ctx.db.insert(issues).values(input).returning().get()
       }),
 )
 

@@ -66,9 +66,7 @@ export const emailVerificationCodes = createTable(
    "email_verification_codes",
    {
       id: generateId("verification_code"),
-      expiresAt: integer("expires_at", {
-         mode: "timestamp",
-      }).notNull(),
+      expiresAt: integer("expires_at").notNull(),
       code: text("code").notNull(),
       userId: text("user_id").notNull(),
       email: text("email").notNull().unique(),
