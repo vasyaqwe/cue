@@ -2,7 +2,7 @@ import { users } from "@/db/schema/users"
 import { relations } from "drizzle-orm"
 import { index, primaryKey, text, uniqueIndex } from "drizzle-orm/sqlite-core"
 import { createInsertSchema } from "drizzle-zod"
-import { createTable, generateId, lifecycleDates } from "../utils"
+import { createTable, generateCode, generateId, lifecycleDates } from "../utils"
 
 export const organizations = createTable(
    "organizations",
@@ -10,6 +10,7 @@ export const organizations = createTable(
       id: generateId("organization"),
       name: text("name").notNull(),
       slug: text("slug").notNull().unique(),
+      inviteCode: text("invite_code").notNull().$defaultFn(generateCode),
       ...lifecycleDates,
    },
    (table) => {

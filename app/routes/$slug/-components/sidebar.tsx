@@ -29,7 +29,7 @@ export function Sidebar() {
 
    const logoutFn = useServerFn(auth.logout)
    const logout = useMutation({
-      mutationFn: () => logoutFn(),
+      mutationFn: logoutFn,
       onSuccess: () => {
          navigate({ to: "/login" })
       },

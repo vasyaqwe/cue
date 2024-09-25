@@ -35,8 +35,8 @@ export function CreateOrganization() {
    const insertFn = useServerFn(organization.insert)
    const insert = useMutation({
       mutationFn: insertFn,
-      onSuccess: () => {
-         queryClient.invalidateQueries(organizationMembershipsQuery())
+      onSuccess: async () => {
+         await queryClient.invalidateQueries(organizationMembershipsQuery())
          navigate({ to: `/${makeSlug(name)}` })
       },
       onError: (error) => {

@@ -17,7 +17,11 @@ import { Sidebar } from "./-components/sidebar"
 export const Route = createFileRoute("/$slug/_layout")({
    component: Component,
    beforeLoad: async ({ context, params }) => {
-      const session = await context.queryClient.ensureQueryData(meQuery())
+      const session = await context.queryClient
+         .ensureQueryData(meQuery())
+         .catch(() => {
+            throw redirect({ to: "/login" })
+         })
       if (!session?.session || !session.user) throw redirect({ to: "/login" })
 
       const memberships = await context.queryClient.ensureQueryData(

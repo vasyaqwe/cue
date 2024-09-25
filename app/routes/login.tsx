@@ -1,4 +1,5 @@
 import * as auth from "@/auth/functions"
+import * as organization from "@/organization/functions"
 import { Button } from "@/ui/components/button"
 import { cardVariants } from "@/ui/components/card"
 import { Icons } from "@/ui/components/icons"
@@ -6,10 +7,11 @@ import { Loading } from "@/ui/components/loading"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
 import { useMountError } from "@/user-interactions/use-mount-error"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 export const Route = createFileRoute("/login")({
    component: Component,
@@ -17,9 +19,11 @@ export const Route = createFileRoute("/login")({
    validateSearch: (
       search: Record<string, unknown>,
    ): {
+      inviteCode?: string | undefined
       error?: string | undefined
    } => {
       return {
+         inviteCode: search.inviteCode as string | undefined,
          error: search.error as string | undefined,
       }
    },
@@ -28,7 +32,38 @@ export const Route = createFileRoute("/login")({
 function Component() {
    useMountError("Login failed, please try again")
    // const navigate = useNavigate()
-   // const search = Route.useSearch()
+   const search = Route.useSearch()
+
+   const byInviteCodeFn = useServerFn(organization.byInviteCode)
+   const { data: organizationToJoin } = useQuery({
+      queryKey: ["organization", search.inviteCode],
+      queryFn: () => byInviteCodeFn({ inviteCode: search.inviteCode ?? "" }),
+      enabled: !!search.inviteCode,
+   })
+
+   useEffect(() => {
+      if (!organizationToJoin) return
+
+      toast.custom(
+         () => (
+            <div className="text-popover-foreground/90">
+               <p className="mb-2 line-clamp-1 font-medium text-[1rem]">
+                  You are invited
+               </p>
+               <p className="max-sm:text-sm">
+                  Sign up to join <b>{organizationToJoin.name}</b> organization
+               </p>
+            </div>
+         ),
+         {
+            duration: Infinity,
+            className:
+               "rounded-xl h-[auto] px-3 py-2 !w-[90%] md:!w-full max-md:mb-[calc(env(safe-area-inset-bottom)+0.5rem)]",
+            position: "bottom-right",
+         },
+      )
+   }, [organizationToJoin])
+
    // const otpInputRef = useRef<HTMLInputElement>(null)
 
    const [isCodeSent, _setIsCodeSent] = useState(false)
@@ -96,7 +131,7 @@ function Component() {
 
    const loginWithGithubFn = useServerFn(auth.logInWithGithub)
    const loginWithGithub = useMutation({
-      mutationFn: () => loginWithGithubFn(),
+      mutationFn: loginWithGithubFn,
       onSuccess: (url) => {
          window.location.href = url
       },
@@ -167,7 +202,7 @@ function Component() {
                                  onClick={() => {
                                     sendLoginCode({
                                        email,
-                                       referralCode: search.referralCode,
+                                       inviteCode: search.inviteCode,
                                     })
                                  }}
                                  variant={"link"}
@@ -188,7 +223,7 @@ function Component() {
                                     e.preventDefault()
                                     sendLoginCode({
                                        email,
-                                       referralCode: search.referralCode,
+                                       inviteCode: search.inviteCode,
                                     })
                                  }}
                                  className="px-6"

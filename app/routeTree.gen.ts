@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
+import { Route as JoinInviteCodeImport } from './routes/join/$inviteCode'
 import { Route as SlugLayoutImport } from './routes/$slug/_layout'
 import { Route as SlugLayoutIndexImport } from './routes/$slug/_layout/index'
 import { Route as SlugLayoutSettingsImport } from './routes/$slug/_layout/settings'
@@ -38,6 +39,11 @@ const LoginRoute = LoginImport.update({
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const JoinInviteCodeRoute = JoinInviteCodeImport.update({
+  path: '/join/$inviteCode',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -92,6 +98,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$slug'
       preLoaderRoute: typeof SlugLayoutImport
       parentRoute: typeof SlugRoute
+    }
+    '/join/$inviteCode': {
+      id: '/join/$inviteCode'
+      path: '/join/$inviteCode'
+      fullPath: '/join/$inviteCode'
+      preLoaderRoute: typeof JoinInviteCodeImport
+      parentRoute: typeof rootRoute
     }
     '/$slug/_layout/settings': {
       id: '/$slug/_layout/settings'
@@ -149,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$slug': typeof SlugLayoutRouteWithChildren
+  '/join/$inviteCode': typeof JoinInviteCodeRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/': typeof SlugLayoutIndexRoute
   '/$slug/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
@@ -158,6 +172,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$slug': typeof SlugLayoutIndexRoute
+  '/join/$inviteCode': typeof JoinInviteCodeRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
 }
@@ -168,6 +183,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/$slug': typeof SlugRouteWithChildren
   '/$slug/_layout': typeof SlugLayoutRouteWithChildren
+  '/join/$inviteCode': typeof JoinInviteCodeRoute
   '/$slug/_layout/settings': typeof SlugLayoutSettingsRoute
   '/$slug/_layout/': typeof SlugLayoutIndexRoute
   '/$slug/_layout/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
@@ -179,17 +195,25 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/$slug'
+    | '/join/$inviteCode'
     | '/$slug/settings'
     | '/$slug/'
     | '/$slug/issue/$issueId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/$slug' | '/$slug/settings' | '/$slug/issue/$issueId'
+  to:
+    | '/'
+    | '/login'
+    | '/$slug'
+    | '/join/$inviteCode'
+    | '/$slug/settings'
+    | '/$slug/issue/$issueId'
   id:
     | '__root__'
     | '/'
     | '/login'
     | '/$slug'
     | '/$slug/_layout'
+    | '/join/$inviteCode'
     | '/$slug/_layout/settings'
     | '/$slug/_layout/'
     | '/$slug/_layout/issue/$issueId'
@@ -200,12 +224,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   SlugRoute: typeof SlugRouteWithChildren
+  JoinInviteCodeRoute: typeof JoinInviteCodeRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   SlugRoute: SlugRouteWithChildren,
+  JoinInviteCodeRoute: JoinInviteCodeRoute,
 }
 
 export const routeTree = rootRoute
@@ -222,7 +248,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/login",
-        "/$slug"
+        "/$slug",
+        "/join/$inviteCode"
       ]
     },
     "/": {
@@ -245,6 +272,9 @@ export const routeTree = rootRoute
         "/$slug/_layout/",
         "/$slug/_layout/issue/$issueId"
       ]
+    },
+    "/join/$inviteCode": {
+      "filePath": "join/$inviteCode.tsx"
     },
     "/$slug/_layout/settings": {
       "filePath": "$slug/_layout/settings.tsx",

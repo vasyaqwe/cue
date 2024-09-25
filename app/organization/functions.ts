@@ -7,6 +7,21 @@ import { protectedProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
 import { TRPCError } from "@trpc/server"
 import { eq } from "drizzle-orm"
+import { z } from "zod"
+
+export const byInviteCode = createServerFn(
+   "GET",
+   protectedProcedure
+      .input(z.object({ inviteCode: z.string() }))
+      .query(async ({ ctx, input }) => {
+         return await ctx.db.query.organizations.findFirst({
+            where: eq(organizations.inviteCode, input.inviteCode),
+            columns: {
+               name: true,
+            },
+         })
+      }),
+)
 
 export const memberships = createServerFn(
    "GET",
@@ -30,7 +45,7 @@ export const insert = createServerFn(
    "POST",
    protectedProcedure
       .input(insertOrganizationParams)
-      .query(async ({ ctx, input }) => {
+      .mutation(async ({ ctx, input }) => {
          const existingOrg = await ctx.db.query.organizations.findFirst({
             where: eq(organizations.slug, input.slug),
          })
