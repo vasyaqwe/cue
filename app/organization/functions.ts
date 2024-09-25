@@ -3,7 +3,11 @@ import {
    organizationMembers,
    organizations,
 } from "@/db/schema"
-import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
+import {
+   organizationProtectedProcedure,
+   protectedProcedure,
+   publicProcedure,
+} from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
 import { TRPCError } from "@trpc/server"
 import { eq } from "drizzle-orm"
@@ -11,7 +15,7 @@ import { z } from "zod"
 
 export const byInviteCode = createServerFn(
    "GET",
-   protectedProcedure
+   publicProcedure
       .input(z.object({ inviteCode: z.string() }))
       .query(async ({ ctx, input }) => {
          return await ctx.db.query.organizations.findFirst({

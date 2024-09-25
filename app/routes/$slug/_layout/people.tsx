@@ -138,7 +138,7 @@ function Component() {
                         </div>
                      </ResponsiveModalContent>
                   </ResponsiveModalWrapper>
-                  <div className="container mt-6 space-y-3">
+                  <div className="container mt-6 space-y-5">
                      {members.map((member) => (
                         <div key={member.user.email}>
                            <div className="flex items-center gap-3">

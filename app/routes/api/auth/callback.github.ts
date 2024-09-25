@@ -1,6 +1,11 @@
 import { createSession, github } from "@/auth"
 import { db } from "@/db"
-import { oauthAccounts, users } from "@/db/schema"
+import {
+   oauthAccounts,
+   organizationMembers,
+   organizations,
+   users,
+} from "@/db/schema"
 import { createAPIFileRoute } from "@tanstack/start/api"
 import { and, eq } from "drizzle-orm"
 import { parseCookies } from "vinxi/http"
@@ -66,6 +71,8 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
                   },
                },
             )
+            if (!emailResponse.ok) throw new Error("Error")
+
             const emails = (await emailResponse.json()) as {
                email: string
                primary: boolean
@@ -88,7 +95,9 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
          }
 
          // If no existing account check if the a user with the email exists and link the account.
-         const newUser = await db.transaction(async (tx) => {
+         const result = await db.transaction(async (tx) => {
+            const inviteCode = cookies.invite_code
+
             const [newUser] = await tx
                .insert(users)
                .values({
@@ -107,16 +116,36 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
                providerUserId: githubUserProfile.id.toString(),
                userId: newUser.id,
             })
-            return newUser
+
+            if (!inviteCode) return { newUser }
+
+            const organizationToJoin = await tx.query.organizations.findFirst({
+               where: eq(organizations.inviteCode, inviteCode),
+               columns: {
+                  id: true,
+                  slug: true,
+               },
+            })
+
+            if (organizationToJoin) {
+               await tx.insert(organizationMembers).values({
+                  id: newUser.id,
+                  organizationId: organizationToJoin.id,
+               })
+            }
+
+            return { newUser, organizationSlug: organizationToJoin?.slug }
          })
 
-         if (!newUser) throw new Error("Error")
+         if (!result.newUser) throw new Error("Error")
 
-         const sessionCookie = await createSession(newUser.id)
+         const sessionCookie = await createSession(result.newUser.id)
          return new Response(null, {
             status: 302,
             headers: {
-               Location: "/",
+               Location: result?.organizationSlug
+                  ? `/${result.organizationSlug}`
+                  : "/",
                "Set-Cookie": sessionCookie.serialize(),
             },
          })
@@ -125,6 +154,9 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
 
          const redirectUrl = new URL("/login", request.url)
          redirectUrl.searchParams.set("error", "true")
+         if (cookies.invite_code) {
+            redirectUrl.searchParams.set("inviteCode", cookies.invite_code)
+         }
 
          return new Response(null, {
             status: 302,

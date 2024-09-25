@@ -2,7 +2,8 @@ import { github, lucia } from "@/auth"
 import { protectedProcedure, publicProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
 import { generateState } from "arctic"
-import { parseCookies, setCookie, setHeader } from "vinxi/http"
+import { deleteCookie, parseCookies, setCookie, setHeader } from "vinxi/http"
+import { z } from "zod"
 
 export const me = createServerFn(
    "GET",
@@ -13,24 +14,42 @@ export const me = createServerFn(
 
 export const logInWithGithub = createServerFn(
    "POST",
-   publicProcedure.mutation(async () => {
-      const state = generateState()
-      const url = await github.createAuthorizationURL(state, {
-         scopes: ["user:email"],
-      })
+   publicProcedure
+      .input(
+         z.object({
+            inviteCode: z.string().optional(),
+         }),
+      )
+      .mutation(async ({ input }) => {
+         const state = generateState()
+         const url = await github.createAuthorizationURL(state, {
+            scopes: ["user:email"],
+         })
 
-      setCookie("github_oauth_state", state, {
-         path: "/",
-         secure: process.env.NODE_ENV === "production",
-         httpOnly: true,
-         maxAge: 60 * 10,
-         sameSite: "lax",
-      })
+         if (input.inviteCode) {
+            setCookie("invite_code", input.inviteCode, {
+               path: "/",
+               secure: process.env.NODE_ENV === "production",
+               httpOnly: true,
+               maxAge: 60 * 10,
+               sameSite: "lax",
+            })
+         } else {
+            deleteCookie("invite_code")
+         }
 
-      setHeader("Location", url.toString())
+         setCookie("github_oauth_state", state, {
+            path: "/",
+            secure: process.env.NODE_ENV === "production",
+            httpOnly: true,
+            maxAge: 60 * 10,
+            sameSite: "lax",
+         })
 
-      return url.toString()
-   }),
+         setHeader("Location", url.toString())
+
+         return url.toString()
+      }),
 )
 
 export const logout = createServerFn(

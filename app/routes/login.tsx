@@ -36,7 +36,7 @@ function Component() {
 
    const byInviteCodeFn = useServerFn(organization.byInviteCode)
    const { data: organizationToJoin } = useQuery({
-      queryKey: ["organization", search.inviteCode],
+      queryKey: ["organization_by_invite_code", search.inviteCode],
       queryFn: () => byInviteCodeFn({ inviteCode: search.inviteCode ?? "" }),
       enabled: !!search.inviteCode,
    })
@@ -133,7 +133,9 @@ function Component() {
    const loginWithGithub = useMutation({
       mutationFn: loginWithGithubFn,
       onSuccess: (url) => {
-         window.location.href = url
+         window.location.href = search.inviteCode
+            ? `${url}?inviteCode=${search.inviteCode}`
+            : url
       },
    })
 
@@ -266,7 +268,11 @@ function Component() {
                                        loginWithGithub.isPending ||
                                        loginWithGithub.isSuccess
                                     }
-                                    onClick={() => loginWithGithub.mutate()}
+                                    onClick={() =>
+                                       loginWithGithub.mutate({
+                                          inviteCode: search.inviteCode,
+                                       })
+                                    }
                                  >
                                     {loginWithGithub.isPending ||
                                     loginWithGithub.isSuccess ? (

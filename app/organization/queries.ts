@@ -3,7 +3,7 @@ import * as organization from "./functions"
 
 export const organizationMembershipsQuery = () =>
    queryOptions({
-      queryKey: ["organizations_memberships"],
+      queryKey: ["organization_memberships"],
       queryFn: () => organization.memberships(),
       staleTime: Infinity,
    })
@@ -12,6 +12,6 @@ export const organizationMembersQuery = ({
    organizationId,
 }: { organizationId: string }) =>
    queryOptions({
-      queryKey: ["organizations_members"],
+      queryKey: ["organization_members"],
       queryFn: () => organization.members({ organizationId }),
    })
