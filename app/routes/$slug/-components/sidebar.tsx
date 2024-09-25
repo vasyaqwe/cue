@@ -2,6 +2,7 @@ import * as auth from "@/auth/functions"
 import { useAuth } from "@/auth/hooks"
 import { pushModal } from "@/modals"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
+import { Route as peopleRoute } from "@/routes/$slug/_layout/people"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
 import { buttonVariants } from "@/ui/components/button"
 import {
@@ -101,6 +102,23 @@ export function Sidebar() {
                      >
                         <Icons.issues className="size-6" />
                         Issues
+                     </Link>
+                  </li>
+                  <li>
+                     <Link
+                        params={{ slug }}
+                        activeProps={{
+                           className:
+                              "!border-border/80 bg-border/30 opacity-100",
+                           "aria-current": "page",
+                        }}
+                        to={peopleRoute.to}
+                        className={cn(
+                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
+                        )}
+                     >
+                        <Icons.people className="size-6" />
+                        People
                      </Link>
                   </li>
                   <li>

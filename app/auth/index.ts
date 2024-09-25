@@ -30,9 +30,9 @@ const adapter: DatabaseAdapter<Session, User> = {
             .innerJoin(users, eq(sessions.userId, users.id))
             .where(eq(sessions.id, sessionId))
             .get()) ?? null
-      if (result === null) {
-         return { session: null, user: null }
-      }
+
+      if (result === null) return { session: null, user: null }
+
       return result
    },
    deleteSession: async (sessionId: string): Promise<void> => {
@@ -67,6 +67,7 @@ export const createSession = async (userId: string) => {
       userId: userId,
       expiresAt: lucia.getNewSessionExpiration(),
    }
+
    await db.insert(sessions).values(session)
 
    const sessionCookie = lucia.createSessionCookie(

@@ -12,7 +12,7 @@ function Component() {
          <Header>
             <HeaderTitle>Settings</HeaderTitle>
          </Header>
-         <main>Hello settings</main>
+         <main className="relative h-full">Hello settings</main>
       </>
    )
 }

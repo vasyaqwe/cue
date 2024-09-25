@@ -19,6 +19,7 @@ import { Route as JoinInviteCodeImport } from './routes/join/$inviteCode'
 import { Route as SlugLayoutImport } from './routes/$slug/_layout'
 import { Route as SlugLayoutIndexImport } from './routes/$slug/_layout/index'
 import { Route as SlugLayoutSettingsImport } from './routes/$slug/_layout/settings'
+import { Route as SlugLayoutPeopleImport } from './routes/$slug/_layout/people'
 import { Route as SlugLayoutIssueIssueIdImport } from './routes/$slug/_layout/issue/$issueId'
 
 // Create Virtual Routes
@@ -59,6 +60,11 @@ const SlugLayoutIndexRoute = SlugLayoutIndexImport.update({
 
 const SlugLayoutSettingsRoute = SlugLayoutSettingsImport.update({
   path: '/settings',
+  getParentRoute: () => SlugLayoutRoute,
+} as any)
+
+const SlugLayoutPeopleRoute = SlugLayoutPeopleImport.update({
+  path: '/people',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
@@ -106,6 +112,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JoinInviteCodeImport
       parentRoute: typeof rootRoute
     }
+    '/$slug/_layout/people': {
+      id: '/$slug/_layout/people'
+      path: '/people'
+      fullPath: '/$slug/people'
+      preLoaderRoute: typeof SlugLayoutPeopleImport
+      parentRoute: typeof SlugLayoutImport
+    }
     '/$slug/_layout/settings': {
       id: '/$slug/_layout/settings'
       path: '/settings'
@@ -133,12 +146,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface SlugLayoutRouteChildren {
+  SlugLayoutPeopleRoute: typeof SlugLayoutPeopleRoute
   SlugLayoutSettingsRoute: typeof SlugLayoutSettingsRoute
   SlugLayoutIndexRoute: typeof SlugLayoutIndexRoute
   SlugLayoutIssueIssueIdRoute: typeof SlugLayoutIssueIssueIdRoute
 }
 
 const SlugLayoutRouteChildren: SlugLayoutRouteChildren = {
+  SlugLayoutPeopleRoute: SlugLayoutPeopleRoute,
   SlugLayoutSettingsRoute: SlugLayoutSettingsRoute,
   SlugLayoutIndexRoute: SlugLayoutIndexRoute,
   SlugLayoutIssueIssueIdRoute: SlugLayoutIssueIssueIdRoute,
@@ -163,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/$slug': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
+  '/$slug/people': typeof SlugLayoutPeopleRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/': typeof SlugLayoutIndexRoute
   '/$slug/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
@@ -173,6 +189,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/$slug': typeof SlugLayoutIndexRoute
   '/join/$inviteCode': typeof JoinInviteCodeRoute
+  '/$slug/people': typeof SlugLayoutPeopleRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
 }
@@ -184,6 +201,7 @@ export interface FileRoutesById {
   '/$slug': typeof SlugRouteWithChildren
   '/$slug/_layout': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
+  '/$slug/_layout/people': typeof SlugLayoutPeopleRoute
   '/$slug/_layout/settings': typeof SlugLayoutSettingsRoute
   '/$slug/_layout/': typeof SlugLayoutIndexRoute
   '/$slug/_layout/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
@@ -196,6 +214,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/$slug'
     | '/join/$inviteCode'
+    | '/$slug/people'
     | '/$slug/settings'
     | '/$slug/'
     | '/$slug/issue/$issueId'
@@ -205,6 +224,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/$slug'
     | '/join/$inviteCode'
+    | '/$slug/people'
     | '/$slug/settings'
     | '/$slug/issue/$issueId'
   id:
@@ -214,6 +234,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/$slug/_layout'
     | '/join/$inviteCode'
+    | '/$slug/_layout/people'
     | '/$slug/_layout/settings'
     | '/$slug/_layout/'
     | '/$slug/_layout/issue/$issueId'
@@ -268,6 +289,7 @@ export const routeTree = rootRoute
       "filePath": "$slug/_layout.tsx",
       "parent": "/$slug",
       "children": [
+        "/$slug/_layout/people",
         "/$slug/_layout/settings",
         "/$slug/_layout/",
         "/$slug/_layout/issue/$issueId"
@@ -275,6 +297,10 @@ export const routeTree = rootRoute
     },
     "/join/$inviteCode": {
       "filePath": "join/$inviteCode.tsx"
+    },
+    "/$slug/_layout/people": {
+      "filePath": "$slug/_layout/people.tsx",
+      "parent": "/$slug/_layout"
     },
     "/$slug/_layout/settings": {
       "filePath": "$slug/_layout/settings.tsx",

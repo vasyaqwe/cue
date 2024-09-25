@@ -38,7 +38,7 @@ export const Route = createFileRoute("/$slug/_layout/")({
          <Header>
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
-         <main>
+         <main className="relative h-full">
             <Loading className="absolute inset-0 m-auto" />
          </main>
       </>
@@ -59,9 +59,9 @@ function Component() {
          <Header>
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
-         <main>
+         <main className="relative h-full">
             {issues.length === 0 ? (
-               <p>No issues</p>
+               <p className="absolute inset-0 m-auto">No issues</p>
             ) : (
                Object.entries(groupedIssues).map(([status, issues]) => {
                   return (

@@ -1,17 +1,13 @@
-import {
-   byIdIssueParams,
-   insertIssueParams,
-   issues,
-   listIssueParams,
-} from "@/db/schema"
+import { insertIssueParams, issues } from "@/db/schema"
 import { organizationProtectedProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
 import { desc, eq } from "drizzle-orm"
+import { z } from "zod"
 
 export const list = createServerFn(
    "GET",
    organizationProtectedProcedure
-      .input(listIssueParams)
+      .input(z.object({ organizationId: z.string() }))
       .query(async ({ ctx, input }) => {
          return await ctx.db.query.issues.findMany({
             where: eq(issues.organizationId, input.organizationId),
@@ -23,7 +19,7 @@ export const list = createServerFn(
 export const byId = createServerFn(
    "GET",
    organizationProtectedProcedure
-      .input(byIdIssueParams)
+      .input(z.object({ issueId: z.string() }))
       .query(async ({ ctx, input }) => {
          return (
             (await ctx.db.query.issues.findFirst({
@@ -49,7 +45,7 @@ export const insert = createServerFn(
 export const deleteFn = createServerFn(
    "POST",
    organizationProtectedProcedure
-      .input(byIdIssueParams)
+      .input(z.object({ issueId: z.string() }))
       .mutation(async ({ ctx, input }) => {
          await ctx.db.delete(issues).where(eq(issues.id, input.issueId))
       }),

@@ -7,3 +7,11 @@ export const organizationMembershipsQuery = () =>
       queryFn: () => organization.memberships(),
       staleTime: Infinity,
    })
+
+export const organizationMembersQuery = ({
+   organizationId,
+}: { organizationId: string }) =>
+   queryOptions({
+      queryKey: ["organizations_members"],
+      queryFn: () => organization.members({ organizationId }),
+   })

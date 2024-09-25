@@ -30,7 +30,7 @@ export function UserAvatar({
       <Avatar
          {...props}
          className={cn(
-            "relative block size-8 overflow-visible [--online-indicator-size:0.875rem]",
+            "relative block size-8 shrink-0 overflow-visible [--online-indicator-size:0.875rem]",
             className,
          )}
       >
@@ -56,7 +56,7 @@ export function UserAvatar({
          <span
             title={"Online"}
             role="status"
-            data-online-indicator
+            data-indicator
             className={cn(
                "-right-0.5 -bottom-0.5 absolute block size-[var(--online-indicator-size)] rounded-full border-[3px] border-background bg-green-500 transition-all duration-300",
                isOnline && showActiveIndicator
