@@ -1,11 +1,8 @@
 import { createSession, github } from "@/auth"
+import { oauthAccounts, users } from "@/auth/schema"
 import { db } from "@/db"
-import {
-   oauthAccounts,
-   organizationMembers,
-   organizations,
-   users,
-} from "@/db/schema"
+import { organizationMembers, organizations } from "@/organization/schema"
+
 import { createAPIFileRoute } from "@tanstack/start/api"
 import { and, eq } from "drizzle-orm"
 import { parseCookies } from "vinxi/http"

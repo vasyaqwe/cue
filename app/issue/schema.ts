@@ -1,8 +1,8 @@
-import { organizations } from "@/db/schema/organizations"
+import { createTable, generateId, lifecycleDates } from "@/db/utils"
+import { organizations } from "@/organization/schema"
 import { index, text } from "drizzle-orm/sqlite-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
-import { createTable, generateId, lifecycleDates } from "../utils"
 
 export const issueStatuses = ["backlog", "todo", "in progress", "done"] as const
 

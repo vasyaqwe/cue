@@ -1,3 +1,3 @@
-export * from "./users"
-export * from "./organizations"
-export * from "./issues"
+export * from "@/auth/schema"
+export * from "@/organization/schema"
+export * from "@/issue/schema"

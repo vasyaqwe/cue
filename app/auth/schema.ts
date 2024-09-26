@@ -1,3 +1,4 @@
+import { createTable, generateId, lifecycleDates } from "@/db/utils"
 import { relations } from "drizzle-orm"
 import {
    index,
@@ -8,7 +9,6 @@ import {
 } from "drizzle-orm/sqlite-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
-import { createTable, generateId, lifecycleDates } from "../utils"
 
 export const users = createTable(
    "users",

@@ -1,13 +1,13 @@
 import {
-   insertOrganizationParams,
-   organizationMembers,
-   organizations,
-} from "@/db/schema"
-import {
    organizationProtectedProcedure,
    protectedProcedure,
    publicProcedure,
 } from "@/lib/trpc"
+import {
+   insertOrganizationParams,
+   organizationMembers,
+   organizations,
+} from "@/organization/schema"
 import { createServerFn } from "@tanstack/start"
 import { TRPCError } from "@trpc/server"
 import { and, eq, exists } from "drizzle-orm"

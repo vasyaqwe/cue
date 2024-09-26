@@ -1,8 +1,13 @@
-import { users } from "@/db/schema/users"
+import { users } from "@/auth/schema"
+import {
+   createTable,
+   generateCode,
+   generateId,
+   lifecycleDates,
+} from "@/db/utils"
 import { relations } from "drizzle-orm"
 import { index, primaryKey, text, uniqueIndex } from "drizzle-orm/sqlite-core"
 import { createInsertSchema } from "drizzle-zod"
-import { createTable, generateCode, generateId, lifecycleDates } from "../utils"
 
 export const organizations = createTable(
    "organizations",

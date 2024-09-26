@@ -1,4 +1,3 @@
-import { type Database, db } from "@/db"
 import {
    type Session,
    type User,
@@ -6,7 +5,8 @@ import {
    emailVerificationCodes,
    sessions,
    users,
-} from "@/db/schema"
+} from "@/auth/schema"
+import { type Database, db } from "@/db"
 import { env } from "@/env"
 import { GitHub } from "arctic"
 import { eq } from "drizzle-orm"

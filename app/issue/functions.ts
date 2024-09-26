@@ -1,4 +1,4 @@
-import { insertIssueParams, issues, updateIssueParams } from "@/db/schema"
+import { insertIssueParams, issues, updateIssueParams } from "@/issue/schema"
 import { organizationProtectedProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
 import { desc, eq } from "drizzle-orm"

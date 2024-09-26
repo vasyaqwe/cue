@@ -1,4 +1,4 @@
-import type { IssueStatus } from "@/db/schema"
+import type { IssueStatus } from "@/issue/schema"
 import { cn } from "@/ui/utils"
 import type { ComponentProps } from "react"
 

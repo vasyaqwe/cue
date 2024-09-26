@@ -1,4 +1,4 @@
-import type { updateIssueParams } from "@/db/schema"
+import type { updateIssueParams } from "@/issue/schema"
 import type { z } from "zod"
 import type * as issue from "./functions"
 

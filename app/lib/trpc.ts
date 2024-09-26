@@ -1,7 +1,7 @@
 import type { Auth } from "@/auth"
 import { auth } from "@/auth"
 import { db } from "@/db"
-import { organizationMembers } from "@/db/schema"
+import { organizationMembers } from "@/organization/schema"
 import { isNotFound, isRedirect } from "@tanstack/react-router"
 import { TRPCError, getTRPCErrorFromUnknown, initTRPC } from "@trpc/server"
 import type {
