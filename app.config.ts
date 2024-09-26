@@ -9,7 +9,4 @@ export default defineConfig({
          }),
       ],
    },
-   server: {
-      preset: "cloudflare-module",
-   },
 })

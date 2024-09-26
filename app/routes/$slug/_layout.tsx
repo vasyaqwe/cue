@@ -1,11 +1,9 @@
 import { meQuery } from "@/auth/queries"
 import { ModalProvider } from "@/modals"
-import { CreateOrganization } from "@/organization/components/create-organization"
-import { organizationMembershipsQuery } from "@/organization/queries"
+import { organizationBySlugQuery } from "@/organization/queries"
 import { Presence } from "@/presence"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
-import { useSuspenseQuery } from "@tanstack/react-query"
 import {
    Outlet,
    createFileRoute,
@@ -24,13 +22,9 @@ export const Route = createFileRoute("/$slug/_layout")({
          })
       if (!session?.session || !session.user) throw redirect({ to: "/login" })
 
-      const memberships = await context.queryClient.ensureQueryData(
-         organizationMembershipsQuery(),
+      const organization = await context.queryClient.ensureQueryData(
+         organizationBySlugQuery({ slug: params.slug }),
       )
-
-      const organization = memberships.find(
-         (m) => m.organization.slug === params.slug,
-      )?.organization
 
       if (!organization) throw notFound()
 
@@ -49,12 +43,6 @@ export const Route = createFileRoute("/$slug/_layout")({
 })
 
 function Component() {
-   const { data: memberships } = useSuspenseQuery(
-      organizationMembershipsQuery(),
-   )
-
-   if (memberships.length === 0) return <CreateOrganization />
-
    return (
       <>
          <Presence />

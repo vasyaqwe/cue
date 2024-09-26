@@ -14,6 +14,6 @@ export const issueByIdQuery = (input: {
    issueId: string
 }) =>
    queryOptions({
-      queryKey: ["issue_by_id", input.organizationId, input.issueId],
+      queryKey: ["issue_by_id", input.issueId],
       queryFn: () => issue.byId(input),
    })

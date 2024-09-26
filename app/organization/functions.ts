@@ -10,7 +10,7 @@ import {
 } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
 import { TRPCError } from "@trpc/server"
-import { eq } from "drizzle-orm"
+import { and, eq, exists } from "drizzle-orm"
 import { z } from "zod"
 
 export const byInviteCode = createServerFn(
@@ -24,6 +24,42 @@ export const byInviteCode = createServerFn(
                name: true,
             },
          })
+      }),
+)
+
+export const bySlug = createServerFn(
+   "GET",
+   protectedProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ ctx, input }) => {
+         return (
+            (await ctx.db.query.organizations.findFirst({
+               where: and(
+                  eq(organizations.slug, input.slug),
+                  // verify membership
+                  exists(
+                     ctx.db
+                        .select()
+                        .from(organizationMembers)
+                        .where(
+                           and(
+                              eq(organizationMembers.id, ctx.user.id),
+                              eq(
+                                 organizationMembers.organizationId,
+                                 organizations.id,
+                              ),
+                           ),
+                        ),
+                  ),
+               ),
+               columns: {
+                  id: true,
+                  slug: true,
+                  name: true,
+                  inviteCode: true,
+               },
+            })) ?? null
+         )
       }),
 )
 

@@ -28,6 +28,8 @@ next-env.d.ts
 /server/build
 /public/build
 .vinxi
+dist
+.wrangler
 
 # misc
 .DS_Store
@@ -46,6 +48,7 @@ yarn-error.log*
 count.txt
 .output
 .cache
+.dev.vars
 
 # vercel
 .vercel
