@@ -6,13 +6,6 @@ export default class IssueServer implements Party.Server {
 
    async onMessage(message: string, _connection: Party.Connection<unknown>) {
       const event: IssueEvent = JSON.parse(message)
-
-      if (event.type === "insert") {
-         return this.room.broadcast(JSON.stringify(event))
-      }
-
-      if (event.type === "delete") {
-         return this.room.broadcast(JSON.stringify(event))
-      }
+      return this.room.broadcast(JSON.stringify(event))
    }
 }
