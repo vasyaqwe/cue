@@ -63,7 +63,7 @@ function ContextMenuItem({
    return (
       <ContextMenuPrimitive.Item
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled]:cursor-not-allowed focus:bg-border/50 data-[disabled]:opacity-75",
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
             inset && "pl-8",
             destructive
                ? "focus:bg-destructive focus:text-destructive-foreground"
@@ -88,7 +88,7 @@ function ContextMenuSubTrigger({
    return (
       <ContextMenuPrimitive.ContextMenuSubTrigger
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled]:cursor-not-allowed data-[state=open]:bg-border/50 focus:bg-border/50 data-[disabled]:opacity-75",
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed data-[state=open]:bg-border/50 focus:bg-border/50 data-[disabled=true]:opacity-75",
             inset && "pl-8",
             destructive
                ? "focus:bg-destructive focus:text-destructive-foreground"
@@ -123,7 +123,8 @@ function ContextMenuCheckboxItem({
    return (
       <ContextMenuPrimitive.CheckboxItem
          className={cn(
-            "relative flex select-none items-center rounded-sm py-1 pr-2 pl-8 text-accent-foreground outline-none data-[disabled]:pointer-events-none focus:bg-popover-highlight data-[state=checked]:text-foreground focus:text-foreground data-[disabled]:opacity-50",
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
+            "pl-8",
             className,
          )}
          checked={checked}
@@ -131,7 +132,7 @@ function ContextMenuCheckboxItem({
       >
          <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
             <ContextMenuPrimitive.ItemIndicator>
-               <Icons.check className="!size-4" />
+               <Icons.check className="!size-5" />
             </ContextMenuPrimitive.ItemIndicator>
          </span>
          {children}

@@ -1,4 +1,4 @@
-import { insertIssueParams, issues } from "@/db/schema"
+import { insertIssueParams, issues, updateIssueParams } from "@/db/schema"
 import { organizationProtectedProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
 import { desc, eq } from "drizzle-orm"
@@ -35,6 +35,18 @@ export const insert = createServerFn(
       .input(insertIssueParams)
       .mutation(async ({ ctx, input }) => {
          return await ctx.db.insert(issues).values(input).returning().get()
+      }),
+)
+
+export const update = createServerFn(
+   "POST",
+   organizationProtectedProcedure
+      .input(updateIssueParams)
+      .mutation(async ({ ctx, input }) => {
+         return await ctx.db
+            .update(issues)
+            .set(input)
+            .where(eq(issues.id, input.id))
       }),
 )
 

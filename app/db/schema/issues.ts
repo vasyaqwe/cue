@@ -1,9 +1,10 @@
 import { organizations } from "@/db/schema/organizations"
 import { index, text } from "drizzle-orm/sqlite-core"
-import { createInsertSchema } from "drizzle-zod"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import { z } from "zod"
 import { createTable, generateId, lifecycleDates } from "../utils"
 
-const issueStatuses = ["backlog", "todo", "in progress", "done"] as const
+export const issueStatuses = ["backlog", "todo", "in progress", "done"] as const
 
 export const issues = createTable(
    "issues",
@@ -32,5 +33,8 @@ export const issues = createTable(
 )
 
 export const insertIssueParams = createInsertSchema(issues)
+export const updateIssueParams = createSelectSchema(issues).partial().extend({
+   id: z.string(),
+})
 
 export type IssueStatus = (typeof issueStatuses)[number]

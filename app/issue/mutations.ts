@@ -1,5 +1,5 @@
 import { useAuth } from "@/auth/hooks"
-import type { insertIssueParams } from "@/db/schema"
+import type { insertIssueParams, updateIssueParams } from "@/db/schema"
 import { env } from "@/env"
 import * as issue from "@/issue/functions"
 import { issueListQuery } from "@/issue/queries"
@@ -54,6 +54,51 @@ export function useDeleteIssue() {
    }
 }
 
+export function useUpdateIssue() {
+   const queryClient = useQueryClient()
+   const socket = useIssueSocket()
+   const { organizationId, user } = useAuth()
+   const { updateIssueInQueryData } = useIssueQueryMutator()
+
+   const updateFn = useServerFn(issue.update)
+   const updateIssue = useMutation({
+      mutationFn: updateFn,
+      onMutate: async (input) => {
+         socket.send(
+            JSON.stringify({
+               type: "update",
+               issueId: input.id,
+               input,
+               senderId: user.id,
+            } satisfies IssueEvent),
+         )
+
+         await queryClient.cancelQueries(issueListQuery({ organizationId }))
+
+         const data = queryClient.getQueryData(
+            issueListQuery({ organizationId }).queryKey,
+         )
+
+         updateIssueInQueryData({ input })
+
+         return { data }
+      },
+      onError: (_err, _data, context) => {
+         queryClient.setQueryData(
+            issueListQuery({ organizationId }).queryKey,
+            context?.data,
+         )
+      },
+      onSettled: () => {
+         queryClient.invalidateQueries(issueListQuery({ organizationId }))
+      },
+   })
+
+   return {
+      updateIssue,
+   }
+}
+
 export function useIssueQueryMutator() {
    const queryClient = useQueryClient()
    const { organizationId } = useAuth()
@@ -69,16 +114,16 @@ export function useIssueQueryMutator() {
    }
 
    const insertIssueToQueryData = ({
-      issue,
-   }: { issue: z.infer<typeof insertIssueParams> }) => {
+      input,
+   }: { input: z.infer<typeof insertIssueParams> }) => {
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
          (oldData) => [
             ...(oldData ?? []),
             {
-               ...issue,
+               ...input,
                id: crypto.randomUUID(),
-               description: issue.description ?? "",
+               description: input.description ?? "",
                createdAt: Date.now(),
                updatedAt: Date.now(),
             },
@@ -86,13 +131,40 @@ export function useIssueQueryMutator() {
       )
    }
 
-   return { deleteIssueFromQueryData, insertIssueToQueryData }
+   const updateIssueInQueryData = ({
+      input,
+   }: {
+      input: z.infer<typeof updateIssueParams>
+   }) => {
+      queryClient.setQueryData(
+         issueListQuery({ organizationId }).queryKey,
+         (oldData) =>
+            produce(oldData, (draft) => {
+               const issue = draft?.find((issue) => issue.id === input.id)
+               if (!issue) return
+
+               if (input.title) issue.title = input.title
+               if (input.description) issue.description = input.description
+               if (input.label) issue.label = input.label
+               if (input.status) issue.status = input.status
+            }),
+      )
+   }
+
+   return {
+      deleteIssueFromQueryData,
+      insertIssueToQueryData,
+      updateIssueInQueryData,
+   }
 }
 
 export function useIssueSocket() {
    const { organizationId, user } = useAuth()
-   const { deleteIssueFromQueryData, insertIssueToQueryData } =
-      useIssueQueryMutator()
+   const {
+      deleteIssueFromQueryData,
+      insertIssueToQueryData,
+      updateIssueInQueryData,
+   } = useIssueQueryMutator()
 
    return usePartySocket({
       host: env.VITE_PARTYKIT_URL,
@@ -103,7 +175,11 @@ export function useIssueSocket() {
          if (message.senderId === user.id) return
 
          if (message.type === "insert") {
-            return insertIssueToQueryData({ issue: message.issue })
+            return insertIssueToQueryData({ input: message.issue })
+         }
+
+         if (message.type === "update") {
+            return updateIssueInQueryData({ input: message.input })
          }
 
          if (message.type === "delete") {

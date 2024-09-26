@@ -1,3 +1,5 @@
+import type { updateIssueParams } from "@/db/schema"
+import type { z } from "zod"
 import type * as issue from "./functions"
 
 export type IssueEvent =
@@ -9,5 +11,11 @@ export type IssueEvent =
    | {
         type: "delete"
         issueId: string
+        senderId: string
+     }
+   | {
+        type: "update"
+        issueId: string
+        input: z.infer<typeof updateIssueParams>
         senderId: string
      }
