@@ -11,7 +11,7 @@ export function Logo({ className, ...props }: ComponentProps<"div">) {
          )}
          {...props}
       >
-         <div className="squircle grid size-full place-content-center bg-background bg-gradient-to-b from-brand/70 to-brand text-background">
+         <div className="squircle grid size-full place-content-center bg-background bg-gradient-to-b from-[#1e1448]/70 to-[#1e1448] text-background">
             <Icons.logo className="mx-auto w-full max-w-[60%]" />
          </div>
       </div>

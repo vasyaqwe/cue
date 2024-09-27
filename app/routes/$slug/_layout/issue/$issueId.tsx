@@ -11,6 +11,7 @@ import {
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from "@/ui/components/dropdown-menu"
+import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { Main } from "@/ui/components/main"
@@ -114,13 +115,17 @@ function Component() {
                      />
                   </svg>
                </DropdownMenuTrigger>
-               <DropdownMenuContent align="start">
+               <DropdownMenuContent
+                  align="start"
+                  title="Issue options"
+               >
                   <DropdownMenuItem
                      onSelect={() => {
                         deleteIssue.mutate({ issueId, organizationId })
                      }}
                      destructive
                   >
+                     <Icons.trash />
                      Delete
                   </DropdownMenuItem>
                </DropdownMenuContent>

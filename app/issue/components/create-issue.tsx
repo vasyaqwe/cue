@@ -58,7 +58,6 @@ export function CreateIssue() {
                   navigate({ to: `/${slug}/issue/${issue.id}` })
                },
             },
-            duration: Infinity,
          })
       },
    })

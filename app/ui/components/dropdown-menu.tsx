@@ -1,19 +1,72 @@
+import { useIsMobile } from "@/ui/hooks/use-is-mobile"
 import { cn } from "@/ui/utils"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import type { ComponentProps } from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { type ComponentProps, createContext, useContext } from "react"
+import { buttonVariants } from "./button"
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "./drawer"
 
-const DropdownMenu = DropdownMenuPrimitive.Root
 const DropdownMenuGroup = DropdownMenuPrimitive.Group
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal
-const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger
+
+const DropdownMenuContext = createContext<{
+   isMobile: boolean
+} | null>(null)
+
+function DropdownMenu(props: DropdownMenuPrimitive.DropdownMenuProps) {
+   const { isMobile } = useIsMobile()
+   return (
+      <DropdownMenuContext.Provider value={{ isMobile }}>
+         {isMobile ? (
+            <Drawer {...props} />
+         ) : (
+            <DropdownMenuPrimitive.Root {...props} />
+         )}
+      </DropdownMenuContext.Provider>
+   )
+}
+
+function DropdownMenuTrigger(
+   props: DropdownMenuPrimitive.DropdownMenuTriggerProps,
+) {
+   const context = useContext(DropdownMenuContext)
+   if (!context)
+      throw new Error("DropdownMenuTrigger must be used within DropdownMenu")
+   return context.isMobile ? (
+      <DrawerTrigger {...props} />
+   ) : (
+      <DropdownMenuPrimitive.Trigger {...props} />
+   )
+}
 
 function DropdownMenuContent({
    className,
+   children,
    sideOffset = 4,
+   title,
    ...props
-}: ComponentProps<typeof DropdownMenuPrimitive.Content>) {
+}: ComponentProps<typeof DropdownMenuPrimitive.Content> & { title: string }) {
+   const context = useContext(DropdownMenuContext)
+   if (!context)
+      throw new Error("DropdownMenuContent must be used within DropdownMenu")
+
+   if (context.isMobile)
+      return (
+         <DrawerContent
+            style={{
+               ...props.style,
+               paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.5rem)`,
+            }}
+            className={cn("px-0.5", className)}
+            {...props}
+         >
+            <DrawerTitle className="sr-only">{title}</DrawerTitle>
+            <div className="mt-2">{children}</div>
+         </DrawerContent>
+      )
+
    return (
-      <DropdownMenuPrimitive.Portal>
+      <DropdownMenuPortal>
          <DropdownMenuPrimitive.Content
             sideOffset={sideOffset}
             className={cn(
@@ -27,22 +80,56 @@ function DropdownMenuContent({
                className,
             )}
             {...props}
-         />
-      </DropdownMenuPrimitive.Portal>
+         >
+            {children}
+         </DropdownMenuPrimitive.Content>
+      </DropdownMenuPortal>
    )
 }
 
 function DropdownMenuItem({
    className,
    destructive = false,
-   inset,
+   inset = false,
+   onSelect,
+   asChild,
    ...props
 }: ComponentProps<typeof DropdownMenuPrimitive.Item> & {
    inset?: boolean
    destructive?: boolean
 }) {
+   const context = useContext(DropdownMenuContext)
+   if (!context)
+      throw new Error("DropdownMenuItem must be used within DropdownMenu")
+
+   if (context.isMobile) {
+      const Comp = asChild ? Slot : "div"
+      return (
+         <Comp
+            onClick={(e) => {
+               onSelect?.(e as never)
+               document.dispatchEvent(
+                  new KeyboardEvent("keydown", {
+                     key: "Escape",
+                  }),
+               )
+            }}
+            className={cn(
+               buttonVariants({ variant: "ghost" }),
+               "flex h-12 items-center justify-start gap-2.5 rounded-xl bg-transparent px-4 font-medium text-[1.05rem] text-foreground/80 duration-300 md:[&_svg]:size-5 active:scale-95 [&:not(:active)]:aria-[current=page]:bg-transparent active:bg-border/50",
+               destructive
+                  ? "active:bg-destructive/95 active:text-destructive-foreground"
+                  : "",
+               className,
+            )}
+            {...props}
+         />
+      )
+   }
+
    return (
       <DropdownMenuPrimitive.Item
+         onSelect={onSelect}
          className={cn(
             "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled]:cursor-not-allowed focus:bg-border/50 data-[disabled]:opacity-75",
             inset && "pl-8",

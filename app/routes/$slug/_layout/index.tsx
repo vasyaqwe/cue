@@ -69,7 +69,10 @@ function Component() {
             ) : (
                Object.entries(groupedIssues).map(([status, issues]) => {
                   return (
-                     <div key={status} className="first:[&>div]:border-t-transparent">
+                     <div
+                        key={status}
+                        className="last:[&>div:last-of-type]:border-border/75 first:[&>div]:border-t-transparent last:[&>div:last-of-type]:border-b"
+                     >
                         <div className="border-border/75 border-y bg-border/25 py-2">
                            <div className="px-8">
                               <p className="font-semibold capitalize">

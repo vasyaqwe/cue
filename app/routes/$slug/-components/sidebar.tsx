@@ -153,7 +153,10 @@ export function Sidebar() {
                         user={user}
                      />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start">
+                  <DropdownMenuContent
+                     title="Account options"
+                     align="start"
+                  >
                      <DropdownMenuItem onSelect={() => logout.mutate()}>
                         <svg
                            viewBox="0 0 24 24"
