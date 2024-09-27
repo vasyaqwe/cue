@@ -2,7 +2,7 @@
 @plugin "tailwindcss-animate";
 
 @theme default {
-  --header-height: 51px;
+  --header-height: 50px;
 
   --color-background: #FEFCFB;
   --color-foreground: #140d30;

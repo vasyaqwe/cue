@@ -1,11 +1,20 @@
 import { useAuth } from "@/auth/hooks"
-import { useUpdateIssue } from "@/issue/mutations"
+import { useDeleteIssue, useUpdateIssue } from "@/issue/mutations"
 import { issueByIdQuery } from "@/issue/queries"
 import type { updateIssueParams } from "@/issue/schema"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import { buttonVariants } from "@/ui/components/button"
+import {} from "@/ui/components/combobox"
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuTrigger,
+} from "@/ui/components/dropdown-menu"
 import { Input } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { Main } from "@/ui/components/main"
+import { cn } from "@/ui/utils"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { useRef } from "react"
@@ -45,6 +54,7 @@ function Component() {
    const { data: issue } = useSuspenseQuery(
       issueByIdQuery({ organizationId, issueId }),
    )
+   const { deleteIssue } = useDeleteIssue()
    const { updateIssue } = useUpdateIssue()
 
    const lastSavedState = useRef({
@@ -81,6 +91,40 @@ function Component() {
       <>
          <Header>
             <HeaderTitle>Issue</HeaderTitle>
+            <DropdownMenu>
+               <DropdownMenuTrigger
+                  aria-label="Issue options"
+                  className={cn(
+                     buttonVariants({ variant: "ghost", size: "icon" }),
+                     " ml-2",
+                  )}
+               >
+                  <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     strokeWidth="2"
+                     stroke="currentColor"
+                     className="size-6"
+                  >
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                     />
+                  </svg>
+               </DropdownMenuTrigger>
+               <DropdownMenuContent align="start">
+                  <DropdownMenuItem
+                     onSelect={() => {
+                        deleteIssue.mutate({ issueId, organizationId })
+                     }}
+                     destructive
+                  >
+                     Delete
+                  </DropdownMenuItem>
+               </DropdownMenuContent>
+            </DropdownMenu>
          </Header>
          <Main className="mx-auto max-w-6xl px-4 pt-10 md:px-8">
             <Input

@@ -42,7 +42,7 @@ function ContextMenuSubContent({
             "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=open]:animate-in",
             "data-[state=open]:data-[side=top]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=top]:slide-out-to-bottom-[1px] data-[state=open]:data-[side=top]:slide-in-from-left-[1px] data-[state=closed]:data-[side=top]:slide-out-to-left-[1px]",
             "data-[state=open]:data-[side=right]:slide-in-from-left-[1px] data-[state=closed]:data-[side=right]:slide-out-to-left-[1px] data-[state=open]:data-[side=right]:slide-in-from-top-[1px] data-[state=closed]:data-[side=right]:slide-out-to-top-[1px]",
-            "data-[state=open]:data-[side=bottom]:slide-in-from-top-[1px] data-[state=closed]:data-[side=bottom]:slide-out-to-top-[1px] data-[state=open]:data-[side=bottom]:slide-in-from-right-[1px] data-[state=closed]:data-[side=bottom]:slide-out-to-right-[1px]",
+            "data-[state=open]:data-[side=bottom]:slide-in-from-top-[1px] data-[state=closed]:data-[side=bottom]:slide-out-to-top-[1px] data-[state=open]:data-[side=bottom]:data-[align=start]:slide-in-from-left-[1px] data-[state=closed]:data-[side=bottom]:data-[align=start]:slide-out-to-left-[1px]",
             "data-[state=open]:data-[side=left]:slide-in-from-right-[1px] data-[state=closed]:data-[side=left]:slide-out-to-right-[1px] data-[state=open]:data-[side=left]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=left]:slide-out-to-bottom-[1px]",
             className,
          )}
@@ -103,7 +103,7 @@ function ContextMenuSubTrigger({
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="-mr-1.5 !size-4 ml-auto opacity-75"
+            className="-mr-1.5 !size-4 ml-auto opacity-60"
          >
             <path
                d="M9.58599 5.18967C9.26945 4.96077 8.84859 4.93714 8.50841 5.12918C8.16824 5.32122 7.97103 5.69376 8.00347 6.08305C8.33162 10.0209 8.33162 13.9791 8.00347 17.917C7.97103 18.3062 8.16824 18.6788 8.50841 18.8708C8.84859 19.0629 9.26945 19.0392 9.58599 18.8103C11.837 17.1825 13.8566 15.2764 15.593 13.141C16.1357 12.4737 16.1357 11.5263 15.593 10.859C13.8566 8.72356 11.837 6.81746 9.58599 5.18967Z"

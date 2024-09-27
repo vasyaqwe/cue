@@ -5,22 +5,30 @@ import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import type { insertIssueParams, updateIssueParams } from "@/issue/schema"
 import type { IssueEvent } from "@/issue/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useParams } from "@tanstack/react-router"
+import { useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { produce } from "immer"
 import usePartySocket from "partysocket/react"
+import { toast } from "sonner"
 import type { z } from "zod"
 
 export function useDeleteIssue() {
    const queryClient = useQueryClient()
    const socket = useIssueSocket()
+   const params = useParams({ from: "/$slug/_layout" })
+   const navigate = useNavigate()
    const { organizationId, user } = useAuth()
    const { deleteIssueFromQueryData } = useIssueQueryMutator()
+
+   const isOnIssueIdPage = "issueId" in params && params.issueId
 
    const deleteFn = useServerFn(issue.deleteFn)
    const deleteIssue = useMutation({
       mutationFn: deleteFn,
       onMutate: async ({ issueId }) => {
+         if (isOnIssueIdPage) {
+            navigate({ to: "/$slug", params: { slug: params.slug } })
+         }
          socket.send(
             JSON.stringify({
                type: "delete",
@@ -39,11 +47,18 @@ export function useDeleteIssue() {
 
          return { data }
       },
-      onError: (_err, _data, context) => {
+      onError: (_err, data, context) => {
          queryClient.setQueryData(
             issueListQuery({ organizationId }).queryKey,
             context?.data,
          )
+         toast.error("Failed to delete issue")
+
+         if (isOnIssueIdPage)
+            navigate({
+               to: "/$slug/issue/$issueId",
+               params: { slug: params.slug, issueId: data.issueId },
+            })
       },
       onSettled: () => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
@@ -90,6 +105,7 @@ export function useUpdateIssue() {
             issueListQuery({ organizationId }).queryKey,
             context?.data,
          )
+         toast.error("Failed to update issue")
       },
       onSettled: () => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
