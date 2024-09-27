@@ -1,11 +1,16 @@
 import { useAuth } from "@/auth/hooks"
+import { useUpdateIssue } from "@/issue/mutations"
 import { issueByIdQuery } from "@/issue/queries"
+import type { updateIssueParams } from "@/issue/schema"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Input } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { Main } from "@/ui/components/main"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, notFound } from "@tanstack/react-router"
+import { useRef } from "react"
+import { debounce } from "remeda"
+import type { z } from "zod"
 
 export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
    component: Component,
@@ -40,8 +45,36 @@ function Component() {
    const { data: issue } = useSuspenseQuery(
       issueByIdQuery({ organizationId, issueId }),
    )
+   const { updateIssue } = useUpdateIssue()
 
-   // handled in loader
+   const lastSavedState = useRef({
+      title: issue?.title,
+      description: issue?.description,
+   })
+
+   const debouncedSaveIssue = debounce(
+      (updatedFields: z.infer<typeof updateIssueParams>) => {
+         if (
+            updatedFields.title !== lastSavedState.current.title ||
+            updatedFields.description !== lastSavedState.current.description
+         ) {
+            const payload = {
+               title: updatedFields.title,
+               description: updatedFields.description,
+            }
+
+            updateIssue.mutate({
+               ...payload,
+               id: issueId,
+               organizationId,
+            })
+
+            lastSavedState.current = payload
+         }
+      },
+      { waitMs: 2000 },
+   )
+
    if (!issue) return null
 
    return (
@@ -58,9 +91,10 @@ function Component() {
                id="title"
                placeholder="Issue title"
                required
-               className={
-                  "!border-none !outline-none !bg-transparent h-8 p-0 font-extrabold text-2xl"
-               }
+               onChange={(e) => {
+                  debouncedSaveIssue.call({ ...issue, title: e.target.value })
+               }}
+               className="!border-none !outline-none !bg-transparent h-8 p-0 font-extrabold text-2xl"
             />
             <Input
                defaultValue={issue.description}
@@ -68,9 +102,13 @@ function Component() {
                id="description"
                placeholder="Add description.."
                required
-               className={
-                  "!border-none !outline-none !bg-transparent mt-2 h-8 p-0 text-lg"
-               }
+               onChange={(e) => {
+                  debouncedSaveIssue.call({
+                     ...issue,
+                     description: e.target.value,
+                  })
+               }}
+               className="!border-none !outline-none !bg-transparent mt-2 h-8 p-0 text-lg"
             />
          </Main>
       </>

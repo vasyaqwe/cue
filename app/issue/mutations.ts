@@ -1,10 +1,11 @@
 import { useAuth } from "@/auth/hooks"
 import { env } from "@/env"
 import * as issue from "@/issue/functions"
-import { issueListQuery } from "@/issue/queries"
+import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import type { insertIssueParams, updateIssueParams } from "@/issue/schema"
 import type { IssueEvent } from "@/issue/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { produce } from "immer"
 import usePartySocket from "partysocket/react"
@@ -57,6 +58,7 @@ export function useDeleteIssue() {
 export function useUpdateIssue() {
    const queryClient = useQueryClient()
    const socket = useIssueSocket()
+   const params = useParams({ strict: false })
    const { organizationId, user } = useAuth()
    const { updateIssueInQueryData } = useIssueQueryMutator()
 
@@ -91,6 +93,10 @@ export function useUpdateIssue() {
       },
       onSettled: () => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
+         if ("issueId" in params && params.issueId)
+            queryClient.invalidateQueries(
+               issueByIdQuery({ issueId: params.issueId, organizationId }),
+            )
       },
    })
 
