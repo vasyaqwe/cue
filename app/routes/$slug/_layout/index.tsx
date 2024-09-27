@@ -20,6 +20,7 @@ import {
 } from "@/ui/components/context-menu"
 import { Icons } from "@/ui/components/icons"
 import { Loading } from "@/ui/components/loading"
+import { Main } from "@/ui/components/main"
 import { useCopyToClipboard } from "@/user-interactions/use-copy-to-clipboard"
 import { formatDate } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
@@ -40,9 +41,9 @@ export const Route = createFileRoute("/$slug/_layout/")({
          <Header>
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
-         <main className="relative h-full">
+         <Main>
             <Loading className="absolute inset-0 m-auto" />
-         </main>
+         </Main>
       </>
    ),
 })
@@ -62,14 +63,14 @@ function Component() {
          <Header>
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
-         <main className="relative h-full">
+         <Main>
             {issues.length === 0 ? (
                <p className="absolute inset-0 m-auto size-fit">No issues</p>
             ) : (
                Object.entries(groupedIssues).map(([status, issues]) => {
                   return (
-                     <div key={status}>
-                        <div className="border-border/75 border-y bg-border/25 py-2 first:border-t-transparent">
+                     <div key={status} className="first:[&>div]:border-t-transparent">
+                        <div className="border-border/75 border-y bg-border/25 py-2">
                            <div className="px-8">
                               <p className="font-semibold capitalize">
                                  <StatusIcon
@@ -223,7 +224,7 @@ function Component() {
                   )
                })
             )}
-         </main>
+         </Main>
       </>
    )
 }

@@ -15,6 +15,7 @@ import {
 import { Icons } from "@/ui/components/icons"
 import { inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
+import { Main } from "@/ui/components/main"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useCopyToClipboard } from "@/user-interactions/use-copy-to-clipboard"
@@ -36,9 +37,9 @@ export const Route = createFileRoute("/$slug/_layout/people")({
          <Header>
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
-         <main className="relative h-full">
+         <Main>
             <Loading className="absolute inset-0 m-auto" />
-         </main>
+         </Main>
       </>
    ),
 })
@@ -66,7 +67,7 @@ function Component() {
          <Header>
             <HeaderTitle>People</HeaderTitle>
          </Header>
-         <main className="relative h-full">
+         <Main>
             {members.length === 0 ? (
                <p className="absolute inset-0 m-auto size-fit">No members</p>
             ) : (
@@ -160,7 +161,7 @@ function Component() {
                   </div>
                </div>
             )}
-         </main>
+         </Main>
       </>
    )
 }

@@ -1,4 +1,5 @@
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import { Main } from "@/ui/components/main"
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/$slug/_layout/settings")({
@@ -12,7 +13,7 @@ function Component() {
          <Header>
             <HeaderTitle>Settings</HeaderTitle>
          </Header>
-         <main className="relative h-full">Hello settings</main>
+         <Main>Hello settings</Main>
       </>
    )
 }

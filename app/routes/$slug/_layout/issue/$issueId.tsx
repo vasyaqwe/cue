@@ -3,6 +3,7 @@ import { issueByIdQuery } from "@/issue/queries"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Input } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
+import { Main } from "@/ui/components/main"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 
@@ -25,9 +26,9 @@ export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
          <Header>
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
-         <main className="relative h-full">
+         <Main>
             <Loading className="absolute inset-0 m-auto" />
-         </main>
+         </Main>
       </>
    ),
    preload: false,
@@ -48,7 +49,7 @@ function Component() {
          <Header>
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
-         <main className="mx-auto max-w-6xl px-4 pt-10 md:px-8">
+         <Main className="mx-auto max-w-6xl px-4 pt-10 md:px-8">
             <Input
                autoComplete="off"
                autoFocus
@@ -71,7 +72,7 @@ function Component() {
                   "!border-none !outline-none !bg-transparent mt-2 h-8 p-0 text-lg"
                }
             />
-         </main>
+         </Main>
       </>
    )
 }

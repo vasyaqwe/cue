@@ -9,20 +9,21 @@ export function Header({
    className,
    children,
    ...props
-}: ComponentProps<"header">) {
+}: ComponentProps<"div">) {
    const router = useRouter()
    const { pathname } = useLocation()
    const { slug } = useParams({ from: "/$slug/_layout" })
 
    return (
       <header
-         className={cn("h-[var(--header-height)]", className)}
-         {...props}
+         className={cn("h-[var(--header-height)]",)}
       >
          <div
             className={cn(
-               "fixed top-0 z-[11] flex h-[var(--header-height)] w-full items-center border-border/60 border-b bg-background shadow-sm md:pl-[17px]",
-            )}
+               "fixed top-0 z-[11] flex h-[var(--header-height)] w-full items-center border-border/75 border-b bg-background shadow-sm md:pl-[17px]",
+            
+            className,)}
+         {...props}
          >
             <div
                style={{
