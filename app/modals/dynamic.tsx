@@ -1,26 +1,46 @@
-import { createResponsiveWrapper } from "@/modals/responsive"
-import { Dialog, DialogContent } from "@/ui/components/dialog"
-import { Drawer, DrawerContent } from "@/ui/components/drawer"
+import { Dialog, DialogContent, DialogTitle } from "@/ui/components/dialog"
+import { Drawer, DrawerContent, DrawerTitle } from "@/ui/components/drawer"
+import { useIsMobile } from "@/ui/hooks/use-is-mobile"
+import { createContext, useContext } from "react"
+import type { DialogProps } from "vaul"
 
-export const { Content, Wrapper: ResponsiveModalWrapper } =
-   createResponsiveWrapper({
-      desktop: {
-         Wrapper: Dialog,
-         Content: DialogContent,
-      },
-      mobile: {
-         Wrapper: Drawer,
-         Content: DrawerContent,
-      },
-   })
+const ModalContext = createContext<{
+   isMobile: boolean
+} | null>(null)
 
-function ResponsiveModalContent({
-   children,
-   ...props
-}: Parameters<typeof Content>[0] & {
-   variant?: "alert" | "overlay"
-}) {
-   return <Content {...props}>{children}</Content>
+function ResponsiveModalWrapper(props: DialogProps) {
+   const { isMobile } = useIsMobile()
+   return (
+      <ModalContext.Provider value={{ isMobile }}>
+         {isMobile ? <Drawer {...props} /> : <Dialog {...props} />}
+      </ModalContext.Provider>
+   )
 }
 
-export { ResponsiveModalContent }
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+function ResponsiveModalContent({ ...props }: any) {
+   const context = useContext(ModalContext)
+   if (!context)
+      throw new Error(
+         "ResponsiveModalContent must be used within ModalProvider",
+      )
+
+   if (context.isMobile) {
+      return <DrawerContent {...props} />
+   }
+   return <DialogContent {...props} />
+}
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+function ResponsiveModalTitle({ ...props }: any) {
+   const context = useContext(ModalContext)
+   if (!context)
+      throw new Error("ResponsiveModalTitle must be used within ModalProvider")
+
+   if (context.isMobile) {
+      return <DrawerTitle {...props} />
+   }
+   return <DialogTitle {...props} />
+}
+
+export { ResponsiveModalWrapper, ResponsiveModalContent, ResponsiveModalTitle }

@@ -1,13 +1,22 @@
 import { useAuth } from "@/auth/hooks"
+import { StatusIcon } from "@/issue/components/icons"
 import { useIssueSocket } from "@/issue/mutations"
 import { issueListQuery } from "@/issue/queries"
+import { type IssueStatus, issueStatuses } from "@/issue/schema"
 import type { IssueEvent } from "@/issue/types"
 import { popModal } from "@/modals"
-import { ResponsiveModalContent } from "@/modals/dynamic"
-import { Button } from "@/ui/components/button"
-import { DialogFooter, DialogHeader, DialogTitle } from "@/ui/components/dialog"
+import { ResponsiveModalContent, ResponsiveModalTitle } from "@/modals/dynamic"
+import { Button, buttonVariants } from "@/ui/components/button"
+import {
+   Combobox,
+   ComboboxContent,
+   ComboboxItem,
+   ComboboxTrigger,
+} from "@/ui/components/combobox"
+import { DialogFooter, DialogHeader } from "@/ui/components/dialog"
 import { Input, inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
+import {} from "@/ui/components/popover"
 import { cn } from "@/ui/utils"
 import { useLocalStorage } from "@/user-interactions/use-local-storage"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -26,6 +35,10 @@ export function CreateIssue() {
    const [description, setDescription] = useLocalStorage(
       "create_issue_description",
       "",
+   )
+   const [status, setStatus] = useLocalStorage<IssueStatus>(
+      "create_issue_status",
+      "todo",
    )
    const titleRef = useRef<HTMLInputElement>(null)
    const socket = useIssueSocket()
@@ -66,8 +79,8 @@ export function CreateIssue() {
       <ResponsiveModalContent
          onAnimationEndCapture={() => titleRef.current?.focus()}
       >
-         <DialogHeader>
-            <DialogTitle>New issue</DialogTitle>
+         <DialogHeader className="max-md:hidden">
+            <ResponsiveModalTitle>New issue</ResponsiveModalTitle>
          </DialogHeader>
          <form
             id="create-issue"
@@ -112,7 +125,45 @@ export function CreateIssue() {
                }
             />
          </form>
-         <DialogFooter className="justify-end">
+         <DialogFooter className="justify-between">
+            <div className="contents">
+               <Combobox modal>
+                  <ComboboxTrigger
+                     className={cn(
+                        buttonVariants({ variant: "outline" }),
+                        "!scale-[unset] capitalize",
+                     )}
+                  >
+                     <StatusIcon
+                        className="!size-[18px] mr-0.5"
+                        status={status}
+                     />
+                     {status}
+                  </ComboboxTrigger>
+                  <ComboboxContent
+                     align="start"
+                     title="Status"
+                  >
+                     {issueStatuses.map((s) => (
+                        <ComboboxItem
+                           key={s}
+                           value={s}
+                           onSelect={(value) => {
+                              setStatus(value as IssueStatus)
+                           }}
+                           isSelected={s === status}
+                           className="capitalize"
+                        >
+                           <StatusIcon
+                              className="!size-[18px] mr-0.5"
+                              status={s}
+                           />
+                           {s}
+                        </ComboboxItem>
+                     ))}
+                  </ComboboxContent>
+               </Combobox>
+            </div>
             <Button
                type="submit"
                disabled={insert.isPending || insert.isSuccess}

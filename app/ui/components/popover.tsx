@@ -4,6 +4,7 @@ import {
    DrawerTitle,
    DrawerTrigger,
 } from "@/ui/components/drawer"
+import { useIsMobile } from "@/ui/hooks/use-is-mobile"
 import { cn } from "@/ui/utils"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 import {
@@ -21,14 +22,14 @@ const PopoverContext = createContext<{
    isMobile: boolean
 } | null>(null)
 
-function Popover(props: PopoverPrimitive.PopoverProps & { isMobile: boolean }) {
-   const { isMobile, ...restProps } = props
+function Popover(props: PopoverPrimitive.PopoverProps) {
+   const { isMobile } = useIsMobile()
    return (
       <PopoverContext.Provider value={{ isMobile }}>
          {isMobile ? (
-            <Drawer {...restProps} />
+            <Drawer {...props} />
          ) : (
-            <PopoverPrimitive.Root {...restProps} />
+            <PopoverPrimitive.Root {...props} />
          )}
       </PopoverContext.Provider>
    )
@@ -37,7 +38,6 @@ function Popover(props: PopoverPrimitive.PopoverProps & { isMobile: boolean }) {
 function PopoverTrigger(props: PopoverPrimitive.PopoverTriggerProps) {
    const context = useContext(PopoverContext)
    if (!context) throw new Error("PopoverTrigger must be used within Popover")
-
    return context.isMobile ? (
       <DrawerTrigger {...props} />
    ) : (
@@ -82,7 +82,7 @@ const PopoverContent = forwardRef<
                align={align}
                sideOffset={sideOffset}
                className={cn(
-                  "!p-1 z-50 min-w-[8rem] overflow-hidden rounded-[10px] border border-border bg-popover text-popover-foreground shadow-lg",
+                  "!p-1 z-50 min-w-[8rem] overflow-hidden rounded-[10px] border border-border bg-popover text-popover-foreground shadow-lg outline-none",
                   "data-[state=closed]:animate-out data-[state=open]:animate-in",
                   "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
                   "data-[state=open]:data-[side=top]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=top]:slide-out-to-bottom-[1px] data-[state=open]:data-[side=top]:slide-in-from-left-[1px] data-[state=closed]:data-[side=top]:slide-out-to-left-[1px]",

@@ -1,7 +1,9 @@
 import { Icons } from "@/ui/components/icons"
+import { useIsMobile } from "@/ui/hooks/use-is-mobile"
 import { cn } from "@/ui/utils"
 import type {
    PopoverContentProps,
+   PopoverProps,
    PopoverTriggerProps,
 } from "@radix-ui/react-popover"
 import {
@@ -13,25 +15,19 @@ import {
    CommandSeparator,
 } from "cmdk"
 import type React from "react"
-import {
-   type ComponentProps,
-   createContext,
-   useContext,
-   useEffect,
-   useState,
-} from "react"
+import { type ComponentProps, createContext, useContext } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 
 type ComboboxSingleProps = {
    multiple?: false
    value?: string
-   onSelect?: (value?: string | undefined) => void
+   onValueChange?: (value?: string | undefined) => void
 }
 
 type ComboboxMultipleProps = {
    multiple: true
    value?: string[]
-   onSelect?: (value?: string[] | undefined) => void
+   onValueChange?: (value?: string[] | undefined) => void
 }
 
 type ComboboxProps = {
@@ -41,8 +37,7 @@ type ComboboxProps = {
 type ComboboxContextType = {
    isOpen: boolean
    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-   internalValue: string | string[]
-   setInternalValue: React.Dispatch<React.SetStateAction<string | string[]>>
+   isMobile: boolean
 } & (ComboboxSingleProps | ComboboxMultipleProps)
 
 const ComboboxContext = createContext<ComboboxContextType | null>(null)
@@ -50,47 +45,20 @@ const ComboboxContext = createContext<ComboboxContextType | null>(null)
 export function Combobox({
    children,
    multiple,
-   value: externalValue,
-   onSelect,
-}: ComboboxProps) {
-   const [isOpen, setIsOpen] = useState(false)
-   const [internalValue, setInternalValue] = useState<string | string[]>(
-      multiple ? [] : "",
-   )
-
-   useEffect(() => {
-      if (externalValue !== undefined) {
-         setInternalValue(externalValue)
-      }
-   }, [externalValue])
-
-   const handleValueChange = (newValue: string | string[]) => {
-      setInternalValue(newValue)
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      onSelect?.(newValue as any)
-   }
-
+   value: propValue,
+   ...props
+}: ComboboxProps & PopoverProps) {
+   const { isMobile } = useIsMobile()
    return (
       <ComboboxContext.Provider
          value={
             {
                multiple,
-               value:
-                  externalValue !== undefined ? externalValue : internalValue,
-               onSelect: handleValueChange,
-               isOpen,
-               setIsOpen,
-               internalValue,
-               setInternalValue,
+               isMobile,
             } as ComboboxContextType
          }
       >
-         <Popover
-            open={isOpen}
-            onOpenChange={setIsOpen}
-         >
-            {children}
-         </Popover>
+         <Popover {...props}>{children}</Popover>
       </ComboboxContext.Provider>
    )
 }
@@ -99,10 +67,19 @@ export function ComboboxTrigger({ ...props }: PopoverTriggerProps) {
    return <PopoverTrigger {...props} />
 }
 
-export function ComboboxContent({ children, ...props }: PopoverContentProps) {
+export function ComboboxContent({
+   children,
+   ...props
+}: PopoverContentProps & { title: string }) {
    return (
-      <PopoverContent {...props}>
-         <Command>
+      <PopoverContent
+         style={{
+            ...props.style,
+            paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.5rem)`,
+         }}
+         {...props}
+      >
+         <Command className={cn("max-md:mt-2")}>
             <CommandList>{children}</CommandList>
          </Command>
       </PopoverContent>
@@ -149,49 +126,41 @@ export function ComboboxSeparator({
 export function ComboboxItem({
    children,
    value: propValue,
+   onSelect,
    className,
    destructive = false,
    inset = false,
+   isSelected = false,
    ...props
 }: {
-   value?: string | undefined
+   value: string
    destructive?: boolean
    inset?: boolean
+   isSelected?: boolean | undefined
+   onSelect: (value: string) => void
 } & ComponentProps<typeof CommandItem>) {
    const context = useContext(ComboboxContext)
    if (!context) throw new Error("ComboboxItem must be used within a Combobox")
-
-   const { multiple, internalValue, onSelect } = context
-
-   const isSelected = !propValue
-      ? false
-      : multiple
-        ? (internalValue as string[]).includes(propValue)
-        : internalValue === propValue
 
    return (
       <CommandItem
          value={propValue}
          onSelect={() => {
-            if (multiple) {
-               const newValue = isSelected
-                  ? (internalValue as string[]).filter(Boolean)
-                  : [...(internalValue as string[]), propValue]
-
-               onSelect?.(
-                  newValue
-                     ? newValue.filter((v) => v !== undefined)
-                     : undefined,
+            if (context.isMobile) {
+               document.dispatchEvent(
+                  new KeyboardEvent("keydown", {
+                     key: "Escape",
+                  }),
                )
-            } else {
-               onSelect?.(propValue ? propValue : undefined)
             }
+
+            onSelect(propValue)
          }}
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed data-[selected=true]:bg-border/50 data-[disabled=true]:opacity-75",
+            "relative flex cursor-pointer select-none items-center gap-2.5 rounded-xl px-4 py-1.5 outline-none md:[&_svg]:size-5 max-md:h-12 max-md:active:scale-95 data-[disabled=true]:cursor-not-allowed md:gap-1.5 md:rounded-[8px] max-md:active:bg-border/50 md:data-[selected=true]:bg-border/50 md:px-2 max-md:text-[1.05rem] data-[disabled=true]:opacity-75 max-md:duration-300",
             inset && "pl-8",
             destructive
-               ? "data-[selected=true]:bg-destructive data-[selected=true]:text-destructive-foreground"
+               ? "max-md:active:bg-destructive/95 md:data-[selected=true]:bg-destructive max-md:active:text-destructive-foreground md:data-[selected=true]:text-destructive-foreground"
                : "",
             className,
          )}
@@ -199,8 +168,9 @@ export function ComboboxItem({
       >
          {children}
          <Icons.check
+            strokeWidth={context.isMobile ? 4 : 2}
             className={cn(
-               `ml-auto size-5`,
+               `ml-auto size-6 md:size-5`,
                isSelected ? "opacity-100" : "opacity-0",
             )}
          />
