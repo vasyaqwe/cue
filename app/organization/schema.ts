@@ -1,10 +1,10 @@
-import { users } from "@/user/schema"
 import {
    createTable,
    generateCode,
    generateId,
    lifecycleDates,
 } from "@/db/utils"
+import { users } from "@/user/schema"
 import { relations } from "drizzle-orm"
 import { index, primaryKey, text, uniqueIndex } from "drizzle-orm/sqlite-core"
 import { createInsertSchema } from "drizzle-zod"

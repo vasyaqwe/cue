@@ -1,3 +1,5 @@
+import { type Database, db } from "@/db"
+import { env } from "@/env"
 import {
    type Session,
    type User,
@@ -6,8 +8,6 @@ import {
    sessions,
    users,
 } from "@/user/schema"
-import { type Database, db } from "@/db"
-import { env } from "@/env"
 import { GitHub } from "arctic"
 import { eq } from "drizzle-orm"
 import type { DatabaseAdapter, SessionAndUser } from "lucia"

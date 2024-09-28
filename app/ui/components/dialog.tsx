@@ -15,8 +15,8 @@ const dialogVariants = cva(
    {
       variants: {
          variant: {
-            default: `max-w-lg data-[state=closed]:zoom-out-[97%] data-[state=open]:zoom-in-[97%] shadow-lg`,
-            alert: "data-[state=closed]:zoom-out-[97%] data-[state=open]:zoom-in-[97%] max-w-md shadow-lg",
+            default: `max-w-lg data-[state=closed]:zoom-out-[98%] data-[state=open]:zoom-in-[98%] shadow-lg`,
+            alert: "data-[state=closed]:zoom-out-[98%] data-[state=open]:zoom-in-[98%] max-w-md shadow-lg",
             command:
                "data-[state=closed]:!animate-none top-[20px] w-[90%] max-w-[430px] translate-y-0 animate-none bg-trasparent md:top-[75px]",
             toolbar:

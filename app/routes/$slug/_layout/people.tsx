@@ -1,4 +1,3 @@
-import { useAuth } from "@/user/hooks"
 import { env } from "@/env"
 import {
    ModalContent,
@@ -17,6 +16,7 @@ import { Main } from "@/ui/components/main"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useCopyToClipboard } from "@/user-interactions/use-copy-to-clipboard"
+import { useAuth } from "@/user/hooks"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { useRef } from "react"

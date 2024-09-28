@@ -1,6 +1,6 @@
-import { useAuth } from "@/user/hooks"
 import { env } from "@/env"
 import type { PresenceEvent } from "@/presence/types"
+import { useAuth } from "@/user/hooks"
 import { usePartySocket } from "partysocket/react"
 import { usePresenceStore } from "./presence-store"
 
