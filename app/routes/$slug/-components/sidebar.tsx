@@ -234,7 +234,6 @@ function NotificationPermissionCard() {
       if ("Notification" in window) {
          const currentPermission = Notification.permission
          setPermissionStatus(currentPermission)
-         console.log("hello")
       }
    }, [])
 
