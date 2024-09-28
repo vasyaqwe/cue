@@ -16,7 +16,7 @@ function DrawerOverlay({
 }: ComponentProps<typeof DrawerPrimitive.Overlay>) {
    return (
       <DrawerPrimitive.Overlay
-         className={cn("fixed inset-0 z-50 bg-black/40", className)}
+         className={cn("fixed inset-0 z-50 bg-black/25", className)}
          {...props}
       />
    )

@@ -260,7 +260,7 @@ function Component() {
                      <ComboboxTrigger
                         className={cn(
                            buttonVariants({ variant: "ghost" }),
-                           "mt-3 w-fit pr-2 pl-2.5 capitalize",
+                           "mt-3 w-fit pr-2 pl-2 capitalize",
                         )}
                      >
                         <LabelIndicator label={issue.label} />

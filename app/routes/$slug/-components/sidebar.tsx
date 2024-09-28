@@ -6,6 +6,7 @@ import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as peopleRoute } from "@/routes/$slug/_layout/people"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
 import { Button, buttonVariants } from "@/ui/components/button"
+import { Card } from "@/ui/components/card"
 import {
    DropdownMenu,
    DropdownMenuContent,
@@ -20,10 +21,13 @@ import { Logo } from "@/ui/components/logo"
 import { Tooltip } from "@/ui/components/tooltip"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
+import { useLocalStorage } from "@/user-interactions/use-local-storage"
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { Link, useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
+import { useEffect } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
+import { toast } from "sonner"
 
 export function Sidebar() {
    const { user } = useAuth()
@@ -176,6 +180,7 @@ export function Sidebar() {
                </ul>
             </nav>
             <div className="mt-auto">
+               {typeof window !== "undefined" && <NotificationPermissionCard />}
                <DropdownMenu>
                   <DropdownMenuTrigger
                      className={cn(
@@ -214,5 +219,54 @@ export function Sidebar() {
             </div>
          </div>
       </aside>
+   )
+}
+
+function NotificationPermissionCard() {
+   const [permissionStatus, setPermissionStatus] =
+      useLocalStorage<NotificationPermission>(
+         "cue_notification_permission_status",
+         "default",
+      )
+
+   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+   useEffect(() => {
+      if ("Notification" in window) {
+         const currentPermission = Notification.permission
+         setPermissionStatus(currentPermission)
+         console.log("hello")
+      }
+   }, [])
+
+   if (permissionStatus === "granted") return null
+
+   return (
+      <Card className="mb-3 animate-fade-in">
+         <p className="-mt-1 text-sm">
+            Cue needs your permission to enable notifications.
+         </p>
+         <Button
+            size="sm"
+            className="mt-2.5 w-full"
+            onClick={async () => {
+               if (!("Notification" in window))
+                  return toast.error(
+                     "Your browser doesn't support notifications",
+                  )
+
+               try {
+                  const permission = await Notification.requestPermission()
+                  setPermissionStatus(permission)
+               } catch (error) {
+                  console.error(
+                     "Error requesting notification permission:",
+                     error,
+                  )
+               }
+            }}
+         >
+            Allow notifications
+         </Button>
+      </Card>
    )
 }

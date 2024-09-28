@@ -200,6 +200,25 @@ export function useIssueSocket() {
       updateIssueInQueryData,
    } = useIssueQueryMutator()
 
+   const notify = (title: string, body: string) => {
+      if (typeof window !== "undefined") return
+
+      if (!("Notification" in window))
+         return console.log(
+            "This browser does not support desktop notification",
+         )
+
+      if (Notification.permission === "granted") {
+         new Notification(title, { body })
+      } else if (Notification.permission !== "denied") {
+         Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+               new Notification(title, { body })
+            }
+         })
+      }
+   }
+
    return usePartySocket({
       host: env.VITE_PARTYKIT_URL,
       party: "issue",
@@ -209,6 +228,7 @@ export function useIssueSocket() {
          if (message.senderId === user.id) return
 
          if (message.type === "insert") {
+            notify("New Issue", message.issue.title)
             return insertIssueToQueryData({ input: message.issue })
          }
 

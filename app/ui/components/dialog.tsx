@@ -17,7 +17,6 @@ const dialogVariants = cva(
          variant: {
             default: `max-w-lg data-[state=closed]:zoom-out-[97%] data-[state=open]:zoom-in-[97%] shadow-lg`,
             alert: "data-[state=closed]:zoom-out-[97%] data-[state=open]:zoom-in-[97%] max-w-md shadow-lg",
-            overlay: "bg-transparent",
             command:
                "data-[state=closed]:!animate-none top-[20px] w-[90%] max-w-[430px] translate-y-0 animate-none bg-trasparent md:top-[75px]",
             toolbar:
@@ -41,13 +40,7 @@ function DialogContent({
       <DialogPortal>
          {variant !== "toolbar" && (
             <DialogOverlay
-               className={
-                  variant === "overlay"
-                     ? "bg-background/85 backdrop-blur-[6px]"
-                     : variant === "command"
-                       ? "bg-background/75"
-                       : ""
-               }
+               className={variant === "command" ? "bg-background/75" : ""}
             />
          )}
          <DialogPrimitive.Content
@@ -102,7 +95,7 @@ const DialogOverlay = forwardRef<
       <DialogPrimitive.Overlay
          ref={ref}
          className={cn(
-            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/30 data-[state=closed]:animate-out data-[state=open]:animate-in",
+            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/20 data-[state=closed]:animate-out data-[state=open]:animate-in",
             className,
          )}
          {...props}

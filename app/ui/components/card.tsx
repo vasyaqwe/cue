@@ -3,7 +3,7 @@ import { type VariantProps, cva } from "class-variance-authority"
 import type { ComponentProps } from "react"
 
 const cardVariants = cva(
-   `border bg-muted border-border text-muted-foreground p-3 rounded-2xl`,
+   `border bg-muted border-border text-muted-foreground p-3 rounded-xl`,
    {
       variants: {
          variant: {
