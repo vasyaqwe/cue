@@ -85,19 +85,31 @@ export function createPushModal<T>({ modals }: CreatePushModalOptions<T>) {
             name,
             props,
          }) => {
-            emitter.emit("change", { name, open: true, props })
-            setState((p) =>
-               [
-                  ...p,
+            setState((prevState) => {
+               // Check if the modal with the same name is already open
+               const isModalOpen = prevState.some(
+                  (item) => item.name === name && item.open,
+               )
+
+               if (isModalOpen) {
+                  // If the modal is already open, do not push it again
+                  return prevState
+               }
+
+               emitter.emit("change", { name, open: true, props })
+
+               return [
+                  ...prevState,
                   {
-                     key: Math.random().toString(),
+                     key: crypto.randomUUID(),
                      name,
                      props,
                      open: true,
                   },
-               ].filter(filterGarbage),
-            )
+               ].filter(filterGarbage)
+            })
          }
+
          const replaceHandler: Handler<EventHandlers["replace"]> = ({
             name,
             props,
@@ -126,7 +138,7 @@ export function createPushModal<T>({ modals }: CreatePushModalOptions<T>) {
                      })
                      .filter(filterGarbage),
                   {
-                     key: Math.random().toString(),
+                     key: crypto.randomUUID(),
                      name,
                      props,
                      open: true,
