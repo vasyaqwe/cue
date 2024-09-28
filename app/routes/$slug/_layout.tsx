@@ -30,7 +30,7 @@ export const Route = createFileRoute("/$slug/_layout")({
       )
       if (!organization) throw notFound()
 
-      context.queryClient.ensureQueryData(organizationMembershipsQuery())
+      context.queryClient.prefetchQuery(organizationMembershipsQuery())
 
       return {
          organizationId: organization.id,

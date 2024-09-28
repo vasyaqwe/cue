@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as NewImport } from './routes/new'
 import { Route as LoginImport } from './routes/login'
+import { Route as HomepageImport } from './routes/homepage'
 import { Route as IndexImport } from './routes/index'
 import { Route as JoinInviteCodeImport } from './routes/join/$inviteCode'
 import { Route as SlugLayoutImport } from './routes/$slug/_layout'
@@ -41,6 +42,11 @@ const NewRoute = NewImport.update({
 
 const LoginRoute = LoginImport.update({
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const HomepageRoute = HomepageImport.update({
+  path: '/homepage',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -88,6 +94,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/homepage': {
+      id: '/homepage'
+      path: '/homepage'
+      fullPath: '/homepage'
+      preLoaderRoute: typeof HomepageImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -188,6 +201,7 @@ const SlugRouteWithChildren = SlugRoute._addFileChildren(SlugRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/homepage': typeof HomepageRoute
   '/login': typeof LoginRoute
   '/new': typeof NewRoute
   '/$slug': typeof SlugLayoutRouteWithChildren
@@ -200,6 +214,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/homepage': typeof HomepageRoute
   '/login': typeof LoginRoute
   '/new': typeof NewRoute
   '/$slug': typeof SlugLayoutIndexRoute
@@ -212,6 +227,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/homepage': typeof HomepageRoute
   '/login': typeof LoginRoute
   '/new': typeof NewRoute
   '/$slug': typeof SlugRouteWithChildren
@@ -227,6 +243,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/homepage'
     | '/login'
     | '/new'
     | '/$slug'
@@ -238,6 +255,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/homepage'
     | '/login'
     | '/new'
     | '/$slug'
@@ -248,6 +266,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/homepage'
     | '/login'
     | '/new'
     | '/$slug'
@@ -262,6 +281,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HomepageRoute: typeof HomepageRoute
   LoginRoute: typeof LoginRoute
   NewRoute: typeof NewRoute
   SlugRoute: typeof SlugRouteWithChildren
@@ -270,6 +290,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HomepageRoute: HomepageRoute,
   LoginRoute: LoginRoute,
   NewRoute: NewRoute,
   SlugRoute: SlugRouteWithChildren,
@@ -289,6 +310,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/homepage",
         "/login",
         "/new",
         "/$slug",
@@ -297,6 +319,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/homepage": {
+      "filePath": "homepage.tsx"
     },
     "/login": {
       "filePath": "login.tsx"

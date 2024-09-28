@@ -1,19 +1,23 @@
 import { CreateOrganization } from "@/organization/components/create-organization"
 import { organizationMembershipsQuery } from "@/organization/queries"
+import { Homepage } from "@/routes/-components/homepage"
 import { createFileRoute, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/")({
-   component: () => <CreateOrganization />,
+   component: Component,
    beforeLoad: async ({ context }) => {
-      const memberships = await context.queryClient
-         .ensureQueryData(organizationMembershipsQuery())
-         .catch(() => {
-            throw redirect({ to: "/login" })
-         })
+      const memberships = await context.queryClient.ensureQueryData(
+         organizationMembershipsQuery(),
+      )
 
-      const firstSlug = memberships[0]?.organization.slug
+      const firstSlug = memberships?.[0]?.organization.slug
       if (firstSlug) {
          throw redirect({ to: `/${firstSlug}` })
       }
    },
+   errorComponent: Homepage,
 })
+
+function Component() {
+   return <CreateOrganization />
+}

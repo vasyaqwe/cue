@@ -65,6 +65,13 @@ export const Route = createRootRouteWithContext<{
          type: "font/woff2",
          crossOrigin: "anonymous",
       },
+      {
+         rel: "preload",
+         href: "/fonts/serif_bold.otf",
+         as: "font",
+         type: "font/otf",
+         crossOrigin: "anonymous",
+      },
       // {
       //    rel: "apple-touch-icon",
       //    sizes: "180x180",
