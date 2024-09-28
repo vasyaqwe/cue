@@ -1,6 +1,7 @@
 import * as auth from "@/auth/functions"
 import { useAuth } from "@/auth/hooks"
 import { pushModal } from "@/modals"
+import { organizationMembershipsQuery } from "@/organization/queries"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as peopleRoute } from "@/routes/$slug/_layout/people"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
@@ -9,6 +10,8 @@ import {
    DropdownMenu,
    DropdownMenuContent,
    DropdownMenuItem,
+   DropdownMenuLabel,
+   DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from "@/ui/components/dropdown-menu"
 import { Icons } from "@/ui/components/icons"
@@ -17,7 +20,7 @@ import { Logo } from "@/ui/components/logo"
 import { Tooltip } from "@/ui/components/tooltip"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { Link, useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { useHotkeys } from "react-hotkeys-hook"
@@ -27,6 +30,9 @@ export function Sidebar() {
    const navigate = useNavigate()
    const { slug } = useParams({ from: "/$slug/_layout" })
    const { organization } = useAuth()
+   const { data: memberships } = useSuspenseQuery(
+      organizationMembershipsQuery(),
+   )
 
    const logoutFn = useServerFn(auth.logout)
    const logout = useMutation({
@@ -44,10 +50,41 @@ export function Sidebar() {
    return (
       <div className="h-svh w-60 max-md:hidden">
          <aside className="fixed flex h-full w-60 flex-col border-border/60 border-r p-5 shadow-sm">
-            <div className="mb-5 flex items-center gap-3">
-               <Logo className="size-8" />{" "}
-               <p className="font-bold text-xl">{organization.name}</p>
-            </div>
+            <DropdownMenu>
+               <DropdownMenuTrigger
+                  className={cn(
+                     buttonVariants({ variant: "ghost", size: "xl" }),
+                     "mb-3 justify-start pr-2 pl-1 font-semibold",
+                  )}
+               >
+                  <Logo className="size-7" /> {organization.name}
+                  <Icons.chevronDown className="ml-auto" />
+               </DropdownMenuTrigger>
+               <DropdownMenuContent
+                  className="w-[199px]"
+                  title="Organizations"
+               >
+                  <DropdownMenuLabel className="max-md:hidden">
+                     Organizations
+                  </DropdownMenuLabel>
+                  {memberships.map((membership) => (
+                     <DropdownMenuItem
+                        key={membership.organization.id}
+                        asChild
+                     >
+                        <Link to={`/${membership.organization.slug}`}>
+                           {membership.organization.name}
+                        </Link>
+                     </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                     <Link to="/new">
+                        <Icons.plus /> New organization
+                     </Link>
+                  </DropdownMenuItem>
+               </DropdownMenuContent>
+            </DropdownMenu>
             <Tooltip
                content={
                   <>

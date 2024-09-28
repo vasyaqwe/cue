@@ -1,5 +1,6 @@
 import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Button } from "@/ui/components/button"
+import { Icons } from "@/ui/components/icons"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
 import { Link, useLocation, useParams, useRouter } from "@tanstack/react-router"
@@ -15,15 +16,14 @@ export function Header({
    const { slug } = useParams({ from: "/$slug/_layout" })
 
    return (
-      <header
-         className={cn("h-[var(--header-height)]",)}
-      >
+      <header className={cn("h-[var(--header-height)]")}>
          <div
             className={cn(
                "fixed top-0 z-[11] flex h-[var(--header-height)] w-full items-center border-border/75 border-b bg-background shadow-sm md:pl-[17px]",
-            
-            className,)}
-         {...props}
+
+               className,
+            )}
+            {...props}
          >
             <div
                style={{
@@ -49,21 +49,7 @@ export function Header({
                         className="-ml-0.5 text-foreground/80"
                         aria-label="Go back"
                      >
-                        <svg
-                           width="24"
-                           height="24"
-                           viewBox="0 0 24 24"
-                           fill="none"
-                           xmlns="http://www.w3.org/2000/svg"
-                        >
-                           <path
-                              d="M9.8304 6C7.727 7.55556 5.83783 9.37278 4.20952 11.4057C4.06984 11.5801 4 11.79 4 12M9.8304 18C7.727 16.4444 5.83783 14.6272 4.20952 12.5943C4.06984 12.4199 4 12.21 4 12M4 12H20"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                           />
-                        </svg>
+                        <Icons.arrowLeft />
                      </Button>
                   )}
                </div>

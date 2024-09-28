@@ -28,6 +28,60 @@ export const Icons = {
          />
       </svg>
    ),
+   plus: (props: IconProps) => (
+      <svg
+         width="24"
+         height="24"
+         viewBox="0 0 24 24"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg"
+         {...props}
+      >
+         <path
+            d="M12 19V12M12 12V5M12 12L5 12M12 12L19 12"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+         />
+      </svg>
+   ),
+   arrowLeft: (props: IconProps) => (
+      <svg
+         width="24"
+         height="24"
+         viewBox="0 0 24 24"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg"
+         {...props}
+      >
+         <path
+            d="M9.8304 6C7.727 7.55556 5.83783 9.37278 4.20952 11.4057C4.06984 11.5801 4 11.79 4 12M9.8304 18C7.727 16.4444 5.83783 14.6272 4.20952 12.5943C4.06984 12.4199 4 12.21 4 12M4 12H20"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+         />
+      </svg>
+   ),
+   chevronDown: (props: IconProps) => (
+      <svg
+         width="24"
+         height="24"
+         viewBox="0 0 24 24"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg"
+         {...props}
+      >
+         <path
+            d="M8 10.1392C9.06206 11.601 10.3071 12.9104 11.7021 14.0334C11.8774 14.1744 12.1226 14.1744 12.2979 14.0334C13.6929 12.9104 14.9379 11.601 16 10.1392"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+         />
+      </svg>
+   ),
    check: (props: IconProps) => (
       <svg
          viewBox="0 0 24 24"

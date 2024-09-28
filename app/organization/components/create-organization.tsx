@@ -5,6 +5,7 @@ import { Input } from "@/ui/components/input"
 import { Label } from "@/ui/components/label"
 import { Loading } from "@/ui/components/loading"
 import { Logo } from "@/ui/components/logo"
+import { cn } from "@/ui/utils"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
@@ -27,7 +28,9 @@ const parseError = (error: Error) => {
    }
 }
 
-export function CreateOrganization() {
+export function CreateOrganization({
+   isFirstOrganization = true,
+}: { isFirstOrganization?: boolean }) {
    const [name, setName] = useState("")
    const navigate = useNavigate()
    const queryClient = useQueryClient()
@@ -51,16 +54,29 @@ export function CreateOrganization() {
    return (
       <div className="grid h-svh place-items-center">
          <div className="mx-auto w-full max-w-[22rem]">
-            <div className="flex items-center gap-2.5">
-               <Logo className="size-11" />{" "}
-               <h1 className="font-extrabold text-2xl">Welcome to Cue,</h1>
-            </div>
-            <h2 className="my-5 font-bold text-foreground/90 text-xl">
-               Create your first organization
+            {isFirstOrganization ? (
+               <div className="flex items-center gap-2.5">
+                  <Logo className="size-11" />{" "}
+                  <h1 className="font-extrabold text-2xl">Welcome to Cue,</h1>
+               </div>
+            ) : (
+               <Logo className="size-11" />
+            )}
+            <h2
+               className={cn(
+                  "my-5 font-bold text-foreground/90",
+                  isFirstOrganization ? "text-xl" : "font-extrabold text-2xl",
+               )}
+            >
+               Create {isFirstOrganization ? "your first" : "a new"}{" "}
+               organization
             </h2>
             <form
                onSubmit={(e) => {
                   e.preventDefault()
+                  if (name.trim().toLowerCase() === "new")
+                     return toast.error("This name is reserved")
+
                   insert.mutate({
                      name,
                      slug: makeSlug(name),

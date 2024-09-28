@@ -1,6 +1,9 @@
 import { meQuery } from "@/auth/queries"
 import { ModalProvider } from "@/modals"
-import { organizationBySlugQuery } from "@/organization/queries"
+import {
+   organizationBySlugQuery,
+   organizationMembershipsQuery,
+} from "@/organization/queries"
 import { Presence } from "@/presence"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
@@ -25,8 +28,9 @@ export const Route = createFileRoute("/$slug/_layout")({
       const organization = await context.queryClient.ensureQueryData(
          organizationBySlugQuery({ slug: params.slug }),
       )
-
       if (!organization) throw notFound()
+
+      context.queryClient.ensureQueryData(organizationMembershipsQuery())
 
       return {
          organizationId: organization.id,

@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as NewImport } from './routes/new'
 import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
 import { Route as JoinInviteCodeImport } from './routes/join/$inviteCode'
@@ -30,6 +31,11 @@ const SlugImport = createFileRoute('/$slug')()
 
 const SlugRoute = SlugImport.update({
   path: '/$slug',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const NewRoute = NewImport.update({
+  path: '/new',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -89,6 +95,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/new': {
+      id: '/new'
+      path: '/new'
+      fullPath: '/new'
+      preLoaderRoute: typeof NewImport
       parentRoute: typeof rootRoute
     }
     '/$slug': {
@@ -176,6 +189,7 @@ const SlugRouteWithChildren = SlugRoute._addFileChildren(SlugRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/new': typeof NewRoute
   '/$slug': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
   '/$slug/people': typeof SlugLayoutPeopleRoute
@@ -187,6 +201,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/new': typeof NewRoute
   '/$slug': typeof SlugLayoutIndexRoute
   '/join/$inviteCode': typeof JoinInviteCodeRoute
   '/$slug/people': typeof SlugLayoutPeopleRoute
@@ -198,6 +213,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/new': typeof NewRoute
   '/$slug': typeof SlugRouteWithChildren
   '/$slug/_layout': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
@@ -212,6 +228,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/new'
     | '/$slug'
     | '/join/$inviteCode'
     | '/$slug/people'
@@ -222,6 +239,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/new'
     | '/$slug'
     | '/join/$inviteCode'
     | '/$slug/people'
@@ -231,6 +249,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/login'
+    | '/new'
     | '/$slug'
     | '/$slug/_layout'
     | '/join/$inviteCode'
@@ -244,6 +263,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  NewRoute: typeof NewRoute
   SlugRoute: typeof SlugRouteWithChildren
   JoinInviteCodeRoute: typeof JoinInviteCodeRoute
 }
@@ -251,6 +271,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  NewRoute: NewRoute,
   SlugRoute: SlugRouteWithChildren,
   JoinInviteCodeRoute: JoinInviteCodeRoute,
 }
@@ -269,6 +290,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/login",
+        "/new",
         "/$slug",
         "/join/$inviteCode"
       ]
@@ -278,6 +300,9 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/new": {
+      "filePath": "new.tsx"
     },
     "/$slug": {
       "filePath": "$slug",
