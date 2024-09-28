@@ -1,5 +1,5 @@
 import { CreateIssue } from "@/issue/components/create-issue"
-import { ModalContent, ModalWrapper } from "@/modals/dynamic"
+import { Modal, ModalContent } from "@/modals/dynamic"
 import { createPushModal } from "@/modals/factory"
 
 export const {
@@ -12,8 +12,8 @@ export const {
    ModalProvider,
 } = createPushModal({
    modals: {
-      "create-issue": {
-         Wrapper: ModalWrapper,
+      create_issue: {
+         Wrapper: Modal,
          Component: CreateIssue,
       },
    },

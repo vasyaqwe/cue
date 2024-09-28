@@ -34,7 +34,7 @@ function CardHeader({ className, children, ...props }: ComponentProps<"div">) {
          {...props}
       >
          {children}
-         <div className={cn("-mx-3 mt-1 h-px bg-border/75")} />
+         <div className={cn("-mx-3 mt-3 h-px bg-border/75")} />
       </div>
    )
 }
@@ -43,7 +43,7 @@ function CardTitle({ className, ...props }: ComponentProps<"h3">) {
    return (
       <h3
          className={cn(
-            "font-semibold text-foreground text-lg leading-none tracking-tight",
+            "mb-2 font-semibold text-foreground text-lg leading-none tracking-tight",
             className,
          )}
          {...props}
@@ -54,7 +54,7 @@ function CardTitle({ className, ...props }: ComponentProps<"h3">) {
 function CardDescription({ className, ...props }: ComponentProps<"p">) {
    return (
       <p
-         className={cn("mt-2 mb-2 text-foreground/75", className)}
+         className={cn("mt-3 text-foreground/75 leading-none", className)}
          {...props}
       />
    )
@@ -63,7 +63,7 @@ function CardDescription({ className, ...props }: ComponentProps<"p">) {
 function CardContent({ className, ...props }: ComponentProps<"div">) {
    return (
       <div
-         className={cn("pt-2", className)}
+         className={cn("pt-3", className)}
          {...props}
       />
    )

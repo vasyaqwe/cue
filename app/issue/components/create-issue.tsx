@@ -10,7 +10,12 @@ import {
 } from "@/issue/schema"
 import type { IssueEvent } from "@/issue/types"
 import { popModal } from "@/modals"
-import { ModalContent, ModalTitle } from "@/modals/dynamic"
+import {
+   ModalContent,
+   ModalFooter,
+   ModalHeader,
+   ModalTitle,
+} from "@/modals/dynamic"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
    Combobox,
@@ -18,7 +23,6 @@ import {
    ComboboxItem,
    ComboboxTrigger,
 } from "@/ui/components/combobox"
-import { DialogFooter, DialogHeader } from "@/ui/components/dialog"
 import { Input, inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
@@ -76,7 +80,7 @@ export function CreateIssue() {
 
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
 
-         popModal("create-issue")
+         popModal("create_issue")
          setTitle("")
          setDescription("")
 
@@ -94,11 +98,11 @@ export function CreateIssue() {
 
    return (
       <ModalContent onAnimationEndCapture={() => titleRef.current?.focus()}>
-         <DialogHeader className="max-md:hidden">
+         <ModalHeader className="max-md:hidden">
             <ModalTitle>New issue</ModalTitle>
-         </DialogHeader>
+         </ModalHeader>
          <form
-            id="create-issue"
+            id="create_issue"
             onSubmit={(e) => {
                e.preventDefault()
                insert.mutate({
@@ -136,7 +140,7 @@ export function CreateIssue() {
                }
             />
          </form>
-         <DialogFooter className="gap-2">
+         <ModalFooter className="gap-2">
             <Combobox
                open={statusOpen}
                onOpenChange={setStatusOpen}
@@ -214,7 +218,7 @@ export function CreateIssue() {
             <Button
                type="submit"
                disabled={insert.isPending || insert.isSuccess}
-               form="create-issue"
+               form="create_issue"
                className="ml-auto"
             >
                {insert.isPending || insert.isSuccess ? (
@@ -226,7 +230,7 @@ export function CreateIssue() {
                   "Create"
                )}
             </Button>
-         </DialogFooter>
+         </ModalFooter>
       </ModalContent>
    )
 }

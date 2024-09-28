@@ -46,7 +46,7 @@ function DrawerContent({
             )}
             {...props}
          >
-            <div className="!p-0 mx-auto mt-1 min-h-1 w-8 rounded-full bg-foreground/80 group-[&[vaul-drawer-direction=right]]:hidden" />
+            <div className="!p-0 mx-auto mt-1 min-h-1 w-8 rounded-full bg-foreground/75 group-[&[vaul-drawer-direction=right]]:hidden" />
             {children}
          </DrawerPrimitive.Content>
       </DrawerPortal>
@@ -72,7 +72,7 @@ function DrawerFooter({ className, ...props }: ComponentProps<"div">) {
             paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 1rem)`,
          }}
          className={cn(
-            "sticky bottom-0 mt-auto flex items-center justify-between gap-2 border border-t-border p-4",
+            "mt-auto flex items-center justify-between gap-2 border-border border-t p-3",
             className,
          )}
          {...props}
@@ -86,10 +86,7 @@ function DrawerTitle({
 }: ComponentProps<typeof DrawerPrimitive.Title>) {
    return (
       <DrawerPrimitive.Title
-         className={cn(
-            "text-center font-semibold text-lg leading-none tracking-tight md:text-xl",
-            className,
-         )}
+         className={cn("font-semibold text-lg leading-none", className)}
          {...props}
       />
    )

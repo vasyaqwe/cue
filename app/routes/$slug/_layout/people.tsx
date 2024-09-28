@@ -1,14 +1,14 @@
 import { env } from "@/env"
 import {
+   Modal,
    ModalContent,
+   ModalHeader,
    ModalTitle,
    ModalTrigger,
-   ModalWrapper,
 } from "@/modals/dynamic"
 import { organizationMembersQuery } from "@/organization/queries"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Button, buttonVariants } from "@/ui/components/button"
-import { DialogHeader } from "@/ui/components/dialog"
 import { Icons } from "@/ui/components/icons"
 import { inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
@@ -70,7 +70,7 @@ function Component() {
                <p className="absolute inset-0 m-auto size-fit">No members</p>
             ) : (
                <div className="mx-auto mt-5 flex max-w-3xl flex-col md:mt-8">
-                  <ModalWrapper>
+                  <Modal>
                      <ModalTrigger
                         className={cn(
                            buttonVariants({ variant: "secondary" }),
@@ -80,9 +80,9 @@ function Component() {
                         Invite your team
                      </ModalTrigger>
                      <ModalContent>
-                        <DialogHeader>
+                        <ModalHeader>
                            <ModalTitle>Invite your team</ModalTitle>
-                        </DialogHeader>
+                        </ModalHeader>
                         <div className="p-4">
                            <p>
                               Anyone with this link can join your organization.
@@ -136,7 +136,7 @@ function Component() {
                            </div>
                         </div>
                      </ModalContent>
-                  </ModalWrapper>
+                  </Modal>
                   <div className="container mt-6 space-y-5">
                      {members.map((member) => (
                         <div key={member.user.email}>

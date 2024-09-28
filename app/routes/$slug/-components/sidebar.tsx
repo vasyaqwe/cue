@@ -48,7 +48,7 @@ export function Sidebar() {
 
    useHotkeys("c", (e) => {
       e.preventDefault()
-      pushModal("create-issue")
+      pushModal("create_issue")
    })
 
    return (
@@ -98,7 +98,7 @@ export function Sidebar() {
             >
                <Button
                   variant={"outline"}
-                  onClick={() => pushModal("create-issue")}
+                  onClick={() => pushModal("create_issue")}
                   className={cn("mb-5 w-full font-semibold text-[0.95rem]")}
                >
                   <svg

@@ -15,7 +15,7 @@ const buttonVariants = cva(
             secondary: `bg-border/75 border-transparent hover:bg-border`,
             outline: `bg-popover !shadow-button border border-transparent text-foreground data-[state=open]:bg-border/[0.025] hover:enabled:bg-border/[0.025]`,
             ghost: "!shadow-none border border-transparent aria-[current=page]:bg-muted data-[state=open]:bg-muted hover:enabled:bg-border/50",
-            destructive: `bg-destructive/90 hover:enabled:bg-destructive text-destructive-foreground/90 hover:enabled:text-destructive-foreground`,
+            destructive: `bg-destructive border-destructive hover:enabled:bg-destructive/90 text-destructive-foreground`,
             link: "!h-auto !rounded-none !p-0 text-foreground/70 underline transition-none hover:enabled:text-foreground",
          },
          size: {

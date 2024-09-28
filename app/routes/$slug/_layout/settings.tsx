@@ -1,5 +1,16 @@
+import {
+   Modal,
+   ModalContent,
+   ModalDescription,
+   ModalFooter,
+   ModalHeader,
+   ModalTitle,
+   ModalTrigger,
+} from "@/modals/dynamic"
+import * as organization from "@/organization/functions"
+import { organizationMembershipsQuery } from "@/organization/queries"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
-import { Button } from "@/ui/components/button"
+import { Button, buttonVariants } from "@/ui/components/button"
 import {
    Card,
    CardContent,
@@ -7,15 +18,23 @@ import {
    CardHeader,
    CardTitle,
 } from "@/ui/components/card"
+import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Label } from "@/ui/components/label"
 import { Main } from "@/ui/components/main"
+import { useIsMobile } from "@/ui/hooks/use-is-mobile"
+import { cn } from "@/ui/utils"
 import * as userFns from "@/user/functions"
 import { useAuth } from "@/user/hooks"
 import { userMeQuery } from "@/user/queries"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createFileRoute } from "@tanstack/react-router"
+import {
+   useMutation,
+   useQueryClient,
+   useSuspenseQuery,
+} from "@tanstack/react-query"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
+import { useState } from "react"
 import { toast } from "sonner"
 
 export const Route = createFileRoute("/$slug/_layout/settings")({
@@ -25,7 +44,9 @@ export const Route = createFileRoute("/$slug/_layout/settings")({
 
 function Component() {
    const queryClient = useQueryClient()
-   const { user } = useAuth()
+   const { user, organizationId } = useAuth()
+   const { isMobile } = useIsMobile()
+   const navigate = useNavigate()
 
    const updateFn = useServerFn(userFns.update)
    const updateUser = useMutation({
@@ -35,6 +56,32 @@ function Component() {
       },
       onSuccess: () => {
          toast.success("Saved")
+      },
+   })
+
+   const { data: memberships } = useSuspenseQuery(
+      organizationMembershipsQuery(),
+   )
+   const [confirmDeletion, setConfirmDeletion] = useState("")
+   const deleteFn = useServerFn(organization.deleteFn)
+   const deleteOrganization = useMutation({
+      mutationFn: deleteFn,
+      onSuccess: () => {
+         queryClient.invalidateQueries(organizationMembershipsQuery())
+         toast.success("Organization deleted")
+         const existingMemberships = memberships?.filter(
+            (m) => m.organizationId !== organizationId,
+         )
+
+         const firstMembership = existingMemberships?.[0]?.organization
+         if (firstMembership) {
+            return navigate({
+               to: "/$slug",
+               params: { slug: firstMembership.slug },
+            })
+         }
+
+         navigate({ to: "/new" })
       },
    })
 
@@ -97,7 +144,83 @@ function Component() {
                <CardHeader>
                   <CardTitle>Danger zone</CardTitle>
                </CardHeader>
-               <CardContent>Delete organization</CardContent>
+               <CardContent className="flex justify-between gap-4 max-lg:flex-col lg:items-center">
+                  <div className="flex items-center gap-3">
+                     <div className="grid size-10 shrink-0 place-content-center rounded-full border border-destructive/10 bg-destructive/15">
+                        <Icons.trash className="size-5 text-destructive" />
+                     </div>
+                     <div>
+                        <h3>Delete organization</h3>
+                        <p className="text-foreground/75 text-sm">
+                           This is permanent. Organization will be fully
+                           deleted.
+                        </p>
+                     </div>
+                  </div>
+                  <Modal>
+                     <ModalTrigger
+                        className={cn(
+                           buttonVariants({
+                              variant: "destructive",
+                           }),
+                           "max-lg:w-full",
+                        )}
+                     >
+                        Delete organization
+                     </ModalTrigger>
+                     <ModalContent variant={"alert"}>
+                        <ModalHeader>
+                           <ModalTitle>Delete this organization?</ModalTitle>
+                           <ModalDescription>
+                              This action cannot be undone. Your organization
+                              and all of its data will be fully deleted.
+                           </ModalDescription>
+                        </ModalHeader>
+                        <div className="p-4">
+                           <form
+                              onSubmit={(e) => {
+                                 e.preventDefault()
+                                 deleteOrganization.mutate({
+                                    organizationId,
+                                 })
+                              }}
+                              id={"delete_organization"}
+                           >
+                              <Label htmlFor="confirmation">
+                                 To confirm, enter{" "}
+                                 <strong>delete this organization</strong> below
+                              </Label>
+                              <Input
+                                 autoFocus={isMobile}
+                                 id="confirmation"
+                                 name="confirmation"
+                                 placeholder="delete this organization"
+                                 value={confirmDeletion}
+                                 onChange={(e) =>
+                                    setConfirmDeletion(e.target.value)
+                                 }
+                              />
+                           </form>
+                        </div>
+                        <ModalFooter>
+                           <Button
+                              className="ml-auto"
+                              form={"delete_organization"}
+                              type="submit"
+                              disabled={
+                                 confirmDeletion.trim() !==
+                                    "delete this organization" ||
+                                 deleteOrganization.isPending ||
+                                 deleteOrganization.isSuccess
+                              }
+                              variant={"destructive"}
+                           >
+                              Delete forever
+                           </Button>
+                        </ModalFooter>
+                     </ModalContent>
+                  </Modal>
+               </CardContent>
             </Card>
          </Main>
       </>
