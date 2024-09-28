@@ -11,7 +11,7 @@ import {
 } from "@/issue/schema"
 import type { IssueEvent } from "@/issue/types"
 import { popModal } from "@/modals"
-import { ResponsiveModalContent, ResponsiveModalTitle } from "@/modals/dynamic"
+import { ModalContent, ModalTitle } from "@/modals/dynamic"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
    Combobox,
@@ -93,11 +93,9 @@ export function CreateIssue() {
    })
 
    return (
-      <ResponsiveModalContent
-         onAnimationEndCapture={() => titleRef.current?.focus()}
-      >
+      <ModalContent onAnimationEndCapture={() => titleRef.current?.focus()}>
          <DialogHeader className="max-md:hidden">
-            <ResponsiveModalTitle>New issue</ResponsiveModalTitle>
+            <ModalTitle>New issue</ModalTitle>
          </DialogHeader>
          <form
             id="create-issue"
@@ -229,6 +227,6 @@ export function CreateIssue() {
                )}
             </Button>
          </DialogFooter>
-      </ResponsiveModalContent>
+      </ModalContent>
    )
 }

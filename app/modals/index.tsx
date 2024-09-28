@@ -1,8 +1,5 @@
 import { CreateIssue } from "@/issue/components/create-issue"
-import {
-   ResponsiveModalContent,
-   ResponsiveModalWrapper,
-} from "@/modals/dynamic"
+import { ModalContent, ModalWrapper } from "@/modals/dynamic"
 import { createPushModal } from "@/modals/factory"
 
 export const {
@@ -16,7 +13,7 @@ export const {
 } = createPushModal({
    modals: {
       "create-issue": {
-         Wrapper: ResponsiveModalWrapper,
+         Wrapper: ModalWrapper,
          Component: CreateIssue,
       },
    },
@@ -25,11 +22,11 @@ export const {
 // biome-ignore lint/correctness/noUnusedVariables: <explanation>
 function ExampleModal() {
    return (
-      <ResponsiveModalContent>
+      <ModalContent>
          <div className="p-4">
             Lorem ipsum dsolor sit, amet consectetur adipisicing elit. Dolores,
             asperiores.
          </div>
-      </ResponsiveModalContent>
+      </ModalContent>
    )
 }

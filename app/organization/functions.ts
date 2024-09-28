@@ -135,3 +135,14 @@ export const insert = createServerFn(
          })
       }),
 )
+
+export const deleteFn = createServerFn(
+   "POST",
+   organizationProtectedProcedure
+      .input(z.object({ organizationId: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+         await ctx.db
+            .delete(organizations)
+            .where(eq(organizations.id, input.organizationId))
+      }),
+)

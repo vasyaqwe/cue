@@ -1,17 +1,15 @@
 import { useAuth } from "@/auth/hooks"
 import { env } from "@/env"
 import {
-   ResponsiveModalContent,
-   ResponsiveModalWrapper,
+   ModalContent,
+   ModalTitle,
+   ModalTrigger,
+   ModalWrapper,
 } from "@/modals/dynamic"
 import { organizationMembersQuery } from "@/organization/queries"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Button, buttonVariants } from "@/ui/components/button"
-import {
-   DialogHeader,
-   DialogTitle,
-   DialogTrigger,
-} from "@/ui/components/dialog"
+import { DialogHeader } from "@/ui/components/dialog"
 import { Icons } from "@/ui/components/icons"
 import { inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
@@ -72,18 +70,18 @@ function Component() {
                <p className="absolute inset-0 m-auto size-fit">No members</p>
             ) : (
                <div className="mx-auto mt-8 flex max-w-3xl flex-col">
-                  <ResponsiveModalWrapper>
-                     <DialogTrigger
+                  <ModalWrapper>
+                     <ModalTrigger
                         className={cn(
                            buttonVariants({ variant: "secondary" }),
                            "mx-auto",
                         )}
                      >
                         Invite your team
-                     </DialogTrigger>
-                     <ResponsiveModalContent>
+                     </ModalTrigger>
+                     <ModalContent>
                         <DialogHeader>
-                           <DialogTitle>Invite your team</DialogTitle>
+                           <ModalTitle>Invite your team</ModalTitle>
                         </DialogHeader>
                         <div className="p-4">
                            <p>
@@ -137,8 +135,8 @@ function Component() {
                               </Button>
                            </div>
                         </div>
-                     </ResponsiveModalContent>
-                  </ResponsiveModalWrapper>
+                     </ModalContent>
+                  </ModalWrapper>
                   <div className="container mt-6 space-y-5">
                      {members.map((member) => (
                         <div key={member.user.email}>
