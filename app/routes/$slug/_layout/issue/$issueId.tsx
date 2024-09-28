@@ -4,7 +4,6 @@ import { issueByIdQuery } from "@/issue/queries"
 import type { updateIssueParams } from "@/issue/schema"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { buttonVariants } from "@/ui/components/button"
-import {} from "@/ui/components/combobox"
 import {
    DropdownMenu,
    DropdownMenuContent,

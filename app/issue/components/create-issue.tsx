@@ -16,13 +16,13 @@ import {
 import { DialogFooter, DialogHeader } from "@/ui/components/dialog"
 import { Input, inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
-import {} from "@/ui/components/popover"
 import { cn } from "@/ui/utils"
 import { useLocalStorage } from "@/user-interactions/use-local-storage"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
 import * as issue from "../functions"
 
@@ -42,6 +42,9 @@ export function CreateIssue() {
    )
    const titleRef = useRef<HTMLInputElement>(null)
    const socket = useIssueSocket()
+
+   const [statusOpen, setStatusOpen] = useState(false)
+   useHotkeys("s", () => setStatusOpen(!statusOpen))
 
    const insertFn = useServerFn(issue.insert)
    const insert = useMutation({
@@ -127,7 +130,11 @@ export function CreateIssue() {
          </form>
          <DialogFooter className="justify-between">
             <div className="contents">
-               <Combobox modal>
+               <Combobox
+                  open={statusOpen}
+                  onOpenChange={setStatusOpen}
+                  modal
+               >
                   <ComboboxTrigger
                      className={cn(
                         buttonVariants({ variant: "outline" }),

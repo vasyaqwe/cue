@@ -1,4 +1,4 @@
-import { Icons } from "@/ui/components/icons"
+import { CommandItem } from "@/ui/components/command"
 import { useIsMobile } from "@/ui/hooks/use-is-mobile"
 import { cn } from "@/ui/utils"
 import type {
@@ -9,13 +9,13 @@ import type {
 import {
    Command,
    CommandEmpty,
+   CommandGroup,
    CommandInput,
-   CommandItem,
    CommandList,
    CommandSeparator,
 } from "cmdk"
 import type React from "react"
-import { type ComponentProps, createContext, useContext } from "react"
+import { type ComponentProps, createContext } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 
 type ComboboxSingleProps = {
@@ -73,6 +73,7 @@ export function ComboboxContent({
 }: PopoverContentProps & { title: string }) {
    return (
       <PopoverContent
+         asChild
          style={{
             ...props.style,
             paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.5rem)`,
@@ -80,7 +81,9 @@ export function ComboboxContent({
          {...props}
       >
          <Command className={cn("max-md:mt-2")}>
-            <CommandList>{children}</CommandList>
+            <CommandList>
+               <CommandGroup>{children}</CommandGroup>
+            </CommandList>
          </Command>
       </PopoverContent>
    )
@@ -123,59 +126,8 @@ export function ComboboxSeparator({
    )
 }
 
-export function ComboboxItem({
-   children,
-   value: propValue,
-   onSelect,
-   className,
-   destructive = false,
-   inset = false,
-   isSelected = false,
-   ...props
-}: {
-   value: string
-   destructive?: boolean
-   inset?: boolean
-   isSelected?: boolean | undefined
-   onSelect: (value: string) => void
-} & ComponentProps<typeof CommandItem>) {
-   const context = useContext(ComboboxContext)
-   if (!context) throw new Error("ComboboxItem must be used within a Combobox")
-
-   return (
-      <CommandItem
-         value={propValue}
-         onSelect={() => {
-            if (context.isMobile) {
-               document.dispatchEvent(
-                  new KeyboardEvent("keydown", {
-                     key: "Escape",
-                  }),
-               )
-            }
-
-            onSelect(propValue)
-         }}
-         className={cn(
-            "relative flex cursor-pointer select-none items-center gap-2.5 rounded-xl px-4 py-1.5 outline-none md:[&_svg]:size-5 max-md:h-12 max-md:active:scale-95 data-[disabled=true]:cursor-not-allowed md:gap-1.5 md:rounded-[8px] max-md:active:bg-border/50 md:data-[selected=true]:bg-border/50 md:px-2 max-md:text-[1.05rem] data-[disabled=true]:opacity-75 max-md:duration-300",
-            inset && "pl-8",
-            destructive
-               ? "max-md:active:bg-destructive/95 md:data-[selected=true]:bg-destructive max-md:active:text-destructive-foreground md:data-[selected=true]:text-destructive-foreground"
-               : "",
-            className,
-         )}
-         {...props}
-      >
-         {children}
-         <Icons.check
-            strokeWidth={context.isMobile ? 4 : 2}
-            className={cn(
-               `ml-auto size-6 md:size-5`,
-               isSelected ? "opacity-100" : "opacity-0",
-            )}
-         />
-      </CommandItem>
-   )
+export function ComboboxItem({ ...props }: ComponentProps<typeof CommandItem>) {
+   return <CommandItem {...props} />
 }
 
 export function ComboboxEmpty({
