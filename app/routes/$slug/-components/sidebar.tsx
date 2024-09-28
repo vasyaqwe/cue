@@ -5,7 +5,7 @@ import { organizationMembershipsQuery } from "@/organization/queries"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as peopleRoute } from "@/routes/$slug/_layout/people"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
-import { buttonVariants } from "@/ui/components/button"
+import { Button, buttonVariants } from "@/ui/components/button"
 import {
    DropdownMenu,
    DropdownMenuContent,
@@ -48,8 +48,8 @@ export function Sidebar() {
    })
 
    return (
-      <div className="h-svh w-60 max-md:hidden">
-         <aside className="fixed flex h-full w-60 flex-col border-border/60 border-r p-5 shadow-sm">
+      <aside className="h-svh w-60 max-md:hidden">
+         <div className="fixed flex h-full w-60 flex-col border-border/60 border-r p-5 shadow-sm">
             <DropdownMenu>
                <DropdownMenuTrigger
                   className={cn(
@@ -92,12 +92,10 @@ export function Sidebar() {
                   </>
                }
             >
-               <button
+               <Button
+                  variant={"outline"}
                   onClick={() => pushModal("create-issue")}
-                  className={cn(
-                     buttonVariants({ variant: "outline" }),
-                     "mb-5 w-full font-semibold text-[0.95rem]",
-                  )}
+                  className={cn("mb-5 w-full font-semibold text-[0.95rem]")}
                >
                   <svg
                      className="size-5"
@@ -119,7 +117,7 @@ export function Sidebar() {
                      />
                   </svg>
                   New issue
-               </button>
+               </Button>
             </Tooltip>
             <nav>
                <ul className="space-y-1">
@@ -214,7 +212,7 @@ export function Sidebar() {
                   </DropdownMenuContent>
                </DropdownMenu>
             </div>
-         </aside>
-      </div>
+         </div>
+      </aside>
    )
 }

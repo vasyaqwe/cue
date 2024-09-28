@@ -1,6 +1,6 @@
 import { cn } from "@/ui/utils"
 import { type VariantProps, cva } from "class-variance-authority"
-import type { ComponentProps } from "react"
+import { type ComponentProps, forwardRef } from "react"
 
 const buttonVariants = cva(
    `inline-flex items-center cursor-pointer justify-center whitespace-nowrap leading-none active:enabled:scale-[97%] gap-1.5 font-medium
@@ -33,18 +33,17 @@ const buttonVariants = cva(
    },
 )
 
-function Button({
-   className,
-   variant,
-   size,
-   ...props
-}: ComponentProps<"button"> & VariantProps<typeof buttonVariants>) {
+const Button = forwardRef<
+   HTMLButtonElement,
+   ComponentProps<"button"> & VariantProps<typeof buttonVariants>
+>(({ className, variant, size, ...props }, ref) => {
    return (
       <button
+         ref={ref}
          className={cn(buttonVariants({ variant, size, className }))}
          {...props}
       />
    )
-}
+})
 
 export { Button, buttonVariants }

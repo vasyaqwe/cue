@@ -19,7 +19,7 @@ export function Header({
       <header className={cn("h-[var(--header-height)]")}>
          <div
             className={cn(
-               "fixed top-0 z-[11] flex h-[var(--header-height)] w-full items-center border-border/75 border-b bg-background shadow-sm md:pl-[17px]",
+               "fixed top-0 z-[2] flex h-[var(--header-height)] w-full items-center border-border/75 border-b bg-background shadow-sm md:pl-[17px]",
 
                className,
             )}

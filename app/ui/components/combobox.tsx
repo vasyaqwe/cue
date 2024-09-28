@@ -56,8 +56,13 @@ export function Combobox({
    )
 }
 
-export function ComboboxTrigger({ ...props }: PopoverTriggerProps) {
-   return <PopoverTrigger {...props} />
+export function ComboboxTrigger({ className, ...props }: PopoverTriggerProps) {
+   return (
+      <PopoverTrigger
+         className={cn("!scale-[unset]", className)}
+         {...props}
+      />
+   )
 }
 
 export function ComboboxContent({

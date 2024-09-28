@@ -19,9 +19,9 @@ function Toaster(props: ComponentProps<typeof Sonner>) {
                      r="6"
                      fill="none"
                      stroke="currentColor"
-                     stroke-width="2"
-                     stroke-dasharray="3.14 0"
-                     stroke-dashoffset="-0.7"
+                     strokeWidth="2"
+                     strokeDasharray="3.14 0"
+                     strokeDashoffset="-0.7"
                   />
                   <circle
                      cx="7"
@@ -29,9 +29,9 @@ function Toaster(props: ComponentProps<typeof Sonner>) {
                      r="3"
                      fill="none"
                      stroke="currentColor"
-                     stroke-width="6"
-                     stroke-dasharray="18.84955592153876 100"
-                     stroke-dashoffset="0"
+                     strokeWidth="6"
+                     strokeDasharray="18.84955592153876 100"
+                     strokeDashoffset="0"
                      transform="rotate(-90 7 7)"
                   />
                   <path

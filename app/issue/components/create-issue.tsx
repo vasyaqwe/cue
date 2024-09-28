@@ -147,7 +147,7 @@ export function CreateIssue() {
                <ComboboxTrigger
                   className={cn(
                      buttonVariants({ variant: "outline" }),
-                     "!scale-[unset] capitalize",
+                     "capitalize",
                   )}
                >
                   <StatusIcon
@@ -165,7 +165,7 @@ export function CreateIssue() {
                         key={s}
                         value={s}
                         onSelect={(value) => {
-                           setStatus(value as IssueStatus)
+                           setStatus(value as never)
                         }}
                         isSelected={s === status}
                         className="capitalize"
@@ -187,7 +187,7 @@ export function CreateIssue() {
                <ComboboxTrigger
                   className={cn(
                      buttonVariants({ variant: "outline" }),
-                     "!scale-[unset] capitalize",
+                     "capitalize",
                   )}
                >
                   <LabelIndicator label={label} />
@@ -202,7 +202,7 @@ export function CreateIssue() {
                         key={l}
                         value={l}
                         onSelect={(value) => {
-                           setLabel(value as IssueLabel)
+                           setLabel(value as never)
                         }}
                         isSelected={l === label}
                         className="capitalize"

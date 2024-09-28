@@ -1,9 +1,10 @@
 import { useAuth } from "@/auth/hooks"
 import { env } from "@/env"
 import { StatusIcon } from "@/issue/components/icons"
+import { LabelIndicator } from "@/issue/components/label-indicator"
 import { useDeleteIssue, useUpdateIssue } from "@/issue/mutations"
 import { issueListQuery } from "@/issue/queries"
-import { issueStatuses } from "@/issue/schema"
+import { issueLabels, issueStatuses } from "@/issue/schema"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Route as issueIdRoute } from "@/routes/$slug/_layout/issue/$issueId"
 import { Badge } from "@/ui/components/badge"
@@ -165,10 +166,38 @@ function Component() {
                                                    }}
                                                 >
                                                    <StatusIcon
-                                                      className="!size-[18px] mr-1 inline-block"
+                                                      className="!size-[18px] mr-0.5 inline-block"
                                                       status={status}
                                                    />
                                                    {status}
+                                                </ContextMenuCheckboxItem>
+                                             ))}
+                                          </ContextMenuSubContent>
+                                       </ContextMenuSub>
+                                       <ContextMenuSub>
+                                          <ContextMenuSubTrigger>
+                                             <Icons.tag /> Label
+                                          </ContextMenuSubTrigger>
+                                          <ContextMenuSubContent>
+                                             {issueLabels.map((label) => (
+                                                <ContextMenuCheckboxItem
+                                                   checked={
+                                                      label === issue.label
+                                                   }
+                                                   className="capitalize"
+                                                   key={label}
+                                                   onSelect={() => {
+                                                      updateIssue.mutate({
+                                                         label,
+                                                         organizationId,
+                                                         id: issue.id,
+                                                      })
+                                                   }}
+                                                >
+                                                   <LabelIndicator
+                                                      label={label}
+                                                   />
+                                                   {label}
                                                 </ContextMenuCheckboxItem>
                                              ))}
                                           </ContextMenuSubContent>
@@ -200,7 +229,29 @@ function Component() {
                                                    )
                                                 }}
                                              >
-                                                <Icons.copy />
+                                                <svg
+                                                   width="24"
+                                                   height="24"
+                                                   viewBox="0 0 24 24"
+                                                   fill="none"
+                                                   xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                   <path
+                                                      opacity="0.5"
+                                                      d="M10.5858 6.3432L11.2929 5.6361C13.2455 3.68348 16.4113 3.68348 18.364 5.6361C20.3166 7.58872 20.3166 10.7545 18.364 12.7072L17.6569 13.4143M6.34314 10.5858L5.63604 11.293C3.68341 13.2456 3.68341 16.4114 5.63604 18.364C7.58866 20.3166 10.7545 20.3166 12.7071 18.364L13.4142 17.6569"
+                                                      stroke="currentColor"
+                                                      strokeWidth={2}
+                                                      strokeLinecap="round"
+                                                      strokeLinejoin="round"
+                                                   />
+                                                   <path
+                                                      d="M14.1213 9.87866L9.87866 14.1213"
+                                                      stroke="currentColor"
+                                                      strokeWidth={2}
+                                                      strokeLinecap="round"
+                                                      strokeLinejoin="round"
+                                                   />
+                                                </svg>
                                                 Copy URL
                                              </ContextMenuItem>
                                           </ContextMenuSubContent>

@@ -171,6 +171,18 @@ export function useIssueQueryMutator() {
                if (input.status) issue.status = input.status
             }),
       )
+
+      queryClient.setQueryData(
+         issueByIdQuery({ issueId: input.id, organizationId }).queryKey,
+         (oldData) => {
+            if (!oldData) return
+
+            return {
+               ...oldData,
+               ...input,
+            }
+         },
+      )
    }
 
    return {

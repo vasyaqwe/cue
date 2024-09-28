@@ -11,7 +11,7 @@ export function LabelIndicator({
       <span
          aria-hidden={true}
          className={cn(
-            "mr-0.5 inline-block size-2.5 rounded-full",
+            "mr-0.5 inline-block size-2.5 rounded-full transition-colors duration-300",
             label === "bug"
                ? "bg-red-400"
                : label === "feature"
