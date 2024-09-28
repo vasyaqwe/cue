@@ -1,6 +1,6 @@
-import { github, lucia } from "@/auth"
-import { users } from "@/auth/schema"
 import { protectedProcedure, publicProcedure } from "@/lib/trpc"
+import { github, lucia } from "@/user/auth"
+import { users } from "@/user/schema"
 import { createServerFn } from "@tanstack/start"
 import { generateState } from "arctic"
 import { eq } from "drizzle-orm"

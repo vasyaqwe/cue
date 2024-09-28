@@ -1,7 +1,7 @@
-import { createSession, github } from "@/auth"
-import { oauthAccounts, users } from "@/auth/schema"
 import { db } from "@/db"
 import { organizationMembers, organizations } from "@/organization/schema"
+import { createSession, github } from "@/user/auth"
+import { oauthAccounts, users } from "@/user/schema"
 
 import { createAPIFileRoute } from "@tanstack/start/api"
 import { and, eq } from "drizzle-orm"

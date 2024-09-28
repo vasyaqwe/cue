@@ -1,5 +1,5 @@
-import { useAuth } from "@/auth/hooks"
-import type { User } from "@/auth/schema"
+import { useAuth } from "@/user/hooks"
+import type { User } from "@/user/schema"
 import { usePresenceStore } from "@/presence/presence-store"
 import { Avatar, AvatarFallback } from "@/ui/components/avatar"
 import { cn } from "@/ui/utils"

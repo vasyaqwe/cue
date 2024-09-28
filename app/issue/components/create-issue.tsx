@@ -1,7 +1,6 @@
-import { useAuth } from "@/auth/hooks"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
-import { useIssueSocket } from "@/issue/mutations"
+import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
 import { issueListQuery } from "@/issue/queries"
 import {
    type IssueLabel,
@@ -24,6 +23,7 @@ import { Input, inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
 import { useLocalStorage } from "@/user-interactions/use-local-storage"
+import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"

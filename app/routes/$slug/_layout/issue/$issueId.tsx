@@ -1,7 +1,7 @@
-import { useAuth } from "@/auth/hooks"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
-import { useDeleteIssue, useUpdateIssue } from "@/issue/mutations"
+import { useDeleteIssue } from "@/issue/hooks/use-delete-issue"
+import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { issueByIdQuery } from "@/issue/queries"
 import {
    issueLabels,
@@ -29,6 +29,7 @@ import { Main } from "@/ui/components/main"
 import { Tooltip } from "@/ui/components/tooltip"
 import { cn } from "@/ui/utils"
 import { useCopyToClipboard } from "@/user-interactions/use-copy-to-clipboard"
+import { useAuth } from "@/user/hooks"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { useRef } from "react"

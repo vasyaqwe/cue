@@ -5,7 +5,7 @@ import {
    emailVerificationCodes,
    sessions,
    users,
-} from "@/auth/schema"
+} from "@/user/schema"
 import { type Database, db } from "@/db"
 import { env } from "@/env"
 import { GitHub } from "arctic"

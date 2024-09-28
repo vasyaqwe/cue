@@ -1,4 +1,3 @@
-import { meQuery } from "@/auth/queries"
 import { ModalProvider } from "@/modals"
 import {
    organizationBySlugQuery,
@@ -7,6 +6,7 @@ import {
 import { Presence } from "@/presence"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
+import { userMeQuery } from "@/user/queries"
 import {
    Outlet,
    createFileRoute,
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/$slug/_layout")({
    component: Component,
    beforeLoad: async ({ context, params }) => {
       const session = await context.queryClient
-         .ensureQueryData(meQuery())
+         .ensureQueryData(userMeQuery())
          .catch(() => {
             throw redirect({ to: "/login" })
          })

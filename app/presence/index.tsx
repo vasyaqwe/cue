@@ -1,4 +1,4 @@
-import { useAuth } from "@/auth/hooks"
+import { useAuth } from "@/user/hooks"
 import { env } from "@/env"
 import type { PresenceEvent } from "@/presence/types"
 import { usePartySocket } from "partysocket/react"

@@ -1,4 +1,4 @@
-import { users } from "@/auth/schema"
+import { users } from "@/user/schema"
 import {
    createTable,
    generateCode,

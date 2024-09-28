@@ -1,6 +1,3 @@
-import * as userFns from "@/auth/functions"
-import { useAuth } from "@/auth/hooks"
-import { meQuery } from "@/auth/queries"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Button } from "@/ui/components/button"
 import {
@@ -13,6 +10,9 @@ import {
 import { Input } from "@/ui/components/input"
 import { Label } from "@/ui/components/label"
 import { Main } from "@/ui/components/main"
+import * as userFns from "@/user/functions"
+import { useAuth } from "@/user/hooks"
+import { userMeQuery } from "@/user/queries"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
@@ -31,7 +31,7 @@ function Component() {
    const updateUser = useMutation({
       mutationFn: updateFn,
       onSettled: () => {
-         queryClient.invalidateQueries(meQuery())
+         queryClient.invalidateQueries(userMeQuery())
       },
       onSuccess: () => {
          toast.success("Saved")

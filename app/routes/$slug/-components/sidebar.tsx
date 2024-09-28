@@ -1,5 +1,5 @@
-import * as auth from "@/auth/functions"
-import { useAuth } from "@/auth/hooks"
+import * as auth from "@/user/functions"
+import { useAuth } from "@/user/hooks"
 import { pushModal } from "@/modals"
 import { organizationMembershipsQuery } from "@/organization/queries"
 import { Route as homeRoute } from "@/routes/$slug/_layout"

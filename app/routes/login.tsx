@@ -1,4 +1,4 @@
-import * as auth from "@/auth/functions"
+import * as auth from "@/user/functions"
 import * as organization from "@/organization/functions"
 import { Button } from "@/ui/components/button"
 import { cardVariants } from "@/ui/components/card"
