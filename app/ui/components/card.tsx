@@ -2,19 +2,17 @@ import { cn } from "@/ui/utils"
 import { type VariantProps, cva } from "class-variance-authority"
 import type { ComponentProps } from "react"
 
-const cardVariants = cva(
-   `border bg-muted border-border text-muted-foreground p-3 rounded-xl`,
-   {
-      variants: {
-         variant: {
-            default: ``,
-         },
-      },
-      defaultVariants: {
-         variant: "default",
+const cardVariants = cva(`border border-border p-3 rounded-xl`, {
+   variants: {
+      variant: {
+         default: `bg-muted/50 text-muted-foreground`,
+         secondary: "bg-background",
       },
    },
-)
+   defaultVariants: {
+      variant: "default",
+   },
+})
 
 function Card({
    className,
@@ -29,19 +27,25 @@ function Card({
    )
 }
 
-function CardHeader({ className, ...props }: ComponentProps<"div">) {
+function CardHeader({ className, children, ...props }: ComponentProps<"div">) {
    return (
       <div
-         className={cn("flex flex-col space-y-1.5 p-6", className)}
+         className={cn("", className)}
          {...props}
-      />
+      >
+         {children}
+         <div className={cn("-mx-3 mt-1 h-px bg-border/75")} />
+      </div>
    )
 }
 
 function CardTitle({ className, ...props }: ComponentProps<"h3">) {
    return (
       <h3
-         className={cn("font-semibold leading-none tracking-tight", className)}
+         className={cn(
+            "font-semibold text-foreground text-lg leading-none tracking-tight",
+            className,
+         )}
          {...props}
       />
    )
@@ -50,7 +54,7 @@ function CardTitle({ className, ...props }: ComponentProps<"h3">) {
 function CardDescription({ className, ...props }: ComponentProps<"p">) {
    return (
       <p
-         className={cn("text-muted-foreground", className)}
+         className={cn("mt-2 mb-2 text-foreground/75", className)}
          {...props}
       />
    )
@@ -59,7 +63,7 @@ function CardDescription({ className, ...props }: ComponentProps<"p">) {
 function CardContent({ className, ...props }: ComponentProps<"div">) {
    return (
       <div
-         className={cn("p-6 pt-0", className)}
+         className={cn("pt-2", className)}
          {...props}
       />
    )

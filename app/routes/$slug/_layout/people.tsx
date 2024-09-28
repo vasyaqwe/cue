@@ -69,7 +69,7 @@ function Component() {
             {members.length === 0 ? (
                <p className="absolute inset-0 m-auto size-fit">No members</p>
             ) : (
-               <div className="mx-auto mt-8 flex max-w-3xl flex-col">
+               <div className="mx-auto mt-5 flex max-w-3xl flex-col md:mt-8">
                   <ModalWrapper>
                      <ModalTrigger
                         className={cn(

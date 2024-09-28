@@ -1,7 +1,9 @@
 import { github, lucia } from "@/auth"
+import { users } from "@/auth/schema"
 import { protectedProcedure, publicProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
 import { generateState } from "arctic"
+import { eq } from "drizzle-orm"
 import { deleteCookie, parseCookies, setCookie, setHeader } from "vinxi/http"
 import { z } from "zod"
 
@@ -10,6 +12,18 @@ export const me = createServerFn(
    protectedProcedure.query(async ({ ctx }) => {
       return ctx.auth
    }),
+)
+
+export const update = createServerFn(
+   "POST",
+   protectedProcedure
+      .input(z.object({ name: z.string().min(1) }))
+      .mutation(async ({ ctx, input }) => {
+         return await ctx.db
+            .update(users)
+            .set(input)
+            .where(eq(users.id, ctx.user.id))
+      }),
 )
 
 export const logInWithGithub = createServerFn(

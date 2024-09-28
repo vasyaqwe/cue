@@ -14,7 +14,7 @@ export const users = createTable(
    "users",
    {
       id: generateId("user"),
-      email: text("email"),
+      email: text("email").notNull().unique(),
       name: text("name"),
       avatarUrl: text("avatar_url"),
       onboardingCompleted: integer("onboarding_completed", {
