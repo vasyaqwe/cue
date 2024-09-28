@@ -94,22 +94,31 @@ function DropdownMenuItem({
    destructive = false,
    inset = false,
    onSelect,
-   asChild,
    ...props
 }: ComponentProps<typeof CommandItem> & {
    inset?: boolean
    destructive?: boolean
+   onSelect?: () => void
 }) {
    const context = useContext(DropdownMenuContext)
    if (!context)
       throw new Error("DropdownMenuItem must be used within DropdownMenu")
 
    if (context.isMobile) {
-      return <CommandItem {...props} />
+      return (
+         <CommandItem
+            destructive={destructive}
+            inset={inset}
+            onSelect={onSelect}
+            className={className}
+            {...props}
+         />
+      )
    }
 
    return (
       <DropdownMenuPrimitive.Item
+         onSelect={onSelect}
          className={cn(
             "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled]:cursor-not-allowed focus:bg-border/50 data-[disabled]:opacity-75",
             inset && "pl-8",

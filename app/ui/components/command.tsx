@@ -24,19 +24,18 @@ export function CommandItem({
    return (
       <Command.Item
          onSelect={() => {
-            if (isMobile) {
-               document.dispatchEvent(
-                  new KeyboardEvent("keydown", {
-                     key: "Escape",
-                  }),
-               )
-            }
-            if (!value) return
-            onSelect?.(value)
+            // if (isMobile) {
+            document.dispatchEvent(
+               new KeyboardEvent("keydown", {
+                  key: "Escape",
+               }),
+            )
+            // }
+            onSelect?.(value ?? "")
          }}
          value={value}
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-2.5 rounded-xl px-4 py-1.5 outline-none md:[&_svg]:size-5 max-md:h-12 max-md:active:scale-95 data-[disabled=true]:cursor-not-allowed md:gap-1.5 md:rounded-[8px] max-md:active:bg-border/50 md:data-[selected=true]:bg-border/50 md:px-2 max-md:text-[1.05rem] data-[disabled=true]:opacity-75 max-md:duration-300",
+            "relative flex cursor-pointer select-none items-center gap-2.5 rounded-xl px-4 py-1.5 outline-none md:[&_svg]:size-5 max-md:h-12 max-md:active:scale-95 data-[disabled=true]:cursor-not-allowed md:gap-1.5 md:rounded-[8px] max-md:active:bg-border/75 md:data-[selected=true]:bg-border/50 md:px-2 max-md:text-[1.05rem] data-[disabled=true]:opacity-75 max-md:duration-300",
             inset && "pl-8",
             destructive
                ? "max-md:active:bg-destructive/95 md:data-[selected=true]:bg-destructive max-md:active:text-destructive-foreground md:data-[selected=true]:text-destructive-foreground"

@@ -1,5 +1,4 @@
 import { CommandItem } from "@/ui/components/command"
-import { useIsMobile } from "@/ui/hooks/use-is-mobile"
 import { cn } from "@/ui/utils"
 import type {
    PopoverContentProps,
@@ -34,11 +33,7 @@ type ComboboxProps = {
    children: React.ReactNode
 } & (ComboboxSingleProps | ComboboxMultipleProps)
 
-type ComboboxContextType = {
-   isOpen: boolean
-   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-   isMobile: boolean
-} & (ComboboxSingleProps | ComboboxMultipleProps)
+type ComboboxContextType = ComboboxSingleProps | ComboboxMultipleProps
 
 const ComboboxContext = createContext<ComboboxContextType | null>(null)
 
@@ -48,13 +43,11 @@ export function Combobox({
    value: propValue,
    ...props
 }: ComboboxProps & PopoverProps) {
-   const { isMobile } = useIsMobile()
    return (
       <ComboboxContext.Provider
          value={
             {
                multiple,
-               isMobile,
             } as ComboboxContextType
          }
       >
@@ -73,14 +66,16 @@ export function ComboboxContent({
 }: PopoverContentProps & { title: string }) {
    return (
       <PopoverContent
-         asChild
          style={{
             ...props.style,
             paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.5rem)`,
          }}
          {...props}
       >
-         <Command className={cn("max-md:mt-2")}>
+         <Command
+            tabIndex={0}
+            className={cn("outline-none max-md:mt-2")}
+         >
             <CommandList>
                <CommandGroup>{children}</CommandGroup>
             </CommandList>

@@ -5,6 +5,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
 
 export const issueStatuses = ["backlog", "todo", "in progress", "done"] as const
+export const issueLabels = ["bug", "feature", "improvement"] as const
 
 export const issues = createTable(
    "issues",
@@ -16,7 +17,7 @@ export const issues = createTable(
          enum: issueStatuses,
       }).notNull(),
       label: text("label", {
-         enum: ["bug", "feature", "improvement"],
+         enum: issueLabels,
       }).notNull(),
       organizationId: text("organization_id")
          .notNull()
@@ -38,3 +39,4 @@ export const updateIssueParams = createSelectSchema(issues).partial().extend({
 })
 
 export type IssueStatus = (typeof issueStatuses)[number]
+export type IssueLabel = (typeof issueLabels)[number]

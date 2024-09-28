@@ -1,8 +1,14 @@
 import { useAuth } from "@/auth/hooks"
 import { StatusIcon } from "@/issue/components/icons"
+import { LabelIndicator } from "@/issue/components/label-indicator"
 import { useIssueSocket } from "@/issue/mutations"
 import { issueListQuery } from "@/issue/queries"
-import { type IssueStatus, issueStatuses } from "@/issue/schema"
+import {
+   type IssueLabel,
+   type IssueStatus,
+   issueLabels,
+   issueStatuses,
+} from "@/issue/schema"
 import type { IssueEvent } from "@/issue/types"
 import { popModal } from "@/modals"
 import { ResponsiveModalContent, ResponsiveModalTitle } from "@/modals/dynamic"
@@ -36,15 +42,23 @@ export function CreateIssue() {
       "create_issue_description",
       "",
    )
+
+   const titleRef = useRef<HTMLInputElement>(null)
+   const socket = useIssueSocket()
+
    const [status, setStatus] = useLocalStorage<IssueStatus>(
       "create_issue_status",
       "todo",
    )
-   const titleRef = useRef<HTMLInputElement>(null)
-   const socket = useIssueSocket()
-
    const [statusOpen, setStatusOpen] = useState(false)
    useHotkeys("s", () => setStatusOpen(!statusOpen))
+
+   const [label, setLabel] = useLocalStorage<IssueLabel>(
+      "create_issue_label",
+      issueLabels[0],
+   )
+   const [labelOpen, setLabelOpen] = useState(false)
+   useHotkeys("l", () => setLabelOpen(!labelOpen))
 
    const insertFn = useServerFn(issue.insert)
    const insert = useMutation({
@@ -89,15 +103,11 @@ export function CreateIssue() {
             id="create-issue"
             onSubmit={(e) => {
                e.preventDefault()
-               // const formData = Object.fromEntries(
-               //    new FormData(e.target as HTMLFormElement),
-               // )
-
                insert.mutate({
                   title,
                   description,
-                  label: "bug",
-                  status: "todo",
+                  label,
+                  status,
                   organizationId,
                })
             }}
@@ -128,53 +138,86 @@ export function CreateIssue() {
                }
             />
          </form>
-         <DialogFooter className="justify-between">
-            <div className="contents">
-               <Combobox
-                  open={statusOpen}
-                  onOpenChange={setStatusOpen}
-                  modal
+         <DialogFooter className="gap-2">
+            <Combobox
+               open={statusOpen}
+               onOpenChange={setStatusOpen}
+               modal
+            >
+               <ComboboxTrigger
+                  className={cn(
+                     buttonVariants({ variant: "outline" }),
+                     "!scale-[unset] capitalize",
+                  )}
                >
-                  <ComboboxTrigger
-                     className={cn(
-                        buttonVariants({ variant: "outline" }),
-                        "!scale-[unset] capitalize",
-                     )}
-                  >
-                     <StatusIcon
-                        className="!size-[18px] mr-0.5"
-                        status={status}
-                     />
-                     {status}
-                  </ComboboxTrigger>
-                  <ComboboxContent
-                     align="start"
-                     title="Status"
-                  >
-                     {issueStatuses.map((s) => (
-                        <ComboboxItem
-                           key={s}
-                           value={s}
-                           onSelect={(value) => {
-                              setStatus(value as IssueStatus)
-                           }}
-                           isSelected={s === status}
-                           className="capitalize"
-                        >
-                           <StatusIcon
-                              className="!size-[18px] mr-0.5"
-                              status={s}
-                           />
-                           {s}
-                        </ComboboxItem>
-                     ))}
-                  </ComboboxContent>
-               </Combobox>
-            </div>
+                  <StatusIcon
+                     className="!size-[18px] mr-0.5"
+                     status={status}
+                  />
+                  {status}
+               </ComboboxTrigger>
+               <ComboboxContent
+                  align="start"
+                  title="Status"
+               >
+                  {issueStatuses.map((s) => (
+                     <ComboboxItem
+                        key={s}
+                        value={s}
+                        onSelect={(value) => {
+                           setStatus(value as IssueStatus)
+                        }}
+                        isSelected={s === status}
+                        className="capitalize"
+                     >
+                        <StatusIcon
+                           className="!size-[18px] mr-0.5"
+                           status={s}
+                        />
+                        {s}
+                     </ComboboxItem>
+                  ))}
+               </ComboboxContent>
+            </Combobox>
+            <Combobox
+               open={labelOpen}
+               onOpenChange={setLabelOpen}
+               modal
+            >
+               <ComboboxTrigger
+                  className={cn(
+                     buttonVariants({ variant: "outline" }),
+                     "!scale-[unset] capitalize",
+                  )}
+               >
+                  <LabelIndicator label={label} />
+                  {label}
+               </ComboboxTrigger>
+               <ComboboxContent
+                  align="start"
+                  title="Label"
+               >
+                  {issueLabels.map((l) => (
+                     <ComboboxItem
+                        key={l}
+                        value={l}
+                        onSelect={(value) => {
+                           setLabel(value as IssueLabel)
+                        }}
+                        isSelected={l === label}
+                        className="capitalize"
+                     >
+                        <LabelIndicator label={l} />
+                        {l}
+                     </ComboboxItem>
+                  ))}
+               </ComboboxContent>
+            </Combobox>
             <Button
                type="submit"
                disabled={insert.isPending || insert.isSuccess}
                form="create-issue"
+               className="ml-auto"
             >
                {insert.isPending || insert.isSuccess ? (
                   <>
