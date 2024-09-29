@@ -1,3 +1,4 @@
+import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
 import { ModalProvider } from "@/modals"
 import {
    organizationBySlugQuery,
@@ -47,6 +48,8 @@ export const Route = createFileRoute("/$slug/_layout")({
 })
 
 function Component() {
+   useIssueSocket({ shouldListenToEvents: true })
+
    return (
       <>
          <Presence />

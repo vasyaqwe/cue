@@ -5,7 +5,9 @@ import { useAuth } from "@/user/hooks"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import usePartySocket from "partysocket/react"
 
-export function useIssueSocket() {
+export function useIssueSocket({
+   shouldListenToEvents = false,
+}: { shouldListenToEvents?: boolean } = {}) {
    const { organizationId, user } = useAuth()
    const { slug } = useParams({ from: "/$slug/_layout" })
    const navigate = useNavigate()
@@ -48,6 +50,8 @@ export function useIssueSocket() {
       party: "issue",
       room: organizationId,
       onMessage(event: MessageEvent<string>) {
+         if (!shouldListenToEvents) return
+
          const message: IssueEvent = JSON.parse(event.data)
          if (message.senderId === user.id) return
 
@@ -61,6 +65,14 @@ export function useIssueSocket() {
          }
 
          if (message.type === "update") {
+            console.log("hello")
+            if (message.input.status === "done" && message.input.title) {
+               notify({
+                  title: "Issue resolved",
+                  body: `Issue “${message.input.title}” has just been resolved.`,
+                  issueId: message.issueId,
+               })
+            }
             return updateIssueInQueryData({ input: message.input })
          }
 

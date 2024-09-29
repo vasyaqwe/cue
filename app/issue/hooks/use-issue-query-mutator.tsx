@@ -44,16 +44,21 @@ export function useIssueQueryMutator() {
    }) => {
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
-         (oldData) =>
-            produce(oldData, (draft) => {
+         (oldData) => {
+            if (!oldData) return oldData
+            return produce(oldData, (draft) => {
                const issue = draft?.find((issue) => issue.id === input.id)
                if (!issue) return
 
-               if (input.title) issue.title = input.title
-               if (input.description) issue.description = input.description
-               if (input.label) issue.label = input.label
-               if (input.status) issue.status = input.status
-            }),
+               Object.assign(issue, {
+                  ...(input.title &&
+                     issue.title !== input.title && { title: input.title }),
+                  ...(input.description && { description: input.description }),
+                  ...(input.label && { label: input.label }),
+                  ...(input.status && { status: input.status }),
+               })
+            })
+         },
       )
 
       queryClient.setQueryData(

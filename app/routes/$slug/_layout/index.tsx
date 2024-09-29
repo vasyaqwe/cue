@@ -163,6 +163,7 @@ function Component() {
                                                          status,
                                                          organizationId,
                                                          id: issue.id,
+                                                         title: issue.title,
                                                       })
                                                    }}
                                                 >
@@ -192,6 +193,7 @@ function Component() {
                                                          label,
                                                          organizationId,
                                                          id: issue.id,
+                                                         title: issue.title,
                                                       })
                                                    }}
                                                 >

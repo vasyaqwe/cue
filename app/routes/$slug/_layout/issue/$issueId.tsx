@@ -268,6 +268,7 @@ function Component() {
                                     id: issueId,
                                     organizationId,
                                     status: value as never,
+                                    title: issue.title,
                                  })
                               }}
                               isSelected={s === issue.status}
@@ -306,6 +307,7 @@ function Component() {
                                     id: issueId,
                                     organizationId,
                                     label: value as never,
+                                    title: issue.title,
                                  })
                               }}
                               isSelected={l === issue.label}

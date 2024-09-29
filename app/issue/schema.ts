@@ -34,9 +34,12 @@ export const issues = createTable(
 )
 
 export const insertIssueParams = createInsertSchema(issues)
-export const updateIssueParams = createSelectSchema(issues).partial().extend({
-   id: z.string(),
-})
+export const updateIssueParams = createSelectSchema(issues)
+   .partial()
+   .extend({
+      id: z.string(),
+      title: z.string().min(1),
+   })
 
 export type IssueStatus = (typeof issueStatuses)[number]
 export type IssueLabel = (typeof issueLabels)[number]
