@@ -14,7 +14,8 @@ import {
    CommandSeparator,
 } from "cmdk"
 import type React from "react"
-import { type ComponentProps, createContext } from "react"
+import { type ComponentProps, createContext, useState } from "react"
+import { useHotkeys } from "react-hotkeys-hook"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 
 type ComboboxSingleProps = {
@@ -31,18 +32,31 @@ type ComboboxMultipleProps = {
 
 type ComboboxProps = {
    children: React.ReactNode
+   shortcut?: string | undefined
 } & (ComboboxSingleProps | ComboboxMultipleProps)
 
 type ComboboxContextType = ComboboxSingleProps | ComboboxMultipleProps
 
 const ComboboxContext = createContext<ComboboxContextType | null>(null)
 
+function Hotkey({
+   shortcut,
+   setOpen,
+}: { shortcut: string; setOpen: () => void }) {
+   useHotkeys(shortcut, setOpen)
+   return null
+}
+
 export function Combobox({
    children,
    multiple,
-   value: propValue,
+   open: openProp,
+   onOpenChange: onOpenChangeProp,
+   shortcut,
    ...props
 }: ComboboxProps & PopoverProps) {
+   const [open, setOpen] = useState(false)
+
    return (
       <ComboboxContext.Provider
          value={
@@ -51,7 +65,19 @@ export function Combobox({
             } as ComboboxContextType
          }
       >
-         <Popover {...props}>{children}</Popover>
+         {shortcut ? (
+            <Hotkey
+               shortcut={shortcut}
+               setOpen={() => setOpen(!open)}
+            />
+         ) : null}
+         <Popover
+            open={openProp ?? open}
+            onOpenChange={onOpenChangeProp ?? setOpen}
+            {...props}
+         >
+            {children}
+         </Popover>
       </ComboboxContext.Provider>
    )
 }

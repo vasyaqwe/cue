@@ -8,6 +8,7 @@ import {
    issueStatuses,
    type updateIssueParams,
 } from "@/issue/schema"
+import { useOnPushModal } from "@/modals"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
@@ -24,6 +25,7 @@ import {
 } from "@/ui/components/dropdown-menu"
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
+import { Kbd } from "@/ui/components/kbd"
 import { Loading } from "@/ui/components/loading"
 import { Main } from "@/ui/components/main"
 import { Tooltip } from "@/ui/components/tooltip"
@@ -32,7 +34,8 @@ import { useCopyToClipboard } from "@/user-interactions/use-copy-to-clipboard"
 import { useAuth } from "@/user/hooks"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, notFound } from "@tanstack/react-router"
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import { useHotkeys } from "react-hotkeys-hook"
 import { debounce } from "remeda"
 import { toast } from "sonner"
 import type { z } from "zod"
@@ -102,6 +105,18 @@ function Component() {
    )
 
    const { copy } = useCopyToClipboard()
+
+   const onCopyIssueUrl = () => {
+      copy(window.location.href)
+      toast.success("Issue URL copied to clipboard")
+   }
+   useHotkeys("mod+shift+c", (e) => {
+      e.preventDefault()
+      onCopyIssueUrl()
+   })
+
+   const [createIssueOpen, setCreateIssueOpen] = useState(false)
+   useOnPushModal("create_issue", (open) => setCreateIssueOpen(open))
 
    if (!issue) return null
 
@@ -188,12 +203,22 @@ function Component() {
                      <p className="pl-2 font-semibold text-foreground/75">
                         Properties
                      </p>
-                     <Tooltip content="Copy issue URL">
+                     <Tooltip
+                        content={
+                           <div className="flex items-center gap-2">
+                              Copy issue URL
+                              <div className="inline-flex items-center gap-1">
+                                 <Kbd>Ctrl</Kbd>
+                                 <Kbd className="px-0.5 py-0">
+                                    <Icons.shift className="h-5 w-[18px]" />
+                                 </Kbd>
+                                 <Kbd>C</Kbd>
+                              </div>
+                           </div>
+                        }
+                     >
                         <Button
-                           onClick={() => {
-                              copy(window.location.href)
-                              toast.success("Copied to clipboard")
-                           }}
+                           onClick={onCopyIssueUrl}
                            aria-label="Copy issue URL"
                            variant={"ghost"}
                            size={"icon"}
@@ -216,7 +241,7 @@ function Component() {
                         </Button>
                      </Tooltip>
                   </div>
-                  <Combobox>
+                  <Combobox shortcut={!createIssueOpen ? "s" : undefined}>
                      <ComboboxTrigger
                         className={cn(
                            buttonVariants({ variant: "ghost" }),
@@ -257,7 +282,7 @@ function Component() {
                         ))}
                      </ComboboxContent>
                   </Combobox>
-                  <Combobox>
+                  <Combobox shortcut={!createIssueOpen ? "l" : undefined}>
                      <ComboboxTrigger
                         className={cn(
                            buttonVariants({ variant: "ghost" }),

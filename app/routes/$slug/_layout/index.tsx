@@ -213,7 +213,7 @@ function Component() {
                                                 onSelect={() => {
                                                    copy(issue.title)
                                                    toast.success(
-                                                      "Copied to clipboard",
+                                                      "Issue title copied to clipboard",
                                                    )
                                                 }}
                                              >
@@ -226,7 +226,7 @@ function Component() {
                                                       `${env.VITE_BASE_URL}/${slug}/issue/${issue.id}`,
                                                    )
                                                    toast.success(
-                                                      "Copied to clipboard",
+                                                      "Issue URL copied to clipboard",
                                                    )
                                                 }}
                                              >

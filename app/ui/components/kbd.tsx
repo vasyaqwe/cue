@@ -2,15 +2,33 @@ import { cn } from "@/ui/utils"
 import type { ComponentProps } from "react"
 
 export function Kbd({ className, children, ...props }: ComponentProps<"kbd">) {
+   const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0
    return (
       <kbd
          className={cn(
-            `ml-auto inline-flex items-center gap-[3px] rounded-md border border-border bg-background/90 px-1 font-semibold text-muted-foreground tracking-widest shadow-inner group-hover:border-muted group-hover:bg-background/75`,
+            `ml-auto inline-flex min-h-[21px] shrink-0 items-center gap-[3px] rounded-[5px] border border-border bg-background/90 px-[5px] pt-px pb-[2px] font-primary text-muted-foreground text-sm shadow-sm group-hover:border-muted group-hover:bg-background/75`,
             className,
          )}
          {...props}
       >
-         {children}
+         {typeof children === "string" && children === "Ctrl" && isMac ? (
+            <>
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mt-px size-[15px]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+               >
+                  <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+               </svg>
+            </>
+         ) : (
+            children
+         )}
       </kbd>
    )
 }

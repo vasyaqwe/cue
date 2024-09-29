@@ -31,8 +31,7 @@ import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
-import { useRef, useState } from "react"
-import { useHotkeys } from "react-hotkeys-hook"
+import { useRef } from "react"
 import { toast } from "sonner"
 import * as issue from "../functions"
 
@@ -54,15 +53,10 @@ export function CreateIssue() {
       "create_issue_status",
       "todo",
    )
-   const [statusOpen, setStatusOpen] = useState(false)
-   useHotkeys("s", () => setStatusOpen(!statusOpen))
-
    const [label, setLabel] = useLocalStorage<IssueLabel>(
       "create_issue_label",
       issueLabels[0],
    )
-   const [labelOpen, setLabelOpen] = useState(false)
-   useHotkeys("l", () => setLabelOpen(!labelOpen))
 
    const insertFn = useServerFn(issue.insert)
    const insert = useMutation({
@@ -142,8 +136,7 @@ export function CreateIssue() {
          </form>
          <ModalFooter className="gap-2">
             <Combobox
-               open={statusOpen}
-               onOpenChange={setStatusOpen}
+               shortcut="s"
                modal
             >
                <ComboboxTrigger
@@ -182,8 +175,7 @@ export function CreateIssue() {
                </ComboboxContent>
             </Combobox>
             <Combobox
-               open={labelOpen}
-               onOpenChange={setLabelOpen}
+               shortcut="l"
                modal
             >
                <ComboboxTrigger

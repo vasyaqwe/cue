@@ -1,9 +1,11 @@
 import {
    Dialog,
    DialogContent,
+   DialogDescription,
    DialogFooter,
    DialogHeader,
    DialogTitle,
+   DialogTrigger,
 } from "@/ui/components/dialog"
 import {
    Drawer,
@@ -15,11 +17,8 @@ import {
    DrawerTrigger,
 } from "@/ui/components/drawer"
 import { useIsMobile } from "@/ui/hooks/use-is-mobile"
-import {
-   DialogDescription,
-   DialogTrigger,
-   type DialogTriggerProps,
-} from "@radix-ui/react-dialog"
+import type { DialogTriggerProps } from "@radix-ui/react-dialog"
+
 import { createContext, useContext } from "react"
 import type { DialogProps } from "vaul"
 
@@ -46,7 +45,7 @@ function ModalTrigger(props: DialogTriggerProps) {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function ModalHeader({ ...props }: any) {
+function ModalHeader(props: any) {
    const context = useContext(ModalContext)
    if (!context)
       throw new Error("ModalHeader must be used within ModalProvider")
@@ -56,7 +55,7 @@ function ModalHeader({ ...props }: any) {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function ModalFooter({ ...props }: any) {
+function ModalFooter(props: any) {
    const context = useContext(ModalContext)
    if (!context)
       throw new Error("ModalFooter must be used within ModalProvider")
@@ -66,7 +65,7 @@ function ModalFooter({ ...props }: any) {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function ModalContent({ ...props }: any) {
+function ModalContent(props: any) {
    const context = useContext(ModalContext)
    if (!context)
       throw new Error("ModalContent must be used within ModalProvider")
@@ -76,7 +75,7 @@ function ModalContent({ ...props }: any) {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function ModalTitle({ ...props }: any) {
+function ModalTitle(props: any) {
    const context = useContext(ModalContext)
    if (!context) throw new Error("ModalTitle must be used within ModalProvider")
 
@@ -85,7 +84,7 @@ function ModalTitle({ ...props }: any) {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function ModalDescription({ ...props }: any) {
+function ModalDescription(props: any) {
    const context = useContext(ModalContext)
    if (!context)
       throw new Error("ModalDescription must be used within ModalProvider")
