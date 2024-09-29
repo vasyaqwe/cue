@@ -90,7 +90,7 @@ function Component() {
          <Header>
             <HeaderTitle>Settings</HeaderTitle>
          </Header>
-         <Main className="mx-auto mt-5 max-w-5xl md:mt-8">
+         <Main className="mx-auto mt-5 max-w-5xl px-4 md:mt-8">
             <Card variant={"secondary"}>
                <CardHeader>
                   <CardTitle>Your profile</CardTitle>

@@ -13,7 +13,7 @@ const buttonVariants = cva(
                       text-background/95 hover:enabled:bg-primary disabled:bg-background disabled:text-foreground disabled:border-foreground/20 
                       active:enabled:shadow-sm hover:enabled:text-primary-foreground`,
             secondary: `bg-border/75 border-transparent hover:bg-border`,
-            outline: `bg-popover !shadow-button border border-transparent text-foreground data-[state=open]:bg-border/[0.025] hover:enabled:bg-border/[0.025]`,
+            outline: `bg-popover !shadow-button border border-transparent text-foreground data-[state=open]:bg-border/[0.03] hover:enabled:bg-border/[0.03]`,
             ghost: "!shadow-none border border-transparent aria-[current=page]:bg-muted data-[state=open]:bg-muted hover:enabled:bg-border/50",
             destructive: `bg-destructive border-destructive hover:enabled:bg-destructive/90 text-destructive-foreground`,
             link: "!h-auto !rounded-none !p-0 text-foreground/70 underline transition-none hover:enabled:text-foreground",

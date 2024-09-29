@@ -28,6 +28,8 @@ const parseError = (error: Error) => {
    }
 }
 
+const RESERVED_SLUGS = ["new", "homepage"]
+
 export function CreateOrganization({
    isFirstOrganization = true,
 }: { isFirstOrganization?: boolean }) {
@@ -74,7 +76,7 @@ export function CreateOrganization({
             <form
                onSubmit={(e) => {
                   e.preventDefault()
-                  if (name.trim().toLowerCase() === "new")
+                  if (RESERVED_SLUGS.includes(name.trim().toLowerCase()))
                      return toast.error("This name is reserved")
 
                   insert.mutate({

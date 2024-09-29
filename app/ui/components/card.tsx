@@ -54,7 +54,7 @@ function CardTitle({ className, ...props }: ComponentProps<"h3">) {
 function CardDescription({ className, ...props }: ComponentProps<"p">) {
    return (
       <p
-         className={cn("mt-3 text-foreground/75 leading-none", className)}
+         className={cn("mt-2 text-foreground/75 leading-tight", className)}
          {...props}
       />
    )

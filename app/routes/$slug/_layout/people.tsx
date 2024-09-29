@@ -33,7 +33,7 @@ export const Route = createFileRoute("/$slug/_layout/people")({
    pendingComponent: () => (
       <>
          <Header>
-            <HeaderTitle>Issues</HeaderTitle>
+            <HeaderTitle>People</HeaderTitle>
          </Header>
          <Main>
             <Loading className="absolute inset-0 m-auto" />
