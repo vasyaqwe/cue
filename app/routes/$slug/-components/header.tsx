@@ -65,7 +65,8 @@ export function Header({
             className="container grid items-center md:flex"
          >
             <div className="md:hidden">
-               {pathname === `/${slug}` ? (
+               {/* TODO: reverse */}
+               {pathname !== `/${slug}` ? (
                   <Link
                      params={{ slug }}
                      to={homeRoute.to}

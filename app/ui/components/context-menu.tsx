@@ -255,12 +255,13 @@ function ContextMenuCheckboxItem({
    }
    return (
       <ContextMenuPrimitive.CheckboxItem
+         checked={checked}
+         onSelect={onSelect}
          className={cn(
             "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
             "pl-8",
             className,
          )}
-         checked={checked}
          {...props}
       >
          <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">

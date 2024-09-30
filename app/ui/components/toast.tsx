@@ -11,7 +11,7 @@ function Toaster(props: ComponentProps<typeof Sonner>) {
                <svg
                   viewBox="0 0 14 14"
                   fill="none"
-                  className="text-brand"
+                  className="size-5 text-brand"
                >
                   <circle
                      cx="7"
@@ -48,7 +48,7 @@ function Toaster(props: ComponentProps<typeof Sonner>) {
                   viewBox="0 0 18 18"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                  className="-mt-px text-[#ec5d5df4]"
+                  className="-mt-px size-5 text-[#ec5d5df4]"
                >
                   <path
                      fillRule="evenodd"
@@ -65,7 +65,7 @@ function Toaster(props: ComponentProps<typeof Sonner>) {
                   fill="currentColor"
                   height="20"
                   width="20"
-                  className="-mt-px"
+                  className="-mt-px size-5"
                >
                   <path
                      fillRule="evenodd"
@@ -86,7 +86,7 @@ function Toaster(props: ComponentProps<typeof Sonner>) {
                ),
             },
             className:
-               "!mx-auto !border-border !shadow-lg !font-primary !py-3.5 !select-none !w-max !max-w-[--width] !left-1/2 max-md:mb-[calc(env(safe-area-inset-bottom)+3.25rem)] !bg-popover !right-auto !text-base !justify-center !pointer-events-auto !rounded-full",
+               "!mx-auto !border-border !shadow-lg !font-primary !py-3.5 !select-none !w-max !max-w-[--width] !left-1/2 max-md:mb-[calc(env(safe-area-inset-bottom)+1.5rem)] !bg-popover !right-auto !text-base !justify-center !pointer-events-auto !rounded-full",
          }}
          expand
          position="bottom-center"

@@ -139,7 +139,9 @@ function Issue({
                   params={{ issueId: issue.id, slug }}
                   className="flex w-full items-center gap-2 py-2 pl-4 md:gap-4 md:px-8"
                >
-                  <p className="line-clamp-1">{issue.title}</p>
+                  <span className="line-clamp-1 break-all text-left">
+                     {issue.title}
+                  </span>
                   <div className="ml-auto">
                      <Badge className="capitalize md:mr-4">
                         <LabelIndicator
