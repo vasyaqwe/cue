@@ -55,7 +55,7 @@ export function CreateOrganization({
 
    return (
       <div className="grid h-svh place-items-center">
-         <div className="mx-auto w-full max-w-[22rem]">
+         <div className="mx-auto w-full max-w-[22rem] px-4">
             {isFirstOrganization ? (
                <div className="flex items-center gap-2.5">
                   <Logo className="size-11" />{" "}
