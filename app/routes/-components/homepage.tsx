@@ -4,17 +4,14 @@ import { buttonVariants } from "@/ui/components/button"
 import { Kbd } from "@/ui/components/kbd"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
-import { userMeQuery } from "@/user/queries"
-import { useSuspenseQuery } from "@tanstack/react-query"
 import { Link, useNavigate } from "@tanstack/react-router"
 import { useHotkeys } from "react-hotkeys-hook"
 
-export function Homepage() {
-   const { data: session } = useSuspenseQuery(userMeQuery())
+export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
    const navigate = useNavigate()
 
    useHotkeys("l", () => {
-      if (!session?.user?.id) return navigate({ to: "/login" })
+      if (!isAuthed) return navigate({ to: "/login" })
       navigate({ to: "/" })
    })
 
@@ -28,7 +25,7 @@ export function Homepage() {
                <Logo className="size-9" />
                Cue
             </Link>
-            {session?.user?.id ? (
+            {isAuthed ? (
                <Link
                   to="/"
                   className={cn(
@@ -58,7 +55,7 @@ export function Homepage() {
                   Simple & minimal <br /> <em>issue tracking</em>
                </h1>
             </section>
-            <section className="mx-auto mt-8 mb-10 flex max-w-3xl justify-center px-4 md:mt-10 md:mb-16">
+            <section className="mx-auto mt-10 mb-12 flex max-w-3xl justify-center px-4 md:mt-12 md:mb-20">
                <ul className="space-y-4 font-medium text-lg tracking-wide">
                   <li className="flex flex-col gap-3 sm:flex-row sm:items-center">
                      <svg

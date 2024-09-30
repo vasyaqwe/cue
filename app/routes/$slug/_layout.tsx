@@ -5,6 +5,7 @@ import {
    organizationMembershipsQuery,
 } from "@/organization/queries"
 import { Presence } from "@/presence"
+import { BottomMenu } from "@/routes/$slug/-components/bottom-menu"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
 import { userMeQuery } from "@/user/queries"
@@ -65,7 +66,7 @@ function Component() {
                <Outlet />
             </div>
          </div>
-         {/* <BottomMenu /> */}
+         <BottomMenu />
       </>
    )
 }

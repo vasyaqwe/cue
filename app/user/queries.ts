@@ -6,4 +6,5 @@ export const userMeQuery = () =>
       queryKey: ["user_me"],
       queryFn: () => auth.me(),
       staleTime: Infinity,
+      retry: false,
    })

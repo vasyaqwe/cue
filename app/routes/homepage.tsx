@@ -6,5 +6,10 @@ export const Route = createFileRoute("/homepage")({
    beforeLoad: async ({ context }) => {
       await context.queryClient.ensureQueryData(userMeQuery())
    },
-   component: Homepage,
+   component: Component,
+   errorComponent: Homepage,
 })
+
+function Component() {
+   return <Homepage isAuthed />
+}
