@@ -4,7 +4,7 @@ import {
    DrawerTitle,
    DrawerTrigger,
 } from "@/ui/components/drawer"
-import { useIsMobile } from "@/ui/hooks/use-is-mobile"
+import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 import {
@@ -12,33 +12,32 @@ import {
    type ElementRef,
    createContext,
    forwardRef,
-   useContext,
 } from "react"
 
 const PopoverPortal = PopoverPrimitive.Portal
 const PopoverAnchor = PopoverPrimitive.Anchor
 
-const PopoverContext = createContext<{
+const _PopoverContext = createContext<{
    isMobile: boolean
 } | null>(null)
 
 function Popover(props: PopoverPrimitive.PopoverProps) {
-   const { isMobile } = useIsMobile()
+   const isMobile = useUIStore().isMobile
    return (
-      <PopoverContext.Provider value={{ isMobile }}>
+      <>
          {isMobile ? (
             <Drawer {...props} />
          ) : (
             <PopoverPrimitive.Root {...props} />
          )}
-      </PopoverContext.Provider>
+      </>
    )
 }
 
 function PopoverTrigger(props: PopoverPrimitive.PopoverTriggerProps) {
-   const context = useContext(PopoverContext)
-   if (!context) throw new Error("PopoverTrigger must be used within Popover")
-   return context.isMobile ? (
+   const isMobile = useUIStore().isMobile
+
+   return isMobile ? (
       <DrawerTrigger {...props} />
    ) : (
       <PopoverPrimitive.Trigger {...props} />
@@ -60,11 +59,9 @@ const PopoverContent = forwardRef<
       },
       ref,
    ) => {
-      const context = useContext(PopoverContext)
-      if (!context)
-         throw new Error("PopoverContent must be used within Popover")
+      const isMobile = useUIStore().isMobile
 
-      if (context.isMobile)
+      if (isMobile)
          return (
             <DrawerContent
                className={cn("px-0.5", className)}

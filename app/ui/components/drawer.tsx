@@ -1,5 +1,5 @@
 import { cn } from "@/ui/utils"
-import type { ComponentProps } from "react"
+import { type ComponentProps, type ElementRef, forwardRef } from "react"
 import { Drawer as DrawerPrimitive } from "vaul"
 
 function Drawer(props: ComponentProps<typeof DrawerPrimitive.Root>) {
@@ -10,17 +10,18 @@ const DrawerTrigger = DrawerPrimitive.Trigger
 const DrawerPortal = DrawerPrimitive.Portal
 const DrawerClose = DrawerPrimitive.Close
 
-function DrawerOverlay({
-   className,
-   ...props
-}: ComponentProps<typeof DrawerPrimitive.Overlay>) {
+const DrawerOverlay = forwardRef<
+   ElementRef<typeof DrawerPrimitive.Overlay>,
+   ComponentProps<typeof DrawerPrimitive.Overlay>
+>(({ className, ...props }, ref) => {
    return (
       <DrawerPrimitive.Overlay
+         ref={ref}
          className={cn("fixed inset-0 z-50 bg-black/25", className)}
          {...props}
       />
    )
-}
+})
 
 function DrawerContent({
    className,
@@ -69,7 +70,7 @@ function DrawerFooter({ className, ...props }: ComponentProps<"div">) {
    return (
       <div
          style={{
-            paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 1rem)`,
+            paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.75rem)`,
          }}
          className={cn(
             "mt-auto flex items-center justify-between gap-2 border-border border-t p-3",

@@ -1,38 +1,33 @@
 import { CommandItem } from "@/ui/components/command"
-import { useIsMobile } from "@/ui/hooks/use-is-mobile"
+import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { Command, CommandList } from "cmdk"
-import { type ComponentProps, createContext, useContext } from "react"
+import type { ComponentProps } from "react"
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "./drawer"
 
 const DropdownMenuGroup = DropdownMenuPrimitive.Group
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal
 
-const DropdownMenuContext = createContext<{
-   isMobile: boolean
-} | null>(null)
-
 function DropdownMenu(props: DropdownMenuPrimitive.DropdownMenuProps) {
-   const { isMobile } = useIsMobile()
+   const isMobile = useUIStore().isMobile
    return (
-      <DropdownMenuContext.Provider value={{ isMobile }}>
+      <>
          {isMobile ? (
             <Drawer {...props} />
          ) : (
             <DropdownMenuPrimitive.Root {...props} />
          )}
-      </DropdownMenuContext.Provider>
+      </>
    )
 }
 
 function DropdownMenuTrigger(
    props: DropdownMenuPrimitive.DropdownMenuTriggerProps,
 ) {
-   const context = useContext(DropdownMenuContext)
-   if (!context)
-      throw new Error("DropdownMenuTrigger must be used within DropdownMenu")
-   return context.isMobile ? (
+   const isMobile = useUIStore().isMobile
+
+   return isMobile ? (
       <DrawerTrigger {...props} />
    ) : (
       <DropdownMenuPrimitive.Trigger {...props} />
@@ -46,11 +41,9 @@ function DropdownMenuContent({
    title,
    ...props
 }: ComponentProps<typeof DropdownMenuPrimitive.Content> & { title: string }) {
-   const context = useContext(DropdownMenuContext)
-   if (!context)
-      throw new Error("DropdownMenuContent must be used within DropdownMenu")
+   const isMobile = useUIStore().isMobile
 
-   if (context.isMobile)
+   if (isMobile)
       return (
          <DrawerContent
             style={{
@@ -100,11 +93,9 @@ function DropdownMenuItem({
    destructive?: boolean
    onSelect?: () => void
 }) {
-   const context = useContext(DropdownMenuContext)
-   if (!context)
-      throw new Error("DropdownMenuItem must be used within DropdownMenu")
+   const isMobile = useUIStore().isMobile
 
-   if (context.isMobile) {
+   if (isMobile) {
       return (
          <CommandItem
             destructive={destructive}

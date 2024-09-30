@@ -7,6 +7,8 @@ import {
 import { Presence } from "@/presence"
 import { BottomMenu } from "@/routes/$slug/-components/bottom-menu"
 import { Logo } from "@/ui/components/logo"
+import { MOBILE_BREAKPOINT } from "@/ui/constants"
+import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import { userMeQuery } from "@/user/queries"
 import {
@@ -15,6 +17,7 @@ import {
    notFound,
    redirect,
 } from "@tanstack/react-router"
+import { useEffect } from "react"
 import { Sidebar } from "./-components/sidebar"
 
 export const Route = createFileRoute("/$slug/_layout")({
@@ -51,14 +54,40 @@ export const Route = createFileRoute("/$slug/_layout")({
 function Component() {
    useIssueSocket({ shouldListenToEvents: true })
 
+   useEffect(() => {
+      if (typeof window === "undefined") {
+         return
+      }
+      document.documentElement.style.overflow = "hidden"
+   }, [])
+
+   useEffect(() => {
+      if (typeof window === "undefined") return
+
+      const checkDevice = (event: MediaQueryList | MediaQueryListEvent) => {
+         useUIStore.setState({ isMobile: event.matches })
+      }
+
+      const mediaQueryList = window.matchMedia(
+         `(max-width: ${MOBILE_BREAKPOINT}px)`,
+      )
+      checkDevice(mediaQueryList)
+
+      mediaQueryList.addEventListener("change", checkDevice)
+
+      return () => {
+         mediaQueryList.removeEventListener("change", checkDevice)
+      }
+   }, [])
+
    return (
       <>
          <Presence />
          <ModalProvider />
-         <div className="flex flex-1 flex-col md:flex-row">
+         <div className="flex h-full flex-1 flex-col md:flex-row">
             <Sidebar />
             <div
-               className={cn("flex flex-1 flex-col")}
+               className={cn("flex h-full flex-1 flex-col")}
                style={{
                   paddingBottom: `max(calc(env(safe-area-inset-bottom) + 8rem), 7rem)`,
                }}

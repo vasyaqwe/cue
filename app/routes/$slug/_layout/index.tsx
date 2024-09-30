@@ -81,7 +81,7 @@ function Component() {
                         className="last:[&>div:last-of-type]:border-border/75 first:[&>div]:border-t-transparent last:[&>div:last-of-type]:border-b"
                      >
                         <div className="border-border/75 border-y bg-border/25 py-2">
-                           <div className="px-8">
+                           <div className="px-4 md:px-8">
                               <p className="font-semibold capitalize">
                                  <StatusIcon
                                     className="-mt-1 mr-2 inline-block"
@@ -98,14 +98,14 @@ function Component() {
                            {issues.map((issue) => (
                               <div
                                  key={issue.id}
-                                 className="flex gap-4 px-8 has-data-[state=open]:bg-border/25 hover:bg-border/25"
+                                 className="flex gap-4 px-4 has-data-[state=open]:bg-border/25 hover:bg-border/25 md:px-8"
                               >
                                  <ContextMenu>
                                     <ContextMenuTrigger asChild>
                                        <Link
                                           to={issueIdRoute.to}
                                           params={{ issueId: issue.id, slug }}
-                                          className="flex w-full gap-4 py-2 "
+                                          className="flex w-full gap-4 py-2"
                                        >
                                           <p className="line-clamp-1">
                                              {issue.title}
@@ -114,7 +114,7 @@ function Component() {
                                           <div className="ml-auto">
                                              <Badge
                                                 variant={issue.label}
-                                                className="mr-4 capitalize"
+                                                className="capitalize md:mr-4"
                                              >
                                                 {issue.label}
                                              </Badge>

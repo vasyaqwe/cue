@@ -22,7 +22,7 @@ import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Label } from "@/ui/components/label"
 import { Main } from "@/ui/components/main"
-import { useIsMobile } from "@/ui/hooks/use-is-mobile"
+import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as userFns from "@/user/functions"
 import { useAuth } from "@/user/hooks"
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/$slug/_layout/settings")({
 function Component() {
    const queryClient = useQueryClient()
    const { user, organizationId } = useAuth()
-   const { isMobile } = useIsMobile()
+   const isMobile = useUIStore().isMobile
    const navigate = useNavigate()
 
    const updateFn = useServerFn(userFns.update)

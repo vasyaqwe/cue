@@ -5,6 +5,7 @@ import { Kbd } from "@/ui/components/kbd"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
 import { Link, useNavigate } from "@tanstack/react-router"
+import { useEffect } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 
 export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
@@ -15,8 +16,13 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
       navigate({ to: "/" })
    })
 
+   useEffect(() => {
+      if (typeof window === "undefined") return
+      document.documentElement.style.overflow = "unset"
+   }, [])
+
    return (
-      <>
+      <div>
          <header className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-4">
             <Link
                to="/"
@@ -225,6 +231,6 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                </small>
             </div>
          </footer>
-      </>
+      </div>
    )
 }

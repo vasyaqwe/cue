@@ -1,5 +1,5 @@
 import { Icons } from "@/ui/components/icons"
-import { useIsMobile } from "@/ui/hooks/use-is-mobile"
+import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import { Command } from "cmdk"
 import type { ComponentProps } from "react"
@@ -19,7 +19,7 @@ export function CommandItem({
    isSelected?: boolean | undefined
    value?: string
 } & ComponentProps<typeof Command.Item>) {
-   const { isMobile } = useIsMobile()
+   const isMobile = useUIStore().isMobile
 
    return (
       <Command.Item
