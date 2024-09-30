@@ -46,9 +46,9 @@ export function BottomMenu() {
             <li className="flex flex-1">
                <button
                   onClick={() => pushModal("create_issue")}
-                  className="group inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-md text-foreground/50 transition-colors active:text-foreground"
+                  className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-md text-foreground/50 transition-colors active:text-foreground"
                >
-                  <Icons.pencil className="size-[27px]" />
+                  <Icons.pencil className="size-[27px] [&>path]:opacity-0" />
                </button>
             </li>
             <li className="flex flex-1">

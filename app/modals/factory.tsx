@@ -101,7 +101,7 @@ export function createPushModal<T>({ modals }: CreatePushModalOptions<T>) {
                return [
                   ...prevState,
                   {
-                     key: crypto.randomUUID(),
+                     key: Math.random().toString(),
                      name,
                      props,
                      open: true,
@@ -138,7 +138,7 @@ export function createPushModal<T>({ modals }: CreatePushModalOptions<T>) {
                      })
                      .filter(filterGarbage),
                   {
-                     key: crypto.randomUUID(),
+                     key: Math.random().toString(),
                      name,
                      props,
                      open: true,
