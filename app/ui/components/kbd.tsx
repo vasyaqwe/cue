@@ -2,7 +2,11 @@ import { cn } from "@/ui/utils"
 import type { ComponentProps } from "react"
 
 export function Kbd({ className, children, ...props }: ComponentProps<"kbd">) {
-   const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0
+   const isMac =
+      typeof window === "undefined"
+         ? true
+         : navigator.platform.toUpperCase().indexOf("MAC") >= 0
+
    return (
       <kbd
          className={cn(

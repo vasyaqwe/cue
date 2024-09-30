@@ -28,27 +28,31 @@ export const Route = createRootRouteWithContext<{
 }>()({
    meta: () => {
       const title = "Cue"
+      const description = "Simple & minimal issue tracking."
+
       return [
          {
             charSet: "utf-8",
          },
          {
             name: "viewport",
-            content: "width=device-width, initial-scale=1",
+            content:
+               "viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0",
          },
+         { name: "theme-color", content: "#fefcfb" },
          { title },
-         // {
-         //    name: "description",
-         //    content: description,
-         // },
-         //  { name: 'keywords', content: keywords },
-         //  { name: 'twitter:title', content: title },
-         //  { name: 'twitter:description', content: description },
-         //  { name: 'twitter:creator', content: '@vasyaqwee' },
-         //  { name: 'twitter:site', content: '@vasyaqwee' },
-         //  { name: 'og:type', content: 'website' },
-         //  { name: 'og:title', content: title },
-         //  { name: 'og:description', content: description },
+         {
+            name: "description",
+            content: description,
+         },
+         { name: "keywords", content: "Cue, Issue tracking, App" },
+         { name: "twitter:title", content: title },
+         { name: "twitter:description", content: description },
+         { name: "twitter:creator", content: "@vasyaqwee" },
+         { name: "twitter:site", content: "@vasyaqwee" },
+         { name: "og:type", content: "website" },
+         { name: "og:title", content: title },
+         { name: "og:description", content: description },
          //  [
          //    { name: 'twitter:image', content: image },
          //    { name: 'twitter:card', content: 'summary_large_image' },
@@ -58,6 +62,9 @@ export const Route = createRootRouteWithContext<{
    },
    links: () => [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
       {
          rel: "preload",
          href: "/fonts/satoshi.woff2",
@@ -89,8 +96,6 @@ export const Route = createRootRouteWithContext<{
       //    sizes: "16x16",
       //    href: "/favicon-16x16.png",
       // },
-      // { rel: "manifest", href: "/site.webmanifest", color: "#fffff" },
-      { rel: "icon", href: "/favicon.ico" },
    ],
    component: RootComponent,
 })
@@ -122,7 +127,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   </Portal.Root>
                </TooltipProvider>
             </div>
-            {/* <BreakpointIndicator /> */}
+            <BreakpointIndicator />
             <ScrollRestoration />
             {/* <ReactQueryDevtools buttonPosition="bottom-left" /> */}
             {/* <TanStackRouterDevtools position="bottom-right" /> */}

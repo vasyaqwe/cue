@@ -185,7 +185,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                   </li>
                </ul>
             </section>
-            <section className="relative isolate mx-auto max-w-4xl">
+            <section className="relative isolate mx-auto max-w-4xl px-4">
                <img
                   src={pattern}
                   alt=""
