@@ -86,12 +86,7 @@ function Component() {
          <ModalProvider />
          <div className="flex h-full flex-1 flex-col md:flex-row">
             <Sidebar />
-            <div
-               className={cn("flex h-full flex-1 flex-col")}
-               style={{
-                  paddingBottom: `max(calc(env(safe-area-inset-bottom) + 8rem), 7rem)`,
-               }}
-            >
+            <div className={cn("flex h-full flex-1 flex-col")}>
                <Outlet />
             </div>
          </div>

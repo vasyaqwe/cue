@@ -15,7 +15,7 @@ export function BottomMenu() {
          style={{
             paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.4rem), 6px)`,
          }}
-         className="fixed bottom-0 z-[2] h-[var(--bottom-menu-height)] w-full border-border border-t bg-background p-1.5 shadow md:hidden"
+         className="fixed bottom-0 z-[2] h-[calc(var(--bottom-menu-height)+max(calc(env(safe-area-inset-bottom)+0.4rem),6px))] w-full border-border border-t bg-background p-1.5 shadow md:hidden"
       >
          <ul className="flex flex-1 items-center justify-around gap-2">
             <li className="flex flex-1">
