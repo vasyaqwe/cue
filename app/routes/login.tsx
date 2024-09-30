@@ -6,7 +6,7 @@ import { Loading } from "@/ui/components/loading"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
 import { useMountError } from "@/user-interactions/use-mount-error"
-import * as auth from "@/user/functions"
+import * as userFns from "@/user/functions"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
@@ -129,7 +129,7 @@ function Component() {
    //    }
    // }, [isSuccess])
 
-   const loginWithGithubFn = useServerFn(auth.logInWithGithub)
+   const loginWithGithubFn = useServerFn(userFns.logInWithGithub)
    const loginWithGithub = useMutation({
       mutationFn: loginWithGithubFn,
       onSuccess: (url) => {

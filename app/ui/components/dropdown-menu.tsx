@@ -159,7 +159,7 @@ function DropdownMenuLabel({
    return (
       <DropdownMenuPrimitive.Label
          className={cn(
-            "px-2 py-1.5 text-foreground/75 text-sm",
+            "px-4 py-1.5 text-foreground/75 text-sm md:px-2",
             inset && "pl-8",
             className,
          )}

@@ -65,7 +65,6 @@ export function useIssueSocket({
          }
 
          if (message.type === "update") {
-            console.log("hello")
             if (message.input.status === "done" && message.input.title) {
                notify({
                   title: "Issue resolved",

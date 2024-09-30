@@ -21,7 +21,7 @@ import { Tooltip } from "@/ui/components/tooltip"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useLocalStorage } from "@/user-interactions/use-local-storage"
-import * as auth from "@/user/functions"
+import * as userFns from "@/user/functions"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { Link, useNavigate, useParams } from "@tanstack/react-router"
@@ -39,7 +39,7 @@ export function Sidebar() {
       organizationMembershipsQuery(),
    )
 
-   const logoutFn = useServerFn(auth.logout)
+   const logoutFn = useServerFn(userFns.logout)
    const logout = useMutation({
       mutationFn: logoutFn,
       onSuccess: () => {
@@ -69,24 +69,22 @@ export function Sidebar() {
                   className="w-[199px]"
                   title="Organizations"
                >
-                  <DropdownMenuLabel className="max-md:hidden">
-                     Organizations
-                  </DropdownMenuLabel>
+                  <DropdownMenuLabel>Organizations</DropdownMenuLabel>
                   {memberships.map((membership) => (
                      <DropdownMenuItem
                         key={membership.organization.id}
-                        asChild
+                        onSelect={() =>
+                           navigate({
+                              to: `/${membership.organization.slug}`,
+                           })
+                        }
                      >
-                        <Link to={`/${membership.organization.slug}`}>
-                           {membership.organization.name}
-                        </Link>
+                        {membership.organization.name}
                      </DropdownMenuItem>
                   ))}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                     <Link to="/new">
-                        <Icons.plus /> New organization
-                     </Link>
+                  <DropdownMenuItem onSelect={() => navigate({ to: "/new" })}>
+                     <Icons.plus /> New organization
                   </DropdownMenuItem>
                </DropdownMenuContent>
             </DropdownMenu>
