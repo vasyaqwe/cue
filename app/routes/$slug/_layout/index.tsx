@@ -67,7 +67,12 @@ function Component() {
          </Header>
          <Main>
             {issues.length === 0 ? (
-               <p className="absolute inset-0 m-auto size-fit">No issues</p>
+               <div className="absolute inset-0 m-auto h-fit">
+                  <p className="flex flex-col items-center gap-4 text-center text-foreground/75 text-lg">
+                     <Icons.issues className="size-20" />
+                     No issues
+                  </p>
+               </div>
             ) : (
                Object.entries(groupedIssues).map(([status, issues]) => {
                   return (

@@ -1,4 +1,6 @@
+import { pushModal } from "@/modals"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
+import { Route as inboxRoute } from "@/routes/$slug/_layout/inbox"
 import { Route as peopleRoute } from "@/routes/$slug/_layout/people"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
 import { Icons } from "@/ui/components/icons"
@@ -13,47 +15,64 @@ export function BottomMenu() {
          style={{
             paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.4rem), 6px)`,
          }}
-         className="fixed bottom-0 z-[2] w-full border-t bg-background p-1.5 shadow md:hidden"
+         className="fixed bottom-0 z-[2] w-full border-border border-t bg-background p-1.5 shadow md:hidden"
       >
          <ul className="flex flex-1 items-center justify-around gap-2">
             <li className="flex flex-1">
                <Link
                   params={{ slug }}
-                  activeOptions={{ exact: true, includeSearch: false }}
+                  activeOptions={{ exact: true }}
                   activeProps={{
-                     className: "!border-border/80 bg-border/30 opacity-100",
                      "aria-current": "page",
                   }}
                   to={homeRoute.to}
-                  className="inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/80 aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
+                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
                >
-                  <Icons.issues className="size-6" />
+                  <Icons.issues className="size-7" />
                </Link>
             </li>
             <li className="flex flex-1">
                <Link
-                  className="inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/80 aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
                   params={{ slug }}
                   activeProps={{
-                     className: "!border-border/80 bg-border/30 opacity-100",
+                     "aria-current": "page",
+                  }}
+                  to={inboxRoute.to}
+                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
+               >
+                  <Icons.inbox className="size-[29px]" />
+               </Link>
+            </li>
+            <li className="flex flex-1">
+               <button
+                  onClick={() => pushModal("create_issue")}
+                  className="group inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-md text-foreground/50 transition-colors active:text-foreground"
+               >
+                  <Icons.pencil className="size-[27px]" />
+               </button>
+            </li>
+            <li className="flex flex-1">
+               <Link
+                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
+                  params={{ slug }}
+                  activeProps={{
                      "aria-current": "page",
                   }}
                   to={peopleRoute.to}
                >
-                  <Icons.people className="size-6" />
+                  <Icons.people className="size-7" />
                </Link>
             </li>
             <li className="flex flex-1">
                <Link
-                  className="inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/80 aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary"
+                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
                   params={{ slug }}
                   activeProps={{
-                     className: "!border-border/80 bg-border/30 opacity-100",
                      "aria-current": "page",
                   }}
                   to={settingsRoute.to}
                >
-                  <Icons.settings className="size-6" />
+                  <Icons.settings className="size-7" />
                </Link>
             </li>
          </ul>

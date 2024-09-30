@@ -13,7 +13,7 @@ import {
 import { Body, Head, Html, Meta, Scripts } from "@tanstack/start"
 import { lazy } from "react"
 
-const TanStackRouterDevtools = import.meta.env.PROD
+const _TanStackRouterDevtools = import.meta.env.PROD
    ? () => null
    : lazy(() =>
         import("@tanstack/router-devtools").then((res) => ({
@@ -122,10 +122,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   </Portal.Root>
                </TooltipProvider>
             </div>
-            <BreakpointIndicator />
+            {/* <BreakpointIndicator /> */}
             <ScrollRestoration />
             {/* <ReactQueryDevtools buttonPosition="bottom-left" /> */}
-            <TanStackRouterDevtools position="bottom-right" />
+            {/* <TanStackRouterDevtools position="bottom-right" /> */}
             <Scripts />
          </Body>
       </Html>

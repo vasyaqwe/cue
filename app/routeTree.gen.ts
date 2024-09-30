@@ -22,6 +22,7 @@ import { Route as SlugLayoutImport } from './routes/$slug/_layout'
 import { Route as SlugLayoutIndexImport } from './routes/$slug/_layout/index'
 import { Route as SlugLayoutSettingsImport } from './routes/$slug/_layout/settings'
 import { Route as SlugLayoutPeopleImport } from './routes/$slug/_layout/people'
+import { Route as SlugLayoutInboxImport } from './routes/$slug/_layout/inbox'
 import { Route as SlugLayoutIssueIssueIdImport } from './routes/$slug/_layout/issue/$issueId'
 
 // Create Virtual Routes
@@ -77,6 +78,11 @@ const SlugLayoutSettingsRoute = SlugLayoutSettingsImport.update({
 
 const SlugLayoutPeopleRoute = SlugLayoutPeopleImport.update({
   path: '/people',
+  getParentRoute: () => SlugLayoutRoute,
+} as any)
+
+const SlugLayoutInboxRoute = SlugLayoutInboxImport.update({
+  path: '/inbox',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
@@ -138,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JoinInviteCodeImport
       parentRoute: typeof rootRoute
     }
+    '/$slug/_layout/inbox': {
+      id: '/$slug/_layout/inbox'
+      path: '/inbox'
+      fullPath: '/$slug/inbox'
+      preLoaderRoute: typeof SlugLayoutInboxImport
+      parentRoute: typeof SlugLayoutImport
+    }
     '/$slug/_layout/people': {
       id: '/$slug/_layout/people'
       path: '/people'
@@ -172,6 +185,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface SlugLayoutRouteChildren {
+  SlugLayoutInboxRoute: typeof SlugLayoutInboxRoute
   SlugLayoutPeopleRoute: typeof SlugLayoutPeopleRoute
   SlugLayoutSettingsRoute: typeof SlugLayoutSettingsRoute
   SlugLayoutIndexRoute: typeof SlugLayoutIndexRoute
@@ -179,6 +193,7 @@ interface SlugLayoutRouteChildren {
 }
 
 const SlugLayoutRouteChildren: SlugLayoutRouteChildren = {
+  SlugLayoutInboxRoute: SlugLayoutInboxRoute,
   SlugLayoutPeopleRoute: SlugLayoutPeopleRoute,
   SlugLayoutSettingsRoute: SlugLayoutSettingsRoute,
   SlugLayoutIndexRoute: SlugLayoutIndexRoute,
@@ -206,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/new': typeof NewRoute
   '/$slug': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
+  '/$slug/inbox': typeof SlugLayoutInboxRoute
   '/$slug/people': typeof SlugLayoutPeopleRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/': typeof SlugLayoutIndexRoute
@@ -219,6 +235,7 @@ export interface FileRoutesByTo {
   '/new': typeof NewRoute
   '/$slug': typeof SlugLayoutIndexRoute
   '/join/$inviteCode': typeof JoinInviteCodeRoute
+  '/$slug/inbox': typeof SlugLayoutInboxRoute
   '/$slug/people': typeof SlugLayoutPeopleRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
@@ -233,6 +250,7 @@ export interface FileRoutesById {
   '/$slug': typeof SlugRouteWithChildren
   '/$slug/_layout': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
+  '/$slug/_layout/inbox': typeof SlugLayoutInboxRoute
   '/$slug/_layout/people': typeof SlugLayoutPeopleRoute
   '/$slug/_layout/settings': typeof SlugLayoutSettingsRoute
   '/$slug/_layout/': typeof SlugLayoutIndexRoute
@@ -248,6 +266,7 @@ export interface FileRouteTypes {
     | '/new'
     | '/$slug'
     | '/join/$inviteCode'
+    | '/$slug/inbox'
     | '/$slug/people'
     | '/$slug/settings'
     | '/$slug/'
@@ -260,6 +279,7 @@ export interface FileRouteTypes {
     | '/new'
     | '/$slug'
     | '/join/$inviteCode'
+    | '/$slug/inbox'
     | '/$slug/people'
     | '/$slug/settings'
     | '/$slug/issue/$issueId'
@@ -272,6 +292,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/$slug/_layout'
     | '/join/$inviteCode'
+    | '/$slug/_layout/inbox'
     | '/$slug/_layout/people'
     | '/$slug/_layout/settings'
     | '/$slug/_layout/'
@@ -339,6 +360,7 @@ export const routeTree = rootRoute
       "filePath": "$slug/_layout.tsx",
       "parent": "/$slug",
       "children": [
+        "/$slug/_layout/inbox",
         "/$slug/_layout/people",
         "/$slug/_layout/settings",
         "/$slug/_layout/",
@@ -347,6 +369,10 @@ export const routeTree = rootRoute
     },
     "/join/$inviteCode": {
       "filePath": "join/$inviteCode.tsx"
+    },
+    "/$slug/_layout/inbox": {
+      "filePath": "$slug/_layout/inbox.tsx",
+      "parent": "/$slug/_layout"
     },
     "/$slug/_layout/people": {
       "filePath": "$slug/_layout/people.tsx",
