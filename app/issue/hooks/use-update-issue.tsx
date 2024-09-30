@@ -11,7 +11,7 @@ import { toast } from "sonner"
 
 export function useUpdateIssue() {
    const queryClient = useQueryClient()
-   const socket = useIssueSocket()
+   const { socket } = useIssueSocket()
    const params = useParams({ strict: false })
    const { organizationId, user } = useAuth()
    const { updateIssueInQueryData } = useIssueQueryMutator()
@@ -20,7 +20,7 @@ export function useUpdateIssue() {
    const updateIssue = useMutation({
       mutationFn: updateFn,
       onMutate: async (input) => {
-         socket.send(
+         socket?.send(
             JSON.stringify({
                type: "update",
                issueId: input.id,

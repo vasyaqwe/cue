@@ -47,7 +47,7 @@ export function CreateIssue() {
    )
 
    const titleRef = useRef<HTMLInputElement>(null)
-   const socket = useIssueSocket()
+   const { socket } = useIssueSocket()
 
    const [status, setStatus] = useLocalStorage<IssueStatus>(
       "create_issue_status",
@@ -64,7 +64,7 @@ export function CreateIssue() {
       onSuccess: (issue) => {
          if (!issue) return
 
-         socket.send(
+         socket?.send(
             JSON.stringify({
                type: "insert",
                issue,

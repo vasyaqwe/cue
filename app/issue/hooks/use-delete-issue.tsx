@@ -11,7 +11,7 @@ import { toast } from "sonner"
 
 export function useDeleteIssue() {
    const queryClient = useQueryClient()
-   const socket = useIssueSocket()
+   const { socket } = useIssueSocket()
    const params = useParams({ from: "/$slug/_layout" })
    const navigate = useNavigate()
    const { organizationId, user } = useAuth()
@@ -26,7 +26,7 @@ export function useDeleteIssue() {
          if (isOnIssueIdPage) {
             navigate({ to: "/$slug", params: { slug: params.slug } })
          }
-         socket.send(
+         socket?.send(
             JSON.stringify({
                type: "delete",
                issueId,

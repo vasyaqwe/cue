@@ -3,7 +3,21 @@ import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import type { IssueEvent } from "@/issue/types"
 import { useAuth } from "@/user/hooks"
 import { useNavigate, useParams } from "@tanstack/react-router"
-import usePartySocket from "partysocket/react"
+import PartySocket from "partysocket"
+import { useEffect, useRef } from "react"
+
+let partySocketInstance: PartySocket | null = null
+
+const getPartySocketInstance = ({ room }: { room: string }) => {
+   if (!partySocketInstance) {
+      partySocketInstance = new PartySocket({
+         host: env.VITE_PARTYKIT_URL,
+         party: "issue",
+         room,
+      })
+   }
+   return partySocketInstance
+}
 
 export function useIssueSocket({
    shouldListenToEvents = false,
@@ -16,6 +30,7 @@ export function useIssueSocket({
       insertIssueToQueryData,
       updateIssueInQueryData,
    } = useIssueQueryMutator()
+   const connectionRef = useRef<PartySocket | null>(null)
 
    const notify = ({
       title,
@@ -45,11 +60,13 @@ export function useIssueSocket({
       }
    }
 
-   return usePartySocket({
-      host: env.VITE_PARTYKIT_URL,
-      party: "issue",
-      room: organizationId,
-      onMessage(event: MessageEvent<string>) {
+   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+   useEffect(() => {
+      const connection = getPartySocketInstance({
+         room: organizationId,
+      })
+
+      connection.onmessage = (event: MessageEvent<string>) => {
          if (!shouldListenToEvents) return
 
          const message: IssueEvent = JSON.parse(event.data)
@@ -78,6 +95,16 @@ export function useIssueSocket({
          if (message.type === "delete") {
             return deleteIssueFromQueryData({ issueId: message.issueId })
          }
-      },
-   })
+      }
+
+      connectionRef.current = connection
+
+      return () => {
+         connectionRef.current = null
+      }
+   }, [organizationId])
+
+   return {
+      socket: connectionRef.current,
+   }
 }
