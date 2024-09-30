@@ -88,6 +88,12 @@ body,#root {
   }
 }
 
+@layer utilities {
+  .pb-safe {
+    padding-bottom: max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.5rem);
+  }
+}
+
 /* reset */
 .hide-scrollbar {
   -ms-overflow-style: none;

@@ -46,11 +46,7 @@ function DropdownMenuContent({
    if (isMobile)
       return (
          <DrawerContent
-            style={{
-               ...props.style,
-               paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.5rem)`,
-            }}
-            className={cn("px-0.5", className)}
+            className={cn("px-0.5 pt-4 pb-safe", className)}
             {...props}
          >
             <DrawerTitle className="sr-only">{title}</DrawerTitle>
@@ -98,7 +94,7 @@ function DropdownMenuItem({
    if (isMobile) {
       return (
          <CommandItem
-            destructive={destructive}
+            variant={destructive ? "destructive" : "default"}
             inset={inset}
             onSelect={onSelect}
             className={className}

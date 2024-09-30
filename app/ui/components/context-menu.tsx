@@ -1,77 +1,57 @@
+import { CommandItem, commandItemVariants } from "@/ui/components/command"
+import {
+   Drawer,
+   DrawerContent,
+   DrawerNested,
+   DrawerTitle,
+   DrawerTrigger,
+} from "@/ui/components/drawer"
 import { Icons } from "@/ui/components/icons"
+import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu"
+import { Command, CommandList } from "cmdk"
 import type { ComponentProps } from "react"
 
-const ContextMenu = ContextMenuPrimitive.Root
 const ContextMenuGroup = ContextMenuPrimitive.Group
 const ContextMenuPortal = ContextMenuPrimitive.Portal
-const ContextMenuTrigger = ContextMenuPrimitive.Trigger
-const ContextMenuSub = ContextMenuPrimitive.ContextMenuSub
 
-function ContextMenuContent({
-   className,
-   ...props
-}: ComponentProps<typeof ContextMenuPrimitive.Content>) {
+function ContextMenu({ ...props }: ContextMenuPrimitive.ContextMenuProps) {
+   const { isMobile } = useUIStore()
+
    return (
-      <ContextMenuPrimitive.Portal>
-         <ContextMenuPrimitive.Content
-            className={cn(
-               "!p-1 z-50 min-w-[8rem] overflow-hidden rounded-[10px] border border-border bg-popover text-popover-foreground shadow-lg",
-               "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=open]:animate-in",
-               "data-[state=open]:data-[side=top]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=top]:slide-out-to-bottom-[1px] data-[state=open]:data-[side=top]:slide-in-from-left-[1px] data-[state=closed]:data-[side=top]:slide-out-to-left-[1px]",
-               "data-[state=open]:data-[side=right]:slide-in-from-left-[1px] data-[state=closed]:data-[side=right]:slide-out-to-left-[1px] data-[state=open]:data-[side=right]:slide-in-from-top-[1px] data-[state=closed]:data-[side=right]:slide-out-to-top-[1px]",
-               "data-[state=open]:data-[side=bottom]:slide-in-from-top-[1px] data-[state=closed]:data-[side=bottom]:slide-out-to-top-[1px] data-[state=open]:data-[side=bottom]:slide-in-from-right-[1px] data-[state=closed]:data-[side=bottom]:slide-out-to-right-[1px]",
-               "data-[state=open]:data-[side=left]:slide-in-from-right-[1px] data-[state=closed]:data-[side=left]:slide-out-to-right-[1px] data-[state=open]:data-[side=left]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=left]:slide-out-to-bottom-[1px]",
-               className,
-            )}
-            {...props}
-         />
-      </ContextMenuPrimitive.Portal>
+      <>
+         {isMobile ? (
+            <Drawer {...props} />
+         ) : (
+            <ContextMenuPrimitive.Root {...props} />
+         )}
+      </>
    )
 }
 
-function ContextMenuSubContent({
-   className,
+function ContextMenuSub({
    ...props
-}: ComponentProps<typeof ContextMenuPrimitive.ContextMenuSubContent>) {
-   return (
-      <ContextMenuPrimitive.ContextMenuSubContent
-         className={cn(
-            "!p-1 z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg",
-            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=open]:animate-in",
-            "data-[state=open]:data-[side=top]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=top]:slide-out-to-bottom-[1px] data-[state=open]:data-[side=top]:slide-in-from-left-[1px] data-[state=closed]:data-[side=top]:slide-out-to-left-[1px]",
-            "data-[state=open]:data-[side=right]:slide-in-from-left-[1px] data-[state=closed]:data-[side=right]:slide-out-to-left-[1px] data-[state=open]:data-[side=right]:slide-in-from-top-[1px] data-[state=closed]:data-[side=right]:slide-out-to-top-[1px]",
-            "data-[state=open]:data-[side=bottom]:slide-in-from-top-[1px] data-[state=closed]:data-[side=bottom]:slide-out-to-top-[1px] data-[state=open]:data-[side=bottom]:data-[align=start]:slide-in-from-left-[1px] data-[state=closed]:data-[side=bottom]:data-[align=start]:slide-out-to-left-[1px]",
-            "data-[state=open]:data-[side=left]:slide-in-from-right-[1px] data-[state=closed]:data-[side=left]:slide-out-to-right-[1px] data-[state=open]:data-[side=left]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=left]:slide-out-to-bottom-[1px]",
-            className,
-         )}
-         {...props}
-      />
-   )
+}: ContextMenuPrimitive.ContextMenuSubProps) {
+   const { isMobile } = useUIStore()
+
+   if (isMobile) {
+      return <DrawerNested {...props} />
+   }
+   return <ContextMenuPrimitive.Sub {...props} />
 }
 
-function ContextMenuItem({
-   className,
-   destructive = false,
-   inset,
+function ContextMenuTrigger({
+   children,
    ...props
-}: ComponentProps<typeof ContextMenuPrimitive.Item> & {
-   inset?: boolean
-   destructive?: boolean
-}) {
-   return (
-      <ContextMenuPrimitive.Item
-         className={cn(
-            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
-            inset && "pl-8",
-            destructive
-               ? "focus:bg-destructive focus:text-destructive-foreground"
-               : "",
-            className,
-         )}
-         {...props}
-      />
+}: ContextMenuPrimitive.ContextMenuTriggerProps) {
+   const isMobile = useUIStore().isMobile
+   return isMobile ? (
+      <DrawerTrigger {...props}>{children}</DrawerTrigger>
+   ) : (
+      <ContextMenuPrimitive.Trigger {...props}>
+         {children}
+      </ContextMenuPrimitive.Trigger>
    )
 }
 
@@ -85,6 +65,20 @@ function ContextMenuSubTrigger({
    inset?: boolean
    destructive?: boolean
 }) {
+   const isMobile = useUIStore().isMobile
+   if (isMobile) {
+      return (
+         <DrawerTrigger
+            className={commandItemVariants({
+               variant: destructive ? "destructive" : "default",
+            })}
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+            {...(props as any)}
+         >
+            {children}
+         </DrawerTrigger>
+      )
+   }
    return (
       <ContextMenuPrimitive.ContextMenuSubTrigger
          className={cn(
@@ -93,7 +87,6 @@ function ContextMenuSubTrigger({
             destructive
                ? "focus:bg-destructive focus:text-destructive-foreground"
                : "",
-            className,
             className,
          )}
          {...props}
@@ -114,12 +107,152 @@ function ContextMenuSubTrigger({
    )
 }
 
+function ContextMenuContent({
+   className,
+   children,
+   title,
+   ...props
+}: ComponentProps<typeof ContextMenuPrimitive.Content> & { title: string }) {
+   const isMobile = useUIStore().isMobile
+
+   if (isMobile)
+      return (
+         <DrawerContent
+            className={cn("px-0.5 pt-4 pb-safe", className)}
+            {...props}
+         >
+            <DrawerTitle className="sr-only">{title}</DrawerTitle>
+            <Command className="mt-2">
+               <CommandList>{children}</CommandList>
+            </Command>
+         </DrawerContent>
+      )
+
+   return (
+      <ContextMenuPortal>
+         <ContextMenuPrimitive.Content
+            className={cn(
+               "!p-1 z-50 min-w-[8rem] overflow-hidden rounded-[10px] border border-border bg-popover text-popover-foreground shadow-lg",
+               "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=open]:animate-in",
+               "data-[state=open]:data-[side=top]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=top]:slide-out-to-bottom-[1px] data-[state=open]:data-[side=top]:slide-in-from-left-[1px] data-[state=closed]:data-[side=top]:slide-out-to-left-[1px]",
+               "data-[state=open]:data-[side=right]:slide-in-from-left-[1px] data-[state=closed]:data-[side=right]:slide-out-to-left-[1px] data-[state=open]:data-[side=right]:slide-in-from-top-[1px] data-[state=closed]:data-[side=right]:slide-out-to-top-[1px]",
+               "data-[state=open]:data-[side=bottom]:slide-in-from-top-[1px] data-[state=closed]:data-[side=bottom]:slide-out-to-top-[1px] data-[state=open]:data-[side=bottom]:slide-in-from-right-[1px] data-[state=closed]:data-[side=bottom]:slide-out-to-right-[1px]",
+               "data-[state=open]:data-[side=left]:slide-in-from-right-[1px] data-[state=closed]:data-[side=left]:slide-out-to-right-[1px] data-[state=open]:data-[side=left]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=left]:slide-out-to-bottom-[1px]",
+               className,
+            )}
+            {...props}
+         >
+            {children}
+         </ContextMenuPrimitive.Content>
+      </ContextMenuPortal>
+   )
+}
+
+function ContextMenuSubContent({
+   className,
+   title,
+   children,
+   ...props
+}: ComponentProps<typeof ContextMenuPrimitive.ContextMenuSubContent> & {
+   title: string
+}) {
+   const isMobile = useUIStore().isMobile
+
+   if (isMobile)
+      return (
+         <DrawerContent
+            className={cn("px-0.5 pt-4 pb-safe", className)}
+            {...props}
+         >
+            <DrawerTitle className="sr-only">{title}</DrawerTitle>
+            <Command className="mt-2">
+               <CommandList>{children}</CommandList>
+            </Command>
+         </DrawerContent>
+      )
+
+   return (
+      <ContextMenuPrimitive.ContextMenuSubContent
+         className={cn(
+            "!p-1 z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg",
+            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=open]:animate-in",
+            "data-[state=open]:data-[side=top]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=top]:slide-out-to-bottom-[1px] data-[state=open]:data-[side=top]:slide-in-from-left-[1px] data-[state=closed]:data-[side=top]:slide-out-to-left-[1px]",
+            "data-[state=open]:data-[side=right]:slide-in-from-left-[1px] data-[state=closed]:data-[side=right]:slide-out-to-left-[1px] data-[state=open]:data-[side=right]:slide-in-from-top-[1px] data-[state=closed]:data-[side=right]:slide-out-to-top-[1px]",
+            "data-[state=open]:data-[side=bottom]:slide-in-from-top-[1px] data-[state=closed]:data-[side=bottom]:slide-out-to-top-[1px] data-[state=open]:data-[side=bottom]:data-[align=start]:slide-in-from-left-[1px] data-[state=closed]:data-[side=bottom]:data-[align=start]:slide-out-to-left-[1px]",
+            "data-[state=open]:data-[side=left]:slide-in-from-right-[1px] data-[state=closed]:data-[side=left]:slide-out-to-right-[1px] data-[state=open]:data-[side=left]:slide-in-from-bottom-[1px] data-[state=closed]:data-[side=left]:slide-out-to-bottom-[1px]",
+            className,
+         )}
+         {...props}
+      >
+         {children}
+      </ContextMenuPrimitive.ContextMenuSubContent>
+   )
+}
+
+function ContextMenuItem({
+   className,
+   destructive = false,
+   inset,
+   onSelect,
+   ...props
+}: ComponentProps<typeof ContextMenuPrimitive.Item> & {
+   inset?: boolean
+   destructive?: boolean
+   onSelect?: () => void
+}) {
+   const isMobile = useUIStore().isMobile
+
+   if (isMobile) {
+      return (
+         <CommandItem
+            variant={destructive ? "destructive" : "default"}
+            inset={inset}
+            onSelect={onSelect}
+            className={className}
+            {...props}
+         />
+      )
+   }
+
+   return (
+      <ContextMenuPrimitive.Item
+         onSelect={onSelect}
+         className={cn(
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[8px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
+            inset && "pl-8",
+            destructive
+               ? "focus:bg-destructive focus:text-destructive-foreground"
+               : "",
+            className,
+         )}
+         {...props}
+      />
+   )
+}
+
 function ContextMenuCheckboxItem({
    className,
    children,
    checked,
+   onSelect,
    ...props
-}: ComponentProps<typeof ContextMenuPrimitive.CheckboxItem>) {
+}: ComponentProps<typeof ContextMenuPrimitive.CheckboxItem> & {
+   onSelect?: () => void
+}) {
+   const isMobile = useUIStore().isMobile
+
+   if (isMobile) {
+      return (
+         <CommandItem
+            onSelect={onSelect}
+            className={className}
+            isSelected={!!checked}
+            {...props}
+         >
+            {children}
+         </CommandItem>
+      )
+   }
    return (
       <ContextMenuPrimitive.CheckboxItem
          className={cn(

@@ -23,7 +23,7 @@ export function StatusIcon({
          innerDasharray: "0 100",
       },
       "in progress": {
-         color: "#facc15",
+         color: "#eab308",
          outerDasharray: "3.14 0",
          outerDashoffset: "-0.7",
          innerRadius: "2",

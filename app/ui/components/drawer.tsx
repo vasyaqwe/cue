@@ -9,6 +9,7 @@ function Drawer(props: ComponentProps<typeof DrawerPrimitive.Root>) {
 const DrawerTrigger = DrawerPrimitive.Trigger
 const DrawerPortal = DrawerPrimitive.Portal
 const DrawerClose = DrawerPrimitive.Close
+const DrawerNested = DrawerPrimitive.NestedRoot
 
 const DrawerOverlay = forwardRef<
    ElementRef<typeof DrawerPrimitive.Overlay>,
@@ -107,6 +108,7 @@ function DrawerDescription({
 
 export {
    Drawer,
+   DrawerNested,
    DrawerClose,
    DrawerContent,
    DrawerDescription,

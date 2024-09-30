@@ -93,14 +93,12 @@ export function ComboboxTrigger({ className, ...props }: PopoverTriggerProps) {
 
 export function ComboboxContent({
    children,
+   className,
    ...props
 }: PopoverContentProps & { title: string }) {
    return (
       <PopoverContent
-         style={{
-            ...props.style,
-            paddingBottom: `max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.5rem)`,
-         }}
+         className={cn("pb-safe", className)}
          {...props}
       >
          <Command

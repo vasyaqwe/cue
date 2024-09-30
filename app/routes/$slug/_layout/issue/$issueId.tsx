@@ -129,23 +129,10 @@ function Component() {
                   aria-label="Issue options"
                   className={cn(
                      buttonVariants({ variant: "ghost", size: "icon" }),
-                     " ml-2",
+                     "ml-2",
                   )}
                >
-                  <svg
-                     xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     strokeWidth="2"
-                     stroke="currentColor"
-                     className="size-6"
-                  >
-                     <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                     />
-                  </svg>
+                  <Icons.ellipsis className="size-6" />
                </DropdownMenuTrigger>
                <DropdownMenuContent
                   align="start"
@@ -196,7 +183,6 @@ function Component() {
                   className="!border-none !outline-none !bg-transparent mt-2 h-8 p-0 text-lg"
                />
             </div>
-
             <aside className="z-[3] w-72 max-md:hidden">
                <div className="fixed top-0 right-0 flex h-svh w-72 flex-col border-border/75 border-l bg-popover px-3 py-3 shadow-sm">
                   <div className="flex items-center justify-between">
@@ -223,21 +209,7 @@ function Component() {
                            variant={"ghost"}
                            size={"icon"}
                         >
-                           <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                           >
-                              <path
-                                 d="M14.1213 9.87874L9.87868 14.1214M10.5858 6.3432L11.2929 5.6361C13.2455 3.68348 16.4113 3.68348 18.364 5.6361C20.3166 7.58872 20.3166 10.7545 18.364 12.7072L17.6569 13.4143M6.34314 10.5858L5.63604 11.293C3.68341 13.2456 3.68341 16.4114 5.63604 18.364C7.58866 20.3166 10.7545 20.3166 12.7071 18.364L13.4142 17.6569"
-                                 stroke="currentColor"
-                                 strokeWidth="2"
-                                 strokeLinecap="round"
-                                 strokeLinejoin="round"
-                              />
-                           </svg>
+                           <Icons.link />
                         </Button>
                      </Tooltip>
                   </div>

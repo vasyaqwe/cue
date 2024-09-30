@@ -13,10 +13,10 @@ export function LabelIndicator({
          className={cn(
             "mr-0.5 inline-block size-2.5 rounded-full transition-colors duration-300",
             label === "bug"
-               ? "bg-red-400"
+               ? "bg-red-500"
                : label === "feature"
-                 ? "bg-green-400"
-                 : "bg-yellow-400",
+                 ? "bg-green-500"
+                 : "bg-yellow-500",
             className,
          )}
          {...props}

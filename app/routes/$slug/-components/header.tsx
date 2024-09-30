@@ -89,7 +89,11 @@ export function Header({
             {children}
             {pathname === `/${slug}` ? (
                <DropdownMenu>
-                  <DropdownMenuTrigger className={cn("rounded-full md:hidden")}>
+                  <DropdownMenuTrigger
+                     className={cn(
+                        "grid place-items-center rounded-full md:hidden",
+                     )}
+                  >
                      <UserAvatar
                         className="size-7"
                         user={user}
