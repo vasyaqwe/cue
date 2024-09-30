@@ -52,11 +52,23 @@ export const Route = createFileRoute("/$slug/_layout/")({
    ),
 })
 
+const sortOrder = ["in progress", "todo", "backlog", "done"]
+
 function Component() {
    const { organizationId } = useAuth()
    const { data: issues } = useSuspenseQuery(issueListQuery({ organizationId }))
 
    const groupedIssues = R.groupBy(issues, R.prop("status"))
+   const sortedIssues = R.reduce<string, Record<string, typeof issues>>(
+      sortOrder,
+      (acc, status) => {
+         if (groupedIssues[status as never]) {
+            acc[status as never] = groupedIssues[status as never]
+         }
+         return acc
+      },
+      {},
+   )
 
    return (
       <>
@@ -72,7 +84,7 @@ function Component() {
                   </p>
                </div>
             ) : (
-               Object.entries(groupedIssues).map(([status, issues]) => {
+               Object.entries(sortedIssues).map(([status, issues]) => {
                   return (
                      <div
                         key={status}
