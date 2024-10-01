@@ -1,10 +1,8 @@
 import { db } from "@/db"
 import { handleAuthError } from "@/error/utils"
-import {} from "@/organization/schema"
+import { joinOrganization } from "@/organization/utils"
 import { createSession, github } from "@/user/auth"
 import { oauthAccounts, users } from "@/user/schema"
-import { joinInvitedOrganization } from "@/user/utils"
-
 import { createAPIFileRoute } from "@tanstack/start/api"
 import { and, eq } from "drizzle-orm"
 import { parseCookies } from "vinxi/http"
@@ -61,7 +59,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
                   },
                })
 
-            const joinedOrganization = await joinInvitedOrganization({
+            const joinedOrganization = await joinOrganization({
                db,
                userId: existingAccount.userId,
                inviteCode,
@@ -131,7 +129,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
 
             if (!inviteCode) return { newUser }
 
-            const joinedOrganization = await joinInvitedOrganization({
+            const joinedOrganization = await joinOrganization({
                db: tx as never,
                userId: newUser.id,
                inviteCode,

@@ -8,6 +8,8 @@ import {
    organizationMembers,
    organizations,
 } from "@/organization/schema"
+import { joinOrganization } from "@/organization/utils"
+import { redirect } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/start"
 import { TRPCError } from "@trpc/server"
 import { and, eq, exists } from "drizzle-orm"
@@ -132,6 +134,24 @@ export const insert = createServerFn(
                organizationId: createdOrganization.id,
                id: ctx.user.id,
             })
+         })
+      }),
+)
+
+export const join = createServerFn(
+   "POST",
+   protectedProcedure
+      .input(z.object({ inviteCode: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+         const joinedOrg = await joinOrganization({
+            db: ctx.db,
+            userId: ctx.user.id,
+            inviteCode: input.inviteCode,
+         })
+
+         throw redirect({
+            to: "/$slug",
+            params: { slug: joinedOrg.slug },
          })
       }),
 )

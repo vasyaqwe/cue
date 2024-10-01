@@ -1,4 +1,4 @@
-import { usePresenceStore } from "@/presence/presence-store"
+import { usePresenceStoreBase } from "@/presence/presence-store"
 import { Avatar, AvatarFallback } from "@/ui/components/avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
@@ -23,7 +23,7 @@ export function UserAvatar({
          ? user.name[0]?.toUpperCase()
          : user.email?.[0]?.toUpperCase() ?? "?"
 
-   const isUserOnline = usePresenceStore.use.isUserOnline()
+   const { isUserOnline } = usePresenceStoreBase()
    const isOnline = user.id === currentUser.id || isUserOnline(user.id ?? "")
 
    return (

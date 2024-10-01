@@ -2,7 +2,7 @@ import type { Database } from "@/db"
 import { organizationMembers, organizations } from "@/organization/schema"
 import { eq } from "drizzle-orm"
 
-export const joinInvitedOrganization = async ({
+export const joinOrganization = async ({
    db,
    userId,
    inviteCode,

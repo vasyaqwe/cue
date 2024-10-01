@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
 
       const firstSlug = memberships?.[0]?.organization.slug
       if (firstSlug) {
-         throw redirect({ to: `/${firstSlug}` })
+         throw redirect({ to: "/$slug", params: { slug: firstSlug } })
       }
    },
    errorComponent: Homepage,

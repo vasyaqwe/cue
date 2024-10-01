@@ -36,3 +36,4 @@ const store = create<State & Actions>()((set, get) => ({
 }))
 
 export const usePresenceStore = createSelectors(store)
+export const usePresenceStoreBase = store
