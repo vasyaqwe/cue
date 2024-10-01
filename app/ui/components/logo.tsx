@@ -10,7 +10,7 @@ export function Logo({ className, ...props }: ComponentProps<"div">) {
          )}
          {...props}
       >
-         <div className="squircle grid size-full transform-gpu place-content-center bg-background bg-gradient-to-b from-[#1e1448]/70 to-[#1e1448] text-background">
+         <div className="squircle grid size-full shrink-0 transform-gpu place-content-center bg-background bg-gradient-to-b from-[#1e1448]/70 to-[#1e1448] text-background">
             <svg
                viewBox="0 0 21 13"
                fill="none"

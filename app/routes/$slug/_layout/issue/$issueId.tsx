@@ -10,6 +10,7 @@ import {
 } from "@/issue/schema"
 import { useOnPushModal } from "@/modals"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import { Main } from "@/routes/$slug/-components/main"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
    Combobox,
@@ -27,7 +28,6 @@ import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
 import { Loading } from "@/ui/components/loading"
-import { Main } from "@/ui/components/main"
 import { Tooltip } from "@/ui/components/tooltip"
 import { cn } from "@/ui/utils"
 import { useCopyToClipboard } from "@/user-interactions/use-copy-to-clipboard"

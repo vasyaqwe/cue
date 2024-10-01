@@ -1,5 +1,4 @@
 import { organizationMembershipsQuery } from "@/organization/queries"
-import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Button } from "@/ui/components/button"
 import {
    DropdownMenu,
@@ -17,7 +16,6 @@ import * as userFns from "@/user/functions"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import {
-   Link,
    useLocation,
    useNavigate,
    useParams,
@@ -66,14 +64,7 @@ export function Header({
          >
             <div className="md:hidden">
                {pathname === `/${slug}` ? (
-                  <Link
-                     params={{ slug }}
-                     to={homeRoute.to}
-                     aria-label="Home"
-                     className="flex shrink-0 select-none items-center gap-2 font-bold text-2xl"
-                  >
-                     <Logo className="size-8" />
-                  </Link>
+                  <Logo className="size-8" />
                ) : (
                   <Button
                      onClick={() => router.history.back()}
@@ -91,7 +82,7 @@ export function Header({
                <DropdownMenu>
                   <DropdownMenuTrigger
                      className={cn(
-                        "grid place-items-center rounded-full md:hidden",
+                        "-mr-1 grid place-items-center rounded-full md:hidden",
                      )}
                   >
                      <UserAvatar

@@ -9,7 +9,7 @@ export function Main({
    return (
       <main
          className={cn(
-            "h-full max-h-[calc(100svh-var(--header-height)-var(--bottom-menu-height))] w-full flex-1 overflow-y-auto pb-8 md:max-h-[calc(100svh-var(--header-height))] md:pb-16",
+            "relative h-full max-h-[calc(100svh-var(--header-height)-var(--bottom-menu-height))] w-full flex-1 overflow-y-auto pb-16 md:max-h-[calc(100svh-var(--header-height))]",
             className,
          )}
          {...props}

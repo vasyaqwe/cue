@@ -1,8 +1,8 @@
 import { organizationMembersQuery } from "@/organization/queries"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import { Main } from "@/routes/$slug/-components/main"
 import { Icons } from "@/ui/components/icons"
 import { Loading } from "@/ui/components/loading"
-import { Main } from "@/ui/components/main"
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/$slug/_layout/inbox")({

@@ -10,6 +10,7 @@ import {
 import * as organization from "@/organization/functions"
 import { organizationMembershipsQuery } from "@/organization/queries"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import { Main } from "@/routes/$slug/-components/main"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
    Card,
@@ -21,7 +22,6 @@ import {
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Label } from "@/ui/components/label"
-import { Main } from "@/ui/components/main"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as userFns from "@/user/functions"

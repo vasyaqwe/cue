@@ -118,11 +118,11 @@ function ContextMenuContent({
    if (isMobile)
       return (
          <DrawerContent
-            className={cn("px-0.5 pt-4 pb-safe", className)}
+            className={cn("px-0.5 pb-safe", className)}
             {...props}
          >
             <DrawerTitle className="sr-only">{title}</DrawerTitle>
-            <Command className="mt-2">
+            <Command className="pt-4">
                <CommandList>{children}</CommandList>
             </Command>
          </DrawerContent>
@@ -161,11 +161,11 @@ function ContextMenuSubContent({
    if (isMobile)
       return (
          <DrawerContent
-            className={cn("px-0.5 pt-4 pb-safe", className)}
+            className={cn("px-0.5 pb-safe", className)}
             {...props}
          >
             <DrawerTitle className="sr-only">{title}</DrawerTitle>
-            <Command className="mt-2">
+            <Command className="pt-4">
                <CommandList>{children}</CommandList>
             </Command>
          </DrawerContent>

@@ -84,11 +84,9 @@ function Component() {
       <>
          <Presence />
          <ModalProvider />
-         <div className="flex h-full flex-1 flex-col md:flex-row">
-            <Sidebar />
-            <div className={cn("flex h-full flex-1 flex-col")}>
-               <Outlet />
-            </div>
+         <Sidebar />
+         <div className={cn("flex h-full min-h-svh flex-1 flex-col")}>
+            <Outlet />
          </div>
          <BottomMenu />
       </>
