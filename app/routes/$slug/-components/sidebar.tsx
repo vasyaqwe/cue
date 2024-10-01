@@ -115,11 +115,12 @@ export function Sidebar() {
                            "aria-current": "page",
                         }}
                         to={inboxRoute.to}
+                        data-has-unread={true}
                         className={cn(
                            "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
                         )}
                      >
-                        <Icons.inbox className="size-6" />
+                        <Icons.inbox className="size-[26px]" />
                         Inbox
                      </Link>
                   </li>
@@ -137,7 +138,7 @@ export function Sidebar() {
                            "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
                         )}
                      >
-                        <Icons.issues className="size-6" />
+                        <Icons.issues className="size-[26px]" />
                         Issues
                      </Link>
                   </li>
@@ -154,7 +155,7 @@ export function Sidebar() {
                            "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
                         )}
                      >
-                        <Icons.people className="size-6" />
+                        <Icons.people className="size-[26px]" />
                         People
                      </Link>
                   </li>
@@ -171,7 +172,7 @@ export function Sidebar() {
                            "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
                         )}
                      >
-                        <Icons.settings className="size-6" />
+                        <Icons.settings className="size-[26px]" />
                         Settings
                      </Link>
                   </li>

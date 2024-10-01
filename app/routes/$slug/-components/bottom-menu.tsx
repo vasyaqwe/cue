@@ -34,6 +34,7 @@ export function BottomMenu() {
                   }}
                   to={inboxRoute.to}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
+                  // data-has-unread={true}
                >
                   <Icons.inbox className="size-[29px]" />
                </Link>
