@@ -16,6 +16,8 @@ export function useUpdateIssue() {
    const { organizationId, user } = useAuth()
    const { updateIssueInQueryData } = useIssueQueryMutator()
 
+   const issueIdParam = "issueId" in params ? params.issueId : null
+
    const updateFn = useServerFn(issue.update)
    const updateIssue = useMutation({
       mutationFn: updateFn,
@@ -31,9 +33,24 @@ export function useUpdateIssue() {
 
          await queryClient.cancelQueries(issueListQuery({ organizationId }))
 
-         const data = queryClient.getQueryData(
+         if (issueIdParam) {
+            await queryClient.cancelQueries(
+               issueByIdQuery({ issueId: issueIdParam, organizationId }),
+            )
+         }
+
+         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+         let data: any
+
+         data = queryClient.getQueryData(
             issueListQuery({ organizationId }).queryKey,
          )
+         if (issueIdParam) {
+            data = queryClient.getQueryData(
+               issueByIdQuery({ issueId: issueIdParam, organizationId })
+                  .queryKey,
+            )
+         }
 
          updateIssueInQueryData({ input })
 
@@ -44,13 +61,19 @@ export function useUpdateIssue() {
             issueListQuery({ organizationId }).queryKey,
             context?.data,
          )
+         if (issueIdParam)
+            queryClient.setQueryData(
+               issueByIdQuery({ issueId: issueIdParam, organizationId })
+                  .queryKey,
+               context?.data,
+            )
          toast.error("Failed to update issue")
       },
       onSettled: () => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
-         if ("issueId" in params && params.issueId)
+         if (issueIdParam)
             queryClient.invalidateQueries(
-               issueByIdQuery({ issueId: params.issueId, organizationId }),
+               issueByIdQuery({ issueId: issueIdParam, organizationId }),
             )
       },
    })

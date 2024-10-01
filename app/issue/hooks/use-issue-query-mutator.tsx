@@ -17,6 +17,11 @@ export function useIssueQueryMutator() {
                return draft?.filter((issue) => issue.id !== issueId)
             }),
       )
+
+      queryClient.setQueryData(
+         issueByIdQuery({ issueId, organizationId }).queryKey,
+         () => null,
+      )
    }
 
    const insertIssueToQueryData = ({
