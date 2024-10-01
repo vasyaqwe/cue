@@ -22,6 +22,7 @@ import {
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Label } from "@/ui/components/label"
+import { Loading } from "@/ui/components/loading"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as userFns from "@/user/functions"
@@ -215,7 +216,12 @@ function Component() {
                               }
                               variant={"destructive"}
                            >
-                              Delete forever
+                              {deleteOrganization.isPending ||
+                              deleteOrganization.isSuccess ? (
+                                 <Loading />
+                              ) : (
+                                 "Delete forever"
+                              )}
                            </Button>
                         </ModalFooter>
                      </ModalContent>

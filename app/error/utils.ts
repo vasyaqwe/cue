@@ -85,3 +85,24 @@ export const parseZodErrorIssues = (issues: ZodIssue[]): string => {
       )
       .join("; ")
 }
+
+export function handleAuthError(
+   error: unknown,
+   request: Request,
+   inviteCode?: string,
+) {
+   console.error(error)
+
+   const redirectUrl = new URL("/login", request.url)
+   redirectUrl.searchParams.set("error", "true")
+   if (inviteCode) {
+      redirectUrl.searchParams.set("inviteCode", inviteCode)
+   }
+
+   return new Response(null, {
+      status: 302,
+      headers: {
+         Location: redirectUrl.toString(),
+      },
+   })
+}

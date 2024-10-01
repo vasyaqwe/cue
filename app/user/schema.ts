@@ -15,13 +15,8 @@ export const users = createTable(
    {
       id: generateId("user"),
       email: text("email").notNull().unique(),
-      name: text("name"),
+      name: text("name").notNull().default("No name"),
       avatarUrl: text("avatar_url"),
-      onboardingCompleted: integer("onboarding_completed", {
-         mode: "boolean",
-      })
-         .notNull()
-         .default(false),
       ...lifecycleDates,
    },
    (table) => {
@@ -31,7 +26,7 @@ export const users = createTable(
    },
 )
 
-export const oauthProviders = z.enum(["github"])
+export const oauthProviders = z.enum(["github", "google"])
 
 export const oauthAccounts = createTable(
    "oauth_accounts",

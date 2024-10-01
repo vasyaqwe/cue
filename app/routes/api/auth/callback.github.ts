@@ -1,7 +1,9 @@
 import { db } from "@/db"
-import { organizationMembers, organizations } from "@/organization/schema"
+import { handleAuthError } from "@/error/utils"
+import {} from "@/organization/schema"
 import { createSession, github } from "@/user/auth"
 import { oauthAccounts, users } from "@/user/schema"
+import { joinInvitedOrganization } from "@/user/utils"
 
 import { createAPIFileRoute } from "@tanstack/start/api"
 import { and, eq } from "drizzle-orm"
@@ -15,14 +17,12 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
       const cookies = parseCookies()
       const storedState = cookies.github_oauth_state
 
-      if (!code || !state || !storedState || state !== storedState) {
-         console.error(
-            `Invalid state or code in GitHub OAuth callback: ${JSON.stringify({ code, state, storedState })}`,
-         )
-         throw new Error("Error")
-      }
-
       try {
+         if (!code || !state || !storedState || state !== storedState) {
+            console.error(`Invalid state or code in GitHub OAuth callback`)
+            throw new Error("Error")
+         }
+
          const tokens = await github.validateAuthorizationCode(code)
          const userProfile = await fetch("https://api.github.com/user", {
             headers: {
@@ -116,22 +116,13 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
 
             if (!inviteCode) return { newUser }
 
-            const organizationToJoin = await tx.query.organizations.findFirst({
-               where: eq(organizations.inviteCode, inviteCode),
-               columns: {
-                  id: true,
-                  slug: true,
-               },
+            const joinedOrganization = await joinInvitedOrganization({
+               db: tx as never,
+               userId: newUser.id,
+               inviteCode,
             })
 
-            if (organizationToJoin) {
-               await tx.insert(organizationMembers).values({
-                  id: newUser.id,
-                  organizationId: organizationToJoin.id,
-               })
-            }
-
-            return { newUser, organizationSlug: organizationToJoin?.slug }
+            return { newUser, organizationSlug: joinedOrganization.slug }
          })
 
          if (!result.newUser) throw new Error("Error")
@@ -147,20 +138,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
             },
          })
       } catch (e) {
-         console.error(e)
-
-         const redirectUrl = new URL("/login", request.url)
-         redirectUrl.searchParams.set("error", "true")
-         if (cookies.invite_code) {
-            redirectUrl.searchParams.set("inviteCode", cookies.invite_code)
-         }
-
-         return new Response(null, {
-            status: 302,
-            headers: {
-               Location: redirectUrl.toString(),
-            },
-         })
+         return handleAuthError(e, request, cookies.invite_code)
       }
    },
 })

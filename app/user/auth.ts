@@ -8,7 +8,7 @@ import {
    sessions,
    users,
 } from "@/user/schema"
-import { GitHub } from "arctic"
+import { GitHub, Google } from "arctic"
 import { eq } from "drizzle-orm"
 import type { DatabaseAdapter, SessionAndUser } from "lucia"
 import { Lucia, generateSessionId } from "lucia"
@@ -59,6 +59,12 @@ export const github = new GitHub(
    env.GITHUB_CLIENT_ID,
    env.GITHUB_CLIENT_SECRET,
    {},
+)
+
+export const google = new Google(
+   env.GOOGLE_CLIENT_ID,
+   env.GOOGLE_CLIENT_SECRET,
+   `${env.VITE_BASE_URL}/api/auth/callback/google`,
 )
 
 export const createSession = async (userId: string) => {
