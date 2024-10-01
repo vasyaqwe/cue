@@ -4,10 +4,19 @@ import { buttonVariants } from "@/ui/components/button"
 import { Icons } from "@/ui/components/icons"
 import { cn } from "@/ui/utils"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { Link, createFileRoute } from "@tanstack/react-router"
+import { Link, createFileRoute, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/new")({
    component: Component,
+   beforeLoad: async ({ context }) => {
+      await context.queryClient
+         .ensureQueryData(organizationMembershipsQuery())
+         .catch(() => {
+            throw redirect({
+               to: "/login",
+            })
+         })
+   },
 })
 
 function Component() {
