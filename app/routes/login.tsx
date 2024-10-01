@@ -140,31 +140,29 @@ function Component() {
    })
 
    return (
-      <>
-         <main className=" h-svh px-7">
-            <div className="isolate grid h-full place-items-center md:min-h-[92svh] max-md:pt-8">
-               <div className="flex w-full max-w-[320px] flex-col">
-                  <Logo className="mx-auto mb-6" />
-                  <h1 className="mb-6 gap-6 pb-2 text-center font-bold text-[1.5rem] leading-none">
-                     Log in to Cue
-                  </h1>
-                  <div
-                     className={cn(
-                        cardVariants(),
-                        "pattern relative mx-auto flex w-full flex-col overflow-hidden rounded-2xl p-0",
-                     )}
-                  >
-                     <>
-                        {isCodeSent ? (
-                           <div
-                              className="flex h-full flex-col p-6 md:p-9"
-                              key={isCodeSent.toString()}
-                           >
-                              <p className="text-foreground/75 md:text-[1rem]">
-                                 Enter the 6-digit code we sent to your email.
-                              </p>
-                              <div className="mt-6 flex flex-grow flex-col">
-                                 {/* <InputOTP
+      <main className="isolate grid h-svh w-full place-items-center px-4">
+         <div className="-mt-8 flex w-full max-w-[320px] flex-col">
+            <Logo className="mx-auto mb-6" />
+            <h1 className="mb-6 gap-6 pb-2 text-center font-bold text-[1.5rem] leading-none">
+               Log in to Cue
+            </h1>
+            <div
+               className={cn(
+                  cardVariants(),
+                  "pattern relative mx-auto flex w-full flex-col overflow-hidden rounded-2xl p-0",
+               )}
+            >
+               <>
+                  {isCodeSent ? (
+                     <div
+                        className="flex h-full flex-col p-6 md:p-9"
+                        key={isCodeSent.toString()}
+                     >
+                        <p className="text-foreground/75 md:text-[1rem]">
+                           Enter the 6-digit code we sent to your email.
+                        </p>
+                        <div className="mt-6 flex flex-grow flex-col">
+                           {/* <InputOTP
                               ref={otpInputRef}
                               autoFocus
                               onComplete={(code) => {
@@ -216,11 +214,11 @@ function Component() {
                               </Button>
                               .
                            </p> */}
-                              </div>
-                           </div>
-                        ) : (
-                           <div>
-                              {/* <form
+                        </div>
+                     </div>
+                  ) : (
+                     <div>
+                        {/* <form
                                  onSubmit={(e) => {
                                     e.preventDefault()
                                     sendLoginCode({
@@ -254,44 +252,42 @@ function Component() {
                                  </Button>
                               </form> */}
 
-                              {/* <div className="relative my-8 w-full">
+                        {/* <div className="relative my-8 w-full">
                                  <hr className="w-full border-border" />
                                  <span className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 bg-muted p-2.5 font-medium text-foreground/50 dark:bg-popover">
                                     OR
                                  </span>
                               </div> */}
-                              <div className="p-6 md:p-9">
-                                 <Button
-                                    size={"lg"}
-                                    className="w-full"
-                                    disabled={
-                                       loginWithGithub.isPending ||
-                                       loginWithGithub.isSuccess
-                                    }
-                                    onClick={() =>
-                                       loginWithGithub.mutate({
-                                          inviteCode: search.inviteCode,
-                                       })
-                                    }
-                                 >
-                                    {loginWithGithub.isPending ||
-                                    loginWithGithub.isSuccess ? (
-                                       <Loading />
-                                    ) : (
-                                       <>
-                                          <Icons.github className="-mt-px size-[18px]" />
-                                          Continue with Github
-                                       </>
-                                    )}
-                                 </Button>
-                              </div>
-                           </div>
-                        )}
-                     </>
-                  </div>
-               </div>
+                        <div className="p-6 md:p-9">
+                           <Button
+                              size={"lg"}
+                              className="w-full"
+                              disabled={
+                                 loginWithGithub.isPending ||
+                                 loginWithGithub.isSuccess
+                              }
+                              onClick={() =>
+                                 loginWithGithub.mutate({
+                                    inviteCode: search.inviteCode,
+                                 })
+                              }
+                           >
+                              {loginWithGithub.isPending ||
+                              loginWithGithub.isSuccess ? (
+                                 <Loading />
+                              ) : (
+                                 <>
+                                    <Icons.github className="-mt-px size-[18px]" />
+                                    Continue with Github
+                                 </>
+                              )}
+                           </Button>
+                        </div>
+                     </div>
+                  )}
+               </>
             </div>
-         </main>
-      </>
+         </div>
+      </main>
    )
 }
