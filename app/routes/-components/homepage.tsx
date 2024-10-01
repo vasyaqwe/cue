@@ -1,4 +1,4 @@
-import app from "@/assets/app.png"
+import app from "@/assets/app.webp"
 import pattern from "@/assets/pattern.png"
 import { buttonVariants } from "@/ui/components/button"
 import { Kbd } from "@/ui/components/kbd"
@@ -22,8 +22,8 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
    }, [])
 
    return (
-      <div>
-         <header className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-4">
+      <div className="w-full">
+         <header className="mx-auto flex w-full max-w-[60rem] items-center justify-between px-4 py-4">
             <Link
                to="/"
                className="flex items-center gap-3 font-secondary text-2xl tracking-wider"
@@ -168,8 +168,8 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                         xmlns="http://www.w3.org/2000/svg"
                      >
                         <path
-                           fill-rule="evenodd"
-                           clip-rule="evenodd"
+                           fillRule="evenodd"
+                           clipRule="evenodd"
                            d="M11.935 1H12.065C13.6859 0.999977 14.9923 0.999959 16.0199 1.13146C17.0866 1.26799 17.9849 1.56008 18.6983 2.23916C19.4116 2.91825 19.7185 3.77329 19.8619 4.78879C20 5.76691 20 7.01056 20 8.55348V15.4465C20 16.9894 20 18.2331 19.8619 19.2112C19.7185 20.2267 19.4116 21.0818 18.6983 21.7608C17.9849 22.4399 17.0866 22.732 16.0199 22.8685C14.9923 23 13.6859 23 12.065 23H11.935C10.3141 23 9.00767 23 7.98015 22.8685C6.91335 22.732 6.01513 22.4399 5.30175 21.7608C4.58837 21.0818 4.28153 20.2267 4.1381 19.2112C3.99996 18.2331 3.99998 16.9894 4 15.4465V8.55348C3.99998 7.01055 3.99996 5.76691 4.1381 4.78879C4.28153 3.77329 4.58837 2.91825 5.30175 2.23916C6.01513 1.56008 6.91335 1.26799 7.98015 1.13146C9.00766 0.999959 10.3141 0.999977 11.935 1ZM8.21703 2.80868C7.34737 2.91998 6.88684 3.12356 6.55883 3.43581C6.23081 3.74805 6.01695 4.18644 5.90003 5.01429C5.77967 5.86648 5.77778 6.99594 5.77778 8.61538V15.3846C5.77778 17.0041 5.77967 18.1335 5.90003 18.9857C6.01695 19.8136 6.23081 20.252 6.55883 20.5642C6.88684 20.8764 7.34737 21.08 8.21703 21.1913C9.11226 21.3059 10.2988 21.3077 12 21.3077C13.7012 21.3077 14.8877 21.3059 15.783 21.1913C16.6526 21.08 17.1132 20.8764 17.4412 20.5642C17.7692 20.252 17.983 19.8136 18.1 18.9857C18.2203 18.1335 18.2222 17.0041 18.2222 15.3846V8.61539C18.2222 6.99594 18.2203 5.86648 18.1 5.01429C17.983 4.18644 17.7692 3.74805 17.4412 3.43581C17.1132 3.12356 16.6526 2.91998 15.783 2.80868C14.8877 2.69411 13.7012 2.69231 12 2.69231C10.2988 2.69231 9.11226 2.69411 8.21703 2.80868Z"
                            fill="currentColor"
                         />
@@ -191,7 +191,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                   </li>
                </ul>
             </section>
-            <section className="relative isolate mx-auto max-w-4xl px-4">
+            <section className="relative isolate mx-auto max-w-[60rem] px-4">
                <img
                   src={pattern}
                   alt=""
@@ -199,7 +199,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                   className="-left-5 absolute bottom-0 z-[-1] w-full blur-2xl"
                />
                <img
-                  className="-mb-6 w-full rounded-t-xl border border-border/75 shadow-[0_-10px_32px_0px_#ebe9e8]"
+                  className="-mb-[5px] w-full rounded-t-xl border border-border/75 shadow-[0_-10px_32px_0px_#ebe9e8]"
                   src={app}
                   alt="App screenshot"
                />
