@@ -17,10 +17,13 @@ export const joinInvitedOrganization = async ({
 
    if (!organizationToJoin) throw new Error("Organization to join not found")
 
-   await db.insert(organizationMembers).values({
-      id: userId,
-      organizationId: organizationToJoin.id,
-   })
+   await db
+      .insert(organizationMembers)
+      .values({
+         id: userId,
+         organizationId: organizationToJoin.id,
+      })
+      .onConflictDoNothing()
 
    return organizationToJoin
 }

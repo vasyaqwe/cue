@@ -16,6 +16,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
       const state = url.searchParams.get("state")
       const cookies = parseCookies()
       const storedState = cookies.github_oauth_state
+      const inviteCode = cookies.invite_code
 
       try {
          if (!code || !state || !storedState || state !== storedState) {
@@ -50,10 +51,26 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
 
          if (existingAccount) {
             const sessionCookie = await createSession(existingAccount.userId)
+
+            if (!inviteCode)
+               return new Response(null, {
+                  status: 302,
+                  headers: {
+                     Location: "/",
+                     "Set-Cookie": sessionCookie.serialize(),
+                  },
+               })
+
+            const joinedOrganization = await joinInvitedOrganization({
+               db,
+               userId: existingAccount.userId,
+               inviteCode,
+            })
+
             return new Response(null, {
                status: 302,
                headers: {
-                  Location: "/",
+                  Location: `/${joinedOrganization.slug}`,
                   "Set-Cookie": sessionCookie.serialize(),
                },
             })
@@ -93,8 +110,6 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
 
          // If no existing account check if the a user with the email exists and link the account.
          const result = await db.transaction(async (tx) => {
-            const inviteCode = cookies.invite_code
-
             const [newUser] = await tx
                .insert(users)
                .values({

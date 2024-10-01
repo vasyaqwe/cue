@@ -62,10 +62,26 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
 
          if (existingAccount) {
             const sessionCookie = await createSession(existingAccount.userId)
+
+            if (!inviteCode)
+               return new Response(null, {
+                  status: 302,
+                  headers: {
+                     Location: "/",
+                     "Set-Cookie": sessionCookie.serialize(),
+                  },
+               })
+
+            const joinedOrganization = await joinInvitedOrganization({
+               db,
+               userId: existingAccount.userId,
+               inviteCode,
+            })
+
             return new Response(null, {
                status: 302,
                headers: {
-                  Location: "/",
+                  Location: `/${joinedOrganization.slug}`,
                   "Set-Cookie": sessionCookie.serialize(),
                },
             })
