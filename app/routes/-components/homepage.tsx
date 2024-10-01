@@ -1,5 +1,5 @@
 import app from "@/assets/app.webp"
-import pattern from "@/assets/pattern.png"
+import pattern from "@/assets/pattern.webp"
 import { buttonVariants } from "@/ui/components/button"
 import { Kbd } from "@/ui/components/kbd"
 import { Logo } from "@/ui/components/logo"
