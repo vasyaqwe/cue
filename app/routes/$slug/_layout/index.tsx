@@ -78,7 +78,7 @@ function Component() {
          <Main>
             {issues.length === 0 ? (
                <div className="absolute inset-0 m-auto h-fit">
-                  <p className="flex flex-col items-center gap-4 text-center text-foreground/75 text-lg">
+                  <p className="flex flex-col items-center gap-4 text-center text-foreground/60 text-lg">
                      <Icons.issues className="size-20" />
                      No issues
                   </p>

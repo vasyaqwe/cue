@@ -46,76 +46,85 @@ function Component() {
    )
 
    return (
-      <>
-         <Header
+      <Main className="flex max-h-[calc(100svh-var(--bottom-menu-height))] pb-0 md:max-h-svh">
+         <div
             className={cn(
-               "md:max-w-[420px] md:border-r md:pl-0",
-               issueId ? "max-md:hidden" : "",
+               "flex flex-1 shrink-0 flex-col border-border/75 2xl:max-w-[400px] lg:max-w-[320px] lg:border-r",
+               issueId ? "max-lg:hidden" : "",
             )}
          >
-            <HeaderTitle>Inbox</HeaderTitle>
-         </Header>
-         <Main className="flex flex-1">
-            <div
+            <Header
                className={cn(
-                  "relative flex-1 border-border/75 md:max-w-[420px] md:border-r",
+                  "border-r-transparent md:pl-0",
                   issueId ? "max-md:hidden" : "",
                )}
             >
-               {notifications.length === 0 ? (
-                  <div className="absolute inset-0 m-auto h-fit">
-                     <p className="flex flex-col items-center gap-4 text-center text-foreground/75 text-lg">
-                        <Icons.inbox className=" size-20" />
-                        Inbox is empty
-                     </p>
-                  </div>
-               ) : (
-                  <div className="space-y-2 p-1.5">
-                     {notifications.map((notification) => (
-                        <Link
-                           to="/$slug/inbox/issue/$issueId"
-                           params={{
-                              slug,
-                              issueId: notification.issue.id,
-                           }}
-                           activeProps={{
-                              className: "!bg-border/55",
-                           }}
-                           className={
-                              "flex items-center gap-2.5 rounded-lg p-2 hover:bg-border/40"
-                           }
-                           key={notification.id}
-                        >
-                           <UserAvatar
-                              user={notification.user}
-                              className="size-10"
-                           />
-                           <div className="flex-1">
-                              <p className="-mt-[3px] font-semibold">
-                                 {notification.issue.title}
-                              </p>
-                              <div className="flex w-full items-center gap-2">
-                                 <p className="line-clamp-1 text-sm opacity-75">
-                                    {notification.content}
+               <HeaderTitle>Inbox</HeaderTitle>
+            </Header>
+            <div className="flex flex-1 shrink-0">
+               <div
+                  className={cn(
+                     "relative flex-1 ",
+                     issueId ? "max-md:hidden" : "",
+                  )}
+               >
+                  {notifications.length === 0 ? (
+                     <div className="absolute inset-0 m-auto h-fit">
+                        <p className="flex flex-col items-center gap-4 text-center text-foreground/60 text-lg">
+                           <Icons.inbox className=" size-20" />
+                           Inbox is empty
+                        </p>
+                     </div>
+                  ) : (
+                     <div className="space-y-2 p-1.5">
+                        {notifications.map((notification) => (
+                           <Link
+                              to="/$slug/inbox/issue/$issueId"
+                              params={{
+                                 slug,
+                                 issueId: notification.issue.id,
+                              }}
+                              activeProps={{
+                                 className: "!bg-border/55",
+                              }}
+                              className={
+                                 "flex items-center gap-2.5 rounded-lg p-2 hover:bg-border/40"
+                              }
+                              key={notification.id}
+                           >
+                              <UserAvatar
+                                 user={notification.user}
+                                 className="size-10"
+                              />
+                              <div className="flex-1">
+                                 <p className="-mt-[3px] font-semibold">
+                                    {notification.issue.title}
                                  </p>
-                                 <span className="ml-auto whitespace-nowrap text-sm opacity-75">
-                                    {formatDate(
-                                       new Date(notification.createdAt),
-                                       {
-                                          month: "short",
-                                          day: "numeric",
-                                       },
-                                    )}
-                                 </span>
+                                 <div className="flex w-full items-center gap-2">
+                                    <p className="line-clamp-1 text-sm opacity-75">
+                                       {notification.content}
+                                    </p>
+                                    <span className="ml-auto whitespace-nowrap text-sm opacity-75">
+                                       {formatDate(
+                                          new Date(notification.createdAt),
+                                          {
+                                             month: "short",
+                                             day: "numeric",
+                                          },
+                                       )}
+                                    </span>
+                                 </div>
                               </div>
-                           </div>
-                        </Link>
-                     ))}
-                  </div>
-               )}
+                           </Link>
+                        ))}
+                     </div>
+                  )}
+               </div>
             </div>
+         </div>
+         <div className={cn(!issueId ? "max-lg:hidden" : "", "flex-1")}>
             <Outlet />
-         </Main>
-      </>
+         </div>
+      </Main>
    )
 }
