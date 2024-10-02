@@ -1,5 +1,5 @@
-import { useEventCallback } from "@/user-interactions/use-event-callback"
-import { useEventListener } from "@/user-interactions/use-event-listener"
+import { useEventCallback } from "@/interactions/use-event-callback"
+import { useEventListener } from "@/interactions/use-event-listener"
 import { useCallback, useEffect, useState } from "react"
 import type { Dispatch, SetStateAction } from "react"
 

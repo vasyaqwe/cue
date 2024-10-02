@@ -1,4 +1,4 @@
-import { useIsomorphicLayoutEffect } from "@/user-interactions/use-isomorphic-layout-effect"
+import { useIsomorphicLayoutEffect } from "@/interactions/use-isomorphic-layout-effect"
 import { useEffect, useRef } from "react"
 import type { RefObject } from "react"
 

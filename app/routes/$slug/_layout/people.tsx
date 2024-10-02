@@ -1,4 +1,5 @@
 import { env } from "@/env"
+import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
 import {
    Modal,
    ModalContent,
@@ -15,7 +16,6 @@ import { inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
-import { useCopyToClipboard } from "@/user-interactions/use-copy-to-clipboard"
 import { useAuth } from "@/user/hooks"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"

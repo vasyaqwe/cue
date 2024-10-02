@@ -1,4 +1,4 @@
-import { useIntersectionObserver } from "@/user-interactions/use-intersection"
+import { useIntersectionObserver } from "@/interactions/use-intersection"
 import type { FetchNextPageOptions } from "@tanstack/react-query"
 import { useEffect } from "react"
 

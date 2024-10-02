@@ -1,4 +1,5 @@
 import { env } from "@/env"
+import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
 import type * as issueFns from "@/issue/functions"
@@ -23,7 +24,6 @@ import {
 } from "@/ui/components/context-menu"
 import { Icons } from "@/ui/components/icons"
 import { Loading } from "@/ui/components/loading"
-import { useCopyToClipboard } from "@/user-interactions/use-copy-to-clipboard"
 import { useAuth } from "@/user/hooks"
 import { formatDate } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
