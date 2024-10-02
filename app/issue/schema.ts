@@ -2,7 +2,6 @@ import { createTable, generateId, lifecycleDates } from "@/db/utils"
 import { organizations } from "@/organization/schema"
 import { index, text } from "drizzle-orm/sqlite-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
-import { z } from "zod"
 
 export const issueStatuses = ["backlog", "todo", "in progress", "done"] as const
 export const issueLabels = ["bug", "feature", "improvement"] as const
@@ -33,12 +32,20 @@ export const issues = createTable(
    },
 )
 
-export const insertIssueParams = createInsertSchema(issues)
+export const insertIssueParams = createInsertSchema(issues).omit({
+   id: true,
+   createdAt: true,
+   updatedAt: true,
+})
 export const updateIssueParams = createSelectSchema(issues)
-   .partial()
-   .extend({
-      id: z.string(),
-      title: z.string().min(1),
+   .partial({
+      label: true,
+      status: true,
+      description: true,
+   })
+   .omit({
+      createdAt: true,
+      updatedAt: true,
    })
 
 export type IssueStatus = (typeof issueStatuses)[number]

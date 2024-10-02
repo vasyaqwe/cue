@@ -61,4 +61,8 @@ export const organizationMembersRelations = relations(
    }),
 )
 
-export const insertOrganizationParams = createInsertSchema(organizations)
+export const insertOrganizationParams = createInsertSchema(organizations).omit({
+   id: true,
+   createdAt: true,
+   updatedAt: true,
+})

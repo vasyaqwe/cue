@@ -45,7 +45,12 @@ export const update = createServerFn(
       .mutation(async ({ ctx, input }) => {
          return await ctx.db
             .update(issues)
-            .set(input)
+            .set({
+               title: input.title,
+               description: input.description,
+               label: input.label,
+               status: input.status,
+            })
             .where(eq(issues.id, input.id))
       }),
 )

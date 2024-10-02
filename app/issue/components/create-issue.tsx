@@ -1,3 +1,4 @@
+import { useInsertNotification } from "@/inbox/hooks/use-insert-notification"
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
@@ -58,6 +59,8 @@ export function CreateIssue() {
       issueLabels[0],
    )
 
+   const { insertNotification } = useInsertNotification()
+
    const insertFn = useServerFn(issue.insert)
    const insert = useMutation({
       mutationFn: insertFn,
@@ -86,6 +89,13 @@ export function CreateIssue() {
                   navigate({ to: `/${slug}/issue/${issue.id}` })
                },
             },
+         })
+
+         insertNotification.mutate({
+            organizationId,
+            issueId: issue.id,
+            type: "new_issue",
+            content: `New issue created by ${user.name}`,
          })
       },
    })

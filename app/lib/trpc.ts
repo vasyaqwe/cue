@@ -55,6 +55,7 @@ export const organizationProtectedProcedure = serverFnProcedure
          throw new TRPCError({ code: "UNAUTHORIZED" })
       }
 
+      // TODO: cache?
       const membership = ctx.db.query.organizationMembers.findFirst({
          where: and(
             eq(organizationMembers.organizationId, input.organizationId),

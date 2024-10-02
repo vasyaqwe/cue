@@ -3,6 +3,7 @@ import { issues } from "@/issue/schema"
 import { organizations } from "@/organization/schema"
 import { users } from "@/user/schema"
 import { index, integer, text } from "drizzle-orm/sqlite-core"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 export const notificationTypes = ["new_issue", "issue_resolved"] as const
 
@@ -39,3 +40,19 @@ export const notifications = createTable(
       }
    },
 )
+
+export const insertNotificationParams = createInsertSchema(notifications).omit({
+   id: true,
+   userId: true,
+   createdAt: true,
+   updatedAt: true,
+})
+export const updateNotificationParams = createSelectSchema(notifications).omit({
+   content: true,
+   issueId: true,
+   organizationId: true,
+   type: true,
+   userId: true,
+   createdAt: true,
+   updatedAt: true,
+})
