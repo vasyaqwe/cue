@@ -1,6 +1,6 @@
 import { pushModal } from "@/modals"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
-import { Route as inboxRoute } from "@/routes/$slug/_layout/inbox"
+import { Route as inboxRoute } from "@/routes/$slug/_layout/inbox/_layout/index"
 import { Route as peopleRoute } from "@/routes/$slug/_layout/people"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
 import { Icons } from "@/ui/components/icons"

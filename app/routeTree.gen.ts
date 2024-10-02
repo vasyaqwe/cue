@@ -22,12 +22,15 @@ import { Route as SlugLayoutImport } from './routes/$slug/_layout'
 import { Route as SlugLayoutIndexImport } from './routes/$slug/_layout/index'
 import { Route as SlugLayoutSettingsImport } from './routes/$slug/_layout/settings'
 import { Route as SlugLayoutPeopleImport } from './routes/$slug/_layout/people'
-import { Route as SlugLayoutInboxImport } from './routes/$slug/_layout/inbox'
 import { Route as SlugLayoutIssueIssueIdImport } from './routes/$slug/_layout/issue/$issueId'
+import { Route as SlugLayoutInboxLayoutImport } from './routes/$slug/_layout/inbox/_layout'
+import { Route as SlugLayoutInboxLayoutIndexImport } from './routes/$slug/_layout/inbox/_layout/index'
+import { Route as SlugLayoutInboxLayoutIssueIssueIdImport } from './routes/$slug/_layout/inbox/_layout/issue.$issueId'
 
 // Create Virtual Routes
 
 const SlugImport = createFileRoute('/$slug')()
+const SlugLayoutInboxImport = createFileRoute('/$slug/_layout/inbox')()
 
 // Create/Update Routes
 
@@ -66,6 +69,11 @@ const SlugLayoutRoute = SlugLayoutImport.update({
   getParentRoute: () => SlugRoute,
 } as any)
 
+const SlugLayoutInboxRoute = SlugLayoutInboxImport.update({
+  path: '/inbox',
+  getParentRoute: () => SlugLayoutRoute,
+} as any)
+
 const SlugLayoutIndexRoute = SlugLayoutIndexImport.update({
   path: '/',
   getParentRoute: () => SlugLayoutRoute,
@@ -81,15 +89,28 @@ const SlugLayoutPeopleRoute = SlugLayoutPeopleImport.update({
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
-const SlugLayoutInboxRoute = SlugLayoutInboxImport.update({
-  path: '/inbox',
-  getParentRoute: () => SlugLayoutRoute,
-} as any)
-
 const SlugLayoutIssueIssueIdRoute = SlugLayoutIssueIssueIdImport.update({
   path: '/issue/$issueId',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
+
+const SlugLayoutInboxLayoutRoute = SlugLayoutInboxLayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => SlugLayoutInboxRoute,
+} as any)
+
+const SlugLayoutInboxLayoutIndexRoute = SlugLayoutInboxLayoutIndexImport.update(
+  {
+    path: '/',
+    getParentRoute: () => SlugLayoutInboxLayoutRoute,
+  } as any,
+)
+
+const SlugLayoutInboxLayoutIssueIssueIdRoute =
+  SlugLayoutInboxLayoutIssueIssueIdImport.update({
+    path: '/issue/$issueId',
+    getParentRoute: () => SlugLayoutInboxLayoutRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -144,13 +165,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JoinInviteCodeImport
       parentRoute: typeof rootRoute
     }
-    '/$slug/_layout/inbox': {
-      id: '/$slug/_layout/inbox'
-      path: '/inbox'
-      fullPath: '/$slug/inbox'
-      preLoaderRoute: typeof SlugLayoutInboxImport
-      parentRoute: typeof SlugLayoutImport
-    }
     '/$slug/_layout/people': {
       id: '/$slug/_layout/people'
       path: '/people'
@@ -172,6 +186,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SlugLayoutIndexImport
       parentRoute: typeof SlugLayoutImport
     }
+    '/$slug/_layout/inbox': {
+      id: '/$slug/_layout/inbox'
+      path: '/inbox'
+      fullPath: '/$slug/inbox'
+      preLoaderRoute: typeof SlugLayoutInboxImport
+      parentRoute: typeof SlugLayoutImport
+    }
+    '/$slug/_layout/inbox/_layout': {
+      id: '/$slug/_layout/inbox/_layout'
+      path: '/inbox'
+      fullPath: '/$slug/inbox'
+      preLoaderRoute: typeof SlugLayoutInboxLayoutImport
+      parentRoute: typeof SlugLayoutInboxRoute
+    }
     '/$slug/_layout/issue/$issueId': {
       id: '/$slug/_layout/issue/$issueId'
       path: '/issue/$issueId'
@@ -179,24 +207,66 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SlugLayoutIssueIssueIdImport
       parentRoute: typeof SlugLayoutImport
     }
+    '/$slug/_layout/inbox/_layout/': {
+      id: '/$slug/_layout/inbox/_layout/'
+      path: '/'
+      fullPath: '/$slug/inbox/'
+      preLoaderRoute: typeof SlugLayoutInboxLayoutIndexImport
+      parentRoute: typeof SlugLayoutInboxLayoutImport
+    }
+    '/$slug/_layout/inbox/_layout/issue/$issueId': {
+      id: '/$slug/_layout/inbox/_layout/issue/$issueId'
+      path: '/issue/$issueId'
+      fullPath: '/$slug/inbox/issue/$issueId'
+      preLoaderRoute: typeof SlugLayoutInboxLayoutIssueIssueIdImport
+      parentRoute: typeof SlugLayoutInboxLayoutImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface SlugLayoutInboxLayoutRouteChildren {
+  SlugLayoutInboxLayoutIndexRoute: typeof SlugLayoutInboxLayoutIndexRoute
+  SlugLayoutInboxLayoutIssueIssueIdRoute: typeof SlugLayoutInboxLayoutIssueIssueIdRoute
+}
+
+const SlugLayoutInboxLayoutRouteChildren: SlugLayoutInboxLayoutRouteChildren = {
+  SlugLayoutInboxLayoutIndexRoute: SlugLayoutInboxLayoutIndexRoute,
+  SlugLayoutInboxLayoutIssueIssueIdRoute:
+    SlugLayoutInboxLayoutIssueIssueIdRoute,
+}
+
+const SlugLayoutInboxLayoutRouteWithChildren =
+  SlugLayoutInboxLayoutRoute._addFileChildren(
+    SlugLayoutInboxLayoutRouteChildren,
+  )
+
+interface SlugLayoutInboxRouteChildren {
+  SlugLayoutInboxLayoutRoute: typeof SlugLayoutInboxLayoutRouteWithChildren
+}
+
+const SlugLayoutInboxRouteChildren: SlugLayoutInboxRouteChildren = {
+  SlugLayoutInboxLayoutRoute: SlugLayoutInboxLayoutRouteWithChildren,
+}
+
+const SlugLayoutInboxRouteWithChildren = SlugLayoutInboxRoute._addFileChildren(
+  SlugLayoutInboxRouteChildren,
+)
+
 interface SlugLayoutRouteChildren {
-  SlugLayoutInboxRoute: typeof SlugLayoutInboxRoute
   SlugLayoutPeopleRoute: typeof SlugLayoutPeopleRoute
   SlugLayoutSettingsRoute: typeof SlugLayoutSettingsRoute
   SlugLayoutIndexRoute: typeof SlugLayoutIndexRoute
+  SlugLayoutInboxRoute: typeof SlugLayoutInboxRouteWithChildren
   SlugLayoutIssueIssueIdRoute: typeof SlugLayoutIssueIssueIdRoute
 }
 
 const SlugLayoutRouteChildren: SlugLayoutRouteChildren = {
-  SlugLayoutInboxRoute: SlugLayoutInboxRoute,
   SlugLayoutPeopleRoute: SlugLayoutPeopleRoute,
   SlugLayoutSettingsRoute: SlugLayoutSettingsRoute,
   SlugLayoutIndexRoute: SlugLayoutIndexRoute,
+  SlugLayoutInboxRoute: SlugLayoutInboxRouteWithChildren,
   SlugLayoutIssueIssueIdRoute: SlugLayoutIssueIssueIdRoute,
 }
 
@@ -221,11 +291,13 @@ export interface FileRoutesByFullPath {
   '/new': typeof NewRoute
   '/$slug': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
-  '/$slug/inbox': typeof SlugLayoutInboxRoute
   '/$slug/people': typeof SlugLayoutPeopleRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/': typeof SlugLayoutIndexRoute
+  '/$slug/inbox': typeof SlugLayoutInboxLayoutRouteWithChildren
   '/$slug/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
+  '/$slug/inbox/': typeof SlugLayoutInboxLayoutIndexRoute
+  '/$slug/inbox/issue/$issueId': typeof SlugLayoutInboxLayoutIssueIssueIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -235,10 +307,11 @@ export interface FileRoutesByTo {
   '/new': typeof NewRoute
   '/$slug': typeof SlugLayoutIndexRoute
   '/join/$inviteCode': typeof JoinInviteCodeRoute
-  '/$slug/inbox': typeof SlugLayoutInboxRoute
   '/$slug/people': typeof SlugLayoutPeopleRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
+  '/$slug/inbox': typeof SlugLayoutInboxLayoutIndexRoute
   '/$slug/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
+  '/$slug/inbox/issue/$issueId': typeof SlugLayoutInboxLayoutIssueIssueIdRoute
 }
 
 export interface FileRoutesById {
@@ -250,11 +323,14 @@ export interface FileRoutesById {
   '/$slug': typeof SlugRouteWithChildren
   '/$slug/_layout': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
-  '/$slug/_layout/inbox': typeof SlugLayoutInboxRoute
   '/$slug/_layout/people': typeof SlugLayoutPeopleRoute
   '/$slug/_layout/settings': typeof SlugLayoutSettingsRoute
   '/$slug/_layout/': typeof SlugLayoutIndexRoute
+  '/$slug/_layout/inbox': typeof SlugLayoutInboxRouteWithChildren
+  '/$slug/_layout/inbox/_layout': typeof SlugLayoutInboxLayoutRouteWithChildren
   '/$slug/_layout/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
+  '/$slug/_layout/inbox/_layout/': typeof SlugLayoutInboxLayoutIndexRoute
+  '/$slug/_layout/inbox/_layout/issue/$issueId': typeof SlugLayoutInboxLayoutIssueIssueIdRoute
 }
 
 export interface FileRouteTypes {
@@ -266,11 +342,13 @@ export interface FileRouteTypes {
     | '/new'
     | '/$slug'
     | '/join/$inviteCode'
-    | '/$slug/inbox'
     | '/$slug/people'
     | '/$slug/settings'
     | '/$slug/'
+    | '/$slug/inbox'
     | '/$slug/issue/$issueId'
+    | '/$slug/inbox/'
+    | '/$slug/inbox/issue/$issueId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -279,10 +357,11 @@ export interface FileRouteTypes {
     | '/new'
     | '/$slug'
     | '/join/$inviteCode'
-    | '/$slug/inbox'
     | '/$slug/people'
     | '/$slug/settings'
+    | '/$slug/inbox'
     | '/$slug/issue/$issueId'
+    | '/$slug/inbox/issue/$issueId'
   id:
     | '__root__'
     | '/'
@@ -292,11 +371,14 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/$slug/_layout'
     | '/join/$inviteCode'
-    | '/$slug/_layout/inbox'
     | '/$slug/_layout/people'
     | '/$slug/_layout/settings'
     | '/$slug/_layout/'
+    | '/$slug/_layout/inbox'
+    | '/$slug/_layout/inbox/_layout'
     | '/$slug/_layout/issue/$issueId'
+    | '/$slug/_layout/inbox/_layout/'
+    | '/$slug/_layout/inbox/_layout/issue/$issueId'
   fileRoutesById: FileRoutesById
 }
 
@@ -360,19 +442,15 @@ export const routeTree = rootRoute
       "filePath": "$slug/_layout.tsx",
       "parent": "/$slug",
       "children": [
-        "/$slug/_layout/inbox",
         "/$slug/_layout/people",
         "/$slug/_layout/settings",
         "/$slug/_layout/",
+        "/$slug/_layout/inbox",
         "/$slug/_layout/issue/$issueId"
       ]
     },
     "/join/$inviteCode": {
       "filePath": "join/$inviteCode.tsx"
-    },
-    "/$slug/_layout/inbox": {
-      "filePath": "$slug/_layout/inbox.tsx",
-      "parent": "/$slug/_layout"
     },
     "/$slug/_layout/people": {
       "filePath": "$slug/_layout/people.tsx",
@@ -386,9 +464,32 @@ export const routeTree = rootRoute
       "filePath": "$slug/_layout/index.tsx",
       "parent": "/$slug/_layout"
     },
+    "/$slug/_layout/inbox": {
+      "filePath": "$slug/_layout/inbox",
+      "parent": "/$slug/_layout",
+      "children": [
+        "/$slug/_layout/inbox/_layout"
+      ]
+    },
+    "/$slug/_layout/inbox/_layout": {
+      "filePath": "$slug/_layout/inbox/_layout.tsx",
+      "parent": "/$slug/_layout/inbox",
+      "children": [
+        "/$slug/_layout/inbox/_layout/",
+        "/$slug/_layout/inbox/_layout/issue/$issueId"
+      ]
+    },
     "/$slug/_layout/issue/$issueId": {
       "filePath": "$slug/_layout/issue/$issueId.tsx",
       "parent": "/$slug/_layout"
+    },
+    "/$slug/_layout/inbox/_layout/": {
+      "filePath": "$slug/_layout/inbox/_layout/index.tsx",
+      "parent": "/$slug/_layout/inbox/_layout"
+    },
+    "/$slug/_layout/inbox/_layout/issue/$issueId": {
+      "filePath": "$slug/_layout/inbox/_layout/issue.$issueId.tsx",
+      "parent": "/$slug/_layout/inbox/_layout"
     }
   }
 }

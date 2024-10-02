@@ -2,6 +2,7 @@ import { createTable, generateId, lifecycleDates } from "@/db/utils"
 import { issues } from "@/issue/schema"
 import { organizations } from "@/organization/schema"
 import { users } from "@/user/schema"
+import { relations } from "drizzle-orm"
 import { index, integer, text } from "drizzle-orm/sqlite-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
@@ -40,6 +41,17 @@ export const notifications = createTable(
       }
    },
 )
+
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+   issue: one(issues, {
+      fields: [notifications.issueId],
+      references: [issues.id],
+   }),
+   user: one(users, {
+      fields: [notifications.userId],
+      references: [users.id],
+   }),
+}))
 
 export const insertNotificationParams = createInsertSchema(notifications).omit({
    id: true,

@@ -19,6 +19,21 @@ export const list = createServerFn(
                eq(notifications.organizationId, input.organizationId),
                eq(notifications.userId, ctx.user.id),
             ),
+            with: {
+               issue: {
+                  columns: {
+                     id: true,
+                     title: true,
+                     status: true,
+                  },
+               },
+               user: {
+                  columns: {
+                     id: true,
+                     avatarUrl: true,
+                  },
+               },
+            },
             orderBy: [desc(notifications.createdAt)],
          })
       }),
