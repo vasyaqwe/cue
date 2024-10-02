@@ -8,6 +8,7 @@ const prefixes = {
    verification_code: "vc",
    oauth_account: "oa",
    issue: "iss",
+   notification: "ntf",
 } as const
 
 const generateIdBase = (prefix: keyof typeof prefixes) => {

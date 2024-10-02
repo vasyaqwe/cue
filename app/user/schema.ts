@@ -63,7 +63,9 @@ export const emailVerificationCodes = createTable(
       id: generateId("verification_code"),
       expiresAt: integer("expires_at").notNull(),
       code: text("code").notNull(),
-      userId: text("user_id").notNull(),
+      userId: text("user_id")
+         .references(() => users.id, { onDelete: "cascade" })
+         .notNull(),
       email: text("email").notNull().unique(),
    },
    (table) => {

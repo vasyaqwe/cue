@@ -192,6 +192,7 @@ function Component() {
                                  <strong>delete this organization</strong> below
                               </Label>
                               <Input
+                                 autoComplete="off"
                                  autoFocus={isMobile}
                                  id="confirmation"
                                  name="confirmation"
@@ -218,7 +219,10 @@ function Component() {
                            >
                               {deleteOrganization.isPending ||
                               deleteOrganization.isSuccess ? (
-                                 <Loading />
+                                 <>
+                                    <Loading />
+                                    Deleting..
+                                 </>
                               ) : (
                                  "Delete forever"
                               )}
