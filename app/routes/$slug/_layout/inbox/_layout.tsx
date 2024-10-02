@@ -79,6 +79,14 @@ function Component() {
                      <div className="space-y-2 p-1.5">
                         {notifications.map((notification) => (
                            <Link
+                              mask={{
+                                 unmaskOnReload: true,
+                                 to: "/$slug/issue/$issueId",
+                                 params: {
+                                    slug,
+                                    issueId: notification.issue.id,
+                                 },
+                              }}
                               to="/$slug/inbox/issue/$issueId"
                               params={{
                                  slug,
@@ -94,7 +102,7 @@ function Component() {
                            >
                               <UserAvatar
                                  user={notification.user}
-                                 className="size-10"
+                                 className="size-10 [&>[data-indicator]]:size-4"
                               />
                               <div className="flex-1">
                                  <p className="-mt-[3px] font-semibold">
