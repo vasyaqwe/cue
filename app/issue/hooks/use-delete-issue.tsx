@@ -1,7 +1,8 @@
+import { inboxListQuery } from "@/inbox/queries"
 import * as issue from "@/issue/functions"
 import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
-import { issueListQuery } from "@/issue/queries"
+import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
@@ -54,8 +55,12 @@ export function useDeleteIssue() {
                params: { slug: params.slug, issueId: data.issueId },
             })
       },
-      onSettled: () => {
+      onSettled: (_, _error, data) => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
+         queryClient.invalidateQueries(
+            issueByIdQuery({ issueId: data.issueId, organizationId }),
+         )
+         queryClient.invalidateQueries(inboxListQuery({ organizationId }))
       },
    })
 

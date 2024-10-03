@@ -1,4 +1,6 @@
+import type * as notificationFns from "@/inbox/functions"
 import { inboxListQuery } from "@/inbox/queries"
+import { StatusIcon } from "@/issue/components/icons"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { Icons } from "@/ui/components/icons"
@@ -10,10 +12,12 @@ import { formatDate } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import {
    Link,
+   type LinkProps,
    Outlet,
    createFileRoute,
    useParams,
 } from "@tanstack/react-router"
+import { useState } from "react"
 
 export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
    component: Component,
@@ -37,13 +41,13 @@ export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
 
 function Component() {
    const { organizationId } = useAuth()
-   const { slug } = Route.useParams()
    const { issueId } = useParams({
       strict: false,
    })
    const { data: notifications } = useSuspenseQuery(
       inboxListQuery({ organizationId }),
    )
+   const [activeItemId, setActiveItemId] = useState<string | null>(null)
 
    return (
       <Main className="flex max-h-[calc(100svh-var(--bottom-menu-height))] pb-0 md:max-h-svh">
@@ -75,54 +79,14 @@ function Component() {
                      </p>
                   </div>
                ) : (
-                  <div className="space-y-2 p-1.5">
+                  <div className="w-full space-y-2 p-1.5">
                      {notifications.map((notification) => (
-                        <Link
-                           mask={{
-                              unmaskOnReload: true,
-                              to: "/$slug/issue/$issueId",
-                              params: {
-                                 slug,
-                                 issueId: notification.issueId,
-                              },
-                           }}
-                           to="/$slug/inbox/issue/$issueId"
-                           params={{
-                              slug,
-                              issueId: notification.issueId,
-                           }}
-                           activeProps={{
-                              className: "!bg-border/55",
-                           }}
-                           className={
-                              "flex items-center gap-2.5 rounded-lg p-2 hover:bg-border/40"
-                           }
+                        <Notification
                            key={notification.id}
-                        >
-                           <UserAvatar
-                              user={notification.sender}
-                              className="size-10 [&>[data-indicator]]:size-4"
-                           />
-                           <div className="flex-1">
-                              <p className="-mt-[3px] font-semibold">
-                                 {notification.issue.title}
-                              </p>
-                              <div className="flex w-full items-center gap-2">
-                                 <p className="line-clamp-1 text-sm opacity-75">
-                                    {notification.content}
-                                 </p>
-                                 <span className="ml-auto whitespace-nowrap text-sm opacity-75">
-                                    {formatDate(
-                                       new Date(notification.createdAt),
-                                       {
-                                          month: "short",
-                                          day: "numeric",
-                                       },
-                                    )}
-                                 </span>
-                              </div>
-                           </div>
-                        </Link>
+                           onClick={() => setActiveItemId(notification.id)}
+                           data-active={activeItemId === notification.id}
+                           notification={notification}
+                        />
                      ))}
                   </div>
                )}
@@ -132,5 +96,71 @@ function Component() {
             <Outlet />
          </div>
       </Main>
+   )
+}
+
+function Notification({
+   notification,
+   ...props
+}: {
+   notification: Awaited<ReturnType<typeof notificationFns.list>>[number]
+} & LinkProps & { onClick?: () => void }) {
+   const { slug } = Route.useParams()
+
+   return (
+      <Link
+         mask={{
+            unmaskOnReload: true,
+            to: "/$slug/issue/$issueId",
+            params: {
+               slug,
+               issueId: notification.issueId,
+            },
+         }}
+         to="/$slug/inbox/issue/$issueId"
+         params={{
+            slug,
+            issueId: notification.issueId,
+         }}
+         className={
+            "flex items-center gap-2.5 rounded-lg p-2 data-[active=true]:bg-border/60 focus:bg-border/60 hover:bg-border/40"
+         }
+         {...props}
+      >
+         <UserAvatar
+            user={notification.sender}
+            className="size-10 [&>[data-indicator]]:size-4"
+         />
+         <div className="flex-1">
+            <div className="-mt-px flex w-full items-center gap-2">
+               <p className="line-clamp-1 font-semibold">
+                  {notification.issue.title}
+               </p>
+               <span className="ml-auto">
+                  {notification.type === "issue_resolved" ? (
+                     <StatusIcon
+                        className="size-4"
+                        status={notification.issue.status}
+                     />
+                  ) : (
+                     <span className="grid size-4 place-items-center rounded-full border border-foreground/10 bg-border">
+                        <Icons.plus className="size-3" />
+                     </span>
+                  )}
+               </span>
+            </div>
+            <div className="flex w-full items-center gap-2">
+               <p className="line-clamp-1 text-sm opacity-75">
+                  {notification.content}
+               </p>
+               <span className="ml-auto whitespace-nowrap text-xs opacity-75">
+                  {formatDate(new Date(notification.createdAt), {
+                     month: "short",
+                     day: "numeric",
+                  })}
+               </span>
+            </div>
+         </div>
+      </Link>
    )
 }

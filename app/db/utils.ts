@@ -47,10 +47,12 @@ const generateId = (prefix: keyof typeof prefixes) =>
 const createTable = sqliteTable
 
 const lifecycleDates = {
-   createdAt: integer("created_at").default(Date.now()).notNull(),
+   createdAt: integer("created_at")
+      .$defaultFn(() => Date.now())
+      .notNull(),
    updatedAt: integer("updated_at")
       .notNull()
-      .default(Date.now())
+      .$defaultFn(() => Date.now())
       .$onUpdateFn(() => Date.now()),
 }
 

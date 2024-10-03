@@ -1,3 +1,4 @@
+import { useInsertNotification } from "@/inbox/hooks/use-insert-notification"
 import * as issue from "@/issue/functions"
 import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
@@ -14,6 +15,7 @@ export function useUpdateIssue() {
    const params = useParams({ strict: false })
    const { organizationId, user } = useAuth()
    const { updateIssueInQueryData } = useIssueQueryMutator()
+   const { insertNotification } = useInsertNotification()
 
    const issueIdParam = "issueId" in params ? params.issueId : null
 
@@ -66,12 +68,21 @@ export function useUpdateIssue() {
             )
          toast.error("Failed to update issue")
       },
-      onSettled: () => {
+      onSettled: (_, _error, issue) => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
          if (issueIdParam)
             queryClient.invalidateQueries(
                issueByIdQuery({ issueId: issueIdParam, organizationId }),
             )
+
+         if (issue.status && issue.status === "done") {
+            insertNotification.mutate({
+               organizationId,
+               issueId: issue.id,
+               type: "issue_resolved",
+               content: `Marked as done by ${user.name}`,
+            })
+         }
       },
    })
 

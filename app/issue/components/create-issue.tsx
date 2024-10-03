@@ -92,7 +92,7 @@ export function CreateIssue() {
             organizationId,
             issueId: issue.id,
             type: "new_issue",
-            content: `New issue created by ${user.name}`,
+            content: `New issue added by ${user.name}`,
          })
       },
    })

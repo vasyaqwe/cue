@@ -22,7 +22,7 @@ export const Route = createFileRoute(
    },
    pendingComponent: () => (
       <>
-         <Header>
+         <Header className="md:pl-0">
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
          <Main>
