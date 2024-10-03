@@ -6,7 +6,7 @@ import {
 import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
 import { organizationMember } from "@/organization/schema"
 import { createServerFn } from "@tanstack/start"
-import { and, desc, eq } from "drizzle-orm"
+import { and, desc, eq, inArray } from "drizzle-orm"
 import { z } from "zod"
 
 export const list = createServerFn(
@@ -90,7 +90,7 @@ export const update = createServerFn(
             .set({
                isRead: input.isRead,
             })
-            .where(eq(notification.id, input.id))
+            .where(inArray(notification.id, input.ids))
       }),
 )
 

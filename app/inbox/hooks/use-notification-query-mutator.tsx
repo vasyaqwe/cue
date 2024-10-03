@@ -33,7 +33,7 @@ export function useNotificationQueryMutator() {
       )
    }
 
-   const updateNotificationInQueryData = ({
+   const updateNotificationsInQueryData = ({
       input,
    }: {
       input: z.infer<typeof updateNotificationParams>
@@ -43,14 +43,11 @@ export function useNotificationQueryMutator() {
          (oldData) => {
             if (!oldData) return oldData
             return produce(oldData, (draft) => {
-               const notification = draft?.find(
-                  (notification) => notification.id === input.id,
-               )
-               if (!notification) return
-
-               Object.assign(notification, {
-                  ...(input.isRead !== undefined && { isRead: input.isRead }),
-               })
+               for (const notification of draft) {
+                  if (input.ids.includes(notification.id)) {
+                     notification.isRead = input.isRead
+                  }
+               }
             })
          },
       )
@@ -59,6 +56,6 @@ export function useNotificationQueryMutator() {
    return {
       deleteNotificationFromQueryData,
       insertNotificationToQueryData,
-      updateNotificationInQueryData,
+      updateNotificationsInQueryData,
    }
 }
