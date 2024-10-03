@@ -84,4 +84,12 @@ export const updateNotificationParams = createSelectSchema(notification)
    })
    .extend({
       ids: z.array(z.string()),
+      isRead: z.boolean().optional(),
+      issue: z
+         .object({
+            title: z.string(),
+            status: z.enum(issueStatuses),
+         })
+         .partial()
+         .optional(),
    })

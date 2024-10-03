@@ -8,7 +8,10 @@ import { useEffect } from "react"
 
 export function useNotificationSocket() {
    const { organizationId, user } = useAuth()
-   const { insertNotificationToQueryData } = useNotificationQueryMutator()
+   const {
+      insertNotificationToQueryData,
+      updateIssuesInNotificationsQueryData,
+   } = useNotificationQueryMutator()
 
    const socket = usePartySocket({
       host: env.VITE_PARTYKIT_URL,
@@ -16,10 +19,15 @@ export function useNotificationSocket() {
       room: organizationId,
       onMessage(event) {
          const message: NotificationEvent = JSON.parse(event.data)
-         if (message.notification.sender.id === user.id) return
+         if (message.senderId === user.id) return
          if (message.type === "insert") {
             return insertNotificationToQueryData({
                input: message.notification,
+            })
+         }
+         if (message.type === "update") {
+            return updateIssuesInNotificationsQueryData({
+               updatedIssue: message.issue,
             })
          }
       },

@@ -137,6 +137,8 @@ function Component() {
                            key={notification.id}
                            onLinkClick={() => {
                               setActiveItemId(notification.id)
+                              if (notification.isRead) return
+
                               updateNotification.mutate({
                                  ids: [notification.id],
                                  isRead: true,

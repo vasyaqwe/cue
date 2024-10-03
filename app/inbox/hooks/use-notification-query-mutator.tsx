@@ -58,11 +58,20 @@ export function useNotificationQueryMutator() {
       queryClient.setQueryData(
          inboxListQuery({ organizationId }).queryKey,
          (oldData) => {
-            if (!oldData) return oldData
+            if (!oldData || input.ids.length === 0) return oldData
+
+            const { ids, isRead, issue } = input
+
             return produce(oldData, (draft) => {
                for (const notification of draft) {
-                  if (input.ids.includes(notification.id)) {
-                     notification.isRead = input.isRead
+                  if (ids.includes(notification.id)) {
+                     Object.assign(notification, {
+                        ...(isRead && { isRead }),
+                        issue: {
+                           title: issue?.title ?? notification.issue?.title,
+                           status: issue?.status ?? notification.issue?.status,
+                        },
+                     })
                   }
                }
             })
@@ -81,9 +90,39 @@ export function useNotificationQueryMutator() {
       )
    }
 
+   const updateIssuesInNotificationsQueryData = ({
+      updatedIssue,
+   }: {
+      updatedIssue: z.infer<typeof updateNotificationParams>["issue"] & {
+         id: string
+      }
+   }) => {
+      queryClient.setQueryData(
+         inboxListQuery({ organizationId }).queryKey,
+         (oldData) => {
+            if (!oldData) return oldData
+
+            return produce(oldData, (draft) => {
+               for (const notification of draft) {
+                  if (notification.issueId !== updatedIssue.id) return
+
+                  Object.assign(notification, {
+                     issue: {
+                        title: updatedIssue?.title ?? notification.issue?.title,
+                        status:
+                           updatedIssue?.status ?? notification.issue?.status,
+                     },
+                  })
+               }
+            })
+         },
+      )
+   }
+
    return {
       deleteNotificationFromQueryData,
       insertNotificationToQueryData,
       updateNotificationsInQueryData,
+      updateIssuesInNotificationsQueryData,
    }
 }

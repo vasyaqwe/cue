@@ -34,6 +34,7 @@ export function useInsertNotification() {
                   avatarUrl: user.avatarUrl,
                },
             },
+            senderId: user.id,
          })
 
          queryClient.invalidateQueries(inboxListQuery({ organizationId }))

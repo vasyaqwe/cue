@@ -1,21 +1,33 @@
 import { useInsertNotification } from "@/inbox/hooks/use-insert-notification"
+import { useNotificationQueryMutator } from "@/inbox/hooks/use-notification-query-mutator"
+import { inboxListQuery } from "@/inbox/queries"
+import { useInboxStore } from "@/inbox/store"
 import * as issue from "@/issue/functions"
 import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import { useAuth } from "@/user/hooks"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+   useMutation,
+   useQueryClient,
+   useSuspenseQuery,
+} from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
 
 export function useUpdateIssue() {
    const queryClient = useQueryClient()
-   const sendEvent = useIssueStore().sendEvent
+   const sendIssueEvent = useIssueStore().sendEvent
+   const sendNotificationEvent = useInboxStore().sendEvent
    const params = useParams({ strict: false })
    const { organizationId, user } = useAuth()
    const { updateIssueInQueryData } = useIssueQueryMutator()
+   const { updateNotificationsInQueryData } = useNotificationQueryMutator()
    const { insertNotification } = useInsertNotification()
+   const { data: notificatons } = useSuspenseQuery(
+      inboxListQuery({ organizationId }),
+   )
 
    const issueIdParam = "issueId" in params ? params.issueId : null
 
@@ -23,11 +35,38 @@ export function useUpdateIssue() {
    const updateIssue = useMutation({
       mutationFn: updateFn,
       onMutate: async (input) => {
-         sendEvent({
+         sendIssueEvent({
             type: "update",
             issueId: input.id,
             input,
             senderId: user.id,
+         })
+
+         const notificationsWithUpdatedIssue = notificatons.filter(
+            (notification) => notification.issueId === input.id,
+         )
+
+         sendNotificationEvent({
+            type: "update",
+            senderId: user.id,
+            issue: {
+               id: input.id,
+               title: input.title,
+               status: input.status,
+            },
+         })
+
+         updateIssueInQueryData({
+            input,
+         })
+         updateNotificationsInQueryData({
+            input: {
+               ids: notificationsWithUpdatedIssue.map((n) => n.id),
+               issue: {
+                  title: input.title,
+                  status: input.status,
+               },
+            },
          })
 
          await queryClient.cancelQueries(issueListQuery({ organizationId }))
@@ -50,8 +89,6 @@ export function useUpdateIssue() {
                   .queryKey,
             )
          }
-
-         updateIssueInQueryData({ input })
 
          return { data }
       },
