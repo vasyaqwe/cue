@@ -22,12 +22,11 @@ import { formatDate } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import {
    Link,
-   type LinkProps,
    Outlet,
    createFileRoute,
    useParams,
 } from "@tanstack/react-router"
-import { useState } from "react"
+import { type ComponentProps, useState } from "react"
 
 export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
    component: Component,
@@ -91,10 +90,10 @@ function Component() {
                      disabled={
                         notifications.filter((n) => !n.isRead).length === 0
                      }
-                     className="ml-auto"
+                     className="-mr-1 ml-auto"
                   >
                      <svg
-                        className="size-5"
+                        className="size-6"
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +163,7 @@ function Notification({
    ...props
 }: {
    notification: Awaited<ReturnType<typeof notificationFns.list>>[number]
-} & LinkProps & { onClick?: () => void }) {
+} & ComponentProps<"div">) {
    const { organizationId } = useAuth()
    const { slug } = Route.useParams()
    const { updateNotification } = useUpdateNotification()
@@ -175,6 +174,7 @@ function Notification({
          <ContextMenuTrigger
             className="flex w-full items-center gap-2 rounded-lg p-2 md:gap-4 data-[active=true]:bg-border/60 data-[state=open]:bg-border/40 has-[a:focus-visible]:bg-border/60 hover:bg-border/40"
             asChild
+            {...props}
          >
             <div>
                <Link
@@ -192,7 +192,6 @@ function Notification({
                      issueId: notification.issueId,
                   }}
                   className={"flex w-full items-center gap-2.5"}
-                  {...props}
                >
                   <UserAvatar
                      user={notification.sender}

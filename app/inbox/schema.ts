@@ -1,5 +1,5 @@
 import { createTable, generateId, lifecycleDates } from "@/db/utils"
-import { issue } from "@/issue/schema"
+import { issue, issueStatuses } from "@/issue/schema"
 import { organization } from "@/organization/schema"
 import { user } from "@/user/schema"
 import { relations } from "drizzle-orm"
@@ -56,13 +56,20 @@ export const notificationRelations = relations(notification, ({ one }) => ({
    }),
 }))
 
-export const insertNotificationParams = createInsertSchema(notification).omit({
-   id: true,
-   receiverId: true,
-   senderId: true,
-   createdAt: true,
-   updatedAt: true,
-})
+export const insertNotificationParams = createInsertSchema(notification)
+   .omit({
+      id: true,
+      receiverId: true,
+      senderId: true,
+      createdAt: true,
+      updatedAt: true,
+   })
+   .extend({
+      issue: z.object({
+         title: z.string(),
+         status: z.enum(issueStatuses),
+      }),
+   })
 export const updateNotificationParams = createSelectSchema(notification)
    .omit({
       content: true,

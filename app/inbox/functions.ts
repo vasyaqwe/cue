@@ -6,6 +6,7 @@ import {
 import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
 import { organizationMember } from "@/organization/schema"
 import { createServerFn } from "@tanstack/start"
+import { TRPCError } from "@trpc/server"
 import { and, desc, eq, inArray } from "drizzle-orm"
 import { z } from "zod"
 
@@ -76,7 +77,13 @@ export const insert = createServerFn(
                .get()
          })
 
-         return await Promise.all(promises)
+         const result = await Promise.all(promises)
+
+         const createdNotification = result[0]
+         if (!createdNotification)
+            throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" })
+
+         return { ...createdNotification, issue: input.issue }
       }),
 )
 

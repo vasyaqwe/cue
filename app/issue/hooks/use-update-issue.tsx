@@ -81,6 +81,10 @@ export function useUpdateIssue() {
                issueId: issue.id,
                type: "issue_resolved",
                content: `Marked as done by ${user.name}`,
+               issue: {
+                  title: issue.title,
+                  status: issue.status,
+               },
             })
          }
       },

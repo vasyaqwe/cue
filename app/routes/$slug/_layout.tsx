@@ -1,3 +1,4 @@
+import { useNotificationSocket } from "@/inbox/hooks/use-notification-socket"
 import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
 import { ModalProvider } from "@/modals"
 import {
@@ -52,7 +53,8 @@ export const Route = createFileRoute("/$slug/_layout")({
 })
 
 function Component() {
-   useIssueSocket({ shouldListenToEvents: true })
+   useIssueSocket()
+   useNotificationSocket()
 
    useEffect(() => {
       if (typeof window === "undefined") {

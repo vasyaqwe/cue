@@ -29,7 +29,7 @@ export function useNotificationQueryMutator() {
    }: { input: Awaited<ReturnType<typeof notificationFns.list>>[number] }) => {
       queryClient.setQueryData(
          inboxListQuery({ organizationId }).queryKey,
-         (oldData) => [...(oldData ?? []), input],
+         (oldData) => [input, ...(oldData ?? [])],
       )
    }
 

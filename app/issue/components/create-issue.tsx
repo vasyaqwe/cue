@@ -93,6 +93,10 @@ export function CreateIssue() {
             issueId: issue.id,
             type: "new_issue",
             content: `New issue added by ${user.name}`,
+            issue: {
+               title: issue.title,
+               status: issue.status,
+            },
          })
       },
    })

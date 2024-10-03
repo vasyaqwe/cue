@@ -1,9 +1,10 @@
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
-import type { insertIssueParams, updateIssueParams } from "@/issue/schema"
+import type { updateIssueParams } from "@/issue/schema"
 import { useAuth } from "@/user/hooks"
 import { useQueryClient } from "@tanstack/react-query"
 import { produce } from "immer"
 import type { z } from "zod"
+import type * as notificationFns from "../functions"
 
 export function useIssueQueryMutator() {
    const queryClient = useQueryClient()
@@ -26,18 +27,20 @@ export function useIssueQueryMutator() {
 
    const insertIssueToQueryData = ({
       input,
-   }: { input: z.infer<typeof insertIssueParams> }) => {
+   }: {
+      input: Awaited<ReturnType<typeof notificationFns.list>>[number]
+   }) => {
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
          (oldData) => [
-            ...(oldData ?? []),
             {
                ...input,
-               id: crypto.randomUUID(),
+               id: input.id ?? crypto.randomUUID(),
                description: input.description ?? "",
                createdAt: Date.now(),
                updatedAt: Date.now(),
             },
+            ...(oldData ?? []),
          ],
       )
    }

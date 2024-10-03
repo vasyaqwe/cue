@@ -234,7 +234,7 @@ export const Icons = {
       </svg>
    ),
    inbox: (props: IconProps) => (
-      <div className="relative">
+      <span className="relative">
          <span className="absolute top-0 right-0 block size-3 scale-0 rounded-full border-[2.5px] border-background bg-primary transition-transform group-data-[has-unread=true]:scale-100" />
          <svg
             width="24"
@@ -263,7 +263,7 @@ export const Icons = {
                className="opacity-0 transition-opacity group-aria-[current=page]:opacity-15"
             />
          </svg>
-      </div>
+      </span>
    ),
    issues: (props: IconProps) => (
       <svg
