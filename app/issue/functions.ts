@@ -1,4 +1,4 @@
-import { insertIssueParams, issues, updateIssueParams } from "@/issue/schema"
+import { insertIssueParams, issue, updateIssueParams } from "@/issue/schema"
 import { organizationProtectedProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
 import { desc, eq } from "drizzle-orm"
@@ -9,9 +9,9 @@ export const list = createServerFn(
    organizationProtectedProcedure
       .input(z.object({ organizationId: z.string() }))
       .query(async ({ ctx, input }) => {
-         return await ctx.db.query.issues.findMany({
-            where: eq(issues.organizationId, input.organizationId),
-            orderBy: [desc(issues.createdAt)],
+         return await ctx.db.query.issue.findMany({
+            where: eq(issue.organizationId, input.organizationId),
+            orderBy: [desc(issue.createdAt)],
          })
       }),
 )
@@ -22,8 +22,8 @@ export const byId = createServerFn(
       .input(z.object({ issueId: z.string() }))
       .query(async ({ ctx, input }) => {
          return (
-            (await ctx.db.query.issues.findFirst({
-               where: eq(issues.id, input.issueId),
+            (await ctx.db.query.issue.findFirst({
+               where: eq(issue.id, input.issueId),
             })) ?? null
          )
       }),
@@ -34,7 +34,7 @@ export const insert = createServerFn(
    organizationProtectedProcedure
       .input(insertIssueParams)
       .mutation(async ({ ctx, input }) => {
-         return await ctx.db.insert(issues).values(input).returning().get()
+         return await ctx.db.insert(issue).values(input).returning().get()
       }),
 )
 
@@ -44,14 +44,14 @@ export const update = createServerFn(
       .input(updateIssueParams)
       .mutation(async ({ ctx, input }) => {
          return await ctx.db
-            .update(issues)
+            .update(issue)
             .set({
                title: input.title,
                description: input.description,
                label: input.label,
                status: input.status,
             })
-            .where(eq(issues.id, input.id))
+            .where(eq(issue.id, input.id))
       }),
 )
 
@@ -60,6 +60,6 @@ export const deleteFn = createServerFn(
    organizationProtectedProcedure
       .input(z.object({ issueId: z.string() }))
       .mutation(async ({ ctx, input }) => {
-         await ctx.db.delete(issues).where(eq(issues.id, input.issueId))
+         await ctx.db.delete(issue).where(eq(issue.id, input.issueId))
       }),
 )

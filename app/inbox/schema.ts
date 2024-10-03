@@ -1,25 +1,25 @@
 import { createTable, generateId, lifecycleDates } from "@/db/utils"
-import { issues } from "@/issue/schema"
-import { organizations } from "@/organization/schema"
-import { users } from "@/user/schema"
+import { issue } from "@/issue/schema"
+import { organization } from "@/organization/schema"
+import { user } from "@/user/schema"
 import { relations } from "drizzle-orm"
 import { index, integer, text } from "drizzle-orm/sqlite-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 export const notificationTypes = ["new_issue", "issue_resolved"] as const
 
-export const notifications = createTable(
-   "notifications",
+export const notification = createTable(
+   "notification",
    {
       id: generateId("notification"),
       userId: text("user_id")
          .notNull()
-         .references(() => users.id, { onDelete: "cascade" }),
+         .references(() => user.id, { onDelete: "cascade" }),
       organizationId: text("organization_id")
          .notNull()
-         .references(() => organizations.id, { onDelete: "cascade" }),
+         .references(() => organization.id, { onDelete: "cascade" }),
       issueId: text("issue_id")
-         .references(() => issues.id, { onDelete: "cascade" })
+         .references(() => issue.id, { onDelete: "cascade" })
          .notNull(),
       type: text("type", {
          enum: notificationTypes,
@@ -34,7 +34,7 @@ export const notifications = createTable(
    },
    (table) => {
       return {
-         notificationsUserOrgIdx: index("notifications_user_org_idx").on(
+         notificationUserOrgIdx: index("notification_user_org_idx").on(
             table.userId,
             table.organizationId,
          ),
@@ -42,24 +42,24 @@ export const notifications = createTable(
    },
 )
 
-export const notificationsRelations = relations(notifications, ({ one }) => ({
-   issue: one(issues, {
-      fields: [notifications.issueId],
-      references: [issues.id],
+export const notificationRelations = relations(notification, ({ one }) => ({
+   issue: one(issue, {
+      fields: [notification.issueId],
+      references: [issue.id],
    }),
-   user: one(users, {
-      fields: [notifications.userId],
-      references: [users.id],
+   user: one(user, {
+      fields: [notification.userId],
+      references: [user.id],
    }),
 }))
 
-export const insertNotificationParams = createInsertSchema(notifications).omit({
+export const insertNotificationParams = createInsertSchema(notification).omit({
    id: true,
    userId: true,
    createdAt: true,
    updatedAt: true,
 })
-export const updateNotificationParams = createSelectSchema(notifications).omit({
+export const updateNotificationParams = createSelectSchema(notification).omit({
    content: true,
    issueId: true,
    organizationId: true,

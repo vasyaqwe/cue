@@ -1,13 +1,13 @@
 import { createTable, generateId, lifecycleDates } from "@/db/utils"
-import { organizations } from "@/organization/schema"
+import { organization } from "@/organization/schema"
 import { index, text } from "drizzle-orm/sqlite-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 export const issueStatuses = ["backlog", "todo", "in progress", "done"] as const
 export const issueLabels = ["bug", "feature", "improvement"] as const
 
-export const issues = createTable(
-   "issues",
+export const issue = createTable(
+   "issue",
    {
       id: generateId("issue"),
       title: text("title").notNull(),
@@ -20,24 +20,24 @@ export const issues = createTable(
       }).notNull(),
       organizationId: text("organization_id")
          .notNull()
-         .references(() => organizations.id, { onDelete: "cascade" }),
+         .references(() => organization.id, { onDelete: "cascade" }),
       ...lifecycleDates,
    },
    (table) => {
       return {
-         issuesOrganizationIdIdx: index("issues_organization_id_idx").on(
+         issueOrganizationIdIdx: index("issue_organization_id_idx").on(
             table.organizationId,
          ),
       }
    },
 )
 
-export const insertIssueParams = createInsertSchema(issues).omit({
+export const insertIssueParams = createInsertSchema(issue).omit({
    id: true,
    createdAt: true,
    updatedAt: true,
 })
-export const updateIssueParams = createSelectSchema(issues)
+export const updateIssueParams = createSelectSchema(issue)
    .partial({
       label: true,
       status: true,

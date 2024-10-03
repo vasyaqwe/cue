@@ -1,7 +1,7 @@
 import { protectedProcedure, publicProcedure } from "@/lib/trpc"
 import { github, google, lucia } from "@/user/auth"
 import { COOKIE_OPTIONS } from "@/user/constants"
-import { users } from "@/user/schema"
+import { user } from "@/user/schema"
 import { createServerFn } from "@tanstack/start"
 import { generateCodeVerifier, generateState } from "arctic"
 import { eq } from "drizzle-orm"
@@ -21,9 +21,9 @@ export const update = createServerFn(
       .input(z.object({ name: z.string().min(1) }))
       .mutation(async ({ ctx, input }) => {
          return await ctx.db
-            .update(users)
+            .update(user)
             .set(input)
-            .where(eq(users.id, ctx.user.id))
+            .where(eq(user.id, ctx.user.id))
       }),
 )
 

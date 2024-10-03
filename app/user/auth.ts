@@ -4,9 +4,9 @@ import {
    type Session,
    type User,
    type User as UserType,
-   emailVerificationCodes,
-   sessions,
-   users,
+   emailVerificationCode,
+   session,
+   user,
 } from "@/user/schema"
 import { GitHub, Google } from "arctic"
 import { eq } from "drizzle-orm"
@@ -23,12 +23,12 @@ const adapter: DatabaseAdapter<Session, User> = {
       const result =
          (await db
             .select({
-               user: users,
-               session: sessions,
+               user: user,
+               session: session,
             })
-            .from(sessions)
-            .innerJoin(users, eq(sessions.userId, users.id))
-            .where(eq(sessions.id, sessionId))
+            .from(session)
+            .innerJoin(user, eq(session.userId, user.id))
+            .where(eq(session.id, sessionId))
             .get()) ?? null
 
       if (result === null) return { session: null, user: null }
@@ -36,17 +36,17 @@ const adapter: DatabaseAdapter<Session, User> = {
       return result
    },
    deleteSession: async (sessionId: string): Promise<void> => {
-      db.delete(sessions).where(eq(sessions.id, sessionId)).run()
+      db.delete(session).where(eq(session.id, sessionId)).run()
    },
    updateSessionExpiration: async (
       sessionId: string,
       expiresAt: Date,
    ): Promise<void> => {
-      db.update(sessions)
+      db.update(session)
          .set({
             expiresAt,
          })
-         .where(eq(sessions.id, sessionId))
+         .where(eq(session.id, sessionId))
          .run()
    },
 }
@@ -68,17 +68,17 @@ export const google = new Google(
 )
 
 export const createSession = async (userId: string) => {
-   const session: Session = {
+   const newSession: Session = {
       id: generateSessionId(),
       userId: userId,
       expiresAt: lucia.getNewSessionExpiration(),
    }
 
-   await db.insert(sessions).values(session)
+   await db.insert(session).values(newSession)
 
    const sessionCookie = lucia.createSessionCookie(
-      session.id,
-      session.expiresAt,
+      newSession.id,
+      newSession.expiresAt,
    )
 
    return sessionCookie
@@ -128,12 +128,12 @@ export const generateEmailVerificationCode = async ({
    email: string
 }) => {
    await tx
-      .delete(emailVerificationCodes)
-      .where(eq(emailVerificationCodes.email, email))
+      .delete(emailVerificationCode)
+      .where(eq(emailVerificationCode.email, email))
 
    const code = generateRandomString(6, alphabet("0-9"))
 
-   await tx.insert(emailVerificationCodes).values({
+   await tx.insert(emailVerificationCode).values({
       userId,
       email,
       code,
@@ -153,8 +153,8 @@ export const verifyVerificationCode = async (
    const databaseCode = await db.transaction(async (tx) => {
       const [databaseCode] = await tx
          .select()
-         .from(emailVerificationCodes)
-         .where(eq(emailVerificationCodes.userId, userId))
+         .from(emailVerificationCode)
+         .where(eq(emailVerificationCode.userId, userId))
 
       if (!databaseCode || databaseCode.code !== code) {
          isValid = false
@@ -176,8 +176,8 @@ export const verifyVerificationCode = async (
 
    if (databaseCode && isValid) {
       await db
-         .delete(emailVerificationCodes)
-         .where(eq(emailVerificationCodes.id, databaseCode.id))
+         .delete(emailVerificationCode)
+         .where(eq(emailVerificationCode.id, databaseCode.id))
    }
 
    return isValid

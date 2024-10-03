@@ -4,13 +4,13 @@ import {
    generateId,
    lifecycleDates,
 } from "@/db/utils"
-import { users } from "@/user/schema"
+import { user } from "@/user/schema"
 import { relations } from "drizzle-orm"
 import { index, primaryKey, text, uniqueIndex } from "drizzle-orm/sqlite-core"
 import { createInsertSchema } from "drizzle-zod"
 
-export const organizations = createTable(
-   "organizations",
+export const organization = createTable(
+   "organization",
    {
       id: generateId("organization"),
       name: text("name").notNull(),
@@ -20,48 +20,48 @@ export const organizations = createTable(
    },
    (table) => {
       return {
-         organizationsSlugIdx: uniqueIndex("organizations_slug_idx").on(
+         organizationSlugIdx: uniqueIndex("organization_slug_idx").on(
             table.slug,
          ),
       }
    },
 )
 
-export const organizationMembers = createTable(
-   "organization_members",
+export const organizationMember = createTable(
+   "organization_member",
    {
       id: text("id")
          .notNull()
-         .references(() => users.id, { onDelete: "cascade" }),
+         .references(() => user.id, { onDelete: "cascade" }),
       organizationId: text("organization_id")
          .notNull()
-         .references(() => organizations.id, { onDelete: "cascade" }),
+         .references(() => organization.id, { onDelete: "cascade" }),
    },
    (table) => {
       return {
-         organizationMembersOrganizationIdIdx: index(
-            "organization_members_organization_id_idx",
+         organizationMemberOrganizationIdIdx: index(
+            "organization_member_organization_id_idx",
          ).on(table.organizationId),
          pk: primaryKey({ columns: [table.id, table.organizationId] }),
       }
    },
 )
 
-export const organizationMembersRelations = relations(
-   organizationMembers,
+export const organizationMemberRelations = relations(
+   organizationMember,
    ({ one }) => ({
-      organization: one(organizations, {
-         fields: [organizationMembers.organizationId],
-         references: [organizations.id],
+      organization: one(organization, {
+         fields: [organizationMember.organizationId],
+         references: [organization.id],
       }),
-      user: one(users, {
-         fields: [organizationMembers.id],
-         references: [users.id],
+      user: one(user, {
+         fields: [organizationMember.id],
+         references: [user.id],
       }),
    }),
 )
 
-export const insertOrganizationParams = createInsertSchema(organizations).omit({
+export const insertOrganizationParams = createInsertSchema(organization).omit({
    id: true,
    createdAt: true,
    updatedAt: true,

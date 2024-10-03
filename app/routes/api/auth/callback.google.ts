@@ -2,7 +2,7 @@ import { db } from "@/db"
 import { handleAuthError } from "@/error/utils"
 import { joinOrganization } from "@/organization/utils"
 import { createSession, google } from "@/user/auth"
-import { oauthAccounts, users } from "@/user/schema"
+import { oauthAccount, user } from "@/user/schema"
 import { createAPIFileRoute } from "@tanstack/start/api"
 import { and, eq } from "drizzle-orm"
 import { parseCookies } from "vinxi/http"
@@ -50,7 +50,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
             verified_email: boolean
          }
 
-         const existingAccount = await db.query.oauthAccounts.findFirst({
+         const existingAccount = await db.query.oauthAccount.findFirst({
             where: (fields) =>
                and(
                   eq(fields.providerId, "google"),
@@ -87,19 +87,19 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
 
          const result = await db.transaction(async (tx) => {
             const [newUser] = await tx
-               .insert(users)
+               .insert(user)
                .values({
                   email: googleUserProfile.email,
                   name: googleUserProfile.name,
                   avatarUrl: googleUserProfile.picture,
                })
                .returning({
-                  id: users.id,
+                  id: user.id,
                })
 
             if (!newUser) throw new Error("Failed to create user")
 
-            await tx.insert(oauthAccounts).values({
+            await tx.insert(oauthAccount).values({
                providerId: "google",
                providerUserId: googleUserProfile.id,
                userId: newUser.id,

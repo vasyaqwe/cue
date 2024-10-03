@@ -2,7 +2,7 @@ import { db } from "@/db"
 import { handleAuthError } from "@/error/utils"
 import { joinOrganization } from "@/organization/utils"
 import { createSession, github } from "@/user/auth"
-import { oauthAccounts, users } from "@/user/schema"
+import { oauthAccount, user } from "@/user/schema"
 import { createAPIFileRoute } from "@tanstack/start/api"
 import { and, eq } from "drizzle-orm"
 import { parseCookies } from "vinxi/http"
@@ -39,7 +39,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
          }
 
          //  email can be null if user has made it private.
-         const existingAccount = await db.query.oauthAccounts.findFirst({
+         const existingAccount = await db.query.oauthAccount.findFirst({
             where: (fields) =>
                and(
                   eq(fields.providerId, "github"),
@@ -109,19 +109,19 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
          // If no existing account check if the a user with the email exists and link the account.
          const result = await db.transaction(async (tx) => {
             const [newUser] = await tx
-               .insert(users)
+               .insert(user)
                .values({
                   email: githubUserProfile.email,
                   name: githubUserProfile.name || githubUserProfile.login,
                   avatarUrl: githubUserProfile.avatar_url,
                })
                .returning({
-                  id: users.id,
+                  id: user.id,
                })
 
             if (!newUser) throw new Error("Error")
 
-            await tx.insert(oauthAccounts).values({
+            await tx.insert(oauthAccount).values({
                providerId: "github",
                providerUserId: githubUserProfile.id.toString(),
                userId: newUser.id,

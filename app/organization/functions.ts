@@ -5,8 +5,8 @@ import {
 } from "@/lib/trpc"
 import {
    insertOrganizationParams,
-   organizationMembers,
-   organizations,
+   organization,
+   organizationMember,
 } from "@/organization/schema"
 import { joinOrganization } from "@/organization/utils"
 import { redirect } from "@tanstack/react-router"
@@ -20,8 +20,8 @@ export const byInviteCode = createServerFn(
    publicProcedure
       .input(z.object({ inviteCode: z.string() }))
       .query(async ({ ctx, input }) => {
-         return await ctx.db.query.organizations.findFirst({
-            where: eq(organizations.inviteCode, input.inviteCode),
+         return await ctx.db.query.organization.findFirst({
+            where: eq(organization.inviteCode, input.inviteCode),
             columns: {
                name: true,
             },
@@ -35,20 +35,20 @@ export const bySlug = createServerFn(
       .input(z.object({ slug: z.string() }))
       .query(async ({ ctx, input }) => {
          return (
-            (await ctx.db.query.organizations.findFirst({
+            (await ctx.db.query.organization.findFirst({
                where: and(
-                  eq(organizations.slug, input.slug),
+                  eq(organization.slug, input.slug),
                   // verify membership
                   exists(
                      ctx.db
                         .select()
-                        .from(organizationMembers)
+                        .from(organizationMember)
                         .where(
                            and(
-                              eq(organizationMembers.id, ctx.user.id),
+                              eq(organizationMember.id, ctx.user.id),
                               eq(
-                                 organizationMembers.organizationId,
-                                 organizations.id,
+                                 organizationMember.organizationId,
+                                 organization.id,
                               ),
                            ),
                         ),
@@ -70,8 +70,8 @@ export const members = createServerFn(
    organizationProtectedProcedure
       .input(z.object({ organizationId: z.string() }))
       .query(async ({ ctx, input }) => {
-         return await ctx.db.query.organizationMembers.findMany({
-            where: eq(organizationMembers.organizationId, input.organizationId),
+         return await ctx.db.query.organizationMember.findMany({
+            where: eq(organizationMember.organizationId, input.organizationId),
             columns: {},
             with: {
                user: {
@@ -90,8 +90,8 @@ export const members = createServerFn(
 export const memberships = createServerFn(
    "GET",
    protectedProcedure.query(async ({ ctx }) => {
-      return await ctx.db.query.organizationMembers.findMany({
-         where: eq(organizationMembers.id, ctx.user.id),
+      return await ctx.db.query.organizationMember.findMany({
+         where: eq(organizationMember.id, ctx.user.id),
          with: {
             organization: {
                columns: {
@@ -111,26 +111,26 @@ export const insert = createServerFn(
    protectedProcedure
       .input(insertOrganizationParams)
       .mutation(async ({ ctx, input }) => {
-         const existingOrg = await ctx.db.query.organizations.findFirst({
-            where: eq(organizations.slug, input.slug),
+         const existingOrg = await ctx.db.query.organization.findFirst({
+            where: eq(organization.slug, input.slug),
          })
 
          if (existingOrg) throw new TRPCError({ code: "CONFLICT" })
 
          await ctx.db.transaction(async (transaction) => {
             const [createdOrganization] = await transaction
-               .insert(organizations)
+               .insert(organization)
                .values({
                   name: input.name,
                   slug: input.slug,
                })
                .returning({
-                  id: organizations.id,
+                  id: organization.id,
                })
 
             if (!createdOrganization) throw new Error("Error")
 
-            await transaction.insert(organizationMembers).values({
+            await transaction.insert(organizationMember).values({
                organizationId: createdOrganization.id,
                id: ctx.user.id,
             })
@@ -162,7 +162,7 @@ export const deleteFn = createServerFn(
       .input(z.object({ organizationId: z.string() }))
       .mutation(async ({ ctx, input }) => {
          await ctx.db
-            .delete(organizations)
-            .where(eq(organizations.id, input.organizationId))
+            .delete(organization)
+            .where(eq(organization.id, input.organizationId))
       }),
 )

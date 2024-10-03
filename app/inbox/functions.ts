@@ -1,10 +1,10 @@
 import {
    insertNotificationParams,
-   notifications,
+   notification,
    updateNotificationParams,
 } from "@/inbox/schema"
 import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
-import { organizationMembers } from "@/organization/schema"
+import { organizationMember } from "@/organization/schema"
 import { createServerFn } from "@tanstack/start"
 import { and, desc, eq } from "drizzle-orm"
 import { z } from "zod"
@@ -14,10 +14,10 @@ export const list = createServerFn(
    protectedProcedure
       .input(z.object({ organizationId: z.string() }))
       .query(async ({ ctx, input }) => {
-         return await ctx.db.query.notifications.findMany({
+         return await ctx.db.query.notification.findMany({
             where: and(
-               eq(notifications.organizationId, input.organizationId),
-               eq(notifications.userId, ctx.user.id),
+               eq(notification.organizationId, input.organizationId),
+               eq(notification.userId, ctx.user.id),
             ),
             with: {
                issue: {
@@ -34,7 +34,7 @@ export const list = createServerFn(
                   },
                },
             },
-            orderBy: [desc(notifications.createdAt)],
+            orderBy: [desc(notification.createdAt)],
          })
       }),
 )
@@ -44,8 +44,8 @@ export const insert = createServerFn(
    organizationProtectedProcedure
       .input(insertNotificationParams)
       .mutation(async ({ ctx, input }) => {
-         const members = await ctx.db.query.organizationMembers.findMany({
-            where: eq(organizationMembers.organizationId, input.organizationId),
+         const members = await ctx.db.query.organizationMember.findMany({
+            where: eq(organizationMember.organizationId, input.organizationId),
             columns: {
                id: true,
             },
@@ -56,7 +56,7 @@ export const insert = createServerFn(
 
          const promises = filteredMembers.map(async (member) => {
             return await ctx.db
-               .insert(notifications)
+               .insert(notification)
                .values({
                   organizationId: input.organizationId,
                   issueId: input.issueId,
@@ -78,11 +78,11 @@ export const update = createServerFn(
       .input(updateNotificationParams)
       .mutation(async ({ ctx, input }) => {
          return await ctx.db
-            .update(notifications)
+            .update(notification)
             .set({
                isRead: input.isRead,
             })
-            .where(eq(notifications.id, input.id))
+            .where(eq(notification.id, input.id))
       }),
 )
 
@@ -92,11 +92,11 @@ export const deleteFn = createServerFn(
       .input(z.object({ issueId: z.string() }))
       .mutation(async ({ ctx, input }) => {
          await ctx.db
-            .delete(notifications)
+            .delete(notification)
             .where(
                and(
-                  eq(notifications.id, input.issueId),
-                  eq(notifications.userId, ctx.user.id),
+                  eq(notification.id, input.issueId),
+                  eq(notification.userId, ctx.user.id),
                ),
             )
       }),

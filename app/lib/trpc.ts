@@ -1,5 +1,5 @@
 import { db } from "@/db"
-import { organizationMembers } from "@/organization/schema"
+import { organizationMember } from "@/organization/schema"
 import type { Auth } from "@/user/auth"
 import { auth } from "@/user/auth"
 import { isNotFound, isRedirect } from "@tanstack/react-router"
@@ -56,10 +56,10 @@ export const organizationProtectedProcedure = serverFnProcedure
       }
 
       // TODO: cache?
-      const membership = ctx.db.query.organizationMembers.findFirst({
+      const membership = ctx.db.query.organizationMember.findFirst({
          where: and(
-            eq(organizationMembers.organizationId, input.organizationId),
-            eq(organizationMembers.id, ctx.auth.user.id),
+            eq(organizationMember.organizationId, input.organizationId),
+            eq(organizationMember.id, ctx.auth.user.id),
          ),
       })
 

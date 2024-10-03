@@ -10,8 +10,8 @@ import {
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
 
-export const users = createTable(
-   "users",
+export const user = createTable(
+   "user",
    {
       id: generateId("user"),
       email: text("email").notNull().unique(),
@@ -21,19 +21,19 @@ export const users = createTable(
    },
    (table) => {
       return {
-         usersEmailIdx: uniqueIndex("users_email_idx").on(table.email),
+         userEmailIdx: uniqueIndex("user_email_idx").on(table.email),
       }
    },
 )
 
 export const oauthProviders = z.enum(["github", "google"])
 
-export const oauthAccounts = createTable(
-   "oauth_accounts",
+export const oauthAccount = createTable(
+   "oauth_account",
    {
       userId: text("user_id")
          .notNull()
-         .references(() => users.id, { onDelete: "cascade" }),
+         .references(() => user.id, { onDelete: "cascade" }),
       providerId: text("provider_id", {
          enum: oauthProviders.options,
       }).notNull(),
@@ -46,25 +46,25 @@ export const oauthAccounts = createTable(
    },
 )
 
-export const usersRelations = relations(users, ({ many }) => ({
-   oauthAccounts: many(oauthAccounts),
+export const userRelations = relations(user, ({ many }) => ({
+   oauthAccount: many(oauthAccount),
 }))
 
-export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
-   user: one(users, {
-      fields: [oauthAccounts.userId],
-      references: [users.id],
+export const oauthAccountRelations = relations(oauthAccount, ({ one }) => ({
+   user: one(user, {
+      fields: [oauthAccount.userId],
+      references: [user.id],
    }),
 }))
 
-export const emailVerificationCodes = createTable(
-   "email_verification_codes",
+export const emailVerificationCode = createTable(
+   "email_verification_code",
    {
       id: generateId("verification_code"),
       expiresAt: integer("expires_at").notNull(),
       code: text("code").notNull(),
       userId: text("user_id")
-         .references(() => users.id, { onDelete: "cascade" })
+         .references(() => user.id, { onDelete: "cascade" })
          .notNull(),
       email: text("email").notNull().unique(),
    },
@@ -77,18 +77,18 @@ export const emailVerificationCodes = createTable(
    },
 )
 
-export const sessions = createTable("sessions", {
+export const session = createTable("session", {
    id: text("id").primaryKey(),
    expiresAt: integer("expires_at", {
       mode: "timestamp",
    }).notNull(),
    userId: text("user_id")
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => user.id, { onDelete: "cascade" }),
 })
 
-export const selectUserParams = createSelectSchema(users)
-export const selectSessionParams = createSelectSchema(sessions)
+export const selectUserParams = createSelectSchema(user)
+export const selectSessionParams = createSelectSchema(session)
 export const insertUserParams = z
    .object({
       email: z.string().email(),
@@ -97,18 +97,18 @@ export const insertUserParams = z
       referralCode: z.string().optional(),
    })
 
-export const insertOauthAccountParams = createInsertSchema(oauthAccounts, {
+export const insertOauthAccountParams = createInsertSchema(oauthAccount, {
    providerUserId: z.string().min(1),
 }).omit({
    userId: true,
 })
 
-export const updateUserParams = createSelectSchema(users, {
+export const updateUserParams = createSelectSchema(user, {
    name: z.string().min(1),
 }).partial()
 
 export const verifyLoginCodeParams = createInsertSchema(
-   emailVerificationCodes,
+   emailVerificationCode,
 ).pick({
    code: true,
    userId: true,

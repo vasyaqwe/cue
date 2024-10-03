@@ -1,5 +1,5 @@
 import type { Database } from "@/db"
-import { organizationMembers, organizations } from "@/organization/schema"
+import { organization, organizationMember } from "@/organization/schema"
 import { eq } from "drizzle-orm"
 
 export const joinOrganization = async ({
@@ -7,8 +7,8 @@ export const joinOrganization = async ({
    userId,
    inviteCode,
 }: { db: Database; userId: string; inviteCode: string }) => {
-   const organizationToJoin = await db.query.organizations.findFirst({
-      where: eq(organizations.inviteCode, inviteCode),
+   const organizationToJoin = await db.query.organization.findFirst({
+      where: eq(organization.inviteCode, inviteCode),
       columns: {
          id: true,
          slug: true,
@@ -18,7 +18,7 @@ export const joinOrganization = async ({
    if (!organizationToJoin) throw new Error("Organization to join not found")
 
    await db
-      .insert(organizationMembers)
+      .insert(organizationMember)
       .values({
          id: userId,
          organizationId: organizationToJoin.id,
