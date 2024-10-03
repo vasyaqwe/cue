@@ -10,7 +10,6 @@ import {
    issueLabels,
    issueStatuses,
 } from "@/issue/schema"
-import type { IssueEvent } from "@/issue/types"
 import { popModal } from "@/modals"
 import {
    ModalContent,
@@ -48,7 +47,7 @@ export function CreateIssue() {
    )
 
    const titleRef = useRef<HTMLInputElement>(null)
-   const { socket } = useIssueSocket()
+   const { sendEvent } = useIssueSocket()
 
    const [status, setStatus] = useLocalStorage<IssueStatus>(
       "create_issue_status",
@@ -67,13 +66,11 @@ export function CreateIssue() {
       onSuccess: (issue) => {
          if (!issue) return
 
-         socket?.send(
-            JSON.stringify({
-               type: "insert",
-               issue,
-               senderId: user.id,
-            } satisfies IssueEvent),
-         )
+         sendEvent({
+            type: "insert",
+            issue,
+            senderId: user.id,
+         })
 
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
 

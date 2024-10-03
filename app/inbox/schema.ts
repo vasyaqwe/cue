@@ -12,7 +12,10 @@ export const notification = createTable(
    "notification",
    {
       id: generateId("notification"),
-      userId: text("user_id")
+      receiverId: text("receiver_id")
+         .notNull()
+         .references(() => user.id, { onDelete: "cascade" }),
+      senderId: text("sender_id")
          .notNull()
          .references(() => user.id, { onDelete: "cascade" }),
       organizationId: text("organization_id")
@@ -34,10 +37,9 @@ export const notification = createTable(
    },
    (table) => {
       return {
-         notificationUserOrgIdx: index("notification_user_org_idx").on(
-            table.userId,
-            table.organizationId,
-         ),
+         notificationReceiverIdOrgIdIdx: index(
+            "notification_receiver_id_org_id_idx",
+         ).on(table.receiverId, table.organizationId),
       }
    },
 )
@@ -47,15 +49,16 @@ export const notificationRelations = relations(notification, ({ one }) => ({
       fields: [notification.issueId],
       references: [issue.id],
    }),
-   user: one(user, {
-      fields: [notification.userId],
+   sender: one(user, {
+      fields: [notification.senderId],
       references: [user.id],
    }),
 }))
 
 export const insertNotificationParams = createInsertSchema(notification).omit({
    id: true,
-   userId: true,
+   receiverId: true,
+   senderId: true,
    createdAt: true,
    updatedAt: true,
 })
@@ -64,7 +67,8 @@ export const updateNotificationParams = createSelectSchema(notification).omit({
    issueId: true,
    organizationId: true,
    type: true,
-   userId: true,
+   receiverId: true,
+   senderId: true,
    createdAt: true,
    updatedAt: true,
 })

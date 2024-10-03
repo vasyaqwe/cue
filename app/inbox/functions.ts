@@ -17,8 +17,16 @@ export const list = createServerFn(
          return await ctx.db.query.notification.findMany({
             where: and(
                eq(notification.organizationId, input.organizationId),
-               eq(notification.userId, ctx.user.id),
+               eq(notification.receiverId, ctx.user.id),
             ),
+            columns: {
+               id: true,
+               type: true,
+               content: true,
+               issueId: true,
+               isRead: true,
+               createdAt: true,
+            },
             with: {
                issue: {
                   columns: {
@@ -26,7 +34,7 @@ export const list = createServerFn(
                      status: true,
                   },
                },
-               user: {
+               sender: {
                   columns: {
                      id: true,
                      avatarUrl: true,
@@ -59,7 +67,8 @@ export const insert = createServerFn(
                .values({
                   organizationId: input.organizationId,
                   issueId: input.issueId,
-                  userId: member.id,
+                  receiverId: member.id,
+                  senderId: ctx.user.id,
                   type: input.type,
                   content: input.content,
                })
@@ -95,7 +104,7 @@ export const deleteFn = createServerFn(
             .where(
                and(
                   eq(notification.id, input.issueId),
-                  eq(notification.userId, ctx.user.id),
+                  eq(notification.receiverId, ctx.user.id),
                ),
             )
       }),

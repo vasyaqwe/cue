@@ -2,7 +2,6 @@ import * as issue from "@/issue/functions"
 import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
 import { issueListQuery } from "@/issue/queries"
-import type { IssueEvent } from "@/issue/types"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
@@ -11,7 +10,7 @@ import { toast } from "sonner"
 
 export function useDeleteIssue() {
    const queryClient = useQueryClient()
-   const { socket } = useIssueSocket()
+   const { sendEvent } = useIssueSocket()
    const params = useParams({ from: "/$slug/_layout" })
    const navigate = useNavigate()
    const { organizationId, user } = useAuth()
@@ -26,13 +25,11 @@ export function useDeleteIssue() {
          if (isOnIssueIdPage) {
             navigate({ to: "/$slug", params: { slug: params.slug } })
          }
-         socket?.send(
-            JSON.stringify({
-               type: "delete",
-               issueId,
-               senderId: user.id,
-            } satisfies IssueEvent),
-         )
+         sendEvent({
+            type: "delete",
+            issueId,
+            senderId: user.id,
+         })
 
          await queryClient.cancelQueries(issueListQuery({ organizationId }))
 

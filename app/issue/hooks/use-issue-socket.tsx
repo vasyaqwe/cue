@@ -106,5 +106,9 @@ export function useIssueSocket({
 
    return {
       socket: connectionRef.current,
+      sendEvent: (event: IssueEvent) => {
+         if (!connectionRef.current) return
+         connectionRef.current.send(JSON.stringify(event))
+      },
    }
 }
