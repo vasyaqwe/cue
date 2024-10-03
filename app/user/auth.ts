@@ -1,5 +1,6 @@
 import { type Database, db } from "@/db"
 import { env } from "@/env"
+import { organizationMember } from "@/organization/schema"
 import {
    type Session,
    type User,
@@ -68,10 +69,18 @@ export const google = new Google(
 )
 
 export const createSession = async (userId: string) => {
+   const organizationMemberships = await db.query.organizationMember.findMany({
+      where: eq(organizationMember.id, userId),
+      columns: {
+         organizationId: true,
+      },
+   })
+
    const newSession: Session = {
       id: generateSessionId(),
       userId: userId,
       expiresAt: lucia.getNewSessionExpiration(),
+      organizationMemberships,
    }
 
    await db.insert(session).values(newSession)

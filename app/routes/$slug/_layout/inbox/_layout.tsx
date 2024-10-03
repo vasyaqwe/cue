@@ -84,13 +84,13 @@ function Component() {
                                  to: "/$slug/issue/$issueId",
                                  params: {
                                     slug,
-                                    issueId: notification.issue.id,
+                                    issueId: notification.issueId,
                                  },
                               }}
                               to="/$slug/inbox/issue/$issueId"
                               params={{
                                  slug,
-                                 issueId: notification.issue.id,
+                                 issueId: notification.issueId,
                               }}
                               activeProps={{
                                  className: "!bg-border/55",

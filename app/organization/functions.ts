@@ -8,11 +8,11 @@ import {
    organization,
    organizationMember,
 } from "@/organization/schema"
-import { joinOrganization } from "@/organization/utils"
+import { session } from "@/user/schema"
 import { redirect } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/start"
 import { TRPCError } from "@trpc/server"
-import { and, eq, exists } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { z } from "zod"
 
 export const byInviteCode = createServerFn(
@@ -34,34 +34,23 @@ export const bySlug = createServerFn(
    protectedProcedure
       .input(z.object({ slug: z.string() }))
       .query(async ({ ctx, input }) => {
-         return (
-            (await ctx.db.query.organization.findFirst({
-               where: and(
-                  eq(organization.slug, input.slug),
-                  // verify membership
-                  exists(
-                     ctx.db
-                        .select()
-                        .from(organizationMember)
-                        .where(
-                           and(
-                              eq(organizationMember.id, ctx.user.id),
-                              eq(
-                                 organizationMember.organizationId,
-                                 organization.id,
-                              ),
-                           ),
-                        ),
-                  ),
-               ),
-               columns: {
-                  id: true,
-                  slug: true,
-                  name: true,
-                  inviteCode: true,
-               },
-            })) ?? null
+         const foundOrg = await ctx.db.query.organization.findFirst({
+            where: and(eq(organization.slug, input.slug)),
+            columns: {
+               id: true,
+               slug: true,
+               name: true,
+               inviteCode: true,
+            },
+         })
+
+         const membership = ctx.session.organizationMemberships.some(
+            (membership) => membership.organizationId === foundOrg?.id,
          )
+
+         if (!foundOrg || !membership) return null
+
+         return foundOrg
       }),
 )
 
@@ -117,8 +106,8 @@ export const insert = createServerFn(
 
          if (existingOrg) throw new TRPCError({ code: "CONFLICT" })
 
-         await ctx.db.transaction(async (transaction) => {
-            const [createdOrganization] = await transaction
+         await ctx.db.transaction(async (tx) => {
+            const [createdOrganization] = await tx
                .insert(organization)
                .values({
                   name: input.name,
@@ -130,10 +119,22 @@ export const insert = createServerFn(
 
             if (!createdOrganization) throw new Error("Error")
 
-            await transaction.insert(organizationMember).values({
+            await tx.insert(organizationMember).values({
                organizationId: createdOrganization.id,
                id: ctx.user.id,
             })
+
+            await tx
+               .update(session)
+               .set({
+                  organizationMemberships: [
+                     ...ctx.session.organizationMemberships,
+                     {
+                        organizationId: createdOrganization.id,
+                     },
+                  ],
+               })
+               .where(eq(session.userId, ctx.user.id))
          })
       }),
 )
@@ -143,10 +144,38 @@ export const join = createServerFn(
    protectedProcedure
       .input(z.object({ inviteCode: z.string() }))
       .mutation(async ({ ctx, input }) => {
-         const joinedOrg = await joinOrganization({
-            db: ctx.db,
-            userId: ctx.user.id,
-            inviteCode: input.inviteCode,
+         const joinedOrg = await ctx.db.transaction(async (tx) => {
+            const joinedOrg = await tx.query.organization.findFirst({
+               where: eq(organization.inviteCode, input.inviteCode),
+               columns: {
+                  id: true,
+                  slug: true,
+               },
+            })
+
+            if (!joinedOrg) throw new Error("Organization to join not found")
+
+            await tx
+               .insert(organizationMember)
+               .values({
+                  id: ctx.user.id,
+                  organizationId: joinedOrg.id,
+               })
+               .onConflictDoNothing()
+
+            await tx
+               .update(session)
+               .set({
+                  organizationMemberships: [
+                     ...ctx.session.organizationMemberships,
+                     {
+                        organizationId: joinedOrg.id,
+                     },
+                  ],
+               })
+               .where(eq(session.userId, ctx.user.id))
+
+            return joinedOrg
          })
 
          throw redirect({
@@ -161,8 +190,21 @@ export const deleteFn = createServerFn(
    organizationProtectedProcedure
       .input(z.object({ organizationId: z.string() }))
       .mutation(async ({ ctx, input }) => {
-         await ctx.db
-            .delete(organization)
-            .where(eq(organization.id, input.organizationId))
+         return await ctx.db.transaction(async (tx) => {
+            await tx
+               .delete(organization)
+               .where(eq(organization.id, input.organizationId))
+
+            await tx
+               .update(session)
+               .set({
+                  organizationMemberships:
+                     ctx.session.organizationMemberships.filter(
+                        (membership) =>
+                           membership.organizationId !== input.organizationId,
+                     ),
+               })
+               .where(eq(session.userId, ctx.user.id))
+         })
       }),
 )

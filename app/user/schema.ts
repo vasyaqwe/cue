@@ -77,6 +77,10 @@ export const emailVerificationCode = createTable(
    },
 )
 
+const organizationMembershipsSchema = z.array(
+   z.object({ organizationId: z.string() }),
+)
+
 export const session = createTable("session", {
    id: text("id").primaryKey(),
    expiresAt: integer("expires_at", {
@@ -85,10 +89,18 @@ export const session = createTable("session", {
    userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
+   organizationMemberships: text("organization_memberships", {
+      mode: "json",
+   })
+      .$type<z.infer<typeof organizationMembershipsSchema>>()
+      .notNull()
+      .default([]),
 })
 
 export const selectUserParams = createSelectSchema(user)
-export const selectSessionParams = createSelectSchema(session)
+export const selectSessionParams = createSelectSchema(session, {
+   organizationMemberships: organizationMembershipsSchema,
+})
 export const insertUserParams = z
    .object({
       email: z.string().email(),

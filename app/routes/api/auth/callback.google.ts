@@ -1,6 +1,5 @@
 import { db } from "@/db"
 import { handleAuthError } from "@/error/utils"
-import { joinOrganization } from "@/organization/utils"
 import { createSession, google } from "@/user/auth"
 import { oauthAccount, user } from "@/user/schema"
 import { createAPIFileRoute } from "@tanstack/start/api"
@@ -65,24 +64,10 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
                return new Response(null, {
                   status: 302,
                   headers: {
-                     Location: "/",
+                     Location: inviteCode ? `/join/${inviteCode}` : "/",
                      "Set-Cookie": sessionCookie.serialize(),
                   },
                })
-
-            const joinedOrganization = await joinOrganization({
-               db,
-               userId: existingAccount.userId,
-               inviteCode,
-            })
-
-            return new Response(null, {
-               status: 302,
-               headers: {
-                  Location: `/${joinedOrganization.slug}`,
-                  "Set-Cookie": sessionCookie.serialize(),
-               },
-            })
          }
 
          const result = await db.transaction(async (tx) => {
@@ -105,15 +90,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
                userId: newUser.id,
             })
 
-            if (!inviteCode) return { newUser }
-
-            const joinedOrganization = await joinOrganization({
-               db: tx as never,
-               userId: newUser.id,
-               inviteCode,
-            })
-
-            return { newUser, organizationSlug: joinedOrganization.slug }
+            return { newUser }
          })
 
          if (!result.newUser) throw new Error("Failed to create user")
@@ -122,9 +99,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
          return new Response(null, {
             status: 302,
             headers: {
-               Location: result?.organizationSlug
-                  ? `/${result.organizationSlug}`
-                  : "/",
+               Location: inviteCode ? `/join/${inviteCode}` : "/",
                "Set-Cookie": sessionCookie.serialize(),
             },
          })

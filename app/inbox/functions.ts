@@ -22,7 +22,6 @@ export const list = createServerFn(
             with: {
                issue: {
                   columns: {
-                     id: true,
                      title: true,
                      status: true,
                   },

@@ -1,5 +1,4 @@
 import { db } from "@/db"
-import { organizationMember } from "@/organization/schema"
 import type { Auth } from "@/user/auth"
 import { auth } from "@/user/auth"
 import { isNotFound, isRedirect } from "@tanstack/react-router"
@@ -11,7 +10,6 @@ import type {
    MaybePromise,
    Simplify,
 } from "@trpc/server/unstable-core-do-not-import"
-import { and, eq } from "drizzle-orm"
 import superjson from "superjson"
 import { z } from "zod"
 
@@ -55,13 +53,9 @@ export const organizationProtectedProcedure = serverFnProcedure
          throw new TRPCError({ code: "UNAUTHORIZED" })
       }
 
-      // TODO: cache?
-      const membership = ctx.db.query.organizationMember.findFirst({
-         where: and(
-            eq(organizationMember.organizationId, input.organizationId),
-            eq(organizationMember.id, ctx.auth.user.id),
-         ),
-      })
+      const membership = ctx.auth.session.organizationMemberships.some(
+         (membership) => membership.organizationId === input.organizationId,
+      )
 
       if (!membership) throw new TRPCError({ code: "FORBIDDEN" })
 
@@ -69,7 +63,6 @@ export const organizationProtectedProcedure = serverFnProcedure
          ctx: {
             session: ctx?.auth?.session,
             user: ctx?.auth?.user,
-            membership,
          },
       })
    })

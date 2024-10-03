@@ -8,7 +8,7 @@ export const env = createEnv({
       DATABASE_URL: z.string().min(1),
       DATABASE_CONNECTION_TYPE: z
          .enum(["local", "remote", "local-replica"])
-         .default("remote"),
+         .default("local"),
       DATABASE_AUTH_TOKEN: z
          .string()
          .optional()
