@@ -8,7 +8,6 @@ import { toast } from "sonner"
 
 export function useUpdateNotification() {
    const queryClient = useQueryClient()
-   // const { sendEvent } = useNotificationSocket()
    const { organizationId } = useAuth()
    const { updateNotificationsInQueryData } = useNotificationQueryMutator()
 

@@ -2,7 +2,6 @@ import { useInsertNotification } from "@/inbox/hooks/use-insert-notification"
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
-import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
 import { issueListQuery } from "@/issue/queries"
 import {
    type IssueLabel,
@@ -10,6 +9,7 @@ import {
    issueLabels,
    issueStatuses,
 } from "@/issue/schema"
+import { useIssueStore } from "@/issue/store"
 import { popModal } from "@/modals"
 import {
    ModalContent,
@@ -47,7 +47,7 @@ export function CreateIssue() {
    )
 
    const titleRef = useRef<HTMLInputElement>(null)
-   const { sendEvent } = useIssueSocket()
+   const sendEvent = useIssueStore().sendEvent
 
    const [status, setStatus] = useLocalStorage<IssueStatus>(
       "create_issue_status",

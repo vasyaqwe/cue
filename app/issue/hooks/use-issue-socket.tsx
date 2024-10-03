@@ -1,38 +1,16 @@
 import { env } from "@/env"
 import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
+import { useIssueStore } from "@/issue/store"
 import type { IssueEvent } from "@/issue/types"
 import { useAuth } from "@/user/hooks"
 import { useNavigate, useParams } from "@tanstack/react-router"
-import PartySocket from "partysocket"
-import { useCallback, useEffect, useState } from "react"
-
-let issueSocketInstance: PartySocket | null = null
-let currentRoom: string | null = null
-
-const getSocketInstance = ({ room }: { room: string }) => {
-   if (issueSocketInstance && currentRoom === room) {
-      return issueSocketInstance
-   }
-
-   if (issueSocketInstance) {
-      issueSocketInstance.close()
-   }
-
-   issueSocketInstance = new PartySocket({
-      host: env.VITE_PARTYKIT_URL,
-      party: "issue",
-      room,
-   })
-   currentRoom = room
-
-   return issueSocketInstance
-}
+import usePartySocket from "partysocket/react"
+import { useCallback, useEffect } from "react"
 
 export function useIssueSocket() {
    const { organizationId, user } = useAuth()
    const { slug } = useParams({ from: "/$slug/_layout" })
    const navigate = useNavigate()
-   const [isReady, setIsReady] = useState(false)
    const {
       deleteIssueFromQueryData,
       insertIssueToQueryData,
@@ -69,13 +47,11 @@ export function useIssueSocket() {
       [navigate, slug],
    )
 
-   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-   useEffect(() => {
-      const connection = getSocketInstance({
-         room: organizationId,
-      })
-
-      const message = (event: MessageEvent<string>) => {
+   const socket = usePartySocket({
+      host: env.VITE_PARTYKIT_URL,
+      party: "issue",
+      room: organizationId,
+      onMessage(event) {
          const message: IssueEvent = JSON.parse(event.data)
          if (message.senderId === user.id) return
 
@@ -87,6 +63,7 @@ export function useIssueSocket() {
             })
             return insertIssueToQueryData({ input: message.issue })
          }
+
          if (message.type === "update") {
             if (message.input.status === "done" && message.input.title) {
                notify({
@@ -100,37 +77,14 @@ export function useIssueSocket() {
          if (message.type === "delete") {
             return deleteIssueFromQueryData({ issueId: message.issueId })
          }
-      }
-
-      const open = () => setIsReady(true)
-      const close = () => setIsReady(false)
-
-      connection.addEventListener("message", message)
-      connection.addEventListener("open", open)
-      connection.addEventListener("close", close)
-
-      // Set initial state if connection is already open
-      setIsReady(connection.readyState === WebSocket.OPEN)
-
-      return () => {
-         connection.removeEventListener("message", message)
-         connection.removeEventListener("open", open)
-         connection.removeEventListener("close", close)
-      }
-   }, [organizationId, user.id, notify])
-
-   const sendEvent = useCallback(
-      (event: IssueEvent) => {
-         const connection = issueSocketInstance
-         if (!connection || !isReady) {
-            return console.warn("Issue socket not ready, cannot send event")
-         }
-         connection.send(JSON.stringify(event))
       },
-      [isReady],
-   )
+   })
 
-   return {
-      sendEvent,
-   }
+   useEffect(() => {
+      if (!socket) return
+
+      useIssueStore.setState({ socket })
+   }, [socket])
+
+   return null
 }

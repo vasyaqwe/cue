@@ -1,4 +1,4 @@
-import { usePresenceStoreBase } from "@/presence/presence-store"
+import { usePresenceStoreBase } from "@/presence/store"
 import { Avatar, AvatarFallback } from "@/ui/components/avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"

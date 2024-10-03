@@ -132,7 +132,7 @@ export function IssueDetails() {
             className="z-[3]"
          >
             <div>
-               <div className="mx-auto w-full max-w-5xl px-4 pt-10 md:px-8">
+               <div className="mx-auto w-full max-w-6xl px-4 pt-10 md:px-8">
                   <Input
                      autoComplete="off"
                      autoFocus

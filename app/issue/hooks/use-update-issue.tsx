@@ -1,8 +1,8 @@
 import { useInsertNotification } from "@/inbox/hooks/use-insert-notification"
 import * as issue from "@/issue/functions"
 import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
-import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
+import { useIssueStore } from "@/issue/store"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
@@ -11,7 +11,7 @@ import { toast } from "sonner"
 
 export function useUpdateIssue() {
    const queryClient = useQueryClient()
-   const { sendEvent } = useIssueSocket()
+   const sendEvent = useIssueStore().sendEvent
    const params = useParams({ strict: false })
    const { organizationId, user } = useAuth()
    const { updateIssueInQueryData } = useIssueQueryMutator()

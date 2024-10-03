@@ -7,7 +7,7 @@ import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
 import { organizationMember } from "@/organization/schema"
 import { createServerFn } from "@tanstack/start"
 import { TRPCError } from "@trpc/server"
-import { and, desc, eq, inArray } from "drizzle-orm"
+import { and, count, desc, eq, inArray } from "drizzle-orm"
 import { z } from "zod"
 
 export const list = createServerFn(
@@ -44,6 +44,27 @@ export const list = createServerFn(
             },
             orderBy: [desc(notification.createdAt)],
          })
+      }),
+)
+
+export const unreadCount = createServerFn(
+   "GET",
+   protectedProcedure
+      .input(z.object({ organizationId: z.string() }))
+      .query(async ({ ctx, input }) => {
+         return (
+            (await ctx.db
+               .select({ count: count() })
+               .from(notification)
+               .where(
+                  and(
+                     eq(notification.organizationId, input.organizationId),
+                     eq(notification.receiverId, ctx.user.id),
+                     eq(notification.isRead, false),
+                  ),
+               )
+               .get()) ?? { count: 0 }
+         )
       }),
 )
 

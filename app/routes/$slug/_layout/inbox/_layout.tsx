@@ -78,9 +78,9 @@ function Component() {
                   <Button
                      onClick={() =>
                         updateNotification.mutate({
-                           ids: notifications.map(
-                              (notification) => notification.id,
-                           ),
+                           ids: notifications
+                              .filter((n) => !n.isRead)
+                              .map((notification) => notification.id),
                            isRead: true,
                            organizationId,
                         })

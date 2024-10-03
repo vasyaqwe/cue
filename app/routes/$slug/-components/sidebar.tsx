@@ -1,3 +1,4 @@
+import { inboxUnreadCountQuery } from "@/inbox/queries"
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { pushModal } from "@/modals"
 import { organizationMembershipsQuery } from "@/organization/queries"
@@ -37,6 +38,9 @@ export function Sidebar() {
    const { organization } = useAuth()
    const { data: memberships } = useSuspenseQuery(
       organizationMembershipsQuery(),
+   )
+   const { data: unreadCount } = useSuspenseQuery(
+      inboxUnreadCountQuery({ organizationId: organization.id }),
    )
 
    const logoutFn = useServerFn(userFns.logout)
@@ -115,7 +119,7 @@ export function Sidebar() {
                            "aria-current": "page",
                         }}
                         to={inboxRoute.to}
-                        // data-has-unread={true}
+                        data-has-unread={unreadCount.count > 0}
                         className={cn(
                            "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
                         )}

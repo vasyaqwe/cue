@@ -1,6 +1,6 @@
 import * as notification from "@/inbox/functions"
-import { useNotificationSocket } from "@/inbox/hooks/use-notification-socket"
 import { inboxListQuery } from "@/inbox/queries"
+import { useInboxStore } from "@/inbox/store"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
@@ -8,7 +8,7 @@ import { useServerFn } from "@tanstack/start"
 export function useInsertNotification() {
    const queryClient = useQueryClient()
    const { organizationId, user } = useAuth()
-   const { sendEvent } = useNotificationSocket()
+   const sendEvent = useInboxStore().sendEvent
 
    const insertFn = useServerFn(notification.insert)
    const insertNotification = useMutation({

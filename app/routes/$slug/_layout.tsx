@@ -1,4 +1,5 @@
 import { useNotificationSocket } from "@/inbox/hooks/use-notification-socket"
+import { inboxUnreadCountQuery } from "@/inbox/queries"
 import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
 import { ModalProvider } from "@/modals"
 import {
@@ -37,6 +38,9 @@ export const Route = createFileRoute("/$slug/_layout")({
       if (!organization) throw notFound()
 
       context.queryClient.prefetchQuery(organizationMembershipsQuery())
+      context.queryClient.prefetchQuery(
+         inboxUnreadCountQuery({ organizationId: organization.id }),
+      )
 
       return {
          organizationId: organization.id,

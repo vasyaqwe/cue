@@ -1,7 +1,8 @@
+import { inboxListQuery, inboxUnreadCountQuery } from "@/inbox/queries"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import type { updateIssueParams } from "@/issue/schema"
 import { useAuth } from "@/user/hooks"
-import { useQueryClient } from "@tanstack/react-query"
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { produce } from "immer"
 import type { z } from "zod"
 import type * as notificationFns from "../functions"
@@ -9,6 +10,9 @@ import type * as notificationFns from "../functions"
 export function useIssueQueryMutator() {
    const queryClient = useQueryClient()
    const { organizationId } = useAuth()
+   const { data: notificatons } = useSuspenseQuery(
+      inboxListQuery({ organizationId }),
+   )
 
    const deleteIssueFromQueryData = ({ issueId }: { issueId: string }) => {
       queryClient.setQueryData(
@@ -22,6 +26,32 @@ export function useIssueQueryMutator() {
       queryClient.setQueryData(
          issueByIdQuery({ issueId, organizationId }).queryKey,
          () => null,
+      )
+
+      if (notificatons.length === 0) return
+
+      const notificationWithDeletedIssue = notificatons.find(
+         (notification) => notification.issueId === issueId,
+      )
+
+      if (!notificationWithDeletedIssue) return
+
+      queryClient.setQueryData(
+         inboxListQuery({ organizationId }).queryKey,
+         (oldData) =>
+            oldData?.filter(
+               (notification) =>
+                  notification.id !== notificationWithDeletedIssue.id,
+            ),
+      )
+
+      if (notificationWithDeletedIssue.isRead) return
+
+      queryClient.setQueryData(
+         inboxUnreadCountQuery({ organizationId }).queryKey,
+         (oldData) => ({
+            count: (oldData?.count ?? 0) - 1,
+         }),
       )
    }
 

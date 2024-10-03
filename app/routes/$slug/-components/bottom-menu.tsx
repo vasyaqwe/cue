@@ -1,15 +1,21 @@
+import { inboxUnreadCountQuery } from "@/inbox/queries"
 import { pushModal } from "@/modals"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as inboxRoute } from "@/routes/$slug/_layout/inbox/_layout/index"
 import { Route as peopleRoute } from "@/routes/$slug/_layout/people"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
 import { Icons } from "@/ui/components/icons"
+import { useAuth } from "@/user/hooks"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
 import { Link } from "@tanstack/react-router"
 
 export function BottomMenu() {
    const { slug } = useParams({ from: "/$slug/_layout" })
-
+   const { organizationId } = useAuth()
+   const { data: unreadCount } = useSuspenseQuery(
+      inboxUnreadCountQuery({ organizationId }),
+   )
    return (
       <nav className="fixed bottom-0 z-[2] h-[calc(var(--bottom-menu-height)+max(calc(env(safe-area-inset-bottom)+0px),0px))] w-full border-border border-t bg-background p-1.5 shadow md:hidden">
          <ul className="flex flex-1 items-center justify-around gap-2">
@@ -34,7 +40,7 @@ export function BottomMenu() {
                   }}
                   to={inboxRoute.to}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
-                  // data-has-unread={true}
+                  data-has-unread={unreadCount.count > 0}
                >
                   <Icons.inbox className="size-[29px]" />
                </Link>
