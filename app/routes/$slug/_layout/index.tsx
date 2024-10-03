@@ -132,8 +132,11 @@ function Issue({
 
    return (
       <ContextMenu>
-         <ContextMenuTrigger className="flex w-full gap-4 has-data-[state=open]:bg-border/25 hover:bg-border/25">
-            <div className="flex w-full items-center gap-2 md:gap-4">
+         <ContextMenuTrigger
+            asChild
+            className="flex w-full items-center gap-2 md:gap-4 data-[state=open]:bg-border/25 hover:bg-border/25"
+         >
+            <div className="">
                <Link
                   to={issueIdRoute.to}
                   params={{ issueId: issue.id, slug }}

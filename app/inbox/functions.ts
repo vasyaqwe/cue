@@ -97,13 +97,13 @@ export const update = createServerFn(
 export const deleteFn = createServerFn(
    "POST",
    protectedProcedure
-      .input(z.object({ issueId: z.string() }))
+      .input(z.object({ notificationId: z.string() }))
       .mutation(async ({ ctx, input }) => {
          await ctx.db
             .delete(notification)
             .where(
                and(
-                  eq(notification.id, input.issueId),
+                  eq(notification.id, input.notificationId),
                   eq(notification.receiverId, ctx.user.id),
                ),
             )
