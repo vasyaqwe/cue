@@ -135,7 +135,7 @@ function Component() {
                      {notifications.map((notification) => (
                         <Notification
                            key={notification.id}
-                           onClick={() => {
+                           onLinkClick={() => {
                               setActiveItemId(notification.id)
                               updateNotification.mutate({
                                  ids: [notification.id],
@@ -160,10 +160,11 @@ function Component() {
 
 function Notification({
    notification,
+   onLinkClick,
    ...props
 }: {
    notification: Awaited<ReturnType<typeof notificationFns.list>>[number]
-} & ComponentProps<"div">) {
+} & ComponentProps<"div"> & { onLinkClick: () => void }) {
    const { organizationId } = useAuth()
    const { slug } = Route.useParams()
    const { updateNotification } = useUpdateNotification()
@@ -192,6 +193,7 @@ function Notification({
                      issueId: notification.issueId,
                   }}
                   className={"flex w-full items-center gap-2.5"}
+                  onClick={onLinkClick}
                >
                   <UserAvatar
                      user={notification.sender}
