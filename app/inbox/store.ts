@@ -6,6 +6,7 @@ import { create } from "zustand"
 type State = {
    socket: PartySocket | null
    sendEvent: (event: NotificationEvent) => void
+   isRefreshing: boolean
 }
 
 const store = create<State>()((_set, get) => ({
@@ -15,6 +16,7 @@ const store = create<State>()((_set, get) => ({
       if (!socket) return
       socket.send(JSON.stringify(event))
    },
+   isRefreshing: false,
 }))
 
 export const useInboxStore = createSelectors(store)

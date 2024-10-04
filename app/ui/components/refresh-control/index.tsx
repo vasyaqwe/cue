@@ -4,16 +4,16 @@ import type { ComponentProps } from "react"
 
 function RefreshControl({
    children,
-   isRefetching,
+   isRefreshing,
    className,
    ...props
-}: ComponentProps<"div"> & { isRefetching: boolean }) {
+}: ComponentProps<"div"> & { isRefreshing: boolean }) {
    return (
       <>
          <div
             className={cn(
                `z-[1] flex w-full items-center justify-center transition-all duration-300 ease-out `,
-               isRefetching
+               isRefreshing
                   ? "visible h-16 opacity-100"
                   : "invisible h-0 opacity-0",
                className,

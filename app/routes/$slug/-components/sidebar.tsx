@@ -1,7 +1,8 @@
 import { inboxListQuery, inboxUnreadCountQuery } from "@/inbox/queries"
+import { useInboxStore } from "@/inbox/store"
 import { useLocalStorage } from "@/interactions/use-local-storage"
-import { useThrottle } from "@/interactions/use-throttle"
 import { issueListQuery } from "@/issue/queries"
+import { useIssueStore } from "@/issue/store"
 import { pushModal } from "@/modals"
 import { organizationMembershipsQuery } from "@/organization/queries"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
@@ -21,9 +22,9 @@ import {
 import { Icons } from "@/ui/components/icons"
 import { Kbd } from "@/ui/components/kbd"
 import { Logo } from "@/ui/components/logo"
+import { useRefreshState } from "@/ui/components/refresh-control/use-refresh-state"
 import { Tooltip } from "@/ui/components/tooltip"
 import { UserAvatar } from "@/ui/components/user-avatar"
-import { MIN_REFRESH_DURATION } from "@/ui/constants"
 import { cn } from "@/ui/utils"
 import * as userFns from "@/user/functions"
 import { useAuth } from "@/user/hooks"
@@ -46,17 +47,26 @@ export function Sidebar() {
    const notifications = useSuspenseQuery(
       inboxListQuery({ organizationId: organization.id }),
    )
-   const isRefetchingNotifications = useThrottle(
-      notifications.isRefetching,
-      MIN_REFRESH_DURATION,
-   )
+   const refreshNotifications = useRefreshState({
+      isRefetching: notifications.isRefetching,
+      refetch: notifications.refetch,
+      onChange: (isRefreshing) =>
+         useInboxStore.setState({
+            isRefreshing,
+         }),
+   })
+
    const issues = useSuspenseQuery(
       issueListQuery({ organizationId: organization.id }),
    )
-   const isRefetchingIssues = useThrottle(
-      issues.isRefetching,
-      MIN_REFRESH_DURATION,
-   )
+   const refreshIssues = useRefreshState({
+      isRefetching: issues.isRefetching,
+      refetch: issues.refetch,
+      onChange: (isRefreshing) =>
+         useIssueStore.setState({
+            isRefreshing,
+         }),
+   })
 
    const logoutFn = useServerFn(userFns.logout)
    const logout = useMutation({
@@ -130,8 +140,8 @@ export function Sidebar() {
                         params={{ slug }}
                         activeProps={{
                            onMouseUp: () => {
-                              if (isRefetchingNotifications) return
-                              notifications.refetch()
+                              if (refreshNotifications.isRefreshing) return
+                              refreshNotifications.refresh()
                            },
                            className:
                               "!border-border/80 bg-border/30 opacity-100",
@@ -153,8 +163,8 @@ export function Sidebar() {
                         activeOptions={{ exact: true }}
                         activeProps={{
                            onMouseUp: () => {
-                              if (isRefetchingIssues) return
-                              issues.refetch()
+                              if (refreshIssues.isRefreshing) return
+                              refreshIssues.refresh()
                            },
                            className:
                               "!border-border/80 bg-border/30 opacity-100",

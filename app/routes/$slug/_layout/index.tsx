@@ -1,6 +1,5 @@
 import { env } from "@/env"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
-import { useThrottle } from "@/interactions/use-throttle"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
 import type * as issueFns from "@/issue/functions"
@@ -8,6 +7,7 @@ import { useDeleteIssue } from "@/issue/hooks/use-delete-issue"
 import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { issueListQuery } from "@/issue/queries"
 import { issueLabels, issueStatuses } from "@/issue/schema"
+import { useIssueStore } from "@/issue/store"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { Route as issueIdRoute } from "@/routes/$slug/_layout/issue/$issueId"
@@ -26,7 +26,6 @@ import {
 import { Icons } from "@/ui/components/icons"
 import { Loading } from "@/ui/components/loading"
 import RefreshControl from "@/ui/components/refresh-control"
-import { MIN_REFRESH_DURATION } from "@/ui/constants"
 import { useAuth } from "@/user/hooks"
 import { formatDate } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
@@ -60,7 +59,7 @@ const sortOrder = ["in progress", "todo", "backlog", "done"]
 function Component() {
    const { organizationId } = useAuth()
    const issues = useSuspenseQuery(issueListQuery({ organizationId }))
-   const isRefetching = useThrottle(issues.isRefetching, MIN_REFRESH_DURATION)
+   const isRefreshing = useIssueStore().isRefreshing
 
    const groupedIssues = R.groupBy(issues.data, R.prop("status"))
    const sortedIssues = R.reduce<string, Record<string, typeof issues.data>>(
@@ -80,7 +79,7 @@ function Component() {
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
          <Main>
-            <RefreshControl isRefetching={isRefetching}>
+            <RefreshControl isRefreshing={isRefreshing}>
                {issues.data.length === 0 ? (
                   <div className="absolute inset-0 m-auto h-fit">
                      <p className="flex flex-col items-center gap-4 text-center text-foreground/60 text-lg">
