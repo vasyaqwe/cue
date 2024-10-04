@@ -144,17 +144,17 @@ export function Sidebar() {
                               refreshNotifications.refresh()
                            },
                            className:
-                              "!border-border/80 bg-border/30 opacity-100",
+                              "!border-border/80 bg-elevated opacity-100",
                            "aria-current": "page",
                         }}
                         to={inboxRoute.to}
                         data-has-unread={unreadCount.data.count > 0}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
-                        <Icons.inbox className="size-[26px]" />
-                        Inbox
+                        <Icons.inbox className="size-6" />
+                        <span className="nav-link-text"> Inbox</span>
                      </Link>
                   </li>
                   <li>
@@ -167,16 +167,16 @@ export function Sidebar() {
                               refreshIssues.refresh()
                            },
                            className:
-                              "!border-border/80 bg-border/30 opacity-100",
+                              "!border-border/80 bg-elevated opacity-100",
                            "aria-current": "page",
                         }}
                         to={homeRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
-                        <Icons.issues className="size-[26px]" />
-                        Issues
+                        <Icons.issues className="size-6" />
+                        <span className="nav-link-text"> Issues</span>
                      </Link>
                   </li>
                   <li>
@@ -184,16 +184,16 @@ export function Sidebar() {
                         params={{ slug }}
                         activeProps={{
                            className:
-                              "!border-border/80 bg-border/30 opacity-100",
+                              "!border-border/80 bg-elevated opacity-100",
                            "aria-current": "page",
                         }}
                         to={peopleRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
-                        <Icons.people className="size-[26px]" />
-                        People
+                        <Icons.people className="size-6" />
+                        <span className="nav-link-text"> People</span>
                      </Link>
                   </li>
                   <li>
@@ -201,16 +201,16 @@ export function Sidebar() {
                         params={{ slug }}
                         activeProps={{
                            className:
-                              "!border-border/80 bg-border/30 opacity-100",
+                              "!border-border/80 bg-elevated opacity-100",
                            "aria-current": "page",
                         }}
                         to={settingsRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
-                        <Icons.settings className="size-[26px]" />
-                        Settings
+                        <Icons.settings className="size-6" />
+                        <span className="nav-link-text"> Settings</span>
                      </Link>
                   </li>
                </ul>

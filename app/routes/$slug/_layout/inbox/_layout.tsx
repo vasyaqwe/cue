@@ -179,7 +179,7 @@ function Notification({
    return (
       <ContextMenu>
          <ContextMenuTrigger
-            className="flex w-full items-center gap-2 rounded-lg p-2 md:gap-4 data-[state=open]:bg-border/40 has-[a:focus-visible]:bg-border/60 hover:bg-border/40 md:data-[active=true]:bg-border/60"
+            className="flex w-full items-center gap-2 rounded-lg md:gap-4 data-[state=open]:bg-border/40 has-[a:focus-visible]:bg-border/60 hover:bg-border/40 md:data-[active=true]:bg-border/60"
             asChild
             {...props}
          >
@@ -198,7 +198,7 @@ function Notification({
                      slug,
                      issueId: notification.issueId,
                   }}
-                  className={"flex w-full items-center gap-2.5"}
+                  className={"flex w-full items-center gap-2.5 p-2 max-md:pr-0"}
                   onClick={onLinkClick}
                >
                   <UserAvatar
@@ -244,7 +244,7 @@ function Notification({
                      </div>
                   </div>
                </Link>
-               <Icons.ellipsis className="size-7 md:hidden" />
+               <Icons.ellipsis className="mr-1.5 size-7 md:hidden" />
             </div>
          </ContextMenuTrigger>
          <ContextMenuContent title="Notification options">
