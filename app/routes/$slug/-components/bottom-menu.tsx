@@ -1,10 +1,13 @@
-import { inboxUnreadCountQuery } from "@/inbox/queries"
+import { inboxListQuery, inboxUnreadCountQuery } from "@/inbox/queries"
+import { useThrottle } from "@/interactions/use-throttle"
+import { issueListQuery } from "@/issue/queries"
 import { pushModal } from "@/modals"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as inboxRoute } from "@/routes/$slug/_layout/inbox/_layout/index"
 import { Route as peopleRoute } from "@/routes/$slug/_layout/people"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
 import { Icons } from "@/ui/components/icons"
+import { MIN_REFRESH_DURATION } from "@/ui/constants"
 import { useAuth } from "@/user/hooks"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
@@ -16,6 +19,17 @@ export function BottomMenu() {
    const { data: unreadCount } = useSuspenseQuery(
       inboxUnreadCountQuery({ organizationId }),
    )
+   const notifications = useSuspenseQuery(inboxListQuery({ organizationId }))
+   const isRefetchingNotifications = useThrottle(
+      notifications.isRefetching,
+      MIN_REFRESH_DURATION,
+   )
+   const issues = useSuspenseQuery(issueListQuery({ organizationId }))
+   const isRefetchingIssues = useThrottle(
+      issues.isRefetching,
+      MIN_REFRESH_DURATION,
+   )
+
    return (
       <nav className="fixed bottom-0 z-[2] h-[calc(var(--bottom-menu-height)+max(calc(env(safe-area-inset-bottom)+0px),0px))] w-full border-border border-t bg-background p-1.5 shadow md:hidden">
          <ul className="flex flex-1 items-center justify-around gap-2">
@@ -24,6 +38,10 @@ export function BottomMenu() {
                   params={{ slug }}
                   activeOptions={{ exact: true }}
                   activeProps={{
+                     onTouchEnd: () => {
+                        if (isRefetchingIssues) return
+                        issues.refetch()
+                     },
                      "aria-current": "page",
                   }}
                   to={homeRoute.to}
@@ -36,6 +54,10 @@ export function BottomMenu() {
                <Link
                   params={{ slug }}
                   activeProps={{
+                     onTouchEnd: () => {
+                        if (isRefetchingNotifications) return
+                        notifications.refetch()
+                     },
                      "aria-current": "page",
                   }}
                   to={inboxRoute.to}

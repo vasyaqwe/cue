@@ -2,6 +2,7 @@ import type * as notificationFns from "@/inbox/functions"
 import { useDeleteNotifications } from "@/inbox/hooks/use-delete-notification"
 import { useUpdateNotification } from "@/inbox/hooks/use-update-notification"
 import { inboxListQuery } from "@/inbox/queries"
+import { useThrottle } from "@/interactions/use-throttle"
 import { StatusIcon } from "@/issue/components/icons"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
@@ -14,8 +15,10 @@ import {
 } from "@/ui/components/context-menu"
 import { Icons } from "@/ui/components/icons"
 import { Loading } from "@/ui/components/loading"
+import RefreshControl from "@/ui/components/refresh-control"
 import { Tooltip } from "@/ui/components/tooltip"
 import { UserAvatar } from "@/ui/components/user-avatar"
+import { MIN_REFRESH_DURATION } from "@/ui/constants"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { formatDate } from "@/utils/format"
@@ -53,11 +56,14 @@ function Component() {
    const { issueId } = useParams({
       strict: false,
    })
-   const { data: notifications } = useSuspenseQuery(
-      inboxListQuery({ organizationId }),
+   const notifications = useSuspenseQuery(inboxListQuery({ organizationId }))
+   const isRefetching = useThrottle(
+      notifications.isRefetching,
+      MIN_REFRESH_DURATION,
    )
    const [activeItemId, setActiveItemId] = useState<string | null>(null)
    const { updateNotification } = useUpdateNotification()
+   console.log(notifications.isRefetching)
 
    return (
       <Main className="flex max-h-[calc(100svh-var(--bottom-menu-height))] pb-0 md:max-h-svh">
@@ -78,7 +84,7 @@ function Component() {
                   <Button
                      onClick={() =>
                         updateNotification.mutate({
-                           ids: notifications
+                           ids: notifications.data
                               .filter((n) => !n.isRead)
                               .map((notification) => notification.id),
                            isRead: true,
@@ -88,7 +94,7 @@ function Component() {
                      size="icon"
                      variant={"ghost"}
                      disabled={
-                        notifications.filter((n) => !n.isRead).length === 0
+                        notifications.data.filter((n) => !n.isRead).length === 0
                      }
                      className="-mr-1 ml-auto"
                   >
@@ -117,41 +123,43 @@ function Component() {
                   </Button>
                </Tooltip>
             </Header>
-            <div
-               className={cn(
-                  "relative flex flex-1 shrink-0 overflow-y-auto",
-                  issueId ? "max-md:hidden" : "",
-               )}
-            >
-               {notifications.length === 0 ? (
-                  <div className="absolute inset-0 m-auto h-fit">
-                     <p className="flex flex-col items-center gap-4 text-center text-foreground/60 text-lg">
-                        <Icons.inbox className=" size-20" />
-                        Inbox is empty
-                     </p>
-                  </div>
-               ) : (
-                  <div className="w-full space-y-1.5 p-1.5">
-                     {notifications.map((notification) => (
-                        <Notification
-                           key={notification.id}
-                           onLinkClick={() => {
-                              setActiveItemId(notification.id)
-                              if (notification.isRead) return
+            <RefreshControl isRefetching={isRefetching}>
+               <div
+                  className={cn(
+                     "relative flex flex-1 shrink-0 overflow-y-auto",
+                     issueId ? "max-md:hidden" : "",
+                  )}
+               >
+                  {notifications.data.length === 0 ? (
+                     <div className="absolute inset-0 m-auto h-fit">
+                        <p className="flex flex-col items-center gap-4 text-center text-foreground/60 text-lg">
+                           <Icons.inbox className=" size-20" />
+                           Inbox is empty
+                        </p>
+                     </div>
+                  ) : (
+                     <div className="w-full space-y-1.5 p-1.5">
+                        {notifications.data.map((notification) => (
+                           <Notification
+                              key={notification.id}
+                              onLinkClick={() => {
+                                 setActiveItemId(notification.id)
+                                 if (notification.isRead) return
 
-                              updateNotification.mutate({
-                                 ids: [notification.id],
-                                 isRead: true,
-                                 organizationId,
-                              })
-                           }}
-                           data-active={activeItemId === notification.id}
-                           notification={notification}
-                        />
-                     ))}
-                  </div>
-               )}
-            </div>
+                                 updateNotification.mutate({
+                                    ids: [notification.id],
+                                    isRead: true,
+                                    organizationId,
+                                 })
+                              }}
+                              data-active={activeItemId === notification.id}
+                              notification={notification}
+                           />
+                        ))}
+                     </div>
+                  )}
+               </div>
+            </RefreshControl>
          </div>
          <div className={cn(!issueId ? "max-lg:hidden" : "", "flex-1")}>
             <Outlet />

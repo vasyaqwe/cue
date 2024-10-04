@@ -1,5 +1,7 @@
-import { inboxUnreadCountQuery } from "@/inbox/queries"
+import { inboxListQuery, inboxUnreadCountQuery } from "@/inbox/queries"
 import { useLocalStorage } from "@/interactions/use-local-storage"
+import { useThrottle } from "@/interactions/use-throttle"
+import { issueListQuery } from "@/issue/queries"
 import { pushModal } from "@/modals"
 import { organizationMembershipsQuery } from "@/organization/queries"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
@@ -21,6 +23,7 @@ import { Kbd } from "@/ui/components/kbd"
 import { Logo } from "@/ui/components/logo"
 import { Tooltip } from "@/ui/components/tooltip"
 import { UserAvatar } from "@/ui/components/user-avatar"
+import { MIN_REFRESH_DURATION } from "@/ui/constants"
 import { cn } from "@/ui/utils"
 import * as userFns from "@/user/functions"
 import { useAuth } from "@/user/hooks"
@@ -41,6 +44,20 @@ export function Sidebar() {
    )
    const { data: unreadCount } = useSuspenseQuery(
       inboxUnreadCountQuery({ organizationId: organization.id }),
+   )
+   const notifications = useSuspenseQuery(
+      inboxListQuery({ organizationId: organization.id }),
+   )
+   const isRefetchingNotifications = useThrottle(
+      notifications.isRefetching,
+      MIN_REFRESH_DURATION,
+   )
+   const issues = useSuspenseQuery(
+      issueListQuery({ organizationId: organization.id }),
+   )
+   const isRefetchingIssues = useThrottle(
+      issues.isRefetching,
+      MIN_REFRESH_DURATION,
    )
 
    const logoutFn = useServerFn(userFns.logout)
@@ -114,6 +131,10 @@ export function Sidebar() {
                      <Link
                         params={{ slug }}
                         activeProps={{
+                           onMouseUp: () => {
+                              if (isRefetchingNotifications) return
+                              notifications.refetch()
+                           },
                            className:
                               "!border-border/80 bg-border/30 opacity-100",
                            "aria-current": "page",
@@ -133,6 +154,10 @@ export function Sidebar() {
                         params={{ slug }}
                         activeOptions={{ exact: true }}
                         activeProps={{
+                           onMouseUp: () => {
+                              if (isRefetchingIssues) return
+                              issues.refetch()
+                           },
                            className:
                               "!border-border/80 bg-border/30 opacity-100",
                            "aria-current": "page",

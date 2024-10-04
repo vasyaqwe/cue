@@ -1,5 +1,6 @@
 import { env } from "@/env"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
+import { useThrottle } from "@/interactions/use-throttle"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
 import type * as issueFns from "@/issue/functions"
@@ -24,6 +25,8 @@ import {
 } from "@/ui/components/context-menu"
 import { Icons } from "@/ui/components/icons"
 import { Loading } from "@/ui/components/loading"
+import RefreshControl from "@/ui/components/refresh-control"
+import { MIN_REFRESH_DURATION } from "@/ui/constants"
 import { useAuth } from "@/user/hooks"
 import { formatDate } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
@@ -56,10 +59,11 @@ const sortOrder = ["in progress", "todo", "backlog", "done"]
 
 function Component() {
    const { organizationId } = useAuth()
-   const { data: issues } = useSuspenseQuery(issueListQuery({ organizationId }))
+   const issues = useSuspenseQuery(issueListQuery({ organizationId }))
+   const isRefetching = useThrottle(issues.isRefetching, MIN_REFRESH_DURATION)
 
-   const groupedIssues = R.groupBy(issues, R.prop("status"))
-   const sortedIssues = R.reduce<string, Record<string, typeof issues>>(
+   const groupedIssues = R.groupBy(issues.data, R.prop("status"))
+   const sortedIssues = R.reduce<string, Record<string, typeof issues.data>>(
       sortOrder,
       (acc, status) => {
          if (groupedIssues[status as never]) {
@@ -76,46 +80,48 @@ function Component() {
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
          <Main>
-            {issues.length === 0 ? (
-               <div className="absolute inset-0 m-auto h-fit">
-                  <p className="flex flex-col items-center gap-4 text-center text-foreground/60 text-lg">
-                     <Icons.issues className="size-20" />
-                     No issues
-                  </p>
-               </div>
-            ) : (
-               Object.entries(sortedIssues).map(([status, issues]) => {
-                  return (
-                     <div
-                        key={status}
-                        className="last:[&>div:last-of-type]:border-border/75 first:[&>div]:border-t-transparent last:[&>div:last-of-type]:border-b"
-                     >
-                        <div className="border-border/75 border-y bg-border/25 py-2">
-                           <div className="px-4 md:px-8">
-                              <p className="font-semibold capitalize">
-                                 <StatusIcon
-                                    className="-mt-1 mr-2 inline-block"
-                                    status={status as never}
+            <RefreshControl isRefetching={isRefetching}>
+               {issues.data.length === 0 ? (
+                  <div className="absolute inset-0 m-auto h-fit">
+                     <p className="flex flex-col items-center gap-4 text-center text-foreground/60 text-lg">
+                        <Icons.issues className="size-20" />
+                        No issues
+                     </p>
+                  </div>
+               ) : (
+                  Object.entries(sortedIssues).map(([status, issuesArr]) => {
+                     return (
+                        <div
+                           key={status}
+                           className="relative z-[2] last:[&>div:last-of-type]:border-border/75 first:[&>div]:border-t-transparent last:[&>div:last-of-type]:border-b"
+                        >
+                           <div className="border-border/75 border-y bg-elevated py-2">
+                              <div className="px-4 md:px-8">
+                                 <p className="font-semibold capitalize">
+                                    <StatusIcon
+                                       className="-mt-1 mr-2 inline-block"
+                                       status={status as never}
+                                    />
+                                    {status}{" "}
+                                    <span className="ml-1 opacity-75">
+                                       {issuesArr.length}
+                                    </span>
+                                 </p>
+                              </div>
+                           </div>
+                           <div className={"divide-y divide-border/75"}>
+                              {issuesArr.map((issue) => (
+                                 <MemoizedIssue
+                                    key={issue.id}
+                                    issue={issue}
                                  />
-                                 {status}{" "}
-                                 <span className="ml-1 opacity-75">
-                                    {issues.length}
-                                 </span>
-                              </p>
+                              ))}
                            </div>
                         </div>
-                        <div className={"divide-y divide-border/75"}>
-                           {issues.map((issue) => (
-                              <MemoizedIssue
-                                 key={issue.id}
-                                 issue={issue}
-                              />
-                           ))}
-                        </div>
-                     </div>
-                  )
-               })
-            )}
+                     )
+                  })
+               )}
+            </RefreshControl>
          </Main>
       </>
    )
@@ -134,7 +140,7 @@ function Issue({
       <ContextMenu>
          <ContextMenuTrigger
             asChild
-            className="flex w-full items-center gap-2 md:gap-4 data-[state=open]:bg-border/25 hover:bg-border/25"
+            className="flex w-full items-center gap-2 md:gap-4 data-[state=open]:bg-elevated hover:bg-elevated"
          >
             <div className="">
                <Link
