@@ -1,5 +1,5 @@
 import type * as notificationFns from "@/inbox/functions"
-import { useDeleteNotification } from "@/inbox/hooks/use-delete-notification"
+import { useDeleteNotifications } from "@/inbox/hooks/use-delete-notification"
 import { useUpdateNotification } from "@/inbox/hooks/use-update-notification"
 import { inboxListQuery } from "@/inbox/queries"
 import { StatusIcon } from "@/issue/components/icons"
@@ -170,7 +170,7 @@ function Notification({
    const { organizationId } = useAuth()
    const { slug } = Route.useParams()
    const { updateNotification } = useUpdateNotification()
-   const { deleteNotification } = useDeleteNotification()
+   const { deleteNotifications } = useDeleteNotifications()
 
    return (
       <ContextMenu>
@@ -292,8 +292,8 @@ function Notification({
             <ContextMenuItem
                destructive
                onSelect={() =>
-                  deleteNotification.mutate({
-                     notificationId: notification.id,
+                  deleteNotifications.mutate({
+                     notificationIds: [notification.id],
                   })
                }
             >

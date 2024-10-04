@@ -10,28 +10,44 @@ export function useNotificationQueryMutator() {
    const queryClient = useQueryClient()
    const { organizationId } = useAuth()
 
-   const deleteNotificationFromQueryData = ({
-      notificationId,
-   }: { notificationId: string }) => {
+   const deleteNotificationsFromQueryData = ({
+      notificationIds,
+   }: { notificationIds: string[] }) => {
+      let unreadCountToRemove = 0
+
       queryClient.setQueryData(
          inboxListQuery({ organizationId }).queryKey,
-         (oldData) =>
-            produce(oldData, (draft) => {
-               return draft?.filter((notification) => {
-                  if (
-                     !notification.isRead &&
-                     notification.id === notificationId
-                  ) {
-                     queryClient.setQueryData(
-                        inboxUnreadCountQuery({ organizationId }).queryKey,
-                        (oldData) => ({
-                           count: (oldData?.count ?? 0) - 1,
-                        }),
-                     )
-                  }
-                  return notification.id !== notificationId
-               })
-            }),
+         (oldData) => {
+            if (!oldData) return oldData
+
+            return produce(oldData, (draft) => {
+               for (const notificationId of notificationIds) {
+                  const notificationIndex = draft?.findIndex(
+                     (notification) => notification.id === notificationId,
+                  )
+
+                  if (notificationIndex === -1) continue
+
+                  const notification = draft[notificationIndex]
+
+                  draft.splice(notificationIndex, 1)
+
+                  if (!notification?.isRead) unreadCountToRemove++
+               }
+            })
+         },
+      )
+
+      if (unreadCountToRemove === 0) return
+
+      queryClient.setQueryData(
+         inboxUnreadCountQuery({ organizationId }).queryKey,
+         (oldData) => {
+            if (!oldData) return oldData
+            return {
+               count: Math.max(oldData.count - unreadCountToRemove, 0),
+            }
+         },
       )
    }
 
@@ -44,9 +60,12 @@ export function useNotificationQueryMutator() {
       )
       queryClient.setQueryData(
          inboxUnreadCountQuery({ organizationId }).queryKey,
-         (oldData) => ({
-            count: (oldData?.count ?? 0) + 1,
-         }),
+         (oldData) => {
+            if (!oldData) return oldData
+            return {
+               count: oldData.count + 1,
+            }
+         },
       )
    }
 
@@ -55,6 +74,8 @@ export function useNotificationQueryMutator() {
    }: {
       input: z.infer<typeof updateNotificationParams>
    }) => {
+      let unreadCountChange = 0
+
       queryClient.setQueryData(
          inboxListQuery({ organizationId }).queryKey,
          (oldData) => {
@@ -65,28 +86,35 @@ export function useNotificationQueryMutator() {
             return produce(oldData, (draft) => {
                for (const notification of draft) {
                   if (ids.includes(notification.id)) {
+                     const wasUnread = notification.isRead === false
+
                      Object.assign(notification, {
-                        ...(isRead && { isRead }),
+                        isRead:
+                           isRead !== undefined ? isRead : notification.isRead,
                         issue: {
                            title: issue?.title ?? notification.issue?.title,
                            status: issue?.status ?? notification.issue?.status,
                         },
                      })
+
+                     if (isRead !== undefined) {
+                        if (isRead && wasUnread) unreadCountChange -= 1
+                        if (!isRead && !wasUnread) unreadCountChange += 1
+                     }
                   }
                }
             })
          },
       )
 
-      const readCount = input.ids.length
-
       queryClient.setQueryData(
          inboxUnreadCountQuery({ organizationId }).queryKey,
-         (oldData) => ({
-            count: input.isRead
-               ? (oldData?.count ?? 0) - readCount
-               : (oldData?.count ?? 0) + readCount,
-         }),
+         (oldData) => {
+            if (!oldData) return oldData
+            return {
+               count: Math.max(oldData.count + unreadCountChange, 0),
+            }
+         },
       )
    }
 
@@ -104,15 +132,17 @@ export function useNotificationQueryMutator() {
 
             return produce(oldData, (draft) => {
                for (const notification of draft) {
-                  if (notification.issueId !== updatedIssue.id) return
-
-                  Object.assign(notification, {
-                     issue: {
-                        title: updatedIssue?.title ?? notification.issue?.title,
-                        status:
-                           updatedIssue?.status ?? notification.issue?.status,
-                     },
-                  })
+                  if (notification.issueId === updatedIssue.id) {
+                     Object.assign(notification, {
+                        issue: {
+                           title:
+                              updatedIssue?.title ?? notification.issue?.title,
+                           status:
+                              updatedIssue?.status ??
+                              notification.issue?.status,
+                        },
+                     })
+                  }
                }
             })
          },
@@ -120,7 +150,7 @@ export function useNotificationQueryMutator() {
    }
 
    return {
-      deleteNotificationFromQueryData,
+      deleteNotificationsFromQueryData,
       insertNotificationToQueryData,
       updateNotificationsInQueryData,
       updateIssuesInNotificationsQueryData,

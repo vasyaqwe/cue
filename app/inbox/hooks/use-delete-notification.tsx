@@ -6,22 +6,22 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
 
-export function useDeleteNotification() {
+export function useDeleteNotifications() {
    const queryClient = useQueryClient()
    const { organizationId } = useAuth()
-   const { deleteNotificationFromQueryData } = useNotificationQueryMutator()
+   const { deleteNotificationsFromQueryData } = useNotificationQueryMutator()
 
    const deleteFn = useServerFn(notification.deleteFn)
-   const deleteNotification = useMutation({
+   const deleteNotifications = useMutation({
       mutationFn: deleteFn,
-      onMutate: async ({ notificationId }) => {
+      onMutate: async ({ notificationIds }) => {
          await queryClient.cancelQueries(inboxListQuery({ organizationId }))
 
          const data = queryClient.getQueryData(
             inboxListQuery({ organizationId }).queryKey,
          )
 
-         deleteNotificationFromQueryData({ notificationId })
+         deleteNotificationsFromQueryData({ notificationIds })
 
          return { data }
       },
@@ -38,6 +38,6 @@ export function useDeleteNotification() {
    })
 
    return {
-      deleteNotification,
+      deleteNotifications,
    }
 }

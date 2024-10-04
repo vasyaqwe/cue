@@ -1,4 +1,5 @@
-import { inboxListQuery, inboxUnreadCountQuery } from "@/inbox/queries"
+import { useNotificationQueryMutator } from "@/inbox/hooks/use-notification-query-mutator"
+import { inboxListQuery } from "@/inbox/queries"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import type { updateIssueParams } from "@/issue/schema"
 import { useAuth } from "@/user/hooks"
@@ -13,6 +14,7 @@ export function useIssueQueryMutator() {
    const { data: notificatons } = useSuspenseQuery(
       inboxListQuery({ organizationId }),
    )
+   const { deleteNotificationsFromQueryData } = useNotificationQueryMutator()
 
    const deleteIssueFromQueryData = ({ issueId }: { issueId: string }) => {
       queryClient.setQueryData(
@@ -28,31 +30,19 @@ export function useIssueQueryMutator() {
          () => null,
       )
 
+      // delete notifications that have issueId === deleted issue id (due on onCascade delete)
       if (notificatons.length === 0) return
 
-      const notificationWithDeletedIssue = notificatons.find(
+      const notificationsToDelete = notificatons.filter(
          (notification) => notification.issueId === issueId,
       )
+      if (notificationsToDelete?.length === 0) return
 
-      if (!notificationWithDeletedIssue) return
-
-      queryClient.setQueryData(
-         inboxListQuery({ organizationId }).queryKey,
-         (oldData) =>
-            oldData?.filter(
-               (notification) =>
-                  notification.id !== notificationWithDeletedIssue.id,
-            ),
-      )
-
-      if (notificationWithDeletedIssue.isRead) return
-
-      queryClient.setQueryData(
-         inboxUnreadCountQuery({ organizationId }).queryKey,
-         (oldData) => ({
-            count: (oldData?.count ?? 0) - 1,
-         }),
-      )
+      deleteNotificationsFromQueryData({
+         notificationIds: notificationsToDelete.map(
+            (notification) => notification.id,
+         ),
+      })
    }
 
    const insertIssueToQueryData = ({
