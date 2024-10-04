@@ -128,7 +128,7 @@ export function IssueDetails() {
          </Header>
          <Main
             asChild={onInboxPage}
-            className="z-[3]"
+            className="z-[6]"
          >
             <div>
                <div className="mx-auto w-full max-w-6xl px-4 pt-10 md:px-8">
@@ -165,7 +165,7 @@ export function IssueDetails() {
                </div>
                <aside
                   className={cn(
-                     "z-[3] w-72",
+                     "w-72",
                      onInboxPage ? "max-xl:hidden " : " max-md:hidden",
                   )}
                >

@@ -12,7 +12,9 @@ import { Logo } from "@/ui/components/logo"
 import { MOBILE_BREAKPOINT } from "@/ui/constants"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
+import { useAuth } from "@/user/hooks"
 import { userMeQuery } from "@/user/queries"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import {
    Outlet,
    createFileRoute,
@@ -59,6 +61,26 @@ export const Route = createFileRoute("/$slug/_layout")({
 function Component() {
    useIssueSocket()
    useNotificationSocket()
+   const { organizationId } = useAuth()
+
+   const unreadCount = useSuspenseQuery(
+      inboxUnreadCountQuery({ organizationId }),
+   )
+
+   useEffect(() => {
+      if (typeof window === "undefined") return
+
+      const link = document.querySelector("link[rel~='icon']")
+      if (!link || "href" in link === false) return
+
+      if (unreadCount.data.count === 0) {
+         link.href = "/favicon.ico"
+
+         return
+      }
+
+      link.href = "/favicon-badged.ico"
+   }, [unreadCount.data.count])
 
    useEffect(() => {
       if (typeof window === "undefined") {
