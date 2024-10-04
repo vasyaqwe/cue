@@ -5,7 +5,7 @@ import { type ComponentProps, forwardRef } from "react"
 const buttonVariants = cva(
    `inline-flex items-center cursor-pointer justify-center whitespace-nowrap leading-none active:enabled:scale-[98%] gap-1.5 font-medium
     focus-visible:ring-3 focus-visible:ring-offset-2 focus-visible:ring-primary/30 focus-visible:outline-primary/80 shadow-sm
-    outline outline outline-transparent outline-offset-1 disabled:opacity-70 disabled:cursor-not-allowed border transition-all`,
+    outline outline-transparent outline-offset-1 disabled:opacity-70 disabled:cursor-not-allowed border transition-all`,
    {
       variants: {
          variant: {
@@ -13,17 +13,17 @@ const buttonVariants = cva(
                       text-background/95 hover:enabled:bg-primary disabled:bg-background disabled:text-foreground disabled:border-foreground/20 
                       active:enabled:shadow-sm hover:enabled:text-primary-foreground`,
             secondary: `bg-border/75 border-transparent hover:bg-border`,
-            outline: `bg-popover !shadow-button border border-transparent text-foreground data-[state=open]:bg-border/[0.03] hover:enabled:bg-border/[0.03]`,
+            outline: `bg-popover !shadow-button border border-transparent text-foreground data-[state=open]:bg-elevated/75 hover:enabled:bg-elevated/75`,
             ghost: "!shadow-none border border-transparent aria-[current=page]:bg-muted data-[state=open]:bg-muted hover:enabled:bg-border/50",
             destructive: `bg-destructive border-destructive hover:enabled:bg-destructive/90 text-destructive-foreground`,
-            link: "!h-auto !rounded-none !p-0 text-foreground/70 underline transition-none hover:enabled:text-foreground",
+            link: "!h-auto !p-0 text-foreground/70 underline transition-none hover:enabled:text-foreground",
          },
          size: {
-            default: "h-8 rounded-lg px-3 text-[0.94rem]",
-            sm: "h-7 rounded-[8px] px-2.5",
-            lg: "h-9 gap-2 rounded-[10px] px-3.5 text-[1rem]",
-            xl: "h-10 gap-2 rounded-xl px-3.5 text-[1.0325rem]",
-            icon: "size-8 gap-0 rounded-lg",
+            default: "h-8 rounded-full px-3 text-[0.94rem]",
+            sm: "h-7 rounded-full px-2.5",
+            lg: "h-9 gap-2 rounded-full px-3.5 text-[1rem]",
+            xl: "h-10 gap-2 rounded-full px-3.5 text-[1.0325rem]",
+            icon: "size-8 gap-0 rounded-full",
          },
       },
       defaultVariants: {

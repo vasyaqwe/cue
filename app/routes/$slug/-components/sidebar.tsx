@@ -150,7 +150,7 @@ export function Sidebar() {
                         to={inboxRoute.to}
                         data-has-unread={unreadCount.data.count > 0}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
                         <Icons.inbox className="size-6" />
@@ -172,7 +172,7 @@ export function Sidebar() {
                         }}
                         to={homeRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
                         <Icons.issues className="size-6" />
@@ -189,7 +189,7 @@ export function Sidebar() {
                         }}
                         to={peopleRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
                         <Icons.people className="size-6" />
@@ -206,7 +206,7 @@ export function Sidebar() {
                         }}
                         to={settingsRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
                         <Icons.settings className="size-6" />
@@ -276,7 +276,7 @@ function NotificationPermissionCard() {
    if (permissionStatus === "granted") return null
 
    return (
-      <Card className="mb-3 animate-fade-in">
+      <Card className="mb-3 animate-fade-in [--animation-delay:300ms]">
          <p className="-mt-1 text-sm">
             Cue needs your permission to enable notifications.
          </p>

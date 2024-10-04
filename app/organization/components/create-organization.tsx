@@ -28,7 +28,7 @@ const parseError = (error: Error) => {
    }
 }
 
-const RESERVED_SLUGS = ["new", "homepage"]
+const RESERVED_SLUGS = ["new", "homepage", "login"]
 
 export function CreateOrganization({
    isFirstOrganization = true,

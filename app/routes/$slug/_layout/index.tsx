@@ -88,37 +88,40 @@ function Component() {
                      </p>
                   </div>
                ) : (
-                  Object.entries(sortedIssues).map(([status, issuesArr]) => {
-                     return (
-                        <div
-                           key={status}
-                           className="relative z-[2] last:[&>div:last-of-type]:border-border/75 first:[&>div]:border-t-transparent last:[&>div:last-of-type]:border-b"
-                        >
-                           <div className="border-border/75 border-y bg-elevated py-2">
-                              <div className="px-4 md:px-8">
-                                 <p className="font-semibold capitalize">
-                                    <StatusIcon
-                                       className="-mt-1 mr-2 inline-block"
-                                       status={status as never}
+                  Object.entries(sortedIssues).map(
+                     ([status, issuesArr], idx) => {
+                        return (
+                           <div
+                              key={status}
+                              data-first={idx === 0}
+                              className="relative z-[2] last:[&>div:last-of-type]:border-border/75 data-[first=true]:[&>div]:border-t-transparent last:[&>div:last-of-type]:border-b"
+                           >
+                              <div className="border-border/75 border-y bg-elevated py-2">
+                                 <div className="px-4 md:px-8">
+                                    <p className="font-semibold capitalize">
+                                       <StatusIcon
+                                          className="-mt-1 mr-2 inline-block"
+                                          status={status as never}
+                                       />
+                                       {status}{" "}
+                                       <span className="ml-1 opacity-75">
+                                          {issuesArr.length}
+                                       </span>
+                                    </p>
+                                 </div>
+                              </div>
+                              <div className={"divide-y divide-border/75"}>
+                                 {issuesArr.map((issue) => (
+                                    <MemoizedIssue
+                                       key={issue.id}
+                                       issue={issue}
                                     />
-                                    {status}{" "}
-                                    <span className="ml-1 opacity-75">
-                                       {issuesArr.length}
-                                    </span>
-                                 </p>
+                                 ))}
                               </div>
                            </div>
-                           <div className={"divide-y divide-border/75"}>
-                              {issuesArr.map((issue) => (
-                                 <MemoizedIssue
-                                    key={issue.id}
-                                    issue={issue}
-                                 />
-                              ))}
-                           </div>
-                        </div>
-                     )
-                  })
+                        )
+                     },
+                  )
                )}
             </RefreshControl>
          </Main>
