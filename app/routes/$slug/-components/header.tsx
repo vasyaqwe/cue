@@ -43,9 +43,7 @@ export function Header({
       },
    })
 
-   const { data: memberships } = useSuspenseQuery(
-      organizationMembershipsQuery(),
-   )
+   const memberships = useSuspenseQuery(organizationMembershipsQuery())
 
    return (
       <div
@@ -95,7 +93,7 @@ export function Header({
                      align="start"
                   >
                      <DropdownMenuLabel>Organizations</DropdownMenuLabel>
-                     {memberships.map((membership) => (
+                     {memberships.data.map((membership) => (
                         <DropdownMenuItem
                            key={membership.organization.id}
                            onSelect={() =>

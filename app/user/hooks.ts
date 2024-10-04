@@ -7,17 +7,17 @@ const LayoutRoute = getRouteApi("/$slug/_layout")
 
 export function useAuth() {
    const params = LayoutRoute.useParams()
-   const { data: session } = useSuspenseQuery(userMeQuery())
-   const { data: organization } = useSuspenseQuery(
+   const session = useSuspenseQuery(userMeQuery())
+   const organization = useSuspenseQuery(
       organizationBySlugQuery({ slug: params.slug }),
    )
 
-   if (!organization || !session?.session || !session.user)
+   if (!organization.data || !session?.data?.session || !session.data.user)
       throw new Error("Organization not found")
 
    return {
-      user: session.user,
-      organization,
-      organizationId: organization?.id,
+      user: session.data.user,
+      organization: organization.data,
+      organizationId: organization?.data.id,
    }
 }

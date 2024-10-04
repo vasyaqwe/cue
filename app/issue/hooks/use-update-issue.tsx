@@ -25,9 +25,7 @@ export function useUpdateIssue() {
    const { updateIssueInQueryData } = useIssueQueryMutator()
    const { updateNotificationsInQueryData } = useNotificationQueryMutator()
    const { insertNotification } = useInsertNotification()
-   const { data: notificatons } = useSuspenseQuery(
-      inboxListQuery({ organizationId }),
-   )
+   const notificatons = useSuspenseQuery(inboxListQuery({ organizationId }))
 
    const issueIdParam = "issueId" in params ? params.issueId : null
 
@@ -42,7 +40,7 @@ export function useUpdateIssue() {
             senderId: user.id,
          })
 
-         const notificationsWithUpdatedIssue = notificatons.filter(
+         const notificationsWithUpdatedIssue = notificatons.data.filter(
             (notification) => notification.issueId === input.id,
          )
 

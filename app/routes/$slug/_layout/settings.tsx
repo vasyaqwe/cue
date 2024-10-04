@@ -60,9 +60,7 @@ function Component() {
       },
    })
 
-   const { data: memberships } = useSuspenseQuery(
-      organizationMembershipsQuery(),
-   )
+   const memberships = useSuspenseQuery(organizationMembershipsQuery())
    const [confirmDeletion, setConfirmDeletion] = useState("")
    const deleteFn = useServerFn(organization.deleteFn)
    const deleteOrganization = useMutation({
@@ -70,7 +68,7 @@ function Component() {
       onSuccess: () => {
          queryClient.invalidateQueries(organizationMembershipsQuery())
          toast.success("Organization deleted")
-         const existingMemberships = memberships?.filter(
+         const existingMemberships = memberships.data?.filter(
             (m) => m.organizationId !== organizationId,
          )
 

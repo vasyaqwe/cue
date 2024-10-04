@@ -45,9 +45,8 @@ export function IssueDetails() {
    const { pathname } = useLocation()
    if (!issueId) throw new Error("Must have issueId param")
 
-   const { data: issue } = useSuspenseQuery(
-      issueByIdQuery({ organizationId, issueId }),
-   )
+   const query = useSuspenseQuery(issueByIdQuery({ organizationId, issueId }))
+   const issue = query.data
    const { deleteIssue } = useDeleteIssue()
    const { updateIssue } = useUpdateIssue()
 

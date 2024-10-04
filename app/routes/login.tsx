@@ -35,14 +35,15 @@ function Component() {
    const search = Route.useSearch()
 
    const byInviteCodeFn = useServerFn(organization.byInviteCode)
-   const { data: organizationToJoin } = useQuery({
+   const organizationToJoin = useQuery({
       queryKey: ["organization_by_invite_code", search.inviteCode],
       queryFn: () => byInviteCodeFn({ inviteCode: search.inviteCode ?? "" }),
       enabled: !!search.inviteCode,
    })
 
    useEffect(() => {
-      if (!organizationToJoin) return
+      const organization = organizationToJoin.data
+      if (!organization) return
 
       toast.custom(
          () => (
@@ -51,7 +52,7 @@ function Component() {
                   You are invited
                </p>
                <p className="line-clamp-1">
-                  Sign up to join <b>{organizationToJoin.name}</b> organization
+                  Sign up to join <b>{organization.name}</b> organization
                </p>
             </div>
          ),
@@ -67,67 +68,6 @@ function Component() {
    // const otpInputRef = useRef<HTMLInputElement>(null)
 
    const [isCodeSent, _setIsCodeSent] = useState(false)
-   // const [email, setEmail] = useState("")
-   // const [userId, setUserId] = useState<string>()
-   // const timer = useCountdownTimer({
-   //    initialTime: 45,
-   // })
-
-   // const {
-   //    isPending,
-   //    isSuccess,
-   //    mutate: sendLoginCode,
-   // } = api.user.sendLoginCode.useMutation({
-   //    onMutate: () => {
-   //       timer.start()
-   //    },
-   //    onSuccess: (res) => {
-   //       res.userId && setUserId(res.userId)
-   //    },
-   //    onError: () => {
-   //       toast.error("An error occurred, couldn't send code")
-   //       timer.reset()
-   //    },
-   // })
-
-   // const {
-   //    isPending: verifyCodePending,
-   //    isSuccess: verifyCodeSuccess,
-   //    mutateAsync: verifyCodeMutate,
-   // } = api.user.verifyLoginCode.useMutation({
-   //    onError: () => undefined,
-   //    onSuccess: () => {
-   //       setTimeout(() => {
-   //          toast.dismiss()
-   //          navigate({ to: "/" })
-   //       }, 500)
-   //    },
-   // })
-
-   // const onVerifyCode = ({
-   //    code,
-   //    userId,
-   // }: { code: string; userId: string }) => {
-   //    toast.dismiss("otp")
-   //    toast.promise(verifyCodeMutate({ code, userId }), {
-   //       id: "otp",
-   //       loading: "Verifying code...",
-   //       success: () => `Code is valid`,
-   //       error: () => `Code is invalid or expired`,
-   //       position:
-   //          window.innerWidth < MOBILE_BREAKPOINT
-   //             ? "top-center"
-   //             : "bottom-center",
-   //    })
-   // }
-
-   // useEffect(() => {
-   //    if (isSuccess) {
-   //       setTimeout(() => {
-   //          setIsCodeSent(true)
-   //       }, 700)
-   //    }
-   // }, [isSuccess])
 
    const loginWithGithubFn = useServerFn(userFns.logInWithGithub)
    const loginWithGithub = useMutation({

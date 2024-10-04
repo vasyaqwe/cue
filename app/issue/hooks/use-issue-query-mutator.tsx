@@ -11,9 +11,7 @@ import type * as notificationFns from "../functions"
 export function useIssueQueryMutator() {
    const queryClient = useQueryClient()
    const { organizationId } = useAuth()
-   const { data: notificatons } = useSuspenseQuery(
-      inboxListQuery({ organizationId }),
-   )
+   const notificatons = useSuspenseQuery(inboxListQuery({ organizationId }))
    const { deleteNotificationsFromQueryData } = useNotificationQueryMutator()
 
    const deleteIssueFromQueryData = ({ issueId }: { issueId: string }) => {
@@ -31,9 +29,9 @@ export function useIssueQueryMutator() {
       )
 
       // delete notifications that have issueId === deleted issue id (due on onCascade delete)
-      if (notificatons.length === 0) return
+      if (notificatons.data.length === 0) return
 
-      const notificationsToDelete = notificatons.filter(
+      const notificationsToDelete = notificatons.data.filter(
          (notification) => notification.issueId === issueId,
       )
       if (notificationsToDelete?.length === 0) return

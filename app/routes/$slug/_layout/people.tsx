@@ -44,7 +44,7 @@ export const Route = createFileRoute("/$slug/_layout/people")({
 
 function Component() {
    const { organization, organizationId } = useAuth()
-   const { data: members } = useSuspenseQuery(
+   const members = useSuspenseQuery(
       organizationMembersQuery({ organizationId }),
    )
    const inputRef = useRef<HTMLInputElement>(null)
@@ -66,7 +66,7 @@ function Component() {
             <HeaderTitle>People</HeaderTitle>
          </Header>
          <Main>
-            {members.length === 0 ? (
+            {members.data.length === 0 ? (
                <p className="absolute inset-0 m-auto size-fit">No members</p>
             ) : (
                <div className="mx-auto mt-5 flex max-w-3xl flex-col md:mt-8">
@@ -138,7 +138,7 @@ function Component() {
                      </ModalContent>
                   </Modal>
                   <div className="container mt-6 space-y-5">
-                     {members.map((member) => (
+                     {members.data.map((member) => (
                         <div key={member.user.email}>
                            <div className="flex items-center gap-3">
                               <UserAvatar

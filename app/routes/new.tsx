@@ -20,10 +20,8 @@ export const Route = createFileRoute("/new")({
 })
 
 function Component() {
-   const { data: memberships } = useSuspenseQuery(
-      organizationMembershipsQuery(),
-   )
-   const hasAnOrganization = memberships?.length > 0
+   const memberships = useSuspenseQuery(organizationMembershipsQuery())
+   const hasAnOrganization = memberships.data?.length > 0
 
    return (
       <>

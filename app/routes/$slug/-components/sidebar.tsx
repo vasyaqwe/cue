@@ -39,10 +39,8 @@ export function Sidebar() {
    const navigate = useNavigate()
    const { slug } = useParams({ from: "/$slug/_layout" })
    const { organization } = useAuth()
-   const { data: memberships } = useSuspenseQuery(
-      organizationMembershipsQuery(),
-   )
-   const { data: unreadCount } = useSuspenseQuery(
+   const memberships = useSuspenseQuery(organizationMembershipsQuery())
+   const unreadCount = useSuspenseQuery(
       inboxUnreadCountQuery({ organizationId: organization.id }),
    )
    const notifications = useSuspenseQuery(
@@ -91,7 +89,7 @@ export function Sidebar() {
                   title="Organizations"
                >
                   <DropdownMenuLabel>Organizations</DropdownMenuLabel>
-                  {memberships.map((membership) => (
+                  {memberships.data.map((membership) => (
                      <DropdownMenuItem
                         key={membership.organization.id}
                         onSelect={() =>
@@ -140,7 +138,7 @@ export function Sidebar() {
                            "aria-current": "page",
                         }}
                         to={inboxRoute.to}
-                        data-has-unread={unreadCount.count > 0}
+                        data-has-unread={unreadCount.data.count > 0}
                         className={cn(
                            "group flex h-10 items-center gap-2 rounded-xl border border-transparent px-2.5 font-semibold text-[0.95rem] opacity-75 transition-all hover:opacity-100",
                         )}

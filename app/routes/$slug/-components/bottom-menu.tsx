@@ -16,7 +16,7 @@ import { Link } from "@tanstack/react-router"
 export function BottomMenu() {
    const { slug } = useParams({ from: "/$slug/_layout" })
    const { organizationId } = useAuth()
-   const { data: unreadCount } = useSuspenseQuery(
+   const unreadCount = useSuspenseQuery(
       inboxUnreadCountQuery({ organizationId }),
    )
    const notifications = useSuspenseQuery(inboxListQuery({ organizationId }))
@@ -62,7 +62,7 @@ export function BottomMenu() {
                   }}
                   to={inboxRoute.to}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
-                  data-has-unread={unreadCount.count > 0}
+                  data-has-unread={unreadCount.data.count > 0}
                >
                   <Icons.inbox className="size-[29px]" />
                </Link>
