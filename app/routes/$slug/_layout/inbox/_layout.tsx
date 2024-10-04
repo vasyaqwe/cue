@@ -209,7 +209,7 @@ function Notification({
                      <div className="-mt-px flex w-full items-center">
                         <span
                            className={cn(
-                              "-mb-px block rounded-full bg-primary transition-all duration-300",
+                              "-mb-px block shrink-0 rounded-full bg-primary transition-all duration-300",
                               notification.isRead
                                  ? "mr-0 size-0"
                                  : "mr-1 size-2.5",
