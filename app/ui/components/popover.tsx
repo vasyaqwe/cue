@@ -1,6 +1,7 @@
 import {
    Drawer,
    DrawerContent,
+   DrawerNested,
    DrawerTitle,
    DrawerTrigger,
 } from "@/ui/components/drawer"
@@ -10,23 +11,25 @@ import * as PopoverPrimitive from "@radix-ui/react-popover"
 import {
    type ComponentPropsWithoutRef,
    type ElementRef,
-   createContext,
    forwardRef,
 } from "react"
 
 const PopoverPortal = PopoverPrimitive.Portal
 const PopoverAnchor = PopoverPrimitive.Anchor
 
-const _PopoverContext = createContext<{
-   isMobile: boolean
-} | null>(null)
-
-function Popover(props: PopoverPrimitive.PopoverProps) {
+function Popover({
+   nested = false,
+   ...props
+}: PopoverPrimitive.PopoverProps & { nested?: boolean }) {
    const isMobile = useUIStore().isMobile
    return (
       <>
          {isMobile ? (
-            <Drawer {...props} />
+            nested ? (
+               <DrawerNested {...props} />
+            ) : (
+               <Drawer {...props} />
+            )
          ) : (
             <PopoverPrimitive.Root {...props} />
          )}

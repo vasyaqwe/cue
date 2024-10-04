@@ -53,8 +53,9 @@ export function Combobox({
    open: openProp,
    onOpenChange: onOpenChangeProp,
    shortcut,
+   nested = false,
    ...props
-}: ComboboxProps & PopoverProps) {
+}: ComboboxProps & PopoverProps & { nested?: boolean }) {
    const [open, setOpen] = useState(false)
 
    return (
@@ -72,8 +73,9 @@ export function Combobox({
             />
          ) : null}
          <Popover
-            open={openProp ?? open}
-            onOpenChange={onOpenChangeProp ?? setOpen}
+            open={nested ? undefined : openProp ?? open}
+            onOpenChange={nested ? undefined : onOpenChangeProp ?? setOpen}
+            nested={nested}
             {...props}
          >
             {children}

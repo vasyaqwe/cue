@@ -106,7 +106,10 @@ export function CreateIssue() {
    })
 
    return (
-      <ModalContent onAnimationEndCapture={() => titleRef.current?.focus()}>
+      <ModalContent
+         className="max-md:min-h-[40svh]"
+         onAnimationEndCapture={() => titleRef.current?.focus()}
+      >
          <ModalHeader className="max-md:hidden">
             <ModalTitle>New issue</ModalTitle>
          </ModalHeader>
@@ -135,7 +138,7 @@ export function CreateIssue() {
                onChange={(e) => setTitle(e.target.value)}
                className={cn(
                   inputVariants(),
-                  "!border-none !outline-none !bg-transparent h-8 p-0 font-bold text-xl",
+                  "!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-bold text-xl",
                )}
             />
             <Input
@@ -145,12 +148,13 @@ export function CreateIssue() {
                value={description}
                onChange={(e) => setDescription(e.target.value)}
                className={
-                  "!border-none !outline-none !bg-transparent mt-1 h-8 p-0 text-[1rem]"
+                  "!border-none !outline-none !bg-transparent mt-1 h-8 rounded-none p-0 text-[1rem]"
                }
             />
          </form>
          <ModalFooter className="gap-2">
             <Combobox
+               nested
                shortcut="s"
                modal
             >
@@ -190,6 +194,7 @@ export function CreateIssue() {
                </ComboboxContent>
             </Combobox>
             <Combobox
+               nested
                shortcut="l"
                modal
             >
