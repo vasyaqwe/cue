@@ -24,8 +24,11 @@ export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
          <Header>
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
-         <Main>
-            <Loading className="absolute inset-0 m-auto" />
+         <Main className="flex ">
+            <div className="relative flex-1">
+               <Loading className="absolute inset-0 m-auto" />
+            </div>
+            <div className={"ml-auto max-w-72 flex-1 max-md:hidden"} />
          </Main>
       </>
    ),

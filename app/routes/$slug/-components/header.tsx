@@ -140,7 +140,7 @@ export function Header({
 
 export function HeaderTitle({ className, ...props }: ComponentProps<"h1">) {
    return (
-      <h1
+      <p
          className={cn(
             "text-nowrap text-center font-semibold text-lg",
             className,

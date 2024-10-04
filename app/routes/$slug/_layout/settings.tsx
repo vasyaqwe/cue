@@ -149,7 +149,7 @@ function Component() {
                         <Icons.trash className="size-5 text-destructive" />
                      </div>
                      <div>
-                        <h3>Delete organization</h3>
+                        <p>Delete organization</p>
                         <p className="text-foreground/75 text-sm">
                            This is permanent. Organization will be fully
                            deleted.

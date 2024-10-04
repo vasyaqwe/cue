@@ -41,7 +41,7 @@ function CardHeader({ className, children, ...props }: ComponentProps<"div">) {
 
 function CardTitle({ className, ...props }: ComponentProps<"h3">) {
    return (
-      <h3
+      <p
          className={cn(
             "mb-2 font-semibold text-foreground text-lg leading-none tracking-tight",
             className,
