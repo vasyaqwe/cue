@@ -75,8 +75,12 @@ export function CreateIssue() {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
 
          popModal("create_issue")
-         setTitle("")
-         setDescription("")
+
+         // wait for modal to animate out
+         setTimeout(() => {
+            setTitle("")
+            setDescription("")
+         }, 100)
 
          toast.success("Issue created", {
             action: {
