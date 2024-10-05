@@ -4,6 +4,7 @@ import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import type { updateIssueParams } from "@/issue/schema"
 import { useAuth } from "@/user/hooks"
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+import { useNavigate, useParams } from "@tanstack/react-router"
 import { produce } from "immer"
 import type { z } from "zod"
 import type * as notificationFns from "../functions"
@@ -11,10 +12,18 @@ import type * as notificationFns from "../functions"
 export function useIssueQueryMutator() {
    const queryClient = useQueryClient()
    const { organizationId } = useAuth()
+   const params = useParams({ from: "/$slug/_layout" })
+   const navigate = useNavigate()
    const notificatons = useSuspenseQuery(inboxListQuery({ organizationId }))
    const { deleteNotificationsFromQueryData } = useNotificationQueryMutator()
 
+   const isOnIssueIdPage = "issueId" in params && params.issueId
+
    const deleteIssueFromQueryData = ({ issueId }: { issueId: string }) => {
+      if (isOnIssueIdPage) {
+         navigate({ to: "/$slug", params: { slug: params.slug } })
+      }
+
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
          (oldData) =>

@@ -23,10 +23,6 @@ export function useDeleteIssue() {
    const deleteIssue = useMutation({
       mutationFn: deleteFn,
       onMutate: async ({ issueId }) => {
-         if (isOnIssueIdPage) {
-            navigate({ to: "/$slug", params: { slug: params.slug } })
-         }
-
          await queryClient.cancelQueries(issueListQuery({ organizationId }))
 
          const data = queryClient.getQueryData(
