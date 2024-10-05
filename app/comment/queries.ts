@@ -6,6 +6,6 @@ export const commentListQuery = (input: {
    issueId: string
 }) =>
    queryOptions({
-      queryKey: ["comment_list", input.organizationId],
+      queryKey: ["comment_list", input.issueId],
       queryFn: () => comment.list(input),
    })

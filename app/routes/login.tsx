@@ -63,7 +63,7 @@ function Component() {
             position: "bottom-right",
          },
       )
-   }, [organizationToJoin])
+   }, [organizationToJoin.data])
 
    // const otpInputRef = useRef<HTMLInputElement>(null)
 

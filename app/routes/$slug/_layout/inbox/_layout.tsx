@@ -20,7 +20,7 @@ import { Tooltip } from "@/ui/components/tooltip"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
-import { formatDate } from "@/utils/format"
+import { formatDateRelative } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import {
    Link,
@@ -236,10 +236,10 @@ function Notification({
                            {notification.content}
                         </p>
                         <span className="ml-auto whitespace-nowrap text-xs opacity-75">
-                           {formatDate(new Date(notification.createdAt), {
-                              month: "short",
-                              day: "numeric",
-                           })}
+                           {formatDateRelative(
+                              notification.createdAt,
+                              "narrow",
+                           ).replace("ago", "")}
                         </span>
                      </div>
                   </div>

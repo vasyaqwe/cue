@@ -12,7 +12,8 @@ import { type ComponentProps, useState } from "react"
 export function CreateComment({ className, ...props }: ComponentProps<"form">) {
    const [content, setContent] = useState("")
    const { organizationId, user } = useAuth()
-   const { issueId } = useParams({ from: "/$slug/_layout/issue/$issueId" })
+   const { issueId } = useParams({ strict: false })
+   if (!issueId) throw new Error("Must have issueId param")
 
    const { insertComment } = useInsertComment()
 

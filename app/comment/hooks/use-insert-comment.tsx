@@ -11,7 +11,9 @@ import { toast } from "sonner"
 export function useInsertComment() {
    const queryClient = useQueryClient()
    const { organizationId, user } = useAuth()
-   const { issueId } = useParams({ from: "/$slug/_layout/issue/$issueId" })
+   const { issueId } = useParams({ strict: false })
+   if (!issueId) throw new Error("Must have issueId param")
+
    const sendEvent = useCommentStore().sendEvent
 
    const insertFn = useServerFn(comment.insert)
