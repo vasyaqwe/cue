@@ -1,7 +1,7 @@
 import { comment, insertCommentParams } from "@/comment/schema"
 import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
-import { and, desc, eq } from "drizzle-orm"
+import { and, asc, eq } from "drizzle-orm"
 import { z } from "zod"
 
 export const list = createServerFn(
@@ -18,6 +18,7 @@ export const list = createServerFn(
                id: true,
                content: true,
                createdAt: true,
+               issueId: true,
             },
             with: {
                author: {
@@ -28,7 +29,7 @@ export const list = createServerFn(
                   },
                },
             },
-            orderBy: [desc(comment.createdAt)],
+            orderBy: [asc(comment.createdAt)],
          })
       }),
 )

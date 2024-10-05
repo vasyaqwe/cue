@@ -1,4 +1,7 @@
-export const formatDateRelative = (date: Date | number) => {
+export const formatDateRelative = (
+   date: Date | number,
+   style?: Intl.RelativeTimeFormatStyle,
+) => {
    // Allow dates or times to be passed
    const timeMs = typeof date === "number" ? date : date.getTime()
 
@@ -40,7 +43,7 @@ export const formatDateRelative = (date: Date | number) => {
    if (!divisor || !unit) return ""
 
    // Intl.RelativeTimeFormat do its magic
-   const rtf = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" })
+   const rtf = new Intl.RelativeTimeFormat("en-US", { numeric: "auto", style })
    return rtf.format(-Math.floor(deltaSeconds / divisor), unit) // Added negative sign here
 }
 

@@ -1,4 +1,5 @@
 import { CreateComment } from "@/comment/components/create-comment"
+import { commentListQuery } from "@/comment/queries"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
@@ -30,8 +31,10 @@ import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
 import { Tooltip } from "@/ui/components/tooltip"
+import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
+import { formatDateRelative } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useLocation, useParams } from "@tanstack/react-router"
 import { useRef, useState } from "react"
@@ -47,6 +50,9 @@ export function IssueDetails() {
    if (!issueId) throw new Error("Must have issueId param")
 
    const query = useSuspenseQuery(issueByIdQuery({ organizationId, issueId }))
+   const comments = useSuspenseQuery(
+      commentListQuery({ organizationId, issueId }),
+   )
    const issue = query.data
    const { deleteIssue } = useDeleteIssue()
    const { updateIssue } = useUpdateIssue()
@@ -151,7 +157,7 @@ export function IssueDetails() {
                               title: e.target.value,
                            })
                         }}
-                        className="!border-none !outline-none !bg-transparent h-8 p-0 font-extrabold text-2xl"
+                        className="!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
                      />
                      <Input
                         defaultValue={issue.description}
@@ -165,15 +171,34 @@ export function IssueDetails() {
                               description: e.target.value,
                            })
                         }}
-                        className="!border-none !outline-none !bg-transparent mt-2 h-8 p-0 text-lg"
+                        className="!border-none !outline-none !bg-transparent mt-4 h-8 rounded-none p-0 text-lg"
                      />
-
                      <hr className="mt-12 mb-5 border-border border-t-2 border-dotted" />
-
                      <p className="font-semibold text-lg">Activity</p>
-
                      <div>
-                        <CreateComment className="mt-5" />
+                        {comments.data.map((comment) => (
+                           <div
+                              className="mt-5 flex gap-3"
+                              key={comment.id}
+                           >
+                              <UserAvatar user={comment.author} />
+                              <div className="flex-1">
+                                 <p className="-mt-[2px] line-clamp-1">
+                                    <strong className="mr-1 font-semibold ">
+                                       {comment.author.name}
+                                    </strong>
+                                    <small className="text-foreground/70 text-sm">
+                                       {formatDateRelative(
+                                          comment.createdAt,
+                                          "narrow",
+                                       )}
+                                    </small>
+                                 </p>
+                                 <p className="mt-0.5">{comment.content}</p>
+                              </div>
+                           </div>
+                        ))}
+                        <CreateComment className="mt-7" />
                      </div>
                   </div>
                </div>

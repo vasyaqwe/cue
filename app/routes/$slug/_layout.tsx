@@ -1,3 +1,4 @@
+import { useCommentSocket } from "@/comment/hooks/use-comment-socket"
 import { useNotificationSocket } from "@/inbox/hooks/use-notification-socket"
 import { inboxUnreadCountQuery } from "@/inbox/queries"
 import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
@@ -61,6 +62,7 @@ export const Route = createFileRoute("/$slug/_layout")({
 function Component() {
    useIssueSocket()
    useNotificationSocket()
+   useCommentSocket()
    const { organizationId } = useAuth()
 
    const unreadCount = useSuspenseQuery(

@@ -1,3 +1,4 @@
+import { commentListQuery } from "@/comment/queries"
 import { IssueDetails } from "@/issue/components/issue-details"
 import { issueByIdQuery } from "@/issue/queries"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
@@ -15,6 +16,13 @@ export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
          }),
       )
       if (!issue) throw notFound()
+
+      context.queryClient.prefetchQuery(
+         commentListQuery({
+            issueId: params.issueId,
+            organizationId: context.organizationId,
+         }),
+      )
 
       return issue
    },
