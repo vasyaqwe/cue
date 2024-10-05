@@ -87,7 +87,10 @@ export function CreateIssue() {
                label: "View",
                onClick: () => {
                   toast.dismiss()
-                  navigate({ to: `/${slug}/issue/${issue.id}` })
+                  navigate({
+                     to: "/$slug/issue/$issueId",
+                     params: { issueId: issue.id, slug },
+                  })
                },
             },
          })
