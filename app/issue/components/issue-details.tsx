@@ -1,3 +1,4 @@
+import { CreateComment } from "@/comment/components/create-comment"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
@@ -135,7 +136,7 @@ export function IssueDetails() {
                   </DropdownMenu>
                </Header>
                <div className="max-h-[calc(100svh-var(--header-height)-var(--bottom-menu-height))] overflow-y-auto md:max-h-[calc(100svh-var(--header-height))]">
-                  <div className="mx-auto w-full max-w-4xl px-4 pt-10 md:px-8">
+                  <div className="mx-auto w-full max-w-[50rem] px-4 pt-10 md:px-8">
                      <Input
                         autoComplete="off"
                         autoFocus
@@ -169,16 +170,18 @@ export function IssueDetails() {
 
                      <hr className="mt-12 mb-5 border-border border-t-2 border-dotted" />
 
-                     <p className="font-semibold text-lg">
-                        Activity coming soon..
-                     </p>
+                     <p className="font-semibold text-lg">Activity</p>
+
+                     <div>
+                        <CreateComment className="mt-5" />
+                     </div>
                   </div>
                </div>
             </div>
             <aside
                className={cn(
                   "sticky top-0 flex h-svh w-72 flex-col border-border/75 border-l bg-popover px-3 py-3 shadow-sm",
-                  onInboxPage ? "max-xl:hidden " : " max-md:hidden",
+                  onInboxPage ? "max-xl:hidden " : " max-lg:hidden",
                )}
             >
                <div className="flex items-center justify-between">
@@ -187,16 +190,16 @@ export function IssueDetails() {
                   </p>
                   <Tooltip
                      content={
-                        <div className="flex items-center gap-2">
+                        <span className="flex items-center gap-2">
                            Copy issue URL
-                           <div className="inline-flex items-center gap-1">
+                           <span className="inline-flex items-center gap-1">
                               <Kbd>Ctrl</Kbd>
                               <Kbd className="px-0.5 py-0">
                                  <Icons.shift className="h-5 w-[18px]" />
                               </Kbd>
                               <Kbd>C</Kbd>
-                           </div>
-                        </div>
+                           </span>
+                        </span>
                      }
                   >
                      <Button

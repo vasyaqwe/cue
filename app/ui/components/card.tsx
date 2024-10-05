@@ -5,7 +5,7 @@ import type { ComponentProps } from "react"
 const cardVariants = cva(`border border-border p-3 rounded-xl`, {
    variants: {
       variant: {
-         default: `bg-muted/50 text-muted-foreground`,
+         default: `bg-muted/50`,
          secondary: "bg-background",
       },
    },
@@ -43,7 +43,7 @@ function CardTitle({ className, ...props }: ComponentProps<"h3">) {
    return (
       <p
          className={cn(
-            "mb-2 font-semibold text-foreground text-lg leading-none tracking-tight",
+            "mb-2 font-semibold text-lg leading-none tracking-tight",
             className,
          )}
          {...props}
@@ -54,7 +54,7 @@ function CardTitle({ className, ...props }: ComponentProps<"h3">) {
 function CardDescription({ className, ...props }: ComponentProps<"p">) {
    return (
       <p
-         className={cn("mt-2 text-foreground/75 leading-tight", className)}
+         className={cn("mt-2 text-muted-foreground leading-tight", className)}
          {...props}
       />
    )
