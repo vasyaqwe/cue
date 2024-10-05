@@ -1,4 +1,5 @@
 import { CommandItem } from "@/ui/components/command"
+import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import type {
    PopoverContentProps,
@@ -57,6 +58,7 @@ export function Combobox({
    ...props
 }: ComboboxProps & PopoverProps & { nested?: boolean }) {
    const [open, setOpen] = useState(false)
+   const isMobile = useUIStore().isMobile
 
    return (
       <ComboboxContext.Provider
@@ -73,8 +75,8 @@ export function Combobox({
             />
          ) : null}
          <Popover
-            open={nested ? undefined : openProp ?? open}
-            onOpenChange={nested ? undefined : onOpenChangeProp ?? setOpen}
+            open={!isMobile ? openProp ?? open : undefined}
+            onOpenChange={!isMobile ? onOpenChangeProp ?? setOpen : undefined}
             nested={nested}
             {...props}
          >
