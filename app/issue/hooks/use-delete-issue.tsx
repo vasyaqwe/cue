@@ -26,11 +26,6 @@ export function useDeleteIssue() {
          if (isOnIssueIdPage) {
             navigate({ to: "/$slug", params: { slug: params.slug } })
          }
-         sendEvent({
-            type: "delete",
-            issueId,
-            senderId: user.id,
-         })
 
          await queryClient.cancelQueries(issueListQuery({ organizationId }))
 
@@ -55,12 +50,20 @@ export function useDeleteIssue() {
                params: { slug: params.slug, issueId: data.issueId },
             })
       },
-      onSettled: (_, _error, data) => {
+      onSettled: (_, error, data) => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
          queryClient.invalidateQueries(
             issueByIdQuery({ issueId: data.issueId, organizationId }),
          )
          queryClient.invalidateQueries(inboxListQuery({ organizationId }))
+
+         if (error || !data) return
+
+         sendEvent({
+            type: "delete",
+            issueId: data.issueId,
+            senderId: user.id,
+         })
       },
    })
 

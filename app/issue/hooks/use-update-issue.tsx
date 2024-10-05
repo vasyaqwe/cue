@@ -33,13 +33,6 @@ export function useUpdateIssue() {
    const updateIssue = useMutation({
       mutationFn: updateFn,
       onMutate: async (input) => {
-         sendIssueEvent({
-            type: "update",
-            issueId: input.id,
-            input,
-            senderId: user.id,
-         })
-
          const notificationsWithUpdatedIssue = notificatons.data.filter(
             (notification) => notification.issueId === input.id,
          )
@@ -103,7 +96,7 @@ export function useUpdateIssue() {
             )
          toast.error("Failed to update issue")
       },
-      onSettled: (_, _error, issue) => {
+      onSettled: (_, error, issue) => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
          if (issueIdParam)
             queryClient.invalidateQueries(
@@ -122,6 +115,15 @@ export function useUpdateIssue() {
                },
             })
          }
+
+         if (error || !issue) return
+
+         sendIssueEvent({
+            type: "update",
+            issueId: issue.id,
+            input: issue,
+            senderId: user.id,
+         })
       },
    })
 

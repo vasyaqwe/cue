@@ -22,13 +22,6 @@ export function useDeleteComment() {
    const deleteComment = useMutation({
       mutationFn: deleteFn,
       onMutate: async ({ commentId }) => {
-         sendEvent({
-            type: "delete",
-            commentId,
-            senderId: user.id,
-            issueId,
-         })
-
          await queryClient.cancelQueries(
             commentListQuery({ organizationId, issueId }),
          )
@@ -48,10 +41,19 @@ export function useDeleteComment() {
          )
          toast.error("Failed to delete comment")
       },
-      onSettled: (_, _error, _data) => {
+      onSettled: (_, error, data) => {
          queryClient.invalidateQueries(
             commentListQuery({ organizationId, issueId }),
          )
+
+         if (error || !data) return
+
+         sendEvent({
+            type: "delete",
+            commentId: data.commentId,
+            senderId: user.id,
+            issueId,
+         })
       },
    })
 
