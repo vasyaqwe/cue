@@ -94,6 +94,7 @@ export function useInsertComment() {
                title: issue.data.title,
                status: issue.data.status,
             },
+            commentId: comment.id,
          })
       },
    })

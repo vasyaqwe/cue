@@ -10,6 +10,7 @@
       "typecheck": "tsc --noEmit",
       "format-lint": "biome check",
       "format-lint:fix": "biome check --write",
+      "db:drop": "drizzle-kit drop",
       "db:generate": "drizzle-kit generate",
       "db:migrate": "drizzle-kit migrate",
       "db:push": "drizzle-kit push",

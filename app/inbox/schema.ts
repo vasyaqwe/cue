@@ -1,3 +1,4 @@
+import { comment } from "@/comment/schema"
 import { createTable, generateId, lifecycleDates } from "@/db/utils"
 import { issue, issueStatuses } from "@/issue/schema"
 import { organization } from "@/organization/schema"
@@ -29,6 +30,9 @@ export const notification = createTable(
       issueId: text("issue_id")
          .references(() => issue.id, { onDelete: "cascade" })
          .notNull(),
+      commentId: text("comment_id").references(() => comment.id, {
+         onDelete: "set null",
+      }),
       type: text("type", {
          enum: notificationTypes,
       }).notNull(),
@@ -82,6 +86,7 @@ export const updateNotificationParams = createSelectSchema(notification)
       type: true,
       receiverId: true,
       senderId: true,
+      commentId: true,
       createdAt: true,
       updatedAt: true,
       id: true,

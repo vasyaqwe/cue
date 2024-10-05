@@ -23,6 +23,7 @@ export const list = createServerFn(
                id: true,
                type: true,
                content: true,
+               commentId: true,
                issueId: true,
                isRead: true,
                createdAt: true,
@@ -93,6 +94,7 @@ export const insert = createServerFn(
                   senderId: ctx.user.id,
                   type: input.type,
                   content: input.content,
+                  commentId: input.commentId,
                })
                .returning()
                .get()

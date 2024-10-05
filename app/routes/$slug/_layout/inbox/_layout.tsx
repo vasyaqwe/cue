@@ -226,6 +226,10 @@ function Notification({
                                  className="size-4"
                                  status={notification.issue.status}
                               />
+                           ) : notification.type === "new_issue_comment" ? (
+                              <span className="grid size-4 place-items-center rounded-full border border-foreground/10 bg-border text-foreground/90 text-xl leading-none">
+                                 ❞
+                              </span>
                            ) : (
                               <span className="grid size-4 place-items-center rounded-full border border-foreground/10 bg-border">
                                  <Icons.plus className="size-3" />

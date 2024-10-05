@@ -25,6 +25,7 @@ export function useInsertNotification() {
                isRead: false,
                issueId: notification.issueId,
                type: notification.type,
+               commentId: notification.commentId,
                issue: {
                   title: notification.issue.title,
                   status: notification.issue.status,
