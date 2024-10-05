@@ -37,6 +37,7 @@ export const list = createServerFn(
                sender: {
                   columns: {
                      id: true,
+                     name: true,
                      avatarUrl: true,
                   },
                },

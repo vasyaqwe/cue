@@ -138,6 +138,9 @@ export function Sidebar() {
                   <li>
                      <Link
                         params={{ slug }}
+                        onClick={() =>
+                           useInboxStore.setState({ activeItemId: null })
+                        }
                         activeProps={{
                            onMouseUp: () => {
                               if (refreshNotifications.isRefreshing) return

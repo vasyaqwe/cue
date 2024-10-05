@@ -14,7 +14,7 @@ export function useCommentSocket() {
    const { insertCommentToQueryData, deleteCommentFromQueryData } =
       useCommentQueryMutator()
 
-   const notify = ({
+   const _notify = ({
       title,
       body,
       issueId,
@@ -48,11 +48,6 @@ export function useCommentSocket() {
          const message: CommentEvent = JSON.parse(event.data)
          if (message.senderId === user.id) return
          if (message.type === "insert") {
-            notify({
-               title: `${message.comment.author.name} commented on ${message.issueTitle}`,
-               body: message.comment.content,
-               issueId: message.comment.issueId,
-            })
             return insertCommentToQueryData({
                input: message.comment,
             })

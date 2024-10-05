@@ -31,6 +31,7 @@ export function useInsertNotification() {
                },
                sender: {
                   id: user.id,
+                  name: user.name,
                   avatarUrl: user.avatarUrl,
                },
             },

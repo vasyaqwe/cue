@@ -37,16 +37,6 @@ export function useUpdateIssue() {
             (notification) => notification.issueId === input.id,
          )
 
-         sendNotificationEvent({
-            type: "update",
-            senderId: user.id,
-            issue: {
-               id: input.id,
-               title: input.title,
-               status: input.status,
-            },
-         })
-
          updateIssueInQueryData({
             input,
          })
@@ -103,7 +93,9 @@ export function useUpdateIssue() {
                issueByIdQuery({ issueId: issueIdParam, organizationId }),
             )
 
-         if (issue.status && issue.status === "done") {
+         if (error || !issue) return
+
+         if (issue.status === "done") {
             insertNotification.mutate({
                organizationId,
                issueId: issue.id,
@@ -116,7 +108,15 @@ export function useUpdateIssue() {
             })
          }
 
-         if (error || !issue) return
+         sendNotificationEvent({
+            type: "issue_update",
+            senderId: user.id,
+            issue: {
+               id: issue.id,
+               title: issue.title,
+               status: issue.status,
+            },
+         })
 
          sendIssueEvent({
             type: "update",

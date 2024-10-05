@@ -9,7 +9,7 @@ export type NotificationEvent =
         senderId: string
      }
    | {
-        type: "update"
+        type: "issue_update"
         issue: z.infer<typeof updateNotificationParams>["issue"] & {
            id: string
         }

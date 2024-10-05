@@ -71,6 +71,7 @@ export function BottomMenu() {
                      },
                      "aria-current": "page",
                   }}
+                  onClick={() => useInboxStore.setState({ activeItemId: null })}
                   to={inboxRoute.to}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
                   data-has-unread={unreadCount.data.count > 0}

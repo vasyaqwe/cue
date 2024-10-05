@@ -28,7 +28,7 @@ import {
    createFileRoute,
    useParams,
 } from "@tanstack/react-router"
-import { type ComponentProps, useState } from "react"
+import type { ComponentProps } from "react"
 
 export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
    component: Component,
@@ -57,8 +57,8 @@ function Component() {
    })
    const notifications = useSuspenseQuery(inboxListQuery({ organizationId }))
    const isRefreshing = useInboxStore().isRefreshing
-   console.log(isRefreshing)
-   const [activeItemId, setActiveItemId] = useState<string | null>(null)
+   const activeItemId = useInboxStore().activeItemId
+
    const { updateNotification } = useUpdateNotification()
 
    return (
@@ -139,7 +139,9 @@ function Component() {
                            <Notification
                               key={notification.id}
                               onLinkClick={() => {
-                                 setActiveItemId(notification.id)
+                                 useInboxStore.setState({
+                                    activeItemId: notification.id,
+                                 })
                                  if (notification.isRead) return
 
                                  updateNotification.mutate({
