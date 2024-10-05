@@ -33,7 +33,7 @@ export function Comment({
                      {formatDateRelative(comment.createdAt, "narrow")}
                   </small>
                </p>
-               <div className="-top-2 right-0 flex items-center gap-0.5 rounded-full p-0.5 transition-opacity md:pointer-events-none md:group-hover:pointer-events-auto md:absolute md:group-hover:opacity-100 md:opacity-0 md:shadow-button">
+               <div className="-top-2 right-0 flex items-center rounded-full p-0.5 transition-opacity md:pointer-events-none md:group-hover:pointer-events-auto md:absolute md:group-hover:opacity-100 md:opacity-0 md:shadow-button">
                   <Tooltip content="Resolve comment">
                      <Button
                         aria-label="Resolve comment"

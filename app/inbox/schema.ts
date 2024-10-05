@@ -7,7 +7,11 @@ import { index, integer, text } from "drizzle-orm/sqlite-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
 
-export const notificationTypes = ["new_issue", "issue_resolved"] as const
+export const notificationTypes = [
+   "new_issue",
+   "issue_resolved",
+   "new_issue_comment",
+] as const
 
 export const notification = createTable(
    "notification",

@@ -2,8 +2,14 @@ import * as comment from "@/comment/functions"
 import { useCommentQueryMutator } from "@/comment/hooks/use-comment-query-mutator"
 import { commentListQuery } from "@/comment/queries"
 import { useCommentStore } from "@/comment/store"
+import { useInsertNotification } from "@/inbox/hooks/use-insert-notification"
+import { issueByIdQuery } from "@/issue/queries"
 import { useAuth } from "@/user/hooks"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+   useMutation,
+   useQueryClient,
+   useSuspenseQuery,
+} from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
@@ -15,7 +21,9 @@ export function useInsertComment() {
    if (!issueId)
       throw new Error("useInsertComment must be used in an $issueId route")
 
+   const issue = useSuspenseQuery(issueByIdQuery({ organizationId, issueId }))
    const sendEvent = useCommentStore().sendEvent
+   const { insertNotification } = useInsertNotification()
 
    const insertFn = useServerFn(comment.insert)
    const { insertCommentToQueryData } = useCommentQueryMutator()
@@ -58,7 +66,7 @@ export function useInsertComment() {
          queryClient.invalidateQueries(
             commentListQuery({ organizationId, issueId }),
          )
-         if (error || !comment) return
+         if (error || !comment || !issue.data) return
 
          sendEvent({
             type: "insert",
@@ -73,7 +81,19 @@ export function useInsertComment() {
                   name: user.name,
                },
             },
+            issueTitle: issue.data.title,
             senderId: user.id,
+         })
+
+         insertNotification.mutate({
+            organizationId,
+            issueId: comment.issueId,
+            type: "new_issue_comment",
+            content: `${user.name} commented: ${comment.content}`,
+            issue: {
+               title: issue.data.title,
+               status: issue.data.status,
+            },
          })
       },
    })

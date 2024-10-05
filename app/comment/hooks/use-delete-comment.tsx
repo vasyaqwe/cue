@@ -13,7 +13,7 @@ export function useDeleteComment() {
    const sendEvent = useCommentStore().sendEvent
    const { issueId } = useParams({ strict: false })
    if (!issueId)
-      throw new Error("useInsertComment must be used in an $issueId route")
+      throw new Error("useDeleteComment must be used in an $issueId route")
 
    const { organizationId, user } = useAuth()
    const { deleteCommentFromQueryData } = useCommentQueryMutator()
