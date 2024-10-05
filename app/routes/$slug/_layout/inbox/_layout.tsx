@@ -235,6 +235,9 @@ function Notification({
                      </div>
                      <div className="flex w-full items-center gap-2">
                         <p className="line-clamp-1 text-sm opacity-75">
+                           {notification.type === "new_issue_comment"
+                              ? `${notification.sender.name} commented: `
+                              : null}
                            {notification.content}
                         </p>
                         <span className="ml-auto whitespace-nowrap text-xs opacity-75">

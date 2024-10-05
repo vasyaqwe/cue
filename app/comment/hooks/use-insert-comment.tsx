@@ -89,7 +89,7 @@ export function useInsertComment() {
             organizationId,
             issueId: comment.issueId,
             type: "new_issue_comment",
-            content: `${user.name} commented: ${comment.content}`,
+            content: comment.content,
             issue: {
                title: issue.data.title,
                status: issue.data.status,
