@@ -7,6 +7,16 @@ export function useCommentQueryMutator() {
    const queryClient = useQueryClient()
    const { organizationId } = useAuth()
 
+   const deleteCommentFromQueryData = ({
+      commentId,
+      issueId,
+   }: { commentId: string; issueId: string }) => {
+      queryClient.setQueryData(
+         commentListQuery({ organizationId, issueId }).queryKey,
+         (oldData) => oldData?.filter((comment) => comment.id !== commentId),
+      )
+   }
+
    const insertCommentToQueryData = ({
       input,
    }: { input: Awaited<ReturnType<typeof commentFns.list>>[number] }) => {
@@ -18,5 +28,6 @@ export function useCommentQueryMutator() {
 
    return {
       insertCommentToQueryData,
+      deleteCommentFromQueryData,
    }
 }

@@ -1,3 +1,4 @@
+import { Comment } from "@/comment/components/comment"
 import { CreateComment } from "@/comment/components/create-comment"
 import { commentListQuery } from "@/comment/queries"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
@@ -31,10 +32,8 @@ import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
 import { Tooltip } from "@/ui/components/tooltip"
-import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
-import { formatDateRelative } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useLocation, useParams } from "@tanstack/react-router"
 import { useRef, useState } from "react"
@@ -142,7 +141,7 @@ export function IssueDetails() {
                   </DropdownMenu>
                </Header>
                <div className="max-h-[calc(100svh-var(--header-height)-var(--bottom-menu-height))] overflow-y-auto md:max-h-[calc(100svh-var(--header-height))]">
-                  <div className="mx-auto w-full max-w-[50rem] px-4 pt-10 md:px-8">
+                  <div className="mx-auto w-full max-w-[50rem] px-4 pt-10 pb-16 md:px-8">
                      <Input
                         autoComplete="off"
                         autoFocus
@@ -177,26 +176,10 @@ export function IssueDetails() {
                      <p className="font-semibold text-lg">Activity</p>
                      <div>
                         {comments.data.map((comment) => (
-                           <div
-                              className="mt-5 flex gap-3"
+                           <Comment
                               key={comment.id}
-                           >
-                              <UserAvatar user={comment.author} />
-                              <div className="flex-1">
-                                 <p className="-mt-[2px] line-clamp-1">
-                                    <strong className="mr-1 font-semibold ">
-                                       {comment.author.name}
-                                    </strong>
-                                    <small className="text-foreground/70 text-sm">
-                                       {formatDateRelative(
-                                          comment.createdAt,
-                                          "narrow",
-                                       )}
-                                    </small>
-                                 </p>
-                                 <p className="mt-0.5">{comment.content}</p>
-                              </div>
-                           </div>
+                              comment={comment}
+                           />
                         ))}
                         <CreateComment className="mt-7" />
                      </div>

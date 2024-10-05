@@ -8,7 +8,8 @@ import { useEffect } from "react"
 
 export function useCommentSocket() {
    const { organizationId, user } = useAuth()
-   const { insertCommentToQueryData } = useCommentQueryMutator()
+   const { insertCommentToQueryData, deleteCommentFromQueryData } =
+      useCommentQueryMutator()
 
    const socket = usePartySocket({
       host: env.VITE_PARTYKIT_URL,
@@ -20,6 +21,12 @@ export function useCommentSocket() {
          if (message.type === "insert") {
             return insertCommentToQueryData({
                input: message.comment,
+            })
+         }
+         if (message.type === "delete") {
+            return deleteCommentFromQueryData({
+               commentId: message.commentId,
+               issueId: message.issueId,
             })
          }
       },

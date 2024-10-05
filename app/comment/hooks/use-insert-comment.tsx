@@ -12,7 +12,8 @@ export function useInsertComment() {
    const queryClient = useQueryClient()
    const { organizationId, user } = useAuth()
    const { issueId } = useParams({ strict: false })
-   if (!issueId) throw new Error("Must have issueId param")
+   if (!issueId)
+      throw new Error("useInsertComment must be used in an $issueId route")
 
    const sendEvent = useCommentStore().sendEvent
 
