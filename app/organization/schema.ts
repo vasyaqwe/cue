@@ -31,11 +31,11 @@ export const organizationMember = createTable(
    "organization_member",
    {
       id: text("id")
-         .notNull()
-         .references(() => user.id, { onDelete: "cascade" }),
+         .references(() => user.id, { onDelete: "cascade" })
+         .notNull(),
       organizationId: text("organization_id")
-         .notNull()
-         .references(() => organization.id, { onDelete: "cascade" }),
+         .references(() => organization.id, { onDelete: "cascade" })
+         .notNull(),
    },
    (table) => {
       return {

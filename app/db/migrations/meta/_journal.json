@@ -22,6 +22,13 @@
       "when": 1728197460663,
       "tag": "0002_awesome_exodus",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1728206672938,
+      "tag": "0003_new_leopardon",
+      "breakpoints": true
     }
   ]
 }

@@ -31,8 +31,10 @@ import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
 import { Tooltip } from "@/ui/components/tooltip"
+import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
+import { formatDateRelative } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useLocation, useParams } from "@tanstack/react-router"
 import { useRef, useState } from "react"
@@ -171,6 +173,25 @@ export function IssueDetails() {
                   />
                   <hr className="mt-12 mb-5 border-border border-t-2 border-dotted" />
                   <p className="font-semibold text-lg">Activity</p>
+                  <div>
+                     <div className="mt-3 flex items-center gap-1 py-2">
+                        <UserAvatar
+                           className="mr-[11px] ml-0.5 size-7 [&>[data-indicator]]:size-3"
+                           user={{ ...issue.author, id: issue.authorId }}
+                        />
+                        <div className="md:-mt-px">
+                           <strong className="font-semibold text-foreground">
+                              {issue.author.name}
+                           </strong>{" "}
+                           <span className="text-foreground/70">
+                              created this issue{" "}
+                           </span>
+                           <small className="text-foreground/60 text-sm">
+                              — {formatDateRelative(issue.createdAt)}
+                           </small>
+                        </div>
+                     </div>
+                  </div>
                   <div>
                      {comments.data.map((comment) => (
                         <Comment

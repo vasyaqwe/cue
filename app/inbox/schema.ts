@@ -19,14 +19,14 @@ export const notification = createTable(
    {
       id: generateId("notification"),
       receiverId: text("receiver_id")
-         .notNull()
-         .references(() => user.id, { onDelete: "cascade" }),
+         .references(() => user.id, { onDelete: "cascade" })
+         .notNull(),
       senderId: text("sender_id")
-         .notNull()
-         .references(() => user.id, { onDelete: "cascade" }),
+         .references(() => user.id, { onDelete: "cascade" })
+         .notNull(),
       organizationId: text("organization_id")
-         .notNull()
-         .references(() => organization.id, { onDelete: "cascade" }),
+         .references(() => organization.id, { onDelete: "cascade" })
+         .notNull(),
       issueId: text("issue_id")
          .references(() => issue.id, { onDelete: "cascade" })
          .notNull(),

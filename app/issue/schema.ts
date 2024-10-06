@@ -1,5 +1,7 @@
 import { createTable, generateId, lifecycleDates } from "@/db/utils"
 import { organization } from "@/organization/schema"
+import { user } from "@/user/schema"
+import { relations } from "drizzle-orm"
 import { index, text } from "drizzle-orm/sqlite-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
@@ -18,9 +20,12 @@ export const issue = createTable(
       label: text("label", {
          enum: issueLabels,
       }).notNull(),
+      authorId: text("author_id")
+         .references(() => user.id, { onDelete: "cascade" })
+         .notNull(),
       organizationId: text("organization_id")
-         .notNull()
-         .references(() => organization.id, { onDelete: "cascade" }),
+         .references(() => organization.id, { onDelete: "cascade" })
+         .notNull(),
       ...lifecycleDates,
    },
    (table) => {
@@ -32,8 +37,16 @@ export const issue = createTable(
    },
 )
 
+export const issueRelations = relations(issue, ({ one }) => ({
+   author: one(user, {
+      fields: [issue.authorId],
+      references: [user.id],
+   }),
+}))
+
 export const insertIssueParams = createInsertSchema(issue).omit({
    id: true,
+   authorId: true,
    createdAt: true,
    updatedAt: true,
 })
@@ -44,6 +57,7 @@ export const updateIssueParams = createSelectSchema(issue)
       description: true,
    })
    .omit({
+      authorId: true,
       createdAt: true,
       updatedAt: true,
    })

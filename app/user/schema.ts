@@ -32,8 +32,8 @@ export const oauthAccount = createTable(
    "oauth_account",
    {
       userId: text("user_id")
-         .notNull()
-         .references(() => user.id, { onDelete: "cascade" }),
+         .references(() => user.id, { onDelete: "cascade" })
+         .notNull(),
       providerId: text("provider_id", {
          enum: oauthProviders.options,
       }).notNull(),
@@ -87,8 +87,8 @@ export const session = createTable("session", {
       mode: "timestamp",
    }).notNull(),
    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
    organizationMemberships: text("organization_memberships", {
       mode: "json",
    })

@@ -1,0 +1,1 @@
+ALTER TABLE `issue` ADD `author_id` text NOT NULL REFERENCES user(id);

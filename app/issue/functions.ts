@@ -24,6 +24,14 @@ export const byId = createServerFn(
          return (
             (await ctx.db.query.issue.findFirst({
                where: eq(issue.id, input.issueId),
+               with: {
+                  author: {
+                     columns: {
+                        name: true,
+                        avatarUrl: true,
+                     },
+                  },
+               },
             })) ?? null
          )
       }),
@@ -34,7 +42,11 @@ export const insert = createServerFn(
    organizationProtectedProcedure
       .input(insertIssueParams)
       .mutation(async ({ ctx, input }) => {
-         return await ctx.db.insert(issue).values(input).returning().get()
+         return await ctx.db
+            .insert(issue)
+            .values({ ...input, authorId: ctx.user.id })
+            .returning()
+            .get()
       }),
 )
 

@@ -29,7 +29,7 @@ export function Comment({
                   <strong className="mr-1 font-semibold ">
                      {comment.author.name}
                   </strong>
-                  <small className="text-foreground/70 text-sm">
+                  <small className="text-foreground/60 text-sm">
                      {formatDateRelative(comment.createdAt, "narrow")}
                   </small>
                </p>

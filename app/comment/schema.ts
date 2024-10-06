@@ -12,17 +12,17 @@ export const comment = createTable(
       id: generateId("comment"),
       content: text("content").notNull().default(""),
       organizationId: text("organization_id")
-         .notNull()
-         .references(() => organization.id, { onDelete: "cascade" }),
+         .references(() => organization.id, { onDelete: "cascade" })
+         .notNull(),
       authorId: text("author_id")
-         .notNull()
-         .references(() => user.id, { onDelete: "cascade" }),
+         .references(() => user.id, { onDelete: "cascade" })
+         .notNull(),
       resolvedById: text("resolved_by_id").references(() => user.id, {
          onDelete: "cascade",
       }),
       issueId: text("issue_id")
-         .notNull()
-         .references(() => issue.id, { onDelete: "cascade" }),
+         .references(() => issue.id, { onDelete: "cascade" })
+         .notNull(),
       ...lifecycleDates,
    },
    (table) => {
