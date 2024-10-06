@@ -23,7 +23,18 @@ import type { DialogProps } from "vaul"
 function Modal(props: DialogProps) {
    const isMobile = useUIStore().isMobile
 
-   return <>{isMobile ? <Drawer {...props} /> : <Dialog {...props} />}</>
+   return (
+      <>
+         {isMobile ? (
+            <Drawer
+               repositionInputs={false}
+               {...props}
+            />
+         ) : (
+            <Dialog {...props} />
+         )}
+      </>
+   )
 }
 
 function ModalTrigger(props: DialogTriggerProps) {

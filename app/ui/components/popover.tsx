@@ -28,7 +28,10 @@ function Popover({
             nested ? (
                <DrawerNested {...props} />
             ) : (
-               <Drawer {...props} />
+               <Drawer
+                  repositionInputs={false}
+                  {...props}
+               />
             )
          ) : (
             <PopoverPrimitive.Root {...props} />
