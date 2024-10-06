@@ -110,7 +110,7 @@ export function CreateIssue() {
 
    return (
       <ModalContent
-         className="max-md:min-h-[50svh]"
+         className="max-md:min-h-[48svh]"
          onAnimationEndCapture={() => titleRef.current?.focus()}
       >
          <ModalHeader className="max-md:hidden">

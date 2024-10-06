@@ -14,7 +14,7 @@ import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
 
-export function useInsertComment() {
+export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
    const queryClient = useQueryClient()
    const { organizationId, user } = useAuth()
    const { issueId } = useParams({ strict: false })
@@ -31,6 +31,7 @@ export function useInsertComment() {
    const insertComment = useMutation({
       mutationFn: insertFn,
       onMutate: async (input) => {
+         onMutate?.()
          await queryClient.cancelQueries(
             commentListQuery({ organizationId, issueId }),
          )

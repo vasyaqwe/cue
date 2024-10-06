@@ -36,7 +36,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                   to="/"
                   className={cn(
                      buttonVariants({ variant: "outline" }),
-                     "active:scale-[98%] hover:bg-elevated",
+                     "active:scale-[98%] hover:bg-elevated/75",
                   )}
                >
                   Open app
@@ -47,7 +47,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                   to="/login"
                   className={cn(
                      buttonVariants({ variant: "outline" }),
-                     "active:scale-[98%] hover:bg-elevated",
+                     "active:scale-[98%] hover:bg-elevated/75",
                   )}
                >
                   Log in

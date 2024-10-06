@@ -62,7 +62,7 @@ function Component() {
    const { updateNotification } = useUpdateNotification()
 
    return (
-      <Main className="flex max-h-[calc(100svh-var(--bottom-menu-height))] pb-0 md:max-h-svh">
+      <Main className="flex overflow-visible pb-0">
          <div
             className={cn(
                "flex flex-1 shrink-0 flex-col border-border/75 2xl:max-w-[400px] lg:max-w-[320px] lg:border-r",
@@ -181,7 +181,7 @@ function Notification({
    return (
       <ContextMenu>
          <ContextMenuTrigger
-            className="flex w-full items-center gap-2 rounded-xl md:gap-4 data-[state=open]:bg-border/40 has-[a:focus-visible]:bg-border/60 hover:bg-border/40 md:data-[active=true]:bg-border/60"
+            className="flex w-full items-center gap-2 rounded-xl last:mb-1.5 md:gap-4 data-[state=open]:bg-border/40 has-[a:focus-visible]:bg-border/60 hover:bg-border/40 md:data-[active=true]:bg-border/60"
             asChild
             {...props}
          >
@@ -227,7 +227,7 @@ function Notification({
                                  status={notification.issue.status}
                               />
                            ) : notification.type === "new_issue_comment" ? (
-                              <span className="grid size-4 place-items-center rounded-full border border-foreground/10 bg-border text-foreground/90 text-xl leading-none">
+                              <span className="grid size-4 place-items-center rounded-full border border-foreground/10 bg-border text-foreground/90 text-xl leading-[1.1]">
                                  ❞
                               </span>
                            ) : (

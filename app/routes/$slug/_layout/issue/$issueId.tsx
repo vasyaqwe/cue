@@ -44,5 +44,9 @@ export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
 })
 
 function Component() {
-   return <IssueDetails />
+   return (
+      <Main className="z-[6] flex overflow-y-visible pb-0">
+         <IssueDetails />
+      </Main>
+   )
 }

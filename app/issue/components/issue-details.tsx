@@ -14,7 +14,6 @@ import {
 } from "@/issue/schema"
 import { useOnPushModal } from "@/modals"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
-import { Main } from "@/routes/$slug/-components/main"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
    Combobox,
@@ -98,208 +97,221 @@ export function IssueDetails() {
    const [createIssueOpen, setCreateIssueOpen] = useState(false)
    useOnPushModal("create_issue", (open) => setCreateIssueOpen(open))
 
+   const scrollRef = useRef<HTMLDivElement>(null)
+
    if (!issue) return null
 
    const onInboxPage = pathname.includes("/inbox")
 
    return (
-      <Main
-         asChild={onInboxPage}
-         className="z-[6] overflow-y-visible pb-0"
-      >
-         <div className="flex ">
-            <div className="flex-1">
-               <Header className={onInboxPage ? "md:pl-0" : ""}>
-                  <HeaderTitle>Issue</HeaderTitle>
-                  <DropdownMenu>
-                     <DropdownMenuTrigger
-                        aria-label="Issue options"
-                        className={cn(
-                           buttonVariants({
-                              variant: "ghost",
-                              size: "icon",
-                           }),
-                           "ml-2",
-                        )}
-                     >
-                        <Icons.ellipsis className="size-6" />
-                     </DropdownMenuTrigger>
-                     <DropdownMenuContent
-                        align="start"
-                        title="Issue options"
-                     >
-                        <DropdownMenuItem
-                           onSelect={() => {
-                              deleteIssue.mutate({ issueId, organizationId })
-                           }}
-                           destructive
-                        >
-                           <Icons.trash />
-                           Delete
-                        </DropdownMenuItem>
-                     </DropdownMenuContent>
-                  </DropdownMenu>
-               </Header>
-               <div className="max-h-[calc(100svh-var(--header-height)-var(--bottom-menu-height))] overflow-y-auto md:max-h-[calc(100svh-var(--header-height))]">
-                  <div className="mx-auto w-full max-w-[50rem] px-4 pt-10 pb-16 md:px-8">
-                     <Input
-                        autoComplete="off"
-                        autoFocus
-                        defaultValue={issue.title}
-                        name="title"
-                        id="title"
-                        placeholder="Issue title"
-                        required
-                        onChange={(e) => {
-                           debouncedSaveIssue.call({
-                              ...issue,
-                              title: e.target.value,
-                           })
+      <>
+         <div className="flex flex-1 flex-col">
+            <Header className={onInboxPage ? "md:pl-0" : ""}>
+               <HeaderTitle>Issue</HeaderTitle>
+               <DropdownMenu>
+                  <DropdownMenuTrigger
+                     aria-label="Issue options"
+                     className={cn(
+                        buttonVariants({
+                           variant: "ghost",
+                           size: "icon",
+                        }),
+                        "ml-2",
+                     )}
+                  >
+                     <Icons.ellipsis className="size-6" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                     align="start"
+                     title="Issue options"
+                  >
+                     <DropdownMenuItem
+                        onSelect={() => {
+                           deleteIssue.mutate({ issueId, organizationId })
                         }}
-                        className="!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
-                     />
-                     <Input
-                        defaultValue={issue.description}
-                        name="description"
-                        id="description"
-                        placeholder="Add description.."
-                        required
-                        onChange={(e) => {
-                           debouncedSaveIssue.call({
-                              ...issue,
-                              description: e.target.value,
-                           })
-                        }}
-                        className="!border-none !outline-none !bg-transparent mt-4 h-8 rounded-none p-0 text-lg"
-                     />
-                     <hr className="mt-12 mb-5 border-border border-t-2 border-dotted" />
-                     <p className="font-semibold text-lg">Activity</p>
-                     <div>
-                        {comments.data.map((comment) => (
-                           <Comment
-                              key={comment.id}
-                              comment={comment}
-                           />
-                        ))}
-                        <CreateComment className="mt-7" />
-                     </div>
+                        destructive
+                     >
+                        <Icons.trash />
+                        Delete
+                     </DropdownMenuItem>
+                  </DropdownMenuContent>
+               </DropdownMenu>
+            </Header>
+            <div className="overflow-y-auto">
+               <div className="mx-auto w-full max-w-[51rem] px-4 py-6 md:py-8">
+                  <Input
+                     autoComplete="off"
+                     autoFocus
+                     defaultValue={issue.title}
+                     name="title"
+                     id="title"
+                     placeholder="Issue title"
+                     required
+                     onChange={(e) => {
+                        debouncedSaveIssue.call({
+                           ...issue,
+                           title: e.target.value,
+                        })
+                     }}
+                     className="!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
+                  />
+                  <Input
+                     defaultValue={issue.description}
+                     name="description"
+                     id="description"
+                     placeholder="Add description.."
+                     required
+                     onChange={(e) => {
+                        debouncedSaveIssue.call({
+                           ...issue,
+                           description: e.target.value,
+                        })
+                     }}
+                     className="!border-none !outline-none !bg-transparent mt-4 h-8 rounded-none p-0 text-lg"
+                  />
+                  <hr className="mt-12 mb-5 border-border border-t-2 border-dotted" />
+                  <p className="font-semibold text-lg">Activity</p>
+                  <div>
+                     {comments.data.map((comment) => (
+                        <Comment
+                           key={comment.id}
+                           comment={comment}
+                        />
+                     ))}
                   </div>
                </div>
+               <div
+                  className="h-px w-full"
+                  ref={scrollRef}
+               />
             </div>
-            <aside
-               className={cn(
-                  "sticky top-0 flex h-svh w-72 flex-col border-border/75 border-l bg-popover px-3 py-3 shadow-sm",
-                  onInboxPage ? "max-xl:hidden " : " max-lg:hidden",
-               )}
-            >
-               <div className="flex items-center justify-between">
-                  <p className="pl-2 font-semibold text-foreground/75">
-                     Properties
-                  </p>
-                  <Tooltip
-                     content={
-                        <span className="flex items-center gap-2">
-                           Copy issue URL
-                           <span className="inline-flex items-center gap-1">
-                              <Kbd>Ctrl</Kbd>
-                              <Kbd className="px-0.5 py-0">
-                                 <Icons.shift className="h-5 w-[18px]" />
-                              </Kbd>
-                              <Kbd>C</Kbd>
-                           </span>
-                        </span>
-                     }
-                  >
-                     <Button
-                        onClick={onCopyIssueUrl}
-                        aria-label="Copy issue URL"
-                        variant={"ghost"}
-                        size={"icon"}
-                     >
-                        <Icons.link />
-                     </Button>
-                  </Tooltip>
-               </div>
-               <Combobox shortcut={!createIssueOpen ? "s" : undefined}>
-                  <ComboboxTrigger
-                     className={cn(
-                        buttonVariants({ variant: "ghost" }),
-                        "mt-3 w-fit pr-2 pl-1.5 capitalize",
-                     )}
-                  >
-                     <StatusIcon
-                        className="!size-[18px] mr-0.5"
-                        status={issue.status}
-                     />
-                     {issue.status}
-                  </ComboboxTrigger>
-                  <ComboboxContent
-                     align="start"
-                     side="left"
-                     title="Status"
-                  >
-                     {issueStatuses.map((s) => (
-                        <ComboboxItem
-                           key={s}
-                           value={s}
-                           onSelect={(value) => {
-                              updateIssue.mutate({
-                                 id: issueId,
-                                 organizationId,
-                                 status: value as never,
-                                 title: issue.title,
-                              })
-                           }}
-                           isSelected={s === issue.status}
-                           className="capitalize"
-                        >
-                           <StatusIcon
-                              className="!size-[18px] mr-0.5"
-                              status={s}
-                           />
-                           {s}
-                        </ComboboxItem>
-                     ))}
-                  </ComboboxContent>
-               </Combobox>
-               <Combobox shortcut={!createIssueOpen ? "l" : undefined}>
-                  <ComboboxTrigger
-                     className={cn(
-                        buttonVariants({ variant: "ghost" }),
-                        "mt-3 w-fit pr-2 pl-2 capitalize",
-                     )}
-                  >
-                     <LabelIndicator label={issue.label} />
-                     {issue.label}
-                  </ComboboxTrigger>
-                  <ComboboxContent
-                     align="start"
-                     side="left"
-                     title="Label"
-                  >
-                     {issueLabels.map((l) => (
-                        <ComboboxItem
-                           key={l}
-                           value={l}
-                           onSelect={(value) => {
-                              updateIssue.mutate({
-                                 id: issueId,
-                                 organizationId,
-                                 label: value as never,
-                                 title: issue.title,
-                              })
-                           }}
-                           isSelected={l === issue.label}
-                           className="capitalize"
-                        >
-                           <LabelIndicator label={l} />
-                           {l}
-                        </ComboboxItem>
-                     ))}
-                  </ComboboxContent>
-               </Combobox>
-            </aside>
+            <div className="mt-auto w-full border-border/75 border-t bg-popover px-3 py-3 pb-safe-3 shadow-sm xl:py-4">
+               <CreateComment
+                  onMutate={() =>
+                     setTimeout(() => {
+                        scrollRef.current?.scrollIntoView({
+                           block: "end",
+                           behavior: "smooth",
+                        })
+                     }, 200)
+                  }
+                  className="mx-auto w-full max-w-[49rem]"
+               />
+            </div>
          </div>
-      </Main>
+         <aside
+            className={cn(
+               "sticky top-0 flex h-svh w-72 flex-col border-border/75 border-l bg-popover px-3 py-3 shadow-sm",
+               onInboxPage ? "max-xl:hidden " : " max-lg:hidden",
+            )}
+         >
+            <div className="flex items-center justify-between">
+               <p className="pl-2 font-semibold text-foreground/75">
+                  Properties
+               </p>
+               <Tooltip
+                  content={
+                     <span className="flex items-center gap-2">
+                        Copy issue URL
+                        <span className="inline-flex items-center gap-1">
+                           <Kbd>Ctrl</Kbd>
+                           <Kbd className="px-0.5 py-0">
+                              <Icons.shift className="h-5 w-[18px]" />
+                           </Kbd>
+                           <Kbd>C</Kbd>
+                        </span>
+                     </span>
+                  }
+               >
+                  <Button
+                     onClick={onCopyIssueUrl}
+                     aria-label="Copy issue URL"
+                     variant={"ghost"}
+                     size={"icon"}
+                  >
+                     <Icons.link />
+                  </Button>
+               </Tooltip>
+            </div>
+            <Combobox shortcut={!createIssueOpen ? "s" : undefined}>
+               <ComboboxTrigger
+                  className={cn(
+                     buttonVariants({ variant: "ghost" }),
+                     "mt-3 w-fit pr-2 pl-1.5 capitalize",
+                  )}
+               >
+                  <StatusIcon
+                     className="!size-[18px] mr-0.5"
+                     status={issue.status}
+                  />
+                  {issue.status}
+               </ComboboxTrigger>
+               <ComboboxContent
+                  align="start"
+                  side="left"
+                  title="Status"
+               >
+                  {issueStatuses.map((s) => (
+                     <ComboboxItem
+                        key={s}
+                        value={s}
+                        onSelect={(value) => {
+                           updateIssue.mutate({
+                              id: issueId,
+                              organizationId,
+                              status: value as never,
+                              title: issue.title,
+                           })
+                        }}
+                        isSelected={s === issue.status}
+                        className="capitalize"
+                     >
+                        <StatusIcon
+                           className="!size-[18px] mr-0.5"
+                           status={s}
+                        />
+                        {s}
+                     </ComboboxItem>
+                  ))}
+               </ComboboxContent>
+            </Combobox>
+            <Combobox shortcut={!createIssueOpen ? "l" : undefined}>
+               <ComboboxTrigger
+                  className={cn(
+                     buttonVariants({ variant: "ghost" }),
+                     "mt-3 w-fit pr-2 pl-2 capitalize",
+                  )}
+               >
+                  <LabelIndicator label={issue.label} />
+                  {issue.label}
+               </ComboboxTrigger>
+               <ComboboxContent
+                  align="start"
+                  side="left"
+                  title="Label"
+               >
+                  {issueLabels.map((l) => (
+                     <ComboboxItem
+                        key={l}
+                        value={l}
+                        onSelect={(value) => {
+                           updateIssue.mutate({
+                              id: issueId,
+                              organizationId,
+                              label: value as never,
+                              title: issue.title,
+                           })
+                        }}
+                        isSelected={l === issue.label}
+                        className="capitalize"
+                     >
+                        <LabelIndicator label={l} />
+                        {l}
+                     </ComboboxItem>
+                  ))}
+               </ComboboxContent>
+            </Combobox>
+         </aside>
+      </>
    )
 }

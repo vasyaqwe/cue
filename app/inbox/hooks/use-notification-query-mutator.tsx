@@ -44,6 +44,7 @@ export function useNotificationQueryMutator() {
          inboxUnreadCountQuery({ organizationId }).queryKey,
          (oldData) => {
             if (!oldData) return oldData
+
             return {
                count: Math.max(oldData.count - unreadCountToRemove, 0),
             }
@@ -56,7 +57,11 @@ export function useNotificationQueryMutator() {
    }: { input: Awaited<ReturnType<typeof notificationFns.list>>[number] }) => {
       queryClient.setQueryData(
          inboxListQuery({ organizationId }).queryKey,
-         (oldData) => [input, ...(oldData ?? [])],
+         (oldData) => {
+            if (!oldData) return oldData
+
+            return [input, ...oldData]
+         },
       )
       queryClient.setQueryData(
          inboxUnreadCountQuery({ organizationId }).queryKey,

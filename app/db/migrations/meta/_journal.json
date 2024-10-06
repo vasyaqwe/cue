@@ -15,6 +15,13 @@
       "when": 1728153639388,
       "tag": "0001_funny_puck",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1728197460663,
+      "tag": "0002_awesome_exodus",
+      "breakpoints": true
     }
   ]
 }

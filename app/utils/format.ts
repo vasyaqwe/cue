@@ -8,6 +8,8 @@ export const formatDateRelative = (
    // Get the amount of seconds between the given date and now
    const deltaSeconds = Math.round((Date.now() - timeMs) / 1000) // Changed this line
 
+   if (Math.abs(deltaSeconds) < 60) return "just now"
+
    // Array representing one minute, hour, day, week, month, etc in seconds
    const cutoffs = [
       60,

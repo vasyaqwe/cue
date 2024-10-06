@@ -117,7 +117,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
          <Body suppressHydrationWarning>
             <div
                className={cn(
-                  "flex h-full flex-1 flex-col bg-background text-foreground tracking-[0.02em] antialiased md:flex-row",
+                  "flex-1 flex-row bg-background text-foreground tracking-[0.02em] antialiased md:flex",
                )}
             >
                <TooltipProvider delayDuration={400}>

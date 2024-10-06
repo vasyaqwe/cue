@@ -17,6 +17,9 @@ export const comment = createTable(
       authorId: text("author_id")
          .notNull()
          .references(() => user.id, { onDelete: "cascade" }),
+      resolvedById: text("resolved_by_id").references(() => user.id, {
+         onDelete: "cascade",
+      }),
       issueId: text("issue_id")
          .notNull()
          .references(() => issue.id, { onDelete: "cascade" }),
@@ -24,9 +27,7 @@ export const comment = createTable(
    },
    (table) => {
       return {
-         commentOrganizationIdIdx: index("comment_organization_id_idx").on(
-            table.organizationId,
-         ),
+         commentIssueIdIdx: index("comment_issue_id_idx").on(table.issueId),
       }
    },
 )

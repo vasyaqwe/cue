@@ -9,13 +9,17 @@ import { useAuth } from "@/user/hooks"
 import { useParams } from "@tanstack/react-router"
 import { type ComponentProps, useState } from "react"
 
-export function CreateComment({ className, ...props }: ComponentProps<"form">) {
+export function CreateComment({
+   onMutate,
+   className,
+   ...props
+}: ComponentProps<"form"> & { onMutate?: () => void }) {
    const [content, setContent] = useState("")
    const { organizationId, user } = useAuth()
    const { issueId } = useParams({ strict: false })
    if (!issueId) throw new Error("Must have issueId param")
 
-   const { insertComment } = useInsertComment()
+   const { insertComment } = useInsertComment({ onMutate })
 
    const isEmpty = content.trim() === ""
 

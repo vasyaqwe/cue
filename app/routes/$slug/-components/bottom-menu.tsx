@@ -11,11 +11,12 @@ import { Icons } from "@/ui/components/icons"
 import { useRefreshState } from "@/ui/components/refresh-control/use-refresh-state"
 import { useAuth } from "@/user/hooks"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { useParams } from "@tanstack/react-router"
+import { useLocation, useParams } from "@tanstack/react-router"
 import { Link } from "@tanstack/react-router"
 
 export function BottomMenu() {
    const { slug } = useParams({ from: "/$slug/_layout" })
+   const { pathname } = useLocation()
    const { organizationId } = useAuth()
    const unreadCount = useSuspenseQuery(
       inboxUnreadCountQuery({ organizationId }),
@@ -41,8 +42,11 @@ export function BottomMenu() {
          }),
    })
 
+   const isOnIssuePage = pathname.includes("/issue/")
+   if (isOnIssuePage) return null
+
    return (
-      <nav className="fixed bottom-0 z-[2] h-[calc(var(--bottom-menu-height)+max(calc(env(safe-area-inset-bottom)+0px),0px))] w-full border-border border-t bg-background p-1.5 shadow md:hidden">
+      <nav className="fixed bottom-0 z-[2] h-[calc(var(--bottom-menu-height)+env(safe-area-inset-bottom)] w-full border-border border-t bg-background p-1.5 shadow md:hidden">
          <ul className="flex flex-1 items-center justify-around gap-2">
             <li className="flex flex-1">
                <Link

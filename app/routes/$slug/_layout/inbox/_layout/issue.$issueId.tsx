@@ -25,7 +25,10 @@ export const Route = createFileRoute(
          <Header className="md:pl-0">
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
-         <Main className="flex ">
+         <Main
+            className="flex pb-0"
+            asMain={false}
+         >
             <div className="relative flex-1">
                <Loading className="absolute inset-0 m-auto" />
             </div>
@@ -37,5 +40,12 @@ export const Route = createFileRoute(
 })
 
 function Component() {
-   return <IssueDetails />
+   return (
+      <Main
+         asMain={false}
+         className="z-[6] flex overflow-y-visible pb-0"
+      >
+         <IssueDetails />
+      </Main>
+   )
 }

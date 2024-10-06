@@ -40,7 +40,11 @@ export function useCommentQueryMutator() {
    }: { input: Awaited<ReturnType<typeof commentFns.list>>[number] }) => {
       queryClient.setQueryData(
          commentListQuery({ organizationId, issueId: input.issueId }).queryKey,
-         (oldData) => [...(oldData ?? []), input],
+         (oldData) => {
+            if (!oldData) return oldData
+
+            return [...oldData, input]
+         },
       )
    }
 

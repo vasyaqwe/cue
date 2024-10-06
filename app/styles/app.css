@@ -68,9 +68,6 @@ body,#root {
   height: 100%;
 }
 #root {
-  display: flex;
-  flex-direction: column;
-  min-height: 100svh;
   height: 100%;
 }
 @layer components {
@@ -90,8 +87,23 @@ body,#root {
 }
 
 @layer utilities {
-  .pb-safe {
+  .pb-safe-1 {
+    padding-bottom: max(calc(env(safe-area-inset-bottom) + 0.25rem), 0.25rem);
+  } 
+  .pb-safe-2 {
     padding-bottom: max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.5rem);
+  }
+  .pb-safe-3 {
+    padding-bottom: max(calc(env(safe-area-inset-bottom) + 0.75rem), 0.75rem);
+  } 
+  .pb-safe-4 {
+    padding-bottom: max(calc(env(safe-area-inset-bottom) + 1rem), 1rem);
+  }
+  .pb-safe-5 {
+    padding-bottom: max(calc(env(safe-area-inset-bottom) + 1.25rem), 1.25rem);
+  }
+  .pb-safe-6 {
+    padding-bottom: max(calc(env(safe-area-inset-bottom) + 1.5rem), 1.5rem);
   }
 }
 
@@ -136,6 +148,7 @@ p {
   --mobile-offset: 0 !important;
 }
 
+/* misc */
 @media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) { 
    .nav-link-text {
       margin-bottom: -2px;

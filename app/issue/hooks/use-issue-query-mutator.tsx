@@ -26,10 +26,7 @@ export function useIssueQueryMutator() {
 
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
-         (oldData) =>
-            produce(oldData, (draft) => {
-               return draft?.filter((issue) => issue.id !== issueId)
-            }),
+         (oldData) => oldData?.filter((issue) => issue.id !== issueId),
       )
 
       queryClient.setQueryData(
@@ -59,16 +56,20 @@ export function useIssueQueryMutator() {
    }) => {
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
-         (oldData) => [
-            {
-               ...input,
-               id: input.id ?? crypto.randomUUID(),
-               description: input.description ?? "",
-               createdAt: Date.now(),
-               updatedAt: Date.now(),
-            },
-            ...(oldData ?? []),
-         ],
+         (oldData) => {
+            if (!oldData) return oldData
+
+            return [
+               {
+                  ...input,
+                  id: input.id ?? crypto.randomUUID(),
+                  description: input.description ?? "",
+                  createdAt: Date.now(),
+                  updatedAt: Date.now(),
+               },
+               ...oldData,
+            ]
+         },
       )
    }
 
@@ -81,6 +82,7 @@ export function useIssueQueryMutator() {
          issueListQuery({ organizationId }).queryKey,
          (oldData) => {
             if (!oldData) return oldData
+
             return produce(oldData, (draft) => {
                const issue = draft?.find((issue) => issue.id === input.id)
                if (!issue) return
