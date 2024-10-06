@@ -191,7 +191,7 @@ function Component() {
                               </Label>
                               <Input
                                  autoComplete="off"
-                                 autoFocus={isMobile}
+                                 autoFocus={!isMobile}
                                  id="confirmation"
                                  name="confirmation"
                                  placeholder="delete this organization"

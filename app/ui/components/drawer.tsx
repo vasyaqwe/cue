@@ -58,10 +58,7 @@ function DrawerContent({
 function DrawerHeader({ className, ...props }: ComponentProps<"div">) {
    return (
       <header
-         className={cn(
-            "grid gap-1.5 border-border border-b px-4 py-3.5 md:py-3",
-            className,
-         )}
+         className={cn("grid gap-1.5 px-4 pt-3.5 md:pt-3", className)}
          {...props}
       />
    )

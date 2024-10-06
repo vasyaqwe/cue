@@ -102,7 +102,7 @@ export function ComboboxContent({
 }: PopoverContentProps & { title: string }) {
    return (
       <PopoverContent
-         className={cn("pb-safe-2", className)}
+         className={cn("pb-safe", className)}
          {...props}
       >
          <Command

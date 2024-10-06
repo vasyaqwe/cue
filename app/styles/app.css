@@ -87,24 +87,21 @@ body,#root {
 }
 
 @layer utilities {
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 0rem);
+  }
   .pb-safe-1 {
-    padding-bottom: max(calc(env(safe-area-inset-bottom) + 0.25rem), 0.25rem);
+    padding-bottom: max(env(safe-area-inset-bottom), 0.25rem);
   } 
   .pb-safe-2 {
-    padding-bottom: max(calc(env(safe-area-inset-bottom) + 0.5rem), 0.5rem);
-  }
+    padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+  } 
   .pb-safe-3 {
-    padding-bottom: max(calc(env(safe-area-inset-bottom) + 0.75rem), 0.75rem);
+    padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
   } 
   .pb-safe-4 {
-    padding-bottom: max(calc(env(safe-area-inset-bottom) + 1rem), 1rem);
-  }
-  .pb-safe-5 {
-    padding-bottom: max(calc(env(safe-area-inset-bottom) + 1.25rem), 1.25rem);
-  }
-  .pb-safe-6 {
-    padding-bottom: max(calc(env(safe-area-inset-bottom) + 1.5rem), 1.5rem);
-  }
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  } 
 }
 
 /* reset */

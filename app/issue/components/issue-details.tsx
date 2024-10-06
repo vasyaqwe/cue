@@ -143,7 +143,6 @@ export function IssueDetails() {
                <div className="mx-auto w-full max-w-[51rem] px-4 py-6 md:py-8">
                   <Input
                      autoComplete="off"
-                     autoFocus
                      defaultValue={issue.title}
                      name="title"
                      id="title"
@@ -206,7 +205,7 @@ export function IssueDetails() {
                   ref={scrollRef}
                />
             </div>
-            <div className="mt-auto w-full border-border/75 border-t bg-popover px-3 py-3 pb-safe-2 shadow-sm xl:py-4">
+            <div className="mt-auto w-full border-border/75 border-t bg-popover px-3 py-3 pb-safe-3 shadow-sm xl:py-4">
                <CreateComment
                   onMutate={() =>
                      setTimeout(() => {

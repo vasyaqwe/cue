@@ -83,7 +83,7 @@ function Component() {
                         <ModalHeader>
                            <ModalTitle>Invite your team</ModalTitle>
                         </ModalHeader>
-                        <div className="p-4">
+                        <div className="p-4 pb-safe-4">
                            <p>
                               Anyone with this link can join your organization.
                            </p>
