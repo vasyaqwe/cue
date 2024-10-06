@@ -46,7 +46,7 @@ export function BottomMenu() {
    if (isOnIssuePage) return null
 
    return (
-      <nav className="fixed bottom-0 z-[2] h-[calc(var(--bottom-menu-height)+env(safe-area-inset-bottom)] w-full border-border border-t bg-background p-1.5 shadow md:hidden">
+      <nav className="fixed bottom-0 z-[2] h-[calc(var(--bottom-menu-height)+max(calc(env(safe-area-inset-bottom)+0px),0px)] w-full border-border border-t bg-background p-1.5 shadow md:hidden">
          <ul className="flex flex-1 items-center justify-around gap-2">
             <li className="flex flex-1">
                <Link
