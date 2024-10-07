@@ -1,8 +1,8 @@
-import { inboxListQuery } from "@/inbox/queries"
 import * as issue from "@/issue/functions"
 import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
+import { notificationListQuery } from "@/notification/queries"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
@@ -51,7 +51,9 @@ export function useDeleteIssue() {
          queryClient.invalidateQueries(
             issueByIdQuery({ issueId: data.issueId, organizationId }),
          )
-         queryClient.invalidateQueries(inboxListQuery({ organizationId }))
+         queryClient.invalidateQueries(
+            notificationListQuery({ organizationId }),
+         )
 
          if (error || !data) return
 

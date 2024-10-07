@@ -1,4 +1,4 @@
-import type { updateNotificationParams } from "@/inbox/schema"
+import type { updateNotificationParams } from "@/notification/schema"
 import type { z } from "zod"
 import type * as notification from "./functions"
 

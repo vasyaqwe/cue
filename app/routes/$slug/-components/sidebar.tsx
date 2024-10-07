@@ -1,9 +1,12 @@
-import { inboxListQuery, inboxUnreadCountQuery } from "@/inbox/queries"
-import { useInboxStore } from "@/inbox/store"
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import { pushModal } from "@/modals"
+import {
+   notificationListQuery,
+   notificationUnreadCountQuery,
+} from "@/notification/queries"
+import { useNotificationStore } from "@/notification/store"
 import { organizationMembershipsQuery } from "@/organization/queries"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as inboxRoute } from "@/routes/$slug/_layout/inbox/_layout/index"
@@ -42,16 +45,16 @@ export function Sidebar() {
    const { organization } = useAuth()
    const memberships = useSuspenseQuery(organizationMembershipsQuery())
    const unreadCount = useSuspenseQuery(
-      inboxUnreadCountQuery({ organizationId: organization.id }),
+      notificationUnreadCountQuery({ organizationId: organization.id }),
    )
    const notifications = useSuspenseQuery(
-      inboxListQuery({ organizationId: organization.id }),
+      notificationListQuery({ organizationId: organization.id }),
    )
    const refreshNotifications = useRefreshState({
       isRefetching: notifications.isRefetching,
       refetch: notifications.refetch,
       onChange: (isRefreshing) =>
-         useInboxStore.setState({
+         useNotificationStore.setState({
             isRefreshing,
          }),
    })
@@ -139,7 +142,7 @@ export function Sidebar() {
                      <Link
                         params={{ slug }}
                         onClick={() =>
-                           useInboxStore.setState({ activeItemId: null })
+                           useNotificationStore.setState({ activeItemId: null })
                         }
                         activeProps={{
                            onMouseUp: () => {
@@ -157,7 +160,7 @@ export function Sidebar() {
                         )}
                      >
                         <Icons.inbox className="size-6" />
-                        <span className="nav-link-text"> Inbox</span>
+                        <span className="nav-link-text">Inbox</span>
                      </Link>
                   </li>
                   <li>

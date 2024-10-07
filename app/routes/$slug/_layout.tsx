@@ -1,8 +1,8 @@
 import { useCommentSocket } from "@/comment/hooks/use-comment-socket"
-import { useNotificationSocket } from "@/inbox/hooks/use-notification-socket"
-import { inboxUnreadCountQuery } from "@/inbox/queries"
 import { useIssueSocket } from "@/issue/hooks/use-issue-socket"
 import { ModalProvider } from "@/modals"
+import { useNotificationSocket } from "@/notification/hooks/use-notification-socket"
+import { notificationUnreadCountQuery } from "@/notification/queries"
 import {
    organizationBySlugQuery,
    organizationMembershipsQuery,
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/$slug/_layout")({
 
       context.queryClient.prefetchQuery(organizationMembershipsQuery())
       context.queryClient.prefetchQuery(
-         inboxUnreadCountQuery({ organizationId: organization.id }),
+         notificationUnreadCountQuery({ organizationId: organization.id }),
       )
 
       return {
@@ -68,7 +68,7 @@ function Component() {
    const { pathname } = useLocation()
 
    const unreadCount = useSuspenseQuery(
-      inboxUnreadCountQuery({ organizationId }),
+      notificationUnreadCountQuery({ organizationId }),
    )
 
    useEffect(() => {

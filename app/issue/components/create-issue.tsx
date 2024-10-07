@@ -1,4 +1,3 @@
-import { useInsertNotification } from "@/inbox/hooks/use-insert-notification"
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
@@ -17,6 +16,7 @@ import {
    ModalHeader,
    ModalTitle,
 } from "@/modals/dynamic"
+import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
    Combobox,

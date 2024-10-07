@@ -1,8 +1,11 @@
-import { inboxListQuery, inboxUnreadCountQuery } from "@/inbox/queries"
-import { useInboxStore } from "@/inbox/store"
 import { issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import { pushModal } from "@/modals"
+import {
+   notificationListQuery,
+   notificationUnreadCountQuery,
+} from "@/notification/queries"
+import { useNotificationStore } from "@/notification/store"
 import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as inboxRoute } from "@/routes/$slug/_layout/inbox/_layout/index"
 import { Route as peopleRoute } from "@/routes/$slug/_layout/people"
@@ -19,15 +22,17 @@ export function BottomMenu() {
    const { pathname } = useLocation()
    const { organizationId } = useAuth()
    const unreadCount = useSuspenseQuery(
-      inboxUnreadCountQuery({ organizationId }),
+      notificationUnreadCountQuery({ organizationId }),
    )
 
-   const notifications = useSuspenseQuery(inboxListQuery({ organizationId }))
+   const notifications = useSuspenseQuery(
+      notificationListQuery({ organizationId }),
+   )
    const refreshNotifications = useRefreshState({
       isRefetching: notifications.isRefetching,
       refetch: notifications.refetch,
       onChange: (isRefreshing) =>
-         useInboxStore.setState({
+         useNotificationStore.setState({
             isRefreshing,
          }),
    })
@@ -75,7 +80,9 @@ export function BottomMenu() {
                      },
                      "aria-current": "page",
                   }}
-                  onClick={() => useInboxStore.setState({ activeItemId: null })}
+                  onClick={() =>
+                     useNotificationStore.setState({ activeItemId: null })
+                  }
                   to={inboxRoute.to}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
                   data-has-unread={unreadCount.data.count > 0}

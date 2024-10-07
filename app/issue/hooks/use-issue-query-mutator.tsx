@@ -1,7 +1,7 @@
-import { useNotificationQueryMutator } from "@/inbox/hooks/use-notification-query-mutator"
-import { inboxListQuery } from "@/inbox/queries"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import type { updateIssueParams } from "@/issue/schema"
+import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
+import { notificationListQuery } from "@/notification/queries"
 import { useAuth } from "@/user/hooks"
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
@@ -14,7 +14,9 @@ export function useIssueQueryMutator() {
    const { organizationId } = useAuth()
    const params = useParams({ from: "/$slug/_layout" })
    const navigate = useNavigate()
-   const notificatons = useSuspenseQuery(inboxListQuery({ organizationId }))
+   const notificatons = useSuspenseQuery(
+      notificationListQuery({ organizationId }),
+   )
    const { deleteNotificationsFromQueryData } = useNotificationQueryMutator()
 
    const isOnIssueIdPage = "issueId" in params && params.issueId

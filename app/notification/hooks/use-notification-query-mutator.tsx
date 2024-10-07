@@ -1,6 +1,9 @@
-import type * as notificationFns from "@/inbox/functions"
-import { inboxListQuery, inboxUnreadCountQuery } from "@/inbox/queries"
-import type { updateNotificationParams } from "@/inbox/schema"
+import type * as notificationFns from "@/notification/functions"
+import {
+   notificationListQuery,
+   notificationUnreadCountQuery,
+} from "@/notification/queries"
+import type { updateNotificationParams } from "@/notification/schema"
 import { useAuth } from "@/user/hooks"
 import { useQueryClient } from "@tanstack/react-query"
 import { produce } from "immer"
@@ -16,7 +19,7 @@ export function useNotificationQueryMutator() {
       let unreadCountToRemove = 0
 
       queryClient.setQueryData(
-         inboxListQuery({ organizationId }).queryKey,
+         notificationListQuery({ organizationId }).queryKey,
          (oldData) => {
             if (!oldData) return oldData
 
@@ -41,7 +44,7 @@ export function useNotificationQueryMutator() {
       if (unreadCountToRemove === 0) return
 
       queryClient.setQueryData(
-         inboxUnreadCountQuery({ organizationId }).queryKey,
+         notificationUnreadCountQuery({ organizationId }).queryKey,
          (oldData) => {
             if (!oldData) return oldData
 
@@ -56,7 +59,7 @@ export function useNotificationQueryMutator() {
       input,
    }: { input: Awaited<ReturnType<typeof notificationFns.list>>[number] }) => {
       queryClient.setQueryData(
-         inboxListQuery({ organizationId }).queryKey,
+         notificationListQuery({ organizationId }).queryKey,
          (oldData) => {
             if (!oldData) return oldData
 
@@ -64,7 +67,7 @@ export function useNotificationQueryMutator() {
          },
       )
       queryClient.setQueryData(
-         inboxUnreadCountQuery({ organizationId }).queryKey,
+         notificationUnreadCountQuery({ organizationId }).queryKey,
          (oldData) => {
             if (!oldData) return oldData
             return {
@@ -82,7 +85,7 @@ export function useNotificationQueryMutator() {
       let unreadCountChange = 0
 
       queryClient.setQueryData(
-         inboxListQuery({ organizationId }).queryKey,
+         notificationListQuery({ organizationId }).queryKey,
          (oldData) => {
             if (!oldData || input.ids.length === 0) return oldData
 
@@ -113,7 +116,7 @@ export function useNotificationQueryMutator() {
       )
 
       queryClient.setQueryData(
-         inboxUnreadCountQuery({ organizationId }).queryKey,
+         notificationUnreadCountQuery({ organizationId }).queryKey,
          (oldData) => {
             if (!oldData) return oldData
             return {
@@ -131,7 +134,7 @@ export function useNotificationQueryMutator() {
       }
    }) => {
       queryClient.setQueryData(
-         inboxListQuery({ organizationId }).queryKey,
+         notificationListQuery({ organizationId }).queryKey,
          (oldData) => {
             if (!oldData) return oldData
 

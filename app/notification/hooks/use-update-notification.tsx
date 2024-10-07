@@ -1,6 +1,6 @@
-import * as notification from "@/inbox/functions"
-import { useNotificationQueryMutator } from "@/inbox/hooks/use-notification-query-mutator"
-import { inboxListQuery } from "@/inbox/queries"
+import * as notification from "@/notification/functions"
+import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
+import { notificationListQuery } from "@/notification/queries"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
@@ -15,10 +15,12 @@ export function useUpdateNotification() {
    const updateNotification = useMutation({
       mutationFn: updateFn,
       onMutate: async (input) => {
-         await queryClient.cancelQueries(inboxListQuery({ organizationId }))
+         await queryClient.cancelQueries(
+            notificationListQuery({ organizationId }),
+         )
 
          const data = queryClient.getQueryData(
-            inboxListQuery({ organizationId }).queryKey,
+            notificationListQuery({ organizationId }).queryKey,
          )
 
          updateNotificationsInQueryData({ input })
@@ -27,13 +29,15 @@ export function useUpdateNotification() {
       },
       onError: (_err, _data, context) => {
          queryClient.setQueryData(
-            inboxListQuery({ organizationId }).queryKey,
+            notificationListQuery({ organizationId }).queryKey,
             context?.data,
          )
          toast.error("Error, please try again")
       },
       onSettled: (_, _error, _notification) => {
-         queryClient.invalidateQueries(inboxListQuery({ organizationId }))
+         queryClient.invalidateQueries(
+            notificationListQuery({ organizationId }),
+         )
       },
    })
 

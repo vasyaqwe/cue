@@ -1,4 +1,4 @@
-import type { NotificationEvent } from "@/inbox/types"
+import type { NotificationEvent } from "@/notification/types"
 import type * as Party from "partykit/server"
 
 export default class InboxServer implements Party.Server {

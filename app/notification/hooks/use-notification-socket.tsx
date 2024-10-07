@@ -1,7 +1,7 @@
 import { env } from "@/env"
-import { useNotificationQueryMutator } from "@/inbox/hooks/use-notification-query-mutator"
-import { useInboxStore } from "@/inbox/store"
-import type { NotificationEvent } from "@/inbox/types"
+import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
+import { useNotificationStore } from "@/notification/store"
+import type { NotificationEvent } from "@/notification/types"
 import { useAuth } from "@/user/hooks"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import usePartySocket from "partysocket/react"
@@ -36,7 +36,7 @@ export function useNotificationSocket() {
             to: "/$slug/inbox/issue/$issueId",
             params: { slug, issueId },
          })
-         useInboxStore.setState({
+         useNotificationStore.setState({
             activeItemId: notificationId,
          })
       }
@@ -100,7 +100,7 @@ export function useNotificationSocket() {
    useEffect(() => {
       if (!socket) return
 
-      useInboxStore.setState({ socket })
+      useNotificationStore.setState({ socket })
    }, [socket])
 
    return null

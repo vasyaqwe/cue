@@ -1,6 +1,6 @@
-import * as notification from "@/inbox/functions"
-import { inboxListQuery } from "@/inbox/queries"
-import { useInboxStore } from "@/inbox/store"
+import * as notification from "@/notification/functions"
+import { notificationListQuery } from "@/notification/queries"
+import { useNotificationStore } from "@/notification/store"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
@@ -8,7 +8,7 @@ import { useServerFn } from "@tanstack/start"
 export function useInsertNotification() {
    const queryClient = useQueryClient()
    const { organizationId, user } = useAuth()
-   const sendEvent = useInboxStore().sendEvent
+   const sendEvent = useNotificationStore().sendEvent
 
    const insertFn = useServerFn(notification.insert)
    const insertNotification = useMutation({
@@ -39,7 +39,9 @@ export function useInsertNotification() {
             senderId: user.id,
          })
 
-         queryClient.invalidateQueries(inboxListQuery({ organizationId }))
+         queryClient.invalidateQueries(
+            notificationListQuery({ organizationId }),
+         )
       },
    })
 

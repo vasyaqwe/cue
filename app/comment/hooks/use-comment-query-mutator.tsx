@@ -1,8 +1,8 @@
 import type * as commentFns from "@/comment/functions"
 import { commentListQuery } from "@/comment/queries"
 import type { UpdateCommentEventInput } from "@/comment/types"
-import { useNotificationQueryMutator } from "@/inbox/hooks/use-notification-query-mutator"
-import { inboxListQuery } from "@/inbox/queries"
+import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
+import { notificationListQuery } from "@/notification/queries"
 import { useAuth } from "@/user/hooks"
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { produce } from "immer"
@@ -11,7 +11,9 @@ export function useCommentQueryMutator() {
    const queryClient = useQueryClient()
    const { organizationId } = useAuth()
 
-   const notificatons = useSuspenseQuery(inboxListQuery({ organizationId }))
+   const notificatons = useSuspenseQuery(
+      notificationListQuery({ organizationId }),
+   )
    const { deleteNotificationsFromQueryData } = useNotificationQueryMutator()
 
    const deleteCommentFromQueryData = ({

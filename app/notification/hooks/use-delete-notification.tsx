@@ -1,6 +1,6 @@
-import * as notification from "@/inbox/functions"
-import { useNotificationQueryMutator } from "@/inbox/hooks/use-notification-query-mutator"
-import { inboxListQuery } from "@/inbox/queries"
+import * as notification from "@/notification/functions"
+import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
+import { notificationListQuery } from "@/notification/queries"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
@@ -15,10 +15,12 @@ export function useDeleteNotifications() {
    const deleteNotifications = useMutation({
       mutationFn: deleteFn,
       onMutate: async ({ notificationIds }) => {
-         await queryClient.cancelQueries(inboxListQuery({ organizationId }))
+         await queryClient.cancelQueries(
+            notificationListQuery({ organizationId }),
+         )
 
          const data = queryClient.getQueryData(
-            inboxListQuery({ organizationId }).queryKey,
+            notificationListQuery({ organizationId }).queryKey,
          )
 
          deleteNotificationsFromQueryData({ notificationIds })
@@ -27,13 +29,15 @@ export function useDeleteNotifications() {
       },
       onError: (_err, _data, context) => {
          queryClient.setQueryData(
-            inboxListQuery({ organizationId }).queryKey,
+            notificationListQuery({ organizationId }).queryKey,
             context?.data,
          )
          toast.error("Failed to delete notification")
       },
       onSettled: (_, _error, _data) => {
-         queryClient.invalidateQueries(inboxListQuery({ organizationId }))
+         queryClient.invalidateQueries(
+            notificationListQuery({ organizationId }),
+         )
       },
    })
 

@@ -1,9 +1,9 @@
+import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
 import {
    insertNotificationParams,
    notification,
    updateNotificationParams,
-} from "@/inbox/schema"
-import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
+} from "@/notification/schema"
 import { organizationMember } from "@/organization/schema"
 import { createServerFn } from "@tanstack/start"
 import { and, count, desc, eq, inArray } from "drizzle-orm"

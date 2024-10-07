@@ -1,9 +1,9 @@
-import type * as notificationFns from "@/inbox/functions"
-import { useDeleteNotifications } from "@/inbox/hooks/use-delete-notification"
-import { useUpdateNotification } from "@/inbox/hooks/use-update-notification"
-import { inboxListQuery } from "@/inbox/queries"
-import { useInboxStore } from "@/inbox/store"
 import { StatusIcon } from "@/issue/components/icons"
+import type * as notificationFns from "@/notification/functions"
+import { useDeleteNotifications } from "@/notification/hooks/use-delete-notification"
+import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
+import { notificationListQuery } from "@/notification/queries"
+import { useNotificationStore } from "@/notification/store"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { Button } from "@/ui/components/button"
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
    meta: () => [{ title: "Inbox" }],
    loader: async ({ context }) => {
       context.queryClient.prefetchQuery(
-         inboxListQuery({ organizationId: context.organizationId }),
+         notificationListQuery({ organizationId: context.organizationId }),
       )
    },
    pendingComponent: () => (
@@ -55,9 +55,11 @@ function Component() {
    const { issueId } = useParams({
       strict: false,
    })
-   const notifications = useSuspenseQuery(inboxListQuery({ organizationId }))
-   const isRefreshing = useInboxStore().isRefreshing
-   const activeItemId = useInboxStore().activeItemId
+   const notifications = useSuspenseQuery(
+      notificationListQuery({ organizationId }),
+   )
+   const isRefreshing = useNotificationStore().isRefreshing
+   const activeItemId = useNotificationStore().activeItemId
 
    const { updateNotification } = useUpdateNotification()
 
@@ -118,7 +120,7 @@ function Component() {
                            <Notification
                               key={notification.id}
                               onLinkClick={() => {
-                                 useInboxStore.setState({
+                                 useNotificationStore.setState({
                                     activeItemId: notification.id,
                                  })
                                  if (notification.isRead) return

@@ -1,4 +1,4 @@
-import type { NotificationEvent } from "@/inbox/types"
+import type { NotificationEvent } from "@/notification/types"
 import { createSelectors } from "@/utils/misc"
 import type PartySocket from "partysocket"
 import { create } from "zustand"
@@ -21,5 +21,5 @@ const store = create<State>()((_set, get) => ({
    activeItemId: null,
 }))
 
-export const useInboxStore = createSelectors(store)
-export const useInboxStoreBase = store
+export const useNotificationStore = createSelectors(store)
+export const useNotificationStoreBase = store

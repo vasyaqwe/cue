@@ -1,18 +1,18 @@
 import { queryOptions } from "@tanstack/react-query"
 import * as notification from "./functions"
 
-export const inboxListQuery = (input: {
+export const notificationListQuery = (input: {
    organizationId: string
 }) =>
    queryOptions({
-      queryKey: ["inbox_list", input.organizationId],
+      queryKey: ["notification_list", input.organizationId],
       queryFn: () => notification.list(input),
    })
 
-export const inboxUnreadCountQuery = (input: {
+export const notificationUnreadCountQuery = (input: {
    organizationId: string
 }) =>
    queryOptions({
-      queryKey: ["inbox_unread_count", input.organizationId],
+      queryKey: ["notification_unread_count", input.organizationId],
       queryFn: () => notification.unreadCount(input),
    })

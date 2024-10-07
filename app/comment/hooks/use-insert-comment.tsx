@@ -2,8 +2,8 @@ import * as comment from "@/comment/functions"
 import { useCommentQueryMutator } from "@/comment/hooks/use-comment-query-mutator"
 import { commentListQuery } from "@/comment/queries"
 import { useCommentStore } from "@/comment/store"
-import { useInsertNotification } from "@/inbox/hooks/use-insert-notification"
 import { issueByIdQuery } from "@/issue/queries"
+import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
 import { useAuth } from "@/user/hooks"
 import {
    useMutation,

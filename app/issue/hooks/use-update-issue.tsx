@@ -1,11 +1,11 @@
-import { useInsertNotification } from "@/inbox/hooks/use-insert-notification"
-import { useNotificationQueryMutator } from "@/inbox/hooks/use-notification-query-mutator"
-import { inboxListQuery } from "@/inbox/queries"
-import { useInboxStore } from "@/inbox/store"
 import * as issue from "@/issue/functions"
 import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
+import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
+import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
+import { notificationListQuery } from "@/notification/queries"
+import { useNotificationStore } from "@/notification/store"
 import { useAuth } from "@/user/hooks"
 import {
    useMutation,
@@ -19,13 +19,15 @@ import { toast } from "sonner"
 export function useUpdateIssue() {
    const queryClient = useQueryClient()
    const sendIssueEvent = useIssueStore().sendEvent
-   const sendNotificationEvent = useInboxStore().sendEvent
+   const sendNotificationEvent = useNotificationStore().sendEvent
    const params = useParams({ strict: false })
    const { organizationId, user } = useAuth()
    const { updateIssueInQueryData } = useIssueQueryMutator()
    const { updateNotificationsInQueryData } = useNotificationQueryMutator()
    const { insertNotification } = useInsertNotification()
-   const notificatons = useSuspenseQuery(inboxListQuery({ organizationId }))
+   const notificatons = useSuspenseQuery(
+      notificationListQuery({ organizationId }),
+   )
 
    const issueIdParam = "issueId" in params ? params.issueId : null
 
