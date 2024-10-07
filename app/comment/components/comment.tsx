@@ -10,7 +10,7 @@ import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { formatDateRelative } from "@/utils/format"
 import { useParams } from "@tanstack/react-router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export function Comment({
    comment,
@@ -23,9 +23,13 @@ export function Comment({
    const { updateComment } = useUpdateComment()
    const resolvedBy = comment.resolvedBy
    const [isExpanded, setIsExpanded] = useState(!resolvedBy)
-   const [lastResolvedByName, setLastResolvedByName] = useState(
-      resolvedBy?.name,
-   )
+
+   useEffect(() => {
+      if (resolvedBy === null) return setIsExpanded(true)
+      if (resolvedBy !== null) return setIsExpanded(false)
+   }, [resolvedBy])
+
+   const delayedResolvedBy = useDelayedValue(resolvedBy, 500)
 
    return (
       <>
@@ -50,9 +54,6 @@ export function Comment({
                            <Tooltip content="Reopen comment">
                               <Button
                                  onClick={() => {
-                                    setLastResolvedByName(
-                                       comment.resolvedBy?.name,
-                                    )
                                     updateComment.mutate({
                                        id: comment.id,
                                        organizationId,
@@ -71,14 +72,12 @@ export function Comment({
                            <Tooltip content="Resolve comment">
                               <Button
                                  onClick={() => {
-                                    setLastResolvedByName(user.name)
                                     updateComment.mutate({
                                        id: comment.id,
                                        organizationId,
                                        resolvedById: user.id,
                                        issueId,
                                     })
-                                    setIsExpanded(false)
                                  }}
                                  aria-label="Resolve comment"
                                  variant={"ghost"}
@@ -131,11 +130,10 @@ export function Comment({
                >
                   <span>
                      <strong className="font-semibold">
-                        {lastResolvedByName}
+                        {delayedResolvedBy?.name}
                      </strong>{" "}
                      resolved comment
                   </span>
-
                   <span className="ml-auto flex items-center gap-1">
                      {isExpanded ? "Collapse" : "Expand"}
                      <Icons.chevronDown
@@ -148,4 +146,24 @@ export function Comment({
          </TransitionHeight>
       </>
    )
+}
+
+function useDelayedValue<T>(value: T, delayTime: number): T {
+   const [delayedValue, setDelayedValue] = useState<T>(value)
+
+   useEffect(() => {
+      let timeoutId: NodeJS.Timeout
+
+      if (value === null || value === undefined) {
+         timeoutId = setTimeout(() => {
+            setDelayedValue(value)
+         }, delayTime) as unknown as never
+      } else {
+         setDelayedValue(value)
+      }
+
+      return () => clearTimeout(timeoutId)
+   }, [value, delayTime])
+
+   return delayedValue
 }
