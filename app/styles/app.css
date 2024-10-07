@@ -20,7 +20,7 @@
   --shadow-button: 0px 3px 3px -1px rgba(24,24,24,.09), 0px 0px 0px 1px rgba(24,24,24,.09);
 
   --font-family-primary: "satoshi", sans-serif;
-  --font-family-secondary: "serif", sans-serif;
+  --font-family-secondary: "garamond", sans-serif;
 
   --font-size-xs: 0.8rem;
   --font-size-sm: 0.845rem;
@@ -52,10 +52,17 @@
 }
 
 @font-face {
-  font-family: "serif";
-  src: url("/fonts/serif.ttf") format("truetype");  
+  font-family: "garamond";
+  src: url("/fonts/garamond.ttf") format("truetype");  
   font-display: swap;
   font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-family: "garamond";
+  src: url("/fonts/garamond_italic.ttf") format("truetype");  
+  font-display: swap;
+  font-style: italic;
   font-weight: 400;
 }
 

@@ -23,10 +23,10 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
 
    return (
       <div className="w-full">
-         <header className="mx-auto flex w-full max-w-[60rem] items-center justify-between px-4 py-4">
+         <header className="mx-auto flex w-full max-w-[68rem] items-center justify-between px-4 py-4">
             <Link
                to="/"
-               className="flex items-center gap-3 font-secondary text-2xl tracking-wider"
+               className="flex items-center gap-3 font-medium font-secondary text-[1.725rem] tracking-tight"
             >
                <Logo className="size-9" />
                Cue
@@ -57,11 +57,11 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
          </header>
          <main className="mt-5 md:mt-8">
             <section className="mx-auto max-w-3xl px-4">
-               <h1 className="text-center font-secondary text-4xl leading-[1.35] tracking-wide md:text-[3.3rem] sm:text-5xl sm:leading-[1.25]">
+               <h1 className="text-center font-medium font-secondary text-5xl leading-[1.3] tracking-tighter md:text-[4rem] sm:text-6xl sm:leading-[1.1]">
                   Simple & minimal <br /> <em>issue tracking</em>
                </h1>
             </section>
-            <section className="mx-auto mt-10 mb-12 flex max-w-3xl justify-center px-4 md:mt-12 md:mb-20">
+            <section className="mx-auto my-12 flex max-w-3xl justify-center px-4 md:mt-14 md:mb-20">
                <ul className="space-y-4 font-medium text-lg tracking-wide">
                   <li className="flex flex-col gap-3 sm:flex-row sm:items-center">
                      <svg
@@ -191,7 +191,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                   </li>
                </ul>
             </section>
-            <section className="relative isolate mx-auto max-w-[60rem] px-4">
+            <section className="relative isolate mx-auto max-w-[68rem] px-4">
                <img
                   src={pattern}
                   alt=""
@@ -210,7 +210,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                <div>
                   <Link
                      to="/"
-                     className="flex items-center gap-3 font-secondary text-2xl tracking-wider"
+                     className="flex items-center gap-3 font-medium font-secondary text-[1.725rem] tracking-tight"
                   >
                      <Logo className="size-8" />
                      Cue
