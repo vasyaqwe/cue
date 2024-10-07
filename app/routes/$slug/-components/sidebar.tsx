@@ -1,4 +1,5 @@
 import { useLocalStorage } from "@/interactions/use-local-storage"
+import { DraftIndicator } from "@/issue/components/draft-indicator"
 import { issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import { pushModal } from "@/modals"
@@ -130,10 +131,13 @@ export function Sidebar() {
                <Button
                   variant={"outline"}
                   onClick={() => pushModal("create_issue")}
-                  className={cn("mb-5 w-full font-semibold text-[0.95rem]")}
+                  className={cn(
+                     "relative mb-5 w-full font-semibold text-[0.95rem]",
+                  )}
                >
                   <Icons.pencil className="size-5" />
                   New issue
+                  <DraftIndicator />
                </Button>
             </Tooltip>
             <nav>

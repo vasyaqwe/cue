@@ -332,7 +332,7 @@ export const Icons = {
    ),
    inbox: (props: IconProps) => (
       <span className="relative">
-         <span className="absolute top-0 right-0 block size-3 scale-0 rounded-full border-[2.5px] border-background bg-primary transition-transform md:size-[11px] group-data-[has-unread=true]:scale-100 group-aria-[current=page]:border-elevated md:border-2" />
+         <span className="absolute top-0 right-0 block size-3 rounded-full border-[2.5px] border-background bg-primary opacity-0 transition-opacity md:size-[11px] group-aria-[current=page]:border-elevated md:border-2 group-data-[has-unread=true]:opacity-100" />
          <svg
             width="24"
             height="24"
