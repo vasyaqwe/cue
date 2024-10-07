@@ -29,6 +29,8 @@
   --font-size-base--line-height: 1.4rem;
   --font-size-lg: 1.05rem;
 
+  --ease-vaul: cubic-bezier(0.32, 0.72, 0, 1);
+
   --animate-fade-in: fade-in 500ms var(--animation-delay) ease forwards;
 
   @keyframes fade-in {

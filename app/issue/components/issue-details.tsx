@@ -44,10 +44,12 @@ import { toast } from "sonner"
 import type { z } from "zod"
 
 export function IssueDetails() {
-   const { organizationId } = useAuth()
    const { issueId } = useParams({ strict: false })
+   if (!issueId)
+      throw new Error("IssueDetails must be used in an $issueId route")
+
+   const { organizationId } = useAuth()
    const { pathname } = useLocation()
-   if (!issueId) throw new Error("Must have issueId param")
 
    const query = useSuspenseQuery(issueByIdQuery({ organizationId, issueId }))
    const comments = useSuspenseQuery(

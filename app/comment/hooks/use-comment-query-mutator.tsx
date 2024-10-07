@@ -1,13 +1,16 @@
 import type * as commentFns from "@/comment/functions"
 import { commentListQuery } from "@/comment/queries"
+import type { UpdateCommentEventInput } from "@/comment/types"
 import { useNotificationQueryMutator } from "@/inbox/hooks/use-notification-query-mutator"
 import { inboxListQuery } from "@/inbox/queries"
 import { useAuth } from "@/user/hooks"
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+import { produce } from "immer"
 
 export function useCommentQueryMutator() {
    const queryClient = useQueryClient()
    const { organizationId } = useAuth()
+
    const notificatons = useSuspenseQuery(inboxListQuery({ organizationId }))
    const { deleteNotificationsFromQueryData } = useNotificationQueryMutator()
 
@@ -35,6 +38,32 @@ export function useCommentQueryMutator() {
       })
    }
 
+   const updateCommentInQueryData = ({
+      input,
+   }: {
+      input: UpdateCommentEventInput
+   }) => {
+      queryClient.setQueryData(
+         commentListQuery({ organizationId, issueId: input.issueId }).queryKey,
+         (oldData) => {
+            if (!oldData) return oldData
+
+            return produce(oldData, (draft) => {
+               const comment = draft?.find((comment) => comment.id === input.id)
+               if (!comment) return
+
+               Object.assign(comment, {
+                  ...(input.resolvedById
+                     ? {
+                          resolvedBy: input.resolvedBy,
+                       }
+                     : { resolvedBy: null }),
+               })
+            })
+         },
+      )
+   }
+
    const insertCommentToQueryData = ({
       input,
    }: { input: Awaited<ReturnType<typeof commentFns.list>>[number] }) => {
@@ -50,6 +79,7 @@ export function useCommentQueryMutator() {
 
    return {
       insertCommentToQueryData,
+      updateCommentInQueryData,
       deleteCommentFromQueryData,
    }
 }

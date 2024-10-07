@@ -16,6 +16,6 @@ export type IssueEvent =
    | {
         type: "update"
         issueId: string
-        input: z.infer<typeof updateIssueParams>
+        issue: z.infer<typeof updateIssueParams>
         senderId: string
      }

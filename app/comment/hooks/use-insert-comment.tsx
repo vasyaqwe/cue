@@ -15,11 +15,12 @@ import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
 
 export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
-   const queryClient = useQueryClient()
-   const { organizationId, user } = useAuth()
    const { issueId } = useParams({ strict: false })
    if (!issueId)
       throw new Error("useInsertComment must be used in an $issueId route")
+
+   const queryClient = useQueryClient()
+   const { organizationId, user } = useAuth()
 
    const issue = useSuspenseQuery(issueByIdQuery({ organizationId, issueId }))
    const sendEvent = useCommentStore().sendEvent
@@ -45,6 +46,7 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
                id: crypto.randomUUID(),
                content: input.content ?? "",
                issueId,
+               resolvedBy: null,
                author: {
                   id: user.id,
                   avatarUrl: user.avatarUrl,
@@ -76,6 +78,7 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
                content: comment.content ?? "",
                createdAt: comment.createdAt,
                issueId: comment.issueId,
+               resolvedBy: null,
                author: {
                   id: user.id,
                   avatarUrl: user.avatarUrl,

@@ -121,7 +121,7 @@ export function useUpdateIssue() {
          sendIssueEvent({
             type: "update",
             issueId: issue.id,
-            input: issue,
+            issue,
             senderId: user.id,
          })
       },

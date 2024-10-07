@@ -1,4 +1,8 @@
-import { comment, insertCommentParams } from "@/comment/schema"
+import {
+   comment,
+   insertCommentParams,
+   updateCommentParams,
+} from "@/comment/schema"
 import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
 import { and, asc, eq } from "drizzle-orm"
@@ -21,6 +25,12 @@ export const list = createServerFn(
                issueId: true,
             },
             with: {
+               resolvedBy: {
+                  columns: {
+                     name: true,
+                     avatarUrl: true,
+                  },
+               },
                author: {
                   columns: {
                      id: true,
@@ -51,6 +61,20 @@ export const insert = createServerFn(
             .get()
 
          return createdComment
+      }),
+)
+
+export const update = createServerFn(
+   "POST",
+   organizationProtectedProcedure
+      .input(updateCommentParams)
+      .mutation(async ({ ctx, input }) => {
+         return await ctx.db
+            .update(comment)
+            .set({
+               resolvedById: input.resolvedById,
+            })
+            .where(eq(comment.id, input.id))
       }),
 )
 

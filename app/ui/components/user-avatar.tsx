@@ -15,6 +15,7 @@ export function UserAvatar({
    user,
    showActiveIndicator = true,
    className,
+   children,
    ...props
 }: UserAvatarProps) {
    const { user: currentUser } = useAuth()
@@ -64,6 +65,7 @@ export function UserAvatar({
                   : "invisible scale-0 opacity-0",
             )}
          />
+         {children}
       </Avatar>
    )
 }

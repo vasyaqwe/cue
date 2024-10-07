@@ -8,21 +8,31 @@ import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
 
-export function useDeleteComment() {
+export function useUpdateComment() {
    const { issueId } = useParams({ strict: false })
    if (!issueId)
-      throw new Error("useDeleteComment must be used in an $issueId route")
+      throw new Error("useUpdateComment must be used in an $issueId route")
 
    const queryClient = useQueryClient()
-   const sendEvent = useCommentStore().sendEvent
-
    const { organizationId, user } = useAuth()
-   const { deleteCommentFromQueryData } = useCommentQueryMutator()
 
-   const deleteFn = useServerFn(comment.deleteFn)
-   const deleteComment = useMutation({
-      mutationFn: deleteFn,
-      onMutate: async ({ commentId }) => {
+   const sendCommentEvent = useCommentStore().sendEvent
+   const { updateCommentInQueryData } = useCommentQueryMutator()
+
+   const updateFn = useServerFn(comment.update)
+   const updateComment = useMutation({
+      mutationFn: updateFn,
+      onMutate: async (input) => {
+         updateCommentInQueryData({
+            input: {
+               ...input,
+               resolvedBy: {
+                  avatarUrl: user.avatarUrl,
+                  name: user.name,
+               },
+            },
+         })
+
          await queryClient.cancelQueries(
             commentListQuery({ organizationId, issueId }),
          )
@@ -31,8 +41,6 @@ export function useDeleteComment() {
             commentListQuery({ organizationId, issueId }).queryKey,
          )
 
-         deleteCommentFromQueryData({ commentId, issueId })
-
          return { data }
       },
       onError: (_err, _data, context) => {
@@ -40,18 +48,24 @@ export function useDeleteComment() {
             commentListQuery({ organizationId, issueId }).queryKey,
             context?.data,
          )
-         toast.error("Failed to delete comment")
+         toast.error("Failed to update comment")
       },
-      onSettled: (_, error, data) => {
+      onSettled: (_, error, comment) => {
          queryClient.invalidateQueries(
             commentListQuery({ organizationId, issueId }),
          )
 
-         if (error || !data) return
+         if (error || !comment) return
 
-         sendEvent({
-            type: "delete",
-            commentId: data.commentId,
+         sendCommentEvent({
+            type: "update",
+            comment: {
+               ...comment,
+               resolvedBy: {
+                  avatarUrl: user.avatarUrl,
+                  name: user.name,
+               },
+            },
             senderId: user.id,
             issueId,
          })
@@ -59,6 +73,6 @@ export function useDeleteComment() {
    })
 
    return {
-      deleteComment,
+      updateComment,
    }
 }

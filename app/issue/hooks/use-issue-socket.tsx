@@ -28,7 +28,7 @@ export function useIssueSocket() {
          }
 
          if (message.type === "update") {
-            return updateIssueInQueryData({ input: message.input })
+            return updateIssueInQueryData({ input: message.issue })
          }
          if (message.type === "delete") {
             return deleteIssueFromQueryData({ issueId: message.issueId })

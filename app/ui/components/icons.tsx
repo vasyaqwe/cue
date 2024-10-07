@@ -158,6 +158,31 @@ export const Icons = {
          />
       </svg>
    ),
+   doubleCheck: (props: IconProps) => (
+      <svg
+         className="size-6"
+         viewBox="0 0 24 24"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg"
+         {...props}
+      >
+         <path
+            d="M2 13.3333C2 13.3333 3.5 14 5.5 17C5.5 17 5.78485 16.5192 6.32133 15.7526M16 6C13.7085 7.14577 11.3119 9.55181 9.3879 11.8223"
+            stroke="currentColor"
+            strokeOpacity="0.7"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+         />
+         <path
+            d="M7 13.3333C7 13.3333 8.5 14 10.5 17C10.5 17 16 8.5 21 6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+         />
+      </svg>
+   ),
    reload: (props: IconProps) => (
       <svg
          width="24"

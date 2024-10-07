@@ -14,10 +14,12 @@ export function CreateComment({
    className,
    ...props
 }: ComponentProps<"form"> & { onMutate?: () => void }) {
+   const { issueId } = useParams({ strict: false })
+   if (!issueId)
+      throw new Error("CreateComment must be used in an $issueId route")
+
    const [content, setContent] = useState("")
    const { organizationId, user } = useAuth()
-   const { issueId } = useParams({ strict: false })
-   if (!issueId) throw new Error("Must have issueId param")
 
    const { insertComment } = useInsertComment({ onMutate })
 
