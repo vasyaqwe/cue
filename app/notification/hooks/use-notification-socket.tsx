@@ -1,5 +1,6 @@
 import { env } from "@/env"
 import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
+import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
 import { useNotificationStore } from "@/notification/store"
 import type { NotificationEvent } from "@/notification/types"
 import { useAuth } from "@/user/hooks"
@@ -15,6 +16,8 @@ export function useNotificationSocket() {
       insertNotificationToQueryData,
       updateIssuesInNotificationsQueryData,
    } = useNotificationQueryMutator()
+
+   const { updateNotification } = useUpdateNotification()
 
    const notify = ({
       title,
@@ -35,9 +38,15 @@ export function useNotificationSocket() {
          navigate({
             to: "/$slug/inbox/issue/$issueId",
             params: { slug, issueId },
-         })
-         useNotificationStore.setState({
-            activeItemId: notificationId,
+         }).then(() => {
+            useNotificationStore.setState({
+               activeItemId: notificationId,
+            })
+            updateNotification.mutate({
+               ids: [notificationId],
+               isRead: true,
+               organizationId,
+            })
          })
       }
       if (Notification.permission === "granted") {

@@ -175,7 +175,7 @@ export function IssueDetails() {
                   <hr className="mt-12 mb-5 border-border border-t-2 border-dotted" />
                   <p className="font-semibold text-lg">Activity</p>
                   <div>
-                     <div className="mt-3 flex items-center gap-1 py-2">
+                     <div className="mt-5 flex items-center gap-1">
                         <UserAvatar
                            className="mr-[11px] ml-0.5 size-7 [&>[data-indicator]]:size-3"
                            user={{ ...issue.author, id: issue.authorId }}
