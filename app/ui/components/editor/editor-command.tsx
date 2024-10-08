@@ -68,7 +68,7 @@ export const EditorCommand = forwardRef<
                   }}
                   id="slash-command"
                   className={cn(
-                     "z-50 h-auto max-h-[330px] overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all",
+                     "!p-1 z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg outline-none",
                      className,
                   )}
                   {...props}

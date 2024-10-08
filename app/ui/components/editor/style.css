@@ -1,14 +1,8 @@
-.ProseMirror .is-editor-empty:first-child::before {
+div.ProseMirror > p.is-editor-empty:first-child::before {
    content: attr(data-placeholder);
    float: left;
-   color: hsl(var(--muted-foreground));
-   pointer-events: none;
-   height: 0;
-}
-.ProseMirror .is-empty::before {
-   content: attr(data-placeholder);
-   float: left;
-   color: hsl(var(--muted-foreground));
+   color: var(--color-foreground);
+   opacity: 0.4;
    pointer-events: none;
    height: 0;
 }
@@ -50,10 +44,13 @@
       transform: rotate(360deg);
    }
 }
-
+[data-tippy-root] {
+   width: 200px;
+}
 .tippy-box {
    transition: none;
-   max-width: 400px !important;
+   width: 100%;
+   max-width: 200px !important;
 }
 
 .ProseMirror:not(.dragging) .ProseMirror-selectednode {

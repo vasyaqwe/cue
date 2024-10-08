@@ -1,3 +1,4 @@
+import { commandItemVariants } from "@/ui/components/command"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { cn } from "@/ui/utils"
 import type { Editor, Range } from "@tiptap/core"
@@ -28,10 +29,7 @@ export const EditorCommandItem = forwardRef<
    return (
       <CommandItem
          ref={ref}
-         className={cn(
-            "flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm aria-selected:bg-accent hover:bg-accent",
-            className,
-         )}
+         className={cn(commandItemVariants(), className)}
          {...props}
          onSelect={() => onSelect({ editor, range })}
       >
@@ -46,7 +44,7 @@ export function EditorCommandEmpty({
 }: ComponentProps<typeof CommandEmpty>) {
    return (
       <CommandEmpty
-         className={cn("px-2 text-muted-foreground", className)}
+         className={cn("py-6 text-center", className)}
          {...props}
       />
    )

@@ -32,29 +32,31 @@ export type EditorContentProps = Omit<EditorProviderProps, "content"> & {
 }
 
 export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
-   ({ className, children, content, editorProps, ...props }, ref) => (
-      <div
-         ref={ref}
-         className={cn("rounded-xl border p-4", className)}
-      >
-         <EditorProvider
-            {...props}
-            editorProps={{
-               attributes: {
-                  class: cn(
-                     "prose prose-lg dark:prose-invert max-w-full font-default prose-headings:font-title focus:outline-none",
-                     editorProps?.attributes &&
-                        "class" in editorProps.attributes
-                        ? editorProps?.attributes.class
-                        : "",
-                  ),
-               },
-               ...editorProps,
-            }}
-            content={content}
+   ({ className, children, content, editorProps, ...props }, ref) => {
+      return (
+         <div
+            ref={ref}
+            className={cn("min-h-8", className)}
          >
-            {children}
-         </EditorProvider>
-      </div>
-   ),
+            <EditorProvider
+               {...props}
+               editorProps={{
+                  attributes: {
+                     class: cn(
+                        "prose max-w-full prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-h1:text-2xl prose-h2:text-xl focus:outline-none",
+                        editorProps?.attributes &&
+                           "class" in editorProps.attributes
+                           ? editorProps?.attributes.class
+                           : "",
+                     ),
+                  },
+                  ...editorProps,
+               }}
+               content={content}
+            >
+               {children}
+            </EditorProvider>
+         </div>
+      )
+   },
 )

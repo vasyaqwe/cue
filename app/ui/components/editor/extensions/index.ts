@@ -120,15 +120,11 @@ const slashCommand = slashCommandExtension.configure({
    },
 })
 
-const placeholder = Placeholder.configure({
-   placeholder: ({ node }) => {
-      if (node.type.name === "heading") {
-         return `Heading ${node.attrs.level}`
-      }
-      return "Press '/' for commands"
-   },
-   includeChildren: true,
-})
+const placeholder = (placeholder: string) =>
+   Placeholder.configure({
+      placeholder: () => placeholder,
+      includeChildren: true,
+   })
 
 const link = TiptapLink.configure({
    HTMLAttributes: {
@@ -141,41 +137,18 @@ const link = TiptapLink.configure({
 const starterKit = StarterKit.configure({
    bulletList: {
       HTMLAttributes: {
-         class: cn("-mt-2 list-outside list-disc leading-3"),
+         class: cn("list-outside list-disc leading-3"),
       },
    },
    orderedList: {
       HTMLAttributes: {
-         class: cn("-mt-2 list-outside list-decimal leading-3"),
+         class: cn("list-outside list-decimal leading-3"),
       },
    },
    listItem: {
       HTMLAttributes: {
          class: cn("-mb-2 leading-normal"),
       },
-   },
-   blockquote: {
-      HTMLAttributes: {
-         class: cn("border-primary border-l-4"),
-      },
-   },
-   codeBlock: {
-      HTMLAttributes: {
-         class: cn(
-            "rounded-md border bg-muted p-5 font-medium font-mono text-muted-foreground",
-         ),
-      },
-   },
-   code: {
-      HTMLAttributes: {
-         class: cn("rounded-md bg-muted px-1.5 py-1 font-medium font-mono"),
-         spellcheck: "false",
-      },
-   },
-   horizontalRule: false,
-   dropcursor: {
-      color: "#DBEAFE",
-      width: 4,
    },
    gapcursor: false,
 })

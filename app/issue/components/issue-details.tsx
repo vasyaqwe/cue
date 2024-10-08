@@ -27,6 +27,23 @@ import {
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from "@/ui/components/dropdown-menu"
+import { EditorContent, EditorRoot } from "@/ui/components/editor"
+import {
+   EditorCommand,
+   EditorCommandList,
+} from "@/ui/components/editor/editor-command"
+import {
+   EditorCommandEmpty,
+   EditorCommandItem,
+} from "@/ui/components/editor/editor-command-item"
+import {
+   handleCommandNavigation,
+   link,
+   placeholder,
+   slashCommand,
+   starterKit,
+} from "@/ui/components/editor/extensions"
+import { suggestionItems } from "@/ui/components/editor/extensions/slash-command"
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
@@ -42,23 +59,6 @@ import { useHotkeys } from "react-hotkeys-hook"
 import { debounce } from "remeda"
 import { toast } from "sonner"
 import type { z } from "zod"
-// import { EditorContent, EditorRoot } from "@/ui/components/editor"
-// import {
-//    EditorCommand,
-//    EditorCommandList,
-// } from "@/ui/components/editor/editor-command"
-// import {
-//    EditorCommandEmpty,
-//    EditorCommandItem,
-// } from "@/ui/components/editor/editor-command-item"
-// import {
-//    handleCommandNavigation,
-//    link,
-//    placeholder,
-//    slashCommand,
-//    starterKit,
-// } from "@/ui/components/editor/extensions"
-// import { suggestionItems } from "@/ui/components/editor/extensions/slash-command"
 
 export function IssueDetails() {
    const { issueId } = useParams({ strict: false })
@@ -159,41 +159,6 @@ export function IssueDetails() {
                </DropdownMenu>
             </Header>
             <div className="overflow-y-auto">
-               {/* <EditorRoot>
-                  <EditorContent
-                     extensions={[starterKit, placeholder, link, slashCommand]}
-                     editorProps={{
-                        handleDOMEvents: {
-                           keydown: (_view, event) =>
-                              handleCommandNavigation(event),
-                        },
-                        //  handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
-                        //  handleDrop: (view, event, _slice, moved) =>
-                        //    handleImageDrop(view, event, moved, uploadFn),
-                     }}
-                     //            onUpdate={({ editor }) => {
-                     //   setContent(editor.getHTML())
-                     //            }}
-                  >
-                     <EditorCommand>
-                        <EditorCommandEmpty>No results</EditorCommandEmpty>
-                        <EditorCommandList>
-                           {suggestionItems.map((item) => (
-                              <EditorCommandItem
-                                 value={item.title}
-                                 onSelect={(value) =>
-                                    item.command?.(value as never)
-                                 }
-                                 key={item.title}
-                              >
-                                 {item.icon}
-                                 {item.title}
-                              </EditorCommandItem>
-                           ))}
-                        </EditorCommandList>
-                     </EditorCommand>
-                  </EditorContent>
-               </EditorRoot> */}
                <div className="mx-auto w-full max-w-[51rem] px-4 py-6 md:py-8">
                   <Input
                      autoComplete="off"
@@ -210,20 +175,56 @@ export function IssueDetails() {
                      }}
                      className="!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
                   />
-                  <Input
-                     defaultValue={issue.description}
-                     name="description"
-                     id="description"
-                     placeholder="Add description.."
-                     required
-                     onChange={(e) => {
-                        debouncedSaveIssue.call({
-                           ...issue,
-                           description: e.target.value,
-                        })
-                     }}
-                     className="!border-none !outline-none !bg-transparent mt-4 h-8 rounded-none p-0 text-lg"
-                  />
+                  <EditorRoot>
+                     <EditorContent
+                        className="mt-4"
+                        // onChange={(e) => {
+                        //    debouncedSaveIssue.call({
+                        //       ...issue,
+                        //       description: e.target.value,
+                        //    })
+                        // }}
+                        extensions={[
+                           starterKit,
+                           placeholder(
+                              "Add description (press '/' for commands)",
+                           ),
+                           link,
+                           slashCommand,
+                        ]}
+                        editorProps={{
+                           handleDOMEvents: {
+                              keydown: (_view, event) =>
+                                 handleCommandNavigation(event),
+                           },
+                           //  handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
+                           //  handleDrop: (view, event, _slice, moved) =>
+                           //    handleImageDrop(view, event, moved, uploadFn),
+                        }}
+                        //            onUpdate={({ editor }) => {
+                        //   setContent(editor.getHTML())
+                        //            }}
+                     >
+                        <EditorCommand>
+                           <EditorCommandEmpty>No results</EditorCommandEmpty>
+                           <EditorCommandList>
+                              {suggestionItems.map((item) => (
+                                 <EditorCommandItem
+                                    value={item.title}
+                                    onSelect={(value) =>
+                                       item.command?.(value as never)
+                                    }
+                                    key={item.title}
+                                 >
+                                    {item.icon}
+                                    {item.title}
+                                 </EditorCommandItem>
+                              ))}
+                           </EditorCommandList>
+                        </EditorCommand>
+                     </EditorContent>
+                  </EditorRoot>
+
                   <hr className="mt-12 mb-5 border-border border-t-2 border-dotted" />
                   <p className="font-semibold text-lg">Activity</p>
                   <div>
