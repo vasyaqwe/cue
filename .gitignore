@@ -17,11 +17,6 @@
 /prisma/db.sqlite-journal
 db.sqlite
 
-# next.js
-/.next/
-/out/
-next-env.d.ts
-
 # production
 /build
 /api/
@@ -35,6 +30,7 @@ dist
 .DS_Store
 *.pem
 .partykit
+app.config.timestamp_*.js
 
 # debug
 npm-debug.log*
