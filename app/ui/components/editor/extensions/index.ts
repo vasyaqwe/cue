@@ -147,7 +147,7 @@ const starterKit = StarterKit.configure({
    },
    listItem: {
       HTMLAttributes: {
-         class: cn("-mb-2 leading-normal"),
+         class: cn("leading-normal"),
       },
    },
    gapcursor: false,

@@ -56,7 +56,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                   {content === "<p></p>" ? (
                      <p
                         className={cn(
-                           "prose min-h-9 max-w-full break-all text-foreground/40 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground focus:outline-none",
+                           "prose mt-2 min-h-9 max-w-full break-all text-foreground/40 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground focus:outline-none",
                            classAttr,
                         )}
                      >
@@ -65,7 +65,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                   ) : (
                      <div
                         className={cn(
-                           "prose min-h-9 max-w-full break-all prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground focus:outline-none",
+                           "prose mt-2 min-h-9 max-w-full break-all prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground focus:outline-none",
                            classAttr,
                         )}
                         dangerouslySetInnerHTML={{
@@ -78,13 +78,13 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                <EditorProvider
                   {...props}
                   editorProps={{
+                     ...editorProps,
                      attributes: {
                         class: cn(
-                           "prose min-h-9 max-w-full break-all prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground focus:outline-none",
+                           "prose mt-2 min-h-9 max-w-full break-all prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground focus:outline-none",
                            classAttr,
                         ),
                      },
-                     ...editorProps,
                   }}
                   content={content}
                >

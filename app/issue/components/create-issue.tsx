@@ -126,10 +126,7 @@ export function CreateIssue() {
    })
 
    return (
-      <ModalContent
-         className="max-md:min-h-[48svh]"
-         onAnimationEndCapture={() => titleRef.current?.focus()}
-      >
+      <ModalContent onAnimationEndCapture={() => titleRef.current?.focus()}>
          <ModalHeader className="max-md:hidden">
             <ModalTitle>New issue</ModalTitle>
          </ModalHeader>
@@ -179,6 +176,9 @@ export function CreateIssue() {
                         keydown: (_view, event) =>
                            handleCommandNavigation(event),
                      },
+                     attributes: {
+                        class: "md:min-h-16 min-h-72",
+                     },
                   }}
                >
                   <EditorCommand>
@@ -201,7 +201,7 @@ export function CreateIssue() {
                </EditorContent>
             </EditorRoot>
          </form>
-         <ModalFooter className="gap-2">
+         <ModalFooter className="gap-2 md:mt-0">
             <Combobox
                nested
                shortcut="s"
