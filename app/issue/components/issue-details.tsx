@@ -42,6 +42,23 @@ import { useHotkeys } from "react-hotkeys-hook"
 import { debounce } from "remeda"
 import { toast } from "sonner"
 import type { z } from "zod"
+// import { EditorContent, EditorRoot } from "@/ui/components/editor"
+// import {
+//    EditorCommand,
+//    EditorCommandList,
+// } from "@/ui/components/editor/editor-command"
+// import {
+//    EditorCommandEmpty,
+//    EditorCommandItem,
+// } from "@/ui/components/editor/editor-command-item"
+// import {
+//    handleCommandNavigation,
+//    link,
+//    placeholder,
+//    slashCommand,
+//    starterKit,
+// } from "@/ui/components/editor/extensions"
+// import { suggestionItems } from "@/ui/components/editor/extensions/slash-command"
 
 export function IssueDetails() {
    const { issueId } = useParams({ strict: false })
@@ -142,6 +159,41 @@ export function IssueDetails() {
                </DropdownMenu>
             </Header>
             <div className="overflow-y-auto">
+               {/* <EditorRoot>
+                  <EditorContent
+                     extensions={[starterKit, placeholder, link, slashCommand]}
+                     editorProps={{
+                        handleDOMEvents: {
+                           keydown: (_view, event) =>
+                              handleCommandNavigation(event),
+                        },
+                        //  handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
+                        //  handleDrop: (view, event, _slice, moved) =>
+                        //    handleImageDrop(view, event, moved, uploadFn),
+                     }}
+                     //            onUpdate={({ editor }) => {
+                     //   setContent(editor.getHTML())
+                     //            }}
+                  >
+                     <EditorCommand>
+                        <EditorCommandEmpty>No results</EditorCommandEmpty>
+                        <EditorCommandList>
+                           {suggestionItems.map((item) => (
+                              <EditorCommandItem
+                                 value={item.title}
+                                 onSelect={(value) =>
+                                    item.command?.(value as never)
+                                 }
+                                 key={item.title}
+                              >
+                                 {item.icon}
+                                 {item.title}
+                              </EditorCommandItem>
+                           ))}
+                        </EditorCommandList>
+                     </EditorCommand>
+                  </EditorContent>
+               </EditorRoot> */}
                <div className="mx-auto w-full max-w-[51rem] px-4 py-6 md:py-8">
                   <Input
                      autoComplete="off"

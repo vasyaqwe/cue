@@ -12,6 +12,11 @@
    "files": {
       "ignore": [".vinxi", "routeTree.gen.ts", "migrations/meta"]
    },
+   "css": {
+      "formatter": {
+         "enabled": true
+      }
+   },
    "javascript": {
       "formatter": {
          "jsxQuoteStyle": "double",

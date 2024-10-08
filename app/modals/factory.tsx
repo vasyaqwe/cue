@@ -2,9 +2,9 @@
 import * as Dialog from "@radix-ui/react-dialog"
 import mitt, { type Handler } from "mitt"
 import type React from "react"
-import { Suspense, useEffect, useState } from "react"
+import { type ComponentType, Suspense, useEffect, useState } from "react"
 
-interface CreatePushModalOptions<T> {
+type CreatePushModalOptions<T> = {
    modals: {
       [key in keyof T]:
          | {
@@ -16,7 +16,7 @@ interface CreatePushModalOptions<T> {
               }>
               Component: React.ComponentType<T[key]>
            }
-         | React.ComponentType<T[key]>
+         | ComponentType<T[key]>
    }
 }
 
@@ -38,7 +38,7 @@ export function createPushModal<T>({ modals }: CreatePushModalOptions<T>) {
       popAll: undefined
    }
 
-   interface StateItem {
+   type StateItem = {
       key: string
       name: ModalKeys
       props: Record<string, unknown>

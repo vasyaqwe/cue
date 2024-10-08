@@ -1,0 +1,64 @@
+.ProseMirror .is-editor-empty:first-child::before {
+   content: attr(data-placeholder);
+   float: left;
+   color: hsl(var(--muted-foreground));
+   pointer-events: none;
+   height: 0;
+}
+.ProseMirror .is-empty::before {
+   content: attr(data-placeholder);
+   float: left;
+   color: hsl(var(--muted-foreground));
+   pointer-events: none;
+   height: 0;
+}
+
+.ProseMirror img {
+   transition: filter 0.1s ease-in-out;
+
+   &:hover {
+      cursor: pointer;
+      filter: brightness(90%);
+   }
+
+   &.ProseMirror-selectednode {
+      outline: 3px solid #5abbf7;
+      filter: brightness(90%);
+   }
+}
+
+.img-placeholder {
+   position: relative;
+
+   &:before {
+      content: "";
+      box-sizing: border-box;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 3px solid var(--novel-stone-200);
+      border-top-color: var(--novel-stone-800);
+      animation: spinning 0.6s linear infinite;
+   }
+}
+
+@keyframes spinning {
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+.tippy-box {
+   transition: none;
+   max-width: 400px !important;
+}
+
+.ProseMirror:not(.dragging) .ProseMirror-selectednode {
+   outline: none !important;
+   background-color: var(--novel-highlight-blue);
+   transition: background-color 0.2s;
+   box-shadow: none;
+}
