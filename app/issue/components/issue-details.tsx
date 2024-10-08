@@ -178,12 +178,13 @@ export function IssueDetails() {
                   <EditorRoot>
                      <EditorContent
                         className="mt-4"
-                        // onChange={(e) => {
-                        //    debouncedSaveIssue.call({
-                        //       ...issue,
-                        //       description: e.target.value,
-                        //    })
-                        // }}
+                        content={issue.description}
+                        onUpdate={({ editor }) => {
+                           debouncedSaveIssue.call({
+                              ...issue,
+                              description: editor.getHTML(),
+                           })
+                        }}
                         extensions={[
                            starterKit,
                            placeholder(
@@ -192,6 +193,7 @@ export function IssueDetails() {
                            link,
                            slashCommand,
                         ]}
+                        placeholder="Add description (press '/' for commands)"
                         editorProps={{
                            handleDOMEvents: {
                               keydown: (_view, event) =>
@@ -201,9 +203,6 @@ export function IssueDetails() {
                            //  handleDrop: (view, event, _slice, moved) =>
                            //    handleImageDrop(view, event, moved, uploadFn),
                         }}
-                        //            onUpdate={({ editor }) => {
-                        //   setContent(editor.getHTML())
-                        //            }}
                      >
                         <EditorCommand>
                            <EditorCommandEmpty>No results</EditorCommandEmpty>
