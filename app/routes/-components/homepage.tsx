@@ -114,8 +114,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                            strokeLinejoin="round"
                         />
                      </svg>
-                     Report & track issues with a simple & user-friendly
-                     interface.
+                     Report issues with a user-friendly rich-text editor
                   </li>
                   <li className="flex flex-col gap-3 sm:flex-row sm:items-center">
                      <svg

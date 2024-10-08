@@ -13,6 +13,7 @@ import {
 import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
+import { P, match } from "ts-pattern"
 
 export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
    const { issueId } = useParams({ strict: false })
@@ -69,37 +70,45 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
          queryClient.invalidateQueries(
             commentListQuery({ organizationId, issueId }),
          )
-         if (error || !comment || !issue.data) return
 
-         sendEvent({
-            type: "insert",
-            comment: {
-               id: comment.id,
-               content: comment.content ?? "",
-               createdAt: comment.createdAt,
-               issueId: comment.issueId,
-               resolvedBy: null,
-               author: {
-                  id: user.id,
-                  avatarUrl: user.avatarUrl,
-                  name: user.name,
-               },
+         match({ error, comment, issue }).with(
+            {
+               error: null,
+               comment: P.not(undefined),
+               issue: { data: P.not(null) },
             },
-            issueTitle: issue.data.title,
-            senderId: user.id,
-         })
+            ({ comment, issue }) => {
+               sendEvent({
+                  type: "insert",
+                  comment: {
+                     id: comment.id,
+                     content: comment.content ?? "",
+                     createdAt: comment.createdAt,
+                     issueId: comment.issueId,
+                     resolvedBy: null,
+                     author: {
+                        id: user.id,
+                        avatarUrl: user.avatarUrl,
+                        name: user.name,
+                     },
+                  },
+                  issueTitle: issue.data.title,
+                  senderId: user.id,
+               })
 
-         insertNotification.mutate({
-            organizationId,
-            issueId: comment.issueId,
-            type: "new_issue_comment",
-            content: comment.content,
-            issue: {
-               title: issue.data.title,
-               status: issue.data.status,
+               insertNotification.mutate({
+                  organizationId,
+                  issueId: comment.issueId,
+                  type: "new_issue_comment",
+                  content: comment.content,
+                  issue: {
+                     title: issue.data.title,
+                     status: issue.data.status,
+                  },
+                  commentId: comment.id,
+               })
             },
-            commentId: comment.id,
-         })
+         )
       },
    })
 

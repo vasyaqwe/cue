@@ -41,7 +41,7 @@ import {
    starterKit,
 } from "@/ui/components/editor/extensions"
 import { suggestionItems } from "@/ui/components/editor/extensions/slash-command"
-import { Input, inputVariants } from "@/ui/components/input"
+import { inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
@@ -144,7 +144,7 @@ export function CreateIssue() {
             }}
             className="flex w-full flex-col p-4 pt-3"
          >
-            <Input
+            <input
                ref={titleRef}
                autoComplete="off"
                name="title"

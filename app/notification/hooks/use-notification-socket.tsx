@@ -107,8 +107,6 @@ export function useNotificationSocket() {
    })
 
    useEffect(() => {
-      if (!socket) return
-
       useNotificationStore.setState({ socket })
    }, [socket])
 

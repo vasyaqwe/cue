@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
+import { P, match } from "ts-pattern"
 
 export function useDeleteComment() {
    const { issueId } = useParams({ strict: false })
@@ -47,14 +48,16 @@ export function useDeleteComment() {
             commentListQuery({ organizationId, issueId }),
          )
 
-         if (error || !data) return
-
-         sendEvent({
-            type: "delete",
-            commentId: data.commentId,
-            senderId: user.id,
-            issueId,
-         })
+         match(error)
+            .with(P.not(null), () => undefined)
+            .otherwise(() => {
+               sendEvent({
+                  type: "delete",
+                  commentId: data.commentId,
+                  senderId: user.id,
+                  issueId,
+               })
+            })
       },
    })
 

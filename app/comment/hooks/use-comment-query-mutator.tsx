@@ -6,6 +6,7 @@ import { notificationListQuery } from "@/notification/queries"
 import { useAuth } from "@/user/hooks"
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { produce } from "immer"
+import { match } from "ts-pattern"
 
 export function useCommentQueryMutator() {
    const queryClient = useQueryClient()
@@ -26,18 +27,23 @@ export function useCommentQueryMutator() {
       )
 
       // delete notifications that have commentId === deleted comment id (due on onCascade delete)
-      if (notificatons.data.length === 0) return
-
-      const notificationsToDelete = notificatons.data.filter(
-         (notification) => notification.commentId === commentId,
-      )
-      if (notificationsToDelete?.length === 0) return
-
-      deleteNotificationsFromQueryData({
-         notificationIds: notificationsToDelete.map(
-            (notification) => notification.id,
-         ),
-      })
+      match(notificatons.data)
+         .with([], () => undefined)
+         .otherwise((data) =>
+            match(
+               data.filter(
+                  (notification) => notification.commentId === commentId,
+               ),
+            )
+               .with([], () => undefined)
+               .otherwise((notificationsToDelete) =>
+                  deleteNotificationsFromQueryData({
+                     notificationIds: notificationsToDelete.map(
+                        (notification) => notification.id,
+                     ),
+                  }),
+               ),
+         )
    }
 
    const updateCommentInQueryData = ({
@@ -47,22 +53,22 @@ export function useCommentQueryMutator() {
    }) => {
       queryClient.setQueryData(
          commentListQuery({ organizationId, issueId: input.issueId }).queryKey,
-         (oldData) => {
-            if (!oldData) return oldData
-
-            return produce(oldData, (draft) => {
-               const comment = draft?.find((comment) => comment.id === input.id)
-               if (!comment) return
-
-               Object.assign(comment, {
-                  ...(input.resolvedById
-                     ? {
-                          resolvedBy: input.resolvedBy,
-                       }
-                     : { resolvedBy: null }),
-               })
-            })
-         },
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) =>
+                  produce(data, (draft) => {
+                     match(draft?.find((comment) => comment.id === input.id))
+                        .with(undefined, () => undefined)
+                        .otherwise((comment) =>
+                           Object.assign(comment, {
+                              resolvedBy: input.resolvedById
+                                 ? input.resolvedBy
+                                 : null,
+                           }),
+                        )
+                  }),
+               ),
       )
    }
 
@@ -71,11 +77,10 @@ export function useCommentQueryMutator() {
    }: { input: Awaited<ReturnType<typeof commentFns.list>>[number] }) => {
       queryClient.setQueryData(
          commentListQuery({ organizationId, issueId: input.issueId }).queryKey,
-         (oldData) => {
-            if (!oldData) return oldData
-
-            return [...oldData, input]
-         },
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) => [...data, input]),
       )
    }
 

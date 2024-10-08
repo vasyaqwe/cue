@@ -5,6 +5,7 @@ import type { IssueEvent } from "@/issue/types"
 import { useAuth } from "@/user/hooks"
 import usePartySocket from "partysocket/react"
 import { useEffect } from "react"
+import { match } from "ts-pattern"
 
 export function useIssueSocket() {
    const { organizationId, user } = useAuth()
@@ -21,24 +22,26 @@ export function useIssueSocket() {
       room: organizationId,
       onMessage(event) {
          const message: IssueEvent = JSON.parse(event.data)
-         if (message.senderId === user.id) return
 
-         if (message.type === "insert") {
-            return insertIssueToQueryData({ input: message.issue })
-         }
-
-         if (message.type === "update") {
-            return updateIssueInQueryData({ input: message.issue })
-         }
-         if (message.type === "delete") {
-            return deleteIssueFromQueryData({ issueId: message.issueId })
-         }
+         return match(message)
+            .when(
+               (msg) => msg.senderId === user.id,
+               () => undefined,
+            )
+            .with({ type: "insert" }, (msg) =>
+               insertIssueToQueryData({ input: msg.issue }),
+            )
+            .with({ type: "update" }, (msg) =>
+               updateIssueInQueryData({ input: msg.issue }),
+            )
+            .with({ type: "delete" }, (msg) =>
+               deleteIssueFromQueryData({ issueId: msg.issueId }),
+            )
+            .exhaustive()
       },
    })
 
    useEffect(() => {
-      if (!socket) return
-
       useIssueStore.setState({ socket })
    }, [socket])
 

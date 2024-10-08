@@ -11,6 +11,7 @@ import { useAuth } from "@/user/hooks"
 import { formatDateRelative } from "@/utils/format"
 import { useParams } from "@tanstack/react-router"
 import { useEffect, useState } from "react"
+import { P, match } from "ts-pattern"
 
 export function Comment({
    comment,
@@ -25,8 +26,9 @@ export function Comment({
    const [isExpanded, setIsExpanded] = useState(!resolvedBy)
 
    useEffect(() => {
-      if (resolvedBy === null) return setIsExpanded(true)
-      if (resolvedBy !== null) return setIsExpanded(false)
+      match(resolvedBy)
+         .with(null, () => setIsExpanded(true))
+         .otherwise(() => setIsExpanded(false))
    }, [resolvedBy])
 
    const delayedResolvedBy = useDelayedValue(resolvedBy, 500)
@@ -154,13 +156,15 @@ function useDelayedValue<T>(value: T, delayTime: number): T {
    useEffect(() => {
       let timeoutId: NodeJS.Timeout
 
-      if (value === null || value === undefined) {
-         timeoutId = setTimeout(() => {
+      match(value)
+         .with(P.nullish, () => {
+            timeoutId = setTimeout(() => {
+               setDelayedValue(value)
+            }, delayTime) as unknown as never
+         })
+         .otherwise(() => {
             setDelayedValue(value)
-         }, delayTime) as unknown as never
-      } else {
-         setDelayedValue(value)
-      }
+         })
 
       return () => clearTimeout(timeoutId)
    }, [value, delayTime])

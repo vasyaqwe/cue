@@ -5,6 +5,7 @@ import { env } from "@/env"
 import { useAuth } from "@/user/hooks"
 import usePartySocket from "partysocket/react"
 import { useEffect } from "react"
+import { match } from "ts-pattern"
 
 export function useCommentSocket() {
    const { organizationId, user } = useAuth()
@@ -22,29 +23,28 @@ export function useCommentSocket() {
       room: organizationId,
       onMessage(event) {
          const message: CommentEvent = JSON.parse(event.data)
-         if (message.senderId === user.id) return
-         if (message.type === "insert") {
-            return insertCommentToQueryData({
-               input: message.comment,
-            })
-         }
-         if (message.type === "update") {
-            return updateCommentInQueryData({
-               input: message.comment,
-            })
-         }
-         if (message.type === "delete") {
-            return deleteCommentFromQueryData({
-               commentId: message.commentId,
-               issueId: message.issueId,
-            })
-         }
+         return match(message)
+            .when(
+               (msg) => msg.senderId === user.id,
+               () => undefined,
+            )
+            .with({ type: "insert" }, (msg) =>
+               insertCommentToQueryData({ input: msg.comment }),
+            )
+            .with({ type: "update" }, (msg) =>
+               updateCommentInQueryData({ input: msg.comment }),
+            )
+            .with({ type: "delete" }, (msg) =>
+               deleteCommentFromQueryData({
+                  commentId: msg.commentId,
+                  issueId: msg.issueId,
+               }),
+            )
+            .exhaustive()
       },
    })
 
    useEffect(() => {
-      if (!socket) return
-
       useCommentStore.setState({ socket })
    }, [socket])
 

@@ -15,6 +15,7 @@ import {
 import { routerWithQueryClient } from "@tanstack/react-router-with-query"
 import type { TRPCError } from "@trpc/server"
 import superjson from "superjson"
+import { match } from "ts-pattern"
 
 type TRPCClientError = Error & {
    data: {
@@ -48,22 +49,16 @@ export function createRouter() {
             staleTime: 300 * 1000,
          },
          mutations: {
-            onError: (error) => {
-               if (isTRPCError(error)) {
-                  if (error.data?.code === "TOO_MANY_REQUESTS") {
-                     return toast.error(
-                        "Too many requests, please try again later",
-                     )
-                  }
-
-                  if (error.data?.code !== "INTERNAL_SERVER_ERROR")
-                     return toast.error(error.message)
-
-                  toast.error("An unknown error occurred")
-               }
-
-               toast.error("An unknown error occurred")
-            },
+            onError: (error) =>
+               match(error)
+                  .when(
+                     (e): e is TRPCError => isTRPCError(e),
+                     (e) =>
+                        e.code === "INTERNAL_SERVER_ERROR"
+                           ? toast.error("An unknown error occurred")
+                           : toast.error(e.message),
+                  )
+                  .otherwise(() => toast.error("An unknown error occurred")),
          },
       },
    })
@@ -134,10 +129,6 @@ function CatchBoundary({ error }: ErrorComponentProps) {
       strict: false,
       select: (state) => state.id === rootRouteId,
    })
-
-   if (import.meta.env.DEV) {
-      console.error(error)
-   }
 
    return (
       <div className="grid h-svh w-full place-items-center text-center">
