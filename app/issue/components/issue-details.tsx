@@ -2,6 +2,7 @@ import { Comment } from "@/comment/components/comment"
 import { CreateComment } from "@/comment/components/create-comment"
 import { commentListQuery } from "@/comment/queries"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
+import { useEventListener } from "@/interactions/use-event-listener"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
 import { useDeleteIssue } from "@/issue/hooks/use-delete-issue"
@@ -54,7 +55,7 @@ import { useAuth } from "@/user/hooks"
 import { formatDateRelative } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useLocation, useParams } from "@tanstack/react-router"
-import { useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { debounce } from "remeda"
 import { toast } from "sonner"
@@ -75,33 +76,50 @@ export function IssueDetails() {
    const issue = query.data
    const { deleteIssue } = useDeleteIssue()
    const { updateIssue } = useUpdateIssue()
+   const [title, setTitle] = useState(issue?.title ?? "")
+   const [description, setDescription] = useState(issue?.description ?? "")
 
    const lastSavedState = useRef({
       title: issue?.title,
       description: issue?.description,
    })
 
-   const debouncedSaveIssue = debounce(
-      (updatedFields: z.infer<typeof updateIssueParams>) => {
-         if (
-            updatedFields.title !== lastSavedState.current.title ||
-            updatedFields.description !== lastSavedState.current.description
-         ) {
-            const payload = {
-               title: updatedFields.title,
-               description: updatedFields.description,
-            }
+   const hasUnsavedChanges =
+      title !== lastSavedState.current.title ||
+      description !== lastSavedState.current.description
 
-            updateIssue.mutate({
-               ...payload,
-               id: issueId,
-               organizationId,
-            })
+   useEventListener("beforeunload", (e) => {
+      if (!hasUnsavedChanges) return
+      e.preventDefault()
+   })
 
-            lastSavedState.current = payload
-         }
-      },
-      { waitMs: 2000 },
+   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+   const debouncedSaveIssue = useMemo(
+      () =>
+         debounce(
+            (updatedFields: z.infer<typeof updateIssueParams>) => {
+               if (
+                  updatedFields.title !== lastSavedState.current.title ||
+                  updatedFields.description !==
+                     lastSavedState.current.description
+               ) {
+                  const payload = {
+                     title: updatedFields.title,
+                     description: updatedFields.description,
+                  }
+
+                  updateIssue.mutate({
+                     ...payload,
+                     id: issueId,
+                     organizationId,
+                  })
+
+                  lastSavedState.current = payload
+               }
+            },
+            { waitMs: 2000 },
+         ),
+      [issueId, organizationId],
    )
 
    const { copy } = useCopyToClipboard()
@@ -168,6 +186,7 @@ export function IssueDetails() {
                      placeholder="Issue title"
                      required
                      onChange={(e) => {
+                        setTitle(e.target.value)
                         debouncedSaveIssue.call({
                            ...issue,
                            title: e.target.value,
@@ -178,11 +197,13 @@ export function IssueDetails() {
                   <EditorRoot>
                      <EditorContent
                         className="mt-4"
-                        content={issue.description}
+                        content={description}
                         onUpdate={({ editor }) => {
+                           const description = editor.getHTML()
+                           setDescription(description)
                            debouncedSaveIssue.call({
                               ...issue,
-                              description: editor.getHTML(),
+                              description,
                            })
                         }}
                         extensions={[
@@ -223,7 +244,6 @@ export function IssueDetails() {
                         </EditorCommand>
                      </EditorContent>
                   </EditorRoot>
-
                   <hr className="mt-12 mb-5 border-border border-t-2 border-dotted" />
                   <p className="font-semibold text-lg">Activity</p>
                   <div>
