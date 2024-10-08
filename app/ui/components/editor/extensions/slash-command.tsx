@@ -92,7 +92,7 @@ export const suggestionItems = [
       searchTerms: ["unordered", "point"],
       icon: (
          <svg
-            className="!size-[22px] ml-[-2px]"
+            className="md:!size-[22px] !size-[28px] ml-[-4px] md:ml-[-2px]"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -115,7 +115,7 @@ export const suggestionItems = [
       searchTerms: ["ordered"],
       icon: (
          <svg
-            className="!size-[22px] ml-[-2px]"
+            className="md:!size-[22px] !size-[28px] ml-[-4px] md:ml-[-2px]"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

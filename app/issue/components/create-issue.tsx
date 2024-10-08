@@ -24,6 +24,23 @@ import {
    ComboboxItem,
    ComboboxTrigger,
 } from "@/ui/components/combobox"
+import { EditorContent, EditorRoot } from "@/ui/components/editor"
+import {
+   EditorCommand,
+   EditorCommandList,
+} from "@/ui/components/editor/editor-command"
+import {
+   EditorCommandEmpty,
+   EditorCommandItem,
+} from "@/ui/components/editor/editor-command-item"
+import {
+   handleCommandNavigation,
+   link,
+   placeholder,
+   slashCommand,
+   starterKit,
+} from "@/ui/components/editor/extensions"
+import { suggestionItems } from "@/ui/components/editor/extensions/slash-command"
 import { Input, inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
@@ -130,7 +147,7 @@ export function CreateIssue() {
             }}
             className="flex w-full flex-col p-4 pt-3"
          >
-            <input
+            <Input
                ref={titleRef}
                autoComplete="off"
                name="title"
@@ -144,16 +161,45 @@ export function CreateIssue() {
                   "!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-bold text-xl",
                )}
             />
-            <Input
-               name="description"
-               id="description"
-               placeholder="Add description.."
-               value={description}
-               onChange={(e) => setDescription(e.target.value)}
-               className={
-                  "!border-none !outline-none !bg-transparent mt-1 h-8 rounded-none p-0 text-[1rem]"
-               }
-            />
+            <EditorRoot>
+               <EditorContent
+                  content={description}
+                  onUpdate={({ editor }) => {
+                     setDescription(editor.getHTML())
+                  }}
+                  extensions={[
+                     starterKit,
+                     placeholder("Add description (press '/' for commands)"),
+                     link,
+                     slashCommand,
+                  ]}
+                  placeholder="Add description (press '/' for commands)"
+                  editorProps={{
+                     handleDOMEvents: {
+                        keydown: (_view, event) =>
+                           handleCommandNavigation(event),
+                     },
+                  }}
+               >
+                  <EditorCommand>
+                     <EditorCommandEmpty>No results</EditorCommandEmpty>
+                     <EditorCommandList>
+                        {suggestionItems.map((item) => (
+                           <EditorCommandItem
+                              value={item.title}
+                              onSelect={(value) =>
+                                 item.command?.(value as never)
+                              }
+                              key={item.title}
+                           >
+                              {item.icon}
+                              {item.title}
+                           </EditorCommandItem>
+                        ))}
+                     </EditorCommandList>
+                  </EditorCommand>
+               </EditorContent>
+            </EditorRoot>
          </form>
          <ModalFooter className="gap-2">
             <Combobox

@@ -196,7 +196,7 @@ export function IssueDetails() {
                   />
                   <EditorRoot>
                      <EditorContent
-                        className="mt-4"
+                        className="mt-3"
                         content={description}
                         onUpdate={({ editor }) => {
                            const description = editor.getHTML()
@@ -244,7 +244,7 @@ export function IssueDetails() {
                         </EditorCommand>
                      </EditorContent>
                   </EditorRoot>
-                  <hr className="mt-12 mb-5 border-border border-t-2 border-dotted" />
+                  <hr className="mt-7 mb-5 border-border border-t-2 border-dotted" />
                   <p className="font-semibold text-lg">Activity</p>
                   <div>
                      <div className="mt-5 flex items-center gap-1">

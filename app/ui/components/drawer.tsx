@@ -48,8 +48,10 @@ function DrawerContent({
             )}
             {...props}
          >
-            <div className="!p-0 mx-auto mt-1 min-h-1 w-8 rounded-full bg-foreground/75 group-[&[vaul-drawer-direction=right]]:hidden" />
-            {children}
+            <div className="flex max-h-[88svh] flex-1 flex-col overflow-y-auto">
+               <div className="!p-0 mx-auto mt-1 min-h-1 w-8 rounded-full bg-foreground/75 group-[&[vaul-drawer-direction=right]]:hidden" />
+               {children}
+            </div>
          </DrawerPrimitive.Content>
       </DrawerPortal>
    )

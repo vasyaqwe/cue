@@ -15,15 +15,14 @@ export function DraftIndicator() {
 
    if (!isMounted) return null
 
+   const descriptionEmpty = !issueDescription || issueDescription === "<p></p>"
+
    return (
       <span
          data-visible={
             createIssueOpen
                ? false
-               : !!(
-                    (issueTitle && issueTitle.length > 0) ||
-                    (issueDescription && issueDescription.length > 0)
-                 )
+               : !!((issueTitle && issueTitle.length > 0) || !descriptionEmpty)
          }
          className="md:-translate-y-1/2 -right-3 -top-1 absolute block size-3 rounded-full border-[2.5px] border-background bg-primary opacity-0 transition-opacity md:top-1/2 md:right-2 md:size-[11px] md:border-2 data-[visible=true]:opacity-100"
       />
