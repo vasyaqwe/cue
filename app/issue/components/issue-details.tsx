@@ -38,7 +38,6 @@ import {
    EditorCommandItem,
 } from "@/ui/components/editor/editor-command-item"
 import {
-   handleCommandNavigation,
    link,
    placeholder,
    slashCommand,
@@ -224,15 +223,6 @@ export function IssueDetails() {
                            slashCommand,
                         ]}
                         placeholder="Add description (press '/' for commands)"
-                        editorProps={{
-                           handleDOMEvents: {
-                              keydown: (_view, event) =>
-                                 handleCommandNavigation(event),
-                           },
-                           //  handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
-                           //  handleDrop: (view, event, _slice, moved) =>
-                           //    handleImageDrop(view, event, moved, uploadFn),
-                        }}
                      >
                         <EditorCommand>
                            <EditorCommandEmpty>No results</EditorCommandEmpty>

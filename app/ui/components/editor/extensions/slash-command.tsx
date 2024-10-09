@@ -1,4 +1,10 @@
-import type { SuggestionItem } from "@/ui/components/editor/extensions"
+import { EditorCommandOut } from "@/ui/components/editor/editor-command"
+import { Popover, PopoverContent } from "@/ui/components/popover"
+import type { ReactNode } from "@tanstack/react-router"
+import type { Range } from "@tiptap/core"
+import type { Editor } from "@tiptap/core"
+import { ReactRenderer } from "@tiptap/react"
+import { useState } from "react"
 
 export const suggestionItems = [
    {
@@ -134,3 +140,104 @@ export const suggestionItems = [
       },
    },
 ] satisfies SuggestionItem[]
+
+export function SlashCommandPopover({
+   clientRect,
+   query,
+   range,
+}: {
+   clientRect: () => DOMRect
+   query: string
+   range: Range
+}) {
+   const [open, setOpen] = useState(true)
+   const position = clientRect()
+
+   return (
+      <Popover
+         open={open}
+         onOpenChange={setOpen}
+         drawerOnMobile={false}
+      >
+         <PopoverContent
+            drawerOnMobile={false}
+            title="Command"
+            container={document.body}
+            side="bottom"
+            align="start"
+            className="mt-2 min-w-56"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            onCloseAutoFocus={(e) => e.preventDefault()}
+            style={{
+               position: "absolute",
+               left: position.left,
+               top: position.bottom,
+            }}
+         >
+            <EditorCommandOut
+               query={query}
+               range={range}
+            />
+         </PopoverContent>
+      </Popover>
+   )
+}
+
+export const renderItems = () => {
+   let component: ReactRenderer | null = null
+   return {
+      onStart: (props: {
+         editor: Editor
+         clientRect: DOMRect
+         items: SuggestionItem[]
+         command: never
+         range: Range
+         query: string
+      }) => {
+         component = new ReactRenderer(SlashCommandPopover, {
+            props: {
+               clientRect: props.clientRect,
+               query: props.query,
+               range: props.range,
+            },
+            editor: props.editor,
+         })
+
+         const { selection } = props.editor.state
+         const parentNode = selection.$from.node(selection.$from.depth)
+         const blockType = parentNode.type.name
+         if (blockType === "codeBlock") {
+            return false
+         }
+      },
+      onUpdate: (props: {
+         editor: Editor
+         clientRect: never
+         items: SuggestionItem[]
+         command: never
+         range: Range
+         query: string
+      }) => {
+         component?.updateProps({
+            editor: props.editor,
+            clientRect: props.clientRect,
+            query: props.query,
+            range: props.range,
+         })
+      },
+      onKeyDown: (props: { event: KeyboardEvent }) => {
+         // @ts-expect-error
+         return component?.ref?.onKeyDown(props)
+      },
+      onExit: () => {
+         component?.destroy()
+      },
+   }
+}
+
+export type SuggestionItem = {
+   title: string
+   icon: ReactNode
+   searchTerms?: string[]
+   command?: (props: { editor: Editor; range: Range }) => void
+}

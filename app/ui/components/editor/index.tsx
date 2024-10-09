@@ -3,6 +3,7 @@ import { EditorProvider, useEditor } from "@tiptap/react"
 import type { EditorProviderProps } from "@tiptap/react"
 import { forwardRef, useRef } from "react"
 import type { ReactNode } from "react"
+import { match } from "ts-pattern"
 import tunnel from "tunnel-rat"
 import { EditorCommandTunnelContext } from "./editor-command"
 
@@ -80,7 +81,22 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                   {...props}
                   editorProps={{
                      ...editorProps,
+                     //  handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
+                     //  handleDrop: (view, event, _slice, moved) =>
+                     //    handleImageDrop(view, event, moved, uploadFn),
+                     handleDOMEvents: {
+                        ...editorProps?.handleDOMEvents,
+                        keydown: (_view, event) =>
+                           match(event.key)
+                              .with("ArrowUp", "ArrowDown", "Enter", () => {
+                                 const slashCommand =
+                                    document.querySelector("#slash-command")
+                                 return !!slashCommand
+                              })
+                              .otherwise(() => false),
+                     },
                      attributes: {
+                        ...editorProps?.attributes,
                         class: cn(
                            "prose mt-2 min-h-9 max-w-full break-all prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground focus:outline-none",
                            classAttr,

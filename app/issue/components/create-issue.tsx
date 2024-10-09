@@ -34,7 +34,6 @@ import {
    EditorCommandItem,
 } from "@/ui/components/editor/editor-command-item"
 import {
-   handleCommandNavigation,
    link,
    placeholder,
    slashCommand,
@@ -170,10 +169,6 @@ export function CreateIssue() {
                   ]}
                   placeholder="Add description (press '/' for commands)"
                   editorProps={{
-                     handleDOMEvents: {
-                        keydown: (_view, event) =>
-                           handleCommandNavigation(event),
-                     },
                      attributes: {
                         class: "md:min-h-16 min-h-72",
                      },

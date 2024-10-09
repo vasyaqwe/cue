@@ -1,12 +1,22 @@
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { useOnPushModal } from "@/modals"
 import { useEffect, useState } from "react"
+import { match } from "ts-pattern"
 
 export function DraftIndicator() {
    const [issueTitle] = useLocalStorage("create_issue_title", "")
    const [issueDescription] = useLocalStorage("create_issue_description", "")
    const [createIssueOpen, setCreateIssueOpen] = useState(false)
-   useOnPushModal("create_issue", (open) => setCreateIssueOpen(open))
+   useOnPushModal("create_issue", (open) => {
+      match(open)
+         .with(true, () => setCreateIssueOpen(true))
+         .otherwise(() =>
+            // delay due to dialog animation
+            setTimeout(() => {
+               setCreateIssueOpen(false)
+            }, 100),
+         )
+   })
 
    const [isMounted, setIsMounted] = useState(false)
    useEffect(() => {
