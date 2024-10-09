@@ -25,21 +25,23 @@ import {
    ComboboxTrigger,
 } from "@/ui/components/combobox"
 import { EditorContent, EditorRoot } from "@/ui/components/editor"
+
 import {
    EditorCommand,
    EditorCommandList,
-} from "@/ui/components/editor/editor-command"
+} from "@/ui/components/editor/command/editor-command"
 import {
    EditorCommandEmpty,
    EditorCommandItem,
-} from "@/ui/components/editor/editor-command-item"
+} from "@/ui/components/editor/command/editor-command-item"
+import { commandItems } from "@/ui/components/editor/command/extension"
 import {
    link,
+   mention,
    placeholder,
    slashCommand,
    starterKit,
 } from "@/ui/components/editor/extensions"
-import { suggestionItems } from "@/ui/components/editor/extensions/slash-command"
 import { inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
@@ -166,6 +168,7 @@ export function CreateIssue() {
                      placeholder("Add description (press '/' for commands)"),
                      link,
                      slashCommand,
+                     mention,
                   ]}
                   placeholder="Add description (press '/' for commands)"
                   editorProps={{
@@ -177,7 +180,7 @@ export function CreateIssue() {
                   <EditorCommand>
                      <EditorCommandEmpty>No results</EditorCommandEmpty>
                      <EditorCommandList>
-                        {suggestionItems.map((item) => (
+                        {commandItems.map((item) => (
                            <EditorCommandItem
                               value={item.title}
                               onSelect={(value) =>

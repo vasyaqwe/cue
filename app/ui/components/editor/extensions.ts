@@ -1,10 +1,12 @@
 import {
-   renderItems,
-   suggestionItems,
-} from "@/ui/components/editor/extensions/slash-command"
+   commandItems,
+   renderCommandItems,
+} from "@/ui/components/editor/command/extension"
+import { renderMentionItems } from "@/ui/components/editor/mention/extension"
 import { cn } from "@/ui/utils"
-import { Extension } from "@tiptap/core"
+import { Extension, mergeAttributes } from "@tiptap/core"
 import TiptapLink from "@tiptap/extension-link"
+import Mention from "@tiptap/extension-mention"
 import Placeholder from "@tiptap/extension-placeholder"
 import StarterKit from "@tiptap/starter-kit"
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion"
@@ -33,8 +35,21 @@ const slashCommandExtension = Extension.create({
 
 const slashCommand = slashCommandExtension.configure({
    suggestion: {
-      items: () => suggestionItems,
-      render: renderItems,
+      items: () => commandItems,
+      render: renderCommandItems,
+   },
+})
+
+const mention = Mention.configure({
+   suggestion: {
+      render: renderMentionItems,
+   },
+   renderHTML({ options, node }) {
+      return [
+         "span",
+         mergeAttributes(options.HTMLAttributes),
+         `${options.suggestion.char}${node.attrs.label}`,
+      ]
    },
 })
 
@@ -71,4 +86,4 @@ const starterKit = StarterKit.configure({
    gapcursor: false,
 })
 
-export { starterKit, placeholder, slashCommand, link }
+export { starterKit, placeholder, slashCommand, mention, link }

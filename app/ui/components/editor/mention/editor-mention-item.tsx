@@ -7,8 +7,8 @@ import { CommandEmpty, CommandItem } from "cmdk"
 import { forwardRef } from "react"
 import type { ComponentProps, ComponentPropsWithoutRef } from "react"
 
-type EditorCommandItemProps = {
-   readonly onSelect: ({
+type Props = {
+   onSelect: ({
       editor,
       range,
    }: {
@@ -17,9 +17,9 @@ type EditorCommandItemProps = {
    }) => void
 }
 
-export const EditorCommandItem = forwardRef<
+export const EditorMentionItem = forwardRef<
    HTMLDivElement,
-   EditorCommandItemProps & ComponentPropsWithoutRef<typeof CommandItem>
+   Props & ComponentPropsWithoutRef<typeof CommandItem>
 >(({ children, onSelect, className, ...props }, ref) => {
    const { editor } = useCurrentEditor()
    const range = useEditorStore().range
@@ -38,7 +38,7 @@ export const EditorCommandItem = forwardRef<
    )
 })
 
-export function EditorCommandEmpty({
+export function EditorMentionEmpty({
    className,
    ...props
 }: ComponentProps<typeof CommandEmpty>) {

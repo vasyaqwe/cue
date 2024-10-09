@@ -1,3 +1,4 @@
+import { EditorCommandTunnelContext } from "@/ui/components/editor/command/editor-command"
 import { cn } from "@/ui/utils"
 import { EditorProvider, useEditor } from "@tiptap/react"
 import type { EditorProviderProps } from "@tiptap/react"
@@ -5,7 +6,6 @@ import { forwardRef, useRef } from "react"
 import type { ReactNode } from "react"
 import { match } from "ts-pattern"
 import tunnel from "tunnel-rat"
-import { EditorCommandTunnelContext } from "./editor-command"
 
 export type EditorProps = {
    children: ReactNode

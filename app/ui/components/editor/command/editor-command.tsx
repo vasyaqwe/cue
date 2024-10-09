@@ -3,7 +3,7 @@ import { useEditorStore } from "@/ui/components/editor/store"
 import type { Range } from "@tiptap/core"
 import { Command } from "cmdk"
 import { createContext, forwardRef, useEffect } from "react"
-import type { ComponentPropsWithoutRef, FC } from "react"
+import type { ComponentPropsWithoutRef } from "react"
 import { P, match } from "ts-pattern"
 import type tunnel from "tunnel-rat"
 
@@ -11,15 +11,13 @@ export const EditorCommandTunnelContext = createContext(
    {} as ReturnType<typeof tunnel>,
 )
 
-type EditorCommandOutProps = {
-   readonly query: string
-   readonly range: Range
-}
-
-export const EditorCommandOut: FC<EditorCommandOutProps> = ({
+export function EditorCommandOut({
    query,
    range,
-}) => {
+}: {
+   query: string
+   range: Range
+}) {
    useEffect(() => {
       useEditorStore.setState({ query })
    }, [query])

@@ -32,18 +32,22 @@ import { EditorContent, EditorRoot } from "@/ui/components/editor"
 import {
    EditorCommand,
    EditorCommandList,
-} from "@/ui/components/editor/editor-command"
+} from "@/ui/components/editor/command/editor-command"
 import {
    EditorCommandEmpty,
    EditorCommandItem,
-} from "@/ui/components/editor/editor-command-item"
+} from "@/ui/components/editor/command/editor-command-item"
+import { commandItems } from "@/ui/components/editor/command/extension"
+
 import {
    link,
+   mention,
    placeholder,
    slashCommand,
    starterKit,
 } from "@/ui/components/editor/extensions"
-import { suggestionItems } from "@/ui/components/editor/extensions/slash-command"
+import {} from "@/ui/components/editor/mention/editor-mention"
+import {} from "@/ui/components/editor/mention/editor-mention-item"
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
@@ -221,13 +225,14 @@ export function IssueDetails() {
                            ),
                            link,
                            slashCommand,
+                           mention,
                         ]}
                         placeholder="Add description (press '/' for commands)"
                      >
                         <EditorCommand>
                            <EditorCommandEmpty>No results</EditorCommandEmpty>
                            <EditorCommandList>
-                              {suggestionItems.map((item) => (
+                              {commandItems.map((item) => (
                                  <EditorCommandItem
                                     value={item.title}
                                     onSelect={(value) =>
