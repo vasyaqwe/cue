@@ -6,6 +6,7 @@ import { useAuth } from "@/user/hooks"
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { produce } from "immer"
+import { P, match } from "ts-pattern"
 import type { z } from "zod"
 import type * as notificationFns from "../functions"
 
@@ -37,18 +38,21 @@ export function useIssueQueryMutator() {
       )
 
       // delete notifications that have issueId === deleted issue id (due on onCascade delete)
-      if (notificatons.data.length === 0) return
-
-      const notificationsToDelete = notificatons.data.filter(
-         (notification) => notification.issueId === issueId,
-      )
-      if (notificationsToDelete?.length === 0) return
-
-      deleteNotificationsFromQueryData({
-         notificationIds: notificationsToDelete.map(
-            (notification) => notification.id,
-         ),
-      })
+      match(notificatons.data)
+         .with([], () => {})
+         .otherwise((data) =>
+            match(
+               data.filter((notification) => notification.issueId === issueId),
+            )
+               .with([], () => {})
+               .otherwise((notificationsToDelete) =>
+                  deleteNotificationsFromQueryData({
+                     notificationIds: notificationsToDelete.map(
+                        (notification) => notification.id,
+                     ),
+                  }),
+               ),
+         )
    }
 
    const insertIssueToQueryData = ({
@@ -58,20 +62,19 @@ export function useIssueQueryMutator() {
    }) => {
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
-         (oldData) => {
-            if (!oldData) return oldData
-
-            return [
-               {
-                  ...input,
-                  id: input.id ?? crypto.randomUUID(),
-                  description: input.description ?? "",
-                  createdAt: Date.now(),
-                  updatedAt: Date.now(),
-               },
-               ...oldData,
-            ]
-         },
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) => [
+                  {
+                     ...input,
+                     id: input.id ?? crypto.randomUUID(),
+                     description: input.description ?? "",
+                     createdAt: Date.now(),
+                     updatedAt: Date.now(),
+                  },
+                  ...data,
+               ]),
       )
    }
 
@@ -82,34 +85,40 @@ export function useIssueQueryMutator() {
    }) => {
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
-         (oldData) => {
-            if (!oldData) return oldData
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) =>
+                  produce(data, (draft) =>
+                     match(draft?.find((issue) => issue.id === input.id))
+                        .with(undefined, () => {})
+                        .otherwise((issue) => {
+                           issue.title = input.title
 
-            return produce(oldData, (draft) => {
-               const issue = draft?.find((issue) => issue.id === input.id)
-               if (!issue) return
-
-               Object.assign(issue, {
-                  ...(input.title &&
-                     issue.title !== input.title && { title: input.title }),
-                  ...(input.description && { description: input.description }),
-                  ...(input.label && { label: input.label }),
-                  ...(input.status && { status: input.status }),
-               })
-            })
-         },
+                           match(input)
+                              .with(
+                                 { description: P.not(undefined) },
+                                 (input) => {
+                                    issue.description = input.description
+                                 },
+                              )
+                              .with({ label: P.not(undefined) }, (input) => {
+                                 issue.label = input.label
+                              })
+                              .with({ status: P.not(undefined) }, (input) => {
+                                 issue.status = input.status
+                              })
+                        }),
+                  ),
+               ),
       )
 
       queryClient.setQueryData(
          issueByIdQuery({ issueId: input.id, organizationId }).queryKey,
-         (oldData) => {
-            if (!oldData) return
-
-            return {
-               ...oldData,
-               ...input,
-            }
-         },
+         (oldData) =>
+            match(oldData)
+               .with(P.nullish, (data) => data)
+               .otherwise((data) => ({ ...data, ...input })),
       )
    }
 

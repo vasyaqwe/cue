@@ -81,8 +81,6 @@ export function CreateIssue() {
    const insert = useMutation({
       mutationFn: insertFn,
       onSuccess: (issue) => {
-         if (!issue) return
-
          sendEvent({
             type: "insert",
             issue,

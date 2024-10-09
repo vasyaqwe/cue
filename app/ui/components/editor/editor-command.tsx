@@ -5,6 +5,7 @@ import type { Range } from "@tiptap/core"
 import { Command } from "cmdk"
 import { createContext, forwardRef, useEffect } from "react"
 import type { ComponentPropsWithoutRef, FC } from "react"
+import { P, match } from "ts-pattern"
 import type tunnel from "tunnel-rat"
 
 export const EditorCommandTunnelContext = createContext(
@@ -28,21 +29,22 @@ export const EditorCommandOut: FC<EditorCommandOutProps> = ({
       useEditorStore.setState({ range })
    }, [range])
 
-   useEventListener("keydown", (e) => {
-      if (["ArrowUp", "ArrowDown", "Enter"].includes(e.key)) {
+   useEventListener("keydown", (e) =>
+      match(e.key).with("ArrowUp", "ArrowDown", "Enter", () => {
          e.preventDefault()
-         const commandRef = document.querySelector("#slash-command")
-         if (!commandRef) return
-
-         commandRef.dispatchEvent(
-            new KeyboardEvent("keydown", {
-               key: e.key,
-               cancelable: true,
-               bubbles: true,
-            }),
+         match(document.querySelector("#slash-command")).with(
+            P.not(null),
+            (ref) =>
+               ref.dispatchEvent(
+                  new KeyboardEvent("keydown", {
+                     key: e.key,
+                     cancelable: true,
+                     bubbles: true,
+                  }),
+               ),
          )
-      }
-   })
+      }),
+   )
 
    return (
       <EditorCommandTunnelContext.Consumer>

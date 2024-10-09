@@ -15,6 +15,7 @@ import {
 import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
+import { match } from "ts-pattern"
 
 export function useUpdateIssue() {
    const queryClient = useQueryClient()
@@ -35,21 +36,26 @@ export function useUpdateIssue() {
    const updateIssue = useMutation({
       mutationFn: updateFn,
       onMutate: async (input) => {
-         const notificationsWithUpdatedIssue = notificatons.data.filter(
-            (notification) => notification.issueId === input.id,
+         match(
+            notificatons.data.filter(
+               (notification) => notification.issueId === input.id,
+            ),
          )
+            .with([], () => {})
+            .otherwise((notificationsWithUpdatedIssue) =>
+               updateNotificationsInQueryData({
+                  input: {
+                     ids: notificationsWithUpdatedIssue.map((n) => n.id),
+                     issue: {
+                        title: input.title,
+                        status: input.status,
+                     },
+                  },
+               }),
+            )
 
          updateIssueInQueryData({
             input,
-         })
-         updateNotificationsInQueryData({
-            input: {
-               ids: notificationsWithUpdatedIssue.map((n) => n.id),
-               issue: {
-                  title: input.title,
-                  status: input.status,
-               },
-            },
          })
 
          await queryClient.cancelQueries(issueListQuery({ organizationId }))

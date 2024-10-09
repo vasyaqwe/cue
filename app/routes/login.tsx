@@ -12,6 +12,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { match } from "ts-pattern"
 
 export const Route = createFileRoute("/login")({
    component: Component,
@@ -43,26 +44,29 @@ function Component() {
 
    useEffect(() => {
       const organization = organizationToJoin.data
-      if (!organization) return
 
-      toast.custom(
-         () => (
-            <div className="text-popover-foreground/90">
-               <p className="mb-2 line-clamp-1 font-medium font-semibold text-[1rem]">
-                  You are invited
-               </p>
-               <p className="line-clamp-1">
-                  Sign up to join <b>{organization.name}</b> organization
-               </p>
-            </div>
-         ),
-         {
-            duration: Infinity,
-            className:
-               "!rounded-xl h-[auto] border px-3 py-2 !w-[90%] md:!w-full max-md:mb-[calc(env(safe-area-inset-bottom)+0.5rem)]",
-            position: "bottom-right",
-         },
-      )
+      match(organization)
+         .with(undefined, () => {})
+         .otherwise((org) =>
+            toast.custom(
+               () => (
+                  <div className="text-popover-foreground/90">
+                     <p className="mb-2 line-clamp-1 font-medium font-semibold text-[1rem]">
+                        You are invited
+                     </p>
+                     <p className="line-clamp-1">
+                        Sign up to join <b>{org.name}</b> organization
+                     </p>
+                  </div>
+               ),
+               {
+                  duration: Infinity,
+                  className:
+                     "!rounded-xl h-[auto] border px-3 py-2 !w-[90%] md:!w-full max-md:mb-[calc(env(safe-area-inset-bottom)+0.5rem)]",
+                  position: "bottom-right",
+               },
+            ),
+         )
    }, [organizationToJoin.data])
 
    // const otpInputRef = useRef<HTMLInputElement>(null)

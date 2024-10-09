@@ -14,6 +14,7 @@ import tippy, {
    type Instance,
    type Props,
 } from "tippy.js"
+import { match } from "ts-pattern"
 import { EditorCommandOut } from "../editor-command"
 
 const slashCommandExtension = Extension.create({
@@ -104,14 +105,13 @@ type SuggestionItem = {
    command?: (props: { editor: Editor; range: Range }) => void
 }
 
-const handleCommandNavigation = (event: KeyboardEvent) => {
-   if (["ArrowUp", "ArrowDown", "Enter"].includes(event.key)) {
-      const slashCommand = document.querySelector("#slash-command")
-      if (slashCommand) {
-         return true
-      }
-   }
-}
+const handleCommandNavigation = (event: KeyboardEvent) =>
+   match(event.key)
+      .with("ArrowUp", "ArrowDown", "Enter", () => {
+         const slashCommand = document.querySelector("#slash-command")
+         return !!slashCommand
+      })
+      .otherwise(() => false)
 
 const slashCommand = slashCommandExtension.configure({
    suggestion: {

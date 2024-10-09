@@ -7,14 +7,16 @@ import { cn } from "@/ui/utils"
 import { Link, useNavigate } from "@tanstack/react-router"
 import { useEffect } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
+import { match } from "ts-pattern"
 
 export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
    const navigate = useNavigate()
 
-   useHotkeys("l", () => {
-      if (!isAuthed) return navigate({ to: "/login" })
-      navigate({ to: "/" })
-   })
+   useHotkeys("l", () =>
+      match(isAuthed)
+         .with(false, () => navigate({ to: "/login" }))
+         .otherwise(() => navigate({ to: "/" })),
+   )
 
    useEffect(() => {
       if (typeof window === "undefined") return

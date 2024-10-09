@@ -38,6 +38,7 @@ import { useServerFn } from "@tanstack/start"
 import { useEffect } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
+import { match } from "ts-pattern"
 
 export function Sidebar() {
    const { user } = useAuth()
@@ -149,10 +150,12 @@ export function Sidebar() {
                            useNotificationStore.setState({ activeItemId: null })
                         }
                         activeProps={{
-                           onMouseUp: () => {
-                              if (refreshNotifications.isRefreshing) return
-                              refreshNotifications.refresh()
-                           },
+                           onMouseUp: () =>
+                              match(refreshNotifications.isRefreshing)
+                                 .with(true, () => {})
+                                 .otherwise(() =>
+                                    refreshNotifications.refresh(),
+                                 ),
                            className:
                               "!border-border/80 bg-elevated opacity-100",
                            "aria-current": "page",
@@ -172,10 +175,10 @@ export function Sidebar() {
                         params={{ slug }}
                         activeOptions={{ exact: true }}
                         activeProps={{
-                           onMouseUp: () => {
-                              if (refreshIssues.isRefreshing) return
-                              refreshIssues.refresh()
-                           },
+                           onMouseUp: () =>
+                              match(refreshIssues.isRefreshing)
+                                 .with(true, () => {})
+                                 .otherwise(() => refreshIssues.refresh()),
                            className:
                               "!border-border/80 bg-elevated opacity-100",
                            "aria-current": "page",

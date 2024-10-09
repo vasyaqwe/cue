@@ -59,6 +59,7 @@ import { useMemo, useRef, useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { debounce } from "remeda"
 import { toast } from "sonner"
+import { match } from "ts-pattern"
 import type { z } from "zod"
 
 export function IssueDetails() {
@@ -89,8 +90,7 @@ export function IssueDetails() {
       description !== lastSavedState.current.description
 
    useEventListener("beforeunload", (e) => {
-      if (!hasUnsavedChanges) return
-      e.preventDefault()
+      match(hasUnsavedChanges).with(true, () => e.preventDefault())
    })
 
    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -98,24 +98,31 @@ export function IssueDetails() {
       () =>
          debounce(
             (updatedFields: z.infer<typeof updateIssueParams>) => {
-               if (
-                  updatedFields.title !== lastSavedState.current.title ||
-                  updatedFields.description !==
-                     lastSavedState.current.description
-               ) {
-                  const payload = {
-                     title: updatedFields.title,
-                     description: updatedFields.description,
-                  }
+               match({
+                  updatedTitle: updatedFields.title,
+                  updatedDescription: updatedFields.description,
+               })
+                  .with(
+                     {
+                        updatedTitle: lastSavedState.current.title,
+                        updatedDescription: lastSavedState.current.description,
+                     },
+                     () => {},
+                  )
+                  .otherwise(() => {
+                     const payload = {
+                        title: updatedFields.title,
+                        description: updatedFields.description,
+                     }
 
-                  updateIssue.mutate({
-                     ...payload,
-                     id: issueId,
-                     organizationId,
+                     updateIssue.mutate({
+                        ...payload,
+                        id: issueId,
+                        organizationId,
+                     })
+
+                     lastSavedState.current = payload
                   })
-
-                  lastSavedState.current = payload
-               }
             },
             { waitMs: 2000 },
          ),

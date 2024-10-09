@@ -2,6 +2,7 @@ import { env } from "@/env"
 import type { PresenceEvent } from "@/presence/types"
 import { useAuth } from "@/user/hooks"
 import { usePartySocket } from "partysocket/react"
+import { match } from "ts-pattern"
 import { usePresenceStore } from "./store"
 
 export function Presence() {
@@ -22,14 +23,18 @@ export function Presence() {
       onMessage(event) {
          const message: PresenceEvent = JSON.parse(event.data)
 
-         if (message.type === "online_users")
-            return setOnlineUserIds(message.onlineUsers)
-
-         if (message.type === "user_online")
-            return setUserOnline(message.userId)
-
-         if (message.type === "user_offline")
-            return setUserOffline(message.userId)
+         return match(message)
+            .with({ type: "get_online_users" }, () => {})
+            .with({ type: "online_users" }, (msg) => {
+               setOnlineUserIds(msg.onlineUsers)
+            })
+            .with({ type: "user_online" }, (msg) => {
+               setUserOnline(msg.userId)
+            })
+            .with({ type: "user_offline" }, (msg) => {
+               setUserOffline(msg.userId)
+            })
+            .exhaustive()
       },
    })
 

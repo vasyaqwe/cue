@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
-import { P, match } from "ts-pattern"
+import { match } from "ts-pattern"
 
 export function useUpdateComment() {
    const { issueId } = useParams({ strict: false })
@@ -56,22 +56,20 @@ export function useUpdateComment() {
             commentListQuery({ organizationId, issueId }),
          )
 
-         match(error)
-            .with(P.not(null), () => undefined)
-            .otherwise(() => {
-               sendCommentEvent({
-                  type: "update",
-                  comment: {
-                     ...comment,
-                     resolvedBy: {
-                        avatarUrl: user.avatarUrl,
-                        name: user.name,
-                     },
+         match(error).with(null, () => {
+            sendCommentEvent({
+               type: "update",
+               comment: {
+                  ...comment,
+                  resolvedBy: {
+                     avatarUrl: user.avatarUrl,
+                     name: user.name,
                   },
-                  senderId: user.id,
-                  issueId,
-               })
+               },
+               senderId: user.id,
+               issueId,
             })
+         })
       },
    })
 

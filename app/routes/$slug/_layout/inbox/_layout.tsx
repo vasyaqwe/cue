@@ -29,6 +29,7 @@ import {
    useParams,
 } from "@tanstack/react-router"
 import type { ComponentProps } from "react"
+import { match } from "ts-pattern"
 
 export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
    component: Component,
@@ -123,13 +124,14 @@ function Component() {
                                  useNotificationStore.setState({
                                     activeItemId: notification.id,
                                  })
-                                 if (notification.isRead) return
 
-                                 updateNotification.mutate({
-                                    ids: [notification.id],
-                                    isRead: true,
-                                    organizationId,
-                                 })
+                                 match(notification.isRead).with(false, () =>
+                                    updateNotification.mutate({
+                                       ids: [notification.id],
+                                       isRead: true,
+                                       organizationId,
+                                    }),
+                                 )
                               }}
                               data-active={activeItemId === notification.id}
                               notification={notification}

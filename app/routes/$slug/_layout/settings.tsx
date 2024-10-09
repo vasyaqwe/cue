@@ -37,6 +37,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { useState } from "react"
 import { toast } from "sonner"
+import { P, match } from "ts-pattern"
 
 export const Route = createFileRoute("/$slug/_layout/settings")({
    component: Component,
@@ -73,14 +74,15 @@ function Component() {
          )
 
          const firstMembership = existingMemberships?.[0]?.organization
-         if (firstMembership) {
-            return navigate({
-               to: "/$slug",
-               params: { slug: firstMembership.slug },
-            })
-         }
 
-         navigate({ to: "/new" })
+         match(firstMembership)
+            .with(P.not(undefined), ({ slug }) =>
+               navigate({
+                  to: "/$slug",
+                  params: { slug },
+               }),
+            )
+            .otherwise(() => navigate({ to: "/new" }))
       },
    })
 

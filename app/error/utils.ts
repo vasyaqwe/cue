@@ -1,4 +1,5 @@
 import type { TRPCError } from "@trpc/server"
+import { P, match } from "ts-pattern"
 import type { ZodIssue } from "zod"
 import type { ErrorCode } from "./schema"
 
@@ -95,9 +96,10 @@ export function handleAuthError(
 
    const redirectUrl = new URL("/login", request.url)
    redirectUrl.searchParams.set("error", "true")
-   if (inviteCode) {
-      redirectUrl.searchParams.set("inviteCode", inviteCode)
-   }
+
+   match(inviteCode).with(P.not(undefined), (code) =>
+      redirectUrl.searchParams.set("inviteCode", code),
+   )
 
    return new Response(null, {
       status: 302,

@@ -24,10 +24,7 @@ export function useIssueSocket() {
          const message: IssueEvent = JSON.parse(event.data)
 
          return match(message)
-            .when(
-               (msg) => msg.senderId === user.id,
-               () => undefined,
-            )
+            .with({ senderId: user.id }, () => {})
             .with({ type: "insert" }, (msg) =>
                insertIssueToQueryData({ input: msg.issue }),
             )

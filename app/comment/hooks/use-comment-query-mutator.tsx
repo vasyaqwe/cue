@@ -28,14 +28,14 @@ export function useCommentQueryMutator() {
 
       // delete notifications that have commentId === deleted comment id (due on onCascade delete)
       match(notificatons.data)
-         .with([], () => undefined)
+         .with([], () => {})
          .otherwise((data) =>
             match(
                data.filter(
                   (notification) => notification.commentId === commentId,
                ),
             )
-               .with([], () => undefined)
+               .with([], () => {})
                .otherwise((notificationsToDelete) =>
                   deleteNotificationsFromQueryData({
                      notificationIds: notificationsToDelete.map(
@@ -59,14 +59,13 @@ export function useCommentQueryMutator() {
                .otherwise((data) =>
                   produce(data, (draft) => {
                      match(draft?.find((comment) => comment.id === input.id))
-                        .with(undefined, () => undefined)
-                        .otherwise((comment) =>
-                           Object.assign(comment, {
-                              resolvedBy: input.resolvedById
-                                 ? input.resolvedBy
-                                 : null,
-                           }),
-                        )
+                        .with(undefined, () => {})
+                        .otherwise((comment) => {
+                           if (!input.resolvedById) comment.resolvedBy = null
+                           if (input.resolvedById && input.resolvedBy) {
+                              comment.resolvedBy = input.resolvedBy
+                           }
+                        })
                   }),
                ),
       )

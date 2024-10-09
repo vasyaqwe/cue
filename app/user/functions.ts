@@ -5,6 +5,7 @@ import { user } from "@/user/schema"
 import { createServerFn } from "@tanstack/start"
 import { generateCodeVerifier, generateState } from "arctic"
 import { eq } from "drizzle-orm"
+import { P, match } from "ts-pattern"
 import { deleteCookie, parseCookies, setCookie, setHeader } from "vinxi/http"
 import { z } from "zod"
 
@@ -41,11 +42,9 @@ export const logInWithGithub = createServerFn(
             scopes: ["user:email"],
          })
 
-         if (input.inviteCode) {
-            setCookie("invite_code", input.inviteCode, COOKIE_OPTIONS)
-         } else {
-            deleteCookie("invite_code")
-         }
+         match(input.inviteCode)
+            .with(P.nullish, () => deleteCookie("invite_code"))
+            .otherwise((code) => setCookie("invite_code", code, COOKIE_OPTIONS))
 
          setCookie("github_oauth_state", state, COOKIE_OPTIONS)
 
@@ -70,11 +69,9 @@ export const logInWithGoogle = createServerFn(
             scopes: ["profile", "email"],
          })
 
-         if (input.inviteCode) {
-            setCookie("invite_code", input.inviteCode, COOKIE_OPTIONS)
-         } else {
-            deleteCookie("invite_code")
-         }
+         match(input.inviteCode)
+            .with(P.nullish, () => deleteCookie("invite_code"))
+            .otherwise((code) => setCookie("invite_code", code, COOKIE_OPTIONS))
 
          setCookie("google_oauth_state", state, COOKIE_OPTIONS)
          setCookie("google_oauth_code_verifier", codeVerifier, COOKIE_OPTIONS)

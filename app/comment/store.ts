@@ -11,8 +11,7 @@ type State = {
 const store = create<State>()((_set, get) => ({
    socket: null,
    sendEvent: (event: CommentEvent) => {
-      const socket = get().socket
-      socket?.send(JSON.stringify(event))
+      get().socket?.send(JSON.stringify(event))
    },
 }))
 

@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
+import { match } from "ts-pattern"
 
 export function useDeleteIssue() {
    const queryClient = useQueryClient()
@@ -55,13 +56,13 @@ export function useDeleteIssue() {
             notificationListQuery({ organizationId }),
          )
 
-         if (error || !data) return
-
-         sendEvent({
-            type: "delete",
-            issueId: data.issueId,
-            senderId: user.id,
-         })
+         match(error).with(null, () =>
+            sendEvent({
+               type: "delete",
+               issueId: data.issueId,
+               senderId: user.id,
+            }),
+         )
       },
    })
 

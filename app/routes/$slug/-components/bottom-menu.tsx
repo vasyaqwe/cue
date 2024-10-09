@@ -17,6 +17,7 @@ import { useAuth } from "@/user/hooks"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useLocation, useParams } from "@tanstack/react-router"
 import { Link } from "@tanstack/react-router"
+import { match } from "ts-pattern"
 
 export function BottomMenu() {
    const { slug } = useParams({ from: "/$slug/_layout" })
@@ -59,10 +60,10 @@ export function BottomMenu() {
                   params={{ slug }}
                   activeOptions={{ exact: true }}
                   activeProps={{
-                     onTouchEnd: () => {
-                        if (refreshIssues.isRefreshing) return
-                        refreshIssues.refresh()
-                     },
+                     onTouchEnd: () =>
+                        match(refreshIssues.isRefreshing)
+                           .with(true, () => {})
+                           .otherwise(() => refreshIssues.refresh()),
                      "aria-current": "page",
                   }}
                   to={homeRoute.to}
@@ -75,10 +76,10 @@ export function BottomMenu() {
                <Link
                   params={{ slug }}
                   activeProps={{
-                     onTouchEnd: () => {
-                        if (refreshNotifications.isRefreshing) return
-                        refreshNotifications.refresh()
-                     },
+                     onTouchEnd: () =>
+                        match(refreshNotifications.isRefreshing)
+                           .with(true, () => {})
+                           .otherwise(() => refreshNotifications.refresh()),
                      "aria-current": "page",
                   }}
                   onClick={() =>

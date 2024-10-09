@@ -1,5 +1,6 @@
 import type { PresenceEvent } from "@/presence/types"
 import type * as Party from "partykit/server"
+import { P, match } from "ts-pattern"
 
 export default class PresenceServer implements Party.Server {
    onlineUsers: Map<string, string>
@@ -14,18 +15,17 @@ export default class PresenceServer implements Party.Server {
 
    onConnect(connection: Party.Connection, context: Party.ConnectionContext) {
       const url = new URL(context.request.url)
-      const userId = url.searchParams.get("userId")
 
-      if (!userId) return
+      match(url.searchParams.get("userId")).with(P.not(null), (userId) => {
+         this.onlineUsers.set(userId, connection.id)
 
-      this.onlineUsers.set(userId, connection.id)
+         const payload = {
+            type: "user_online",
+            userId,
+         } satisfies PresenceEvent
 
-      const payload = {
-         type: "user_online",
-         userId,
-      } satisfies PresenceEvent
-
-      return this.room.broadcast(JSON.stringify(payload))
+         return this.room.broadcast(JSON.stringify(payload))
+      })
    }
 
    onClose(connection: Party.Connection) {
@@ -38,22 +38,22 @@ export default class PresenceServer implements Party.Server {
          }
       }
 
-      if (!disconnectedUserId) return
+      match(disconnectedUserId).with(P.not(undefined), (userId) => {
+         this.onlineUsers.delete(userId)
 
-      this.onlineUsers.delete(disconnectedUserId)
+         const payload = {
+            type: "user_offline",
+            userId,
+         } satisfies PresenceEvent
 
-      const payload = {
-         type: "user_offline",
-         userId: disconnectedUserId,
-      } satisfies PresenceEvent
-
-      return this.room.broadcast(JSON.stringify(payload))
+         return this.room.broadcast(JSON.stringify(payload))
+      })
    }
 
    onMessage(message: string, _sender: Party.Connection<unknown>) {
       const event: PresenceEvent = JSON.parse(message)
 
-      if (event.type === "get_online_users") {
+      match(event).with({ type: "get_online_users" }, () => {
          const onlineUsers = Array.from(this.onlineUsers.keys())
          const payload = {
             type: "online_users",
@@ -61,6 +61,6 @@ export default class PresenceServer implements Party.Server {
          } satisfies PresenceEvent
 
          return this.room.broadcast(JSON.stringify(payload))
-      }
+      })
    }
 }

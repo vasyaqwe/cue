@@ -7,6 +7,7 @@ import type { updateNotificationParams } from "@/notification/schema"
 import { useAuth } from "@/user/hooks"
 import { useQueryClient } from "@tanstack/react-query"
 import { produce } from "immer"
+import { P, match } from "ts-pattern"
 import type { z } from "zod"
 
 export function useNotificationQueryMutator() {
@@ -20,39 +21,41 @@ export function useNotificationQueryMutator() {
 
       queryClient.setQueryData(
          notificationListQuery({ organizationId }).queryKey,
-         (oldData) => {
-            if (!oldData) return oldData
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) =>
+                  produce(data, (draft) => {
+                     for (const notificationId of notificationIds) {
+                        const notificationIndex = draft?.findIndex(
+                           (notification) => notification.id === notificationId,
+                        )
 
-            return produce(oldData, (draft) => {
-               for (const notificationId of notificationIds) {
-                  const notificationIndex = draft?.findIndex(
-                     (notification) => notification.id === notificationId,
-                  )
+                        if (notificationIndex === -1) continue
 
-                  if (notificationIndex === -1) continue
+                        const notification = draft[notificationIndex]
 
-                  const notification = draft[notificationIndex]
+                        draft.splice(notificationIndex, 1)
 
-                  draft.splice(notificationIndex, 1)
-
-                  if (!notification?.isRead) unreadCountToRemove++
-               }
-            })
-         },
+                        if (!notification?.isRead) unreadCountToRemove++
+                     }
+                  }),
+               ),
       )
 
-      if (unreadCountToRemove === 0) return
-
-      queryClient.setQueryData(
-         notificationUnreadCountQuery({ organizationId }).queryKey,
-         (oldData) => {
-            if (!oldData) return oldData
-
-            return {
-               count: Math.max(oldData.count - unreadCountToRemove, 0),
-            }
-         },
-      )
+      match(unreadCountToRemove)
+         .with(0, () => {})
+         .otherwise(() =>
+            queryClient.setQueryData(
+               notificationUnreadCountQuery({ organizationId }).queryKey,
+               (oldData) =>
+                  match(oldData)
+                     .with(undefined, (data) => data)
+                     .otherwise((data) => ({
+                        count: Math.max(data.count - unreadCountToRemove, 0),
+                     })),
+            ),
+         )
    }
 
    const insertNotificationToQueryData = ({
@@ -60,20 +63,19 @@ export function useNotificationQueryMutator() {
    }: { input: Awaited<ReturnType<typeof notificationFns.list>>[number] }) => {
       queryClient.setQueryData(
          notificationListQuery({ organizationId }).queryKey,
-         (oldData) => {
-            if (!oldData) return oldData
-
-            return [input, ...oldData]
-         },
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) => [input, ...data]),
       )
       queryClient.setQueryData(
          notificationUnreadCountQuery({ organizationId }).queryKey,
-         (oldData) => {
-            if (!oldData) return oldData
-            return {
-               count: oldData.count + 1,
-            }
-         },
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) => ({
+                  count: data.count + 1,
+               })),
       )
    }
 
@@ -86,43 +88,47 @@ export function useNotificationQueryMutator() {
 
       queryClient.setQueryData(
          notificationListQuery({ organizationId }).queryKey,
-         (oldData) => {
-            if (!oldData || input.ids.length === 0) return oldData
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) => {
+                  const { isRead, issue } = input
 
-            const { ids, isRead, issue } = input
+                  return produce(data, (draft) => {
+                     for (const notification of draft) {
+                        if (input.ids.includes(notification.id)) {
+                           const wasUnread = notification.isRead === false
 
-            return produce(oldData, (draft) => {
-               for (const notification of draft) {
-                  if (ids.includes(notification.id)) {
-                     const wasUnread = notification.isRead === false
-
-                     Object.assign(notification, {
-                        isRead:
-                           isRead !== undefined ? isRead : notification.isRead,
-                        issue: {
-                           title: issue?.title ?? notification.issue?.title,
-                           status: issue?.status ?? notification.issue?.status,
-                        },
-                     })
-
-                     if (isRead !== undefined) {
-                        if (isRead && wasUnread) unreadCountChange -= 1
-                        if (!isRead && !wasUnread) unreadCountChange += 1
+                           Object.assign(notification, {
+                              isRead:
+                                 isRead !== undefined
+                                    ? isRead
+                                    : notification.isRead,
+                              issue: {
+                                 title:
+                                    issue?.title ?? notification.issue?.title,
+                                 status:
+                                    issue?.status ?? notification.issue?.status,
+                              },
+                           })
+                           match(isRead).with(P.not(undefined), (isRead) => {
+                              if (isRead && wasUnread) unreadCountChange -= 1
+                              if (!isRead && !wasUnread) unreadCountChange += 1
+                           })
+                        }
                      }
-                  }
-               }
-            })
-         },
+                  })
+               }),
       )
 
       queryClient.setQueryData(
          notificationUnreadCountQuery({ organizationId }).queryKey,
-         (oldData) => {
-            if (!oldData) return oldData
-            return {
-               count: Math.max(oldData.count + unreadCountChange, 0),
-            }
-         },
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) => ({
+                  count: Math.max(data.count + unreadCountChange, 0),
+               })),
       )
    }
 
@@ -135,25 +141,24 @@ export function useNotificationQueryMutator() {
    }) => {
       queryClient.setQueryData(
          notificationListQuery({ organizationId }).queryKey,
-         (oldData) => {
-            if (!oldData) return oldData
-
-            return produce(oldData, (draft) => {
-               for (const notification of draft) {
-                  if (notification.issueId === updatedIssue.id) {
-                     Object.assign(notification, {
-                        issue: {
-                           title:
-                              updatedIssue?.title ?? notification.issue?.title,
-                           status:
-                              updatedIssue?.status ??
-                              notification.issue?.status,
-                        },
-                     })
-                  }
-               }
-            })
-         },
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) =>
+                  produce(data, (draft) => {
+                     for (const notification of draft) {
+                        if (notification.issueId === updatedIssue.id) {
+                           notification.issue = {
+                              title:
+                                 updatedIssue.title ?? notification.issue.title,
+                              status:
+                                 updatedIssue.status ??
+                                 notification.issue.status,
+                           }
+                        }
+                     }
+                  }),
+               ),
       )
    }
 

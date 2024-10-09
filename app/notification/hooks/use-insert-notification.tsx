@@ -4,6 +4,7 @@ import { useNotificationStore } from "@/notification/store"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
+import { P, match } from "ts-pattern"
 
 export function useInsertNotification() {
    const queryClient = useQueryClient()
@@ -14,33 +15,33 @@ export function useInsertNotification() {
    const insertNotification = useMutation({
       mutationFn: insertFn,
       onSuccess: (notification) => {
-         if (!notification?.id) return
-
-         sendEvent({
-            type: "insert",
-            notification: {
-               id: notification.id,
-               content: notification.content,
-               createdAt: notification.createdAt,
-               isRead: false,
-               issueId: notification.issueId,
-               type: notification.type,
-               commentId: notification.commentId,
-               issue: {
-                  title: notification.issue.title,
-                  status: notification.issue.status,
-               },
-               sender: {
-                  id: user.id,
-                  name: user.name,
-                  avatarUrl: user.avatarUrl,
-               },
-            },
-            senderId: user.id,
-         })
-
          queryClient.invalidateQueries(
             notificationListQuery({ organizationId }),
+         )
+
+         match(notification).with({ id: P.not(undefined) }, (notif) =>
+            sendEvent({
+               type: "insert",
+               notification: {
+                  id: notif.id,
+                  content: notif.content,
+                  createdAt: notif.createdAt,
+                  isRead: false,
+                  issueId: notif.issueId,
+                  type: notif.type,
+                  commentId: notif.commentId,
+                  issue: {
+                     title: notif.issue.title,
+                     status: notif.issue.status,
+                  },
+                  sender: {
+                     id: user.id,
+                     name: user.name,
+                     avatarUrl: user.avatarUrl,
+                  },
+               },
+               senderId: user.id,
+            }),
          )
       },
    })

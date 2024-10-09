@@ -12,9 +12,7 @@ type State = {
 const store = create<State>()((_set, get) => ({
    socket: null,
    sendEvent: (event: IssueEvent) => {
-      const socket = get().socket
-      if (!socket) return
-      socket.send(JSON.stringify(event))
+      get().socket?.send(JSON.stringify(event))
    },
    isRefreshing: false,
 }))

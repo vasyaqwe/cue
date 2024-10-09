@@ -7,6 +7,7 @@ import { useAuth } from "@/user/hooks"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import usePartySocket from "partysocket/react"
 import { useEffect } from "react"
+import { match } from "ts-pattern"
 
 export function useNotificationSocket() {
    const { organizationId, user } = useAuth()
@@ -67,42 +68,44 @@ export function useNotificationSocket() {
       room: organizationId,
       onMessage(event) {
          const message: NotificationEvent = JSON.parse(event.data)
-         if (message.senderId === user.id) return
-         if (message.type === "insert") {
-            insertNotificationToQueryData({
-               input: message.notification,
+         match(message)
+            .with({ senderId: user.id }, () => {})
+            .with({ type: "insert" }, (msg) => {
+               insertNotificationToQueryData({ input: msg.notification })
+
+               match(msg.notification.type)
+                  .with("new_issue", () =>
+                     notify({
+                        title: `${msg.notification.sender.name} reported an issue`,
+                        body: msg.notification.issue.title,
+                        issueId: msg.notification.issueId,
+                        notificationId: msg.notification.id,
+                     }),
+                  )
+                  .with("issue_resolved", () =>
+                     notify({
+                        title: "Issue resolved",
+                        body: `${msg.notification.sender.name} resolved ${msg.notification.issue.title}`,
+                        issueId: msg.notification.issueId,
+                        notificationId: msg.notification.id,
+                     }),
+                  )
+                  .with("new_issue_comment", () =>
+                     notify({
+                        title: `${msg.notification.sender.name} commented on ${msg.notification.issue.title}`,
+                        body: msg.notification.content,
+                        issueId: msg.notification.issueId,
+                        notificationId: msg.notification.id,
+                     }),
+                  )
+                  .exhaustive()
             })
-
-            if (message.notification.type === "new_issue")
-               return notify({
-                  title: `${message.notification.sender.name} reported an issue`,
-                  body: message.notification.issue.title,
-                  issueId: message.notification.issueId,
-                  notificationId: message.notification.id,
-               })
-
-            if (message.notification.type === "issue_resolved")
-               return notify({
-                  title: "Issue resolved",
-                  body: `${message.notification.sender.name} resolved ${message.notification.issue.title}`,
-                  issueId: message.notification.issueId,
-                  notificationId: message.notification.id,
-               })
-
-            if (message.notification.type === "new_issue_comment") {
-               return notify({
-                  title: `${message.notification.sender.name} commented on ${message.notification.issue.title}`,
-                  body: message.notification.content,
-                  issueId: message.notification.issueId,
-                  notificationId: message.notification.id,
-               })
-            }
-         }
-         if (message.type === "issue_update") {
-            return updateIssuesInNotificationsQueryData({
-               updatedIssue: message.issue,
-            })
-         }
+            .with({ type: "issue_update" }, (msg) =>
+               updateIssuesInNotificationsQueryData({
+                  updatedIssue: msg.issue,
+               }),
+            )
+            .exhaustive()
       },
    })
 
