@@ -21,9 +21,7 @@ export function Presence() {
          socket.send(JSON.stringify(event))
       },
       onMessage(event) {
-         const message: PresenceEvent = JSON.parse(event.data)
-
-         return match(message)
+         return match(JSON.parse(event.data) as PresenceEvent)
             .with({ type: "get_online_users" }, () => {})
             .with({ type: "online_users" }, (msg) => {
                setOnlineUserIds(msg.onlineUsers)

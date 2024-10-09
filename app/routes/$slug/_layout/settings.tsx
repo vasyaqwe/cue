@@ -73,9 +73,7 @@ function Component() {
             (m) => m.organizationId !== organizationId,
          )
 
-         const firstMembership = existingMemberships?.[0]?.organization
-
-         match(firstMembership)
+         match(existingMemberships?.[0]?.organization)
             .with(P.not(undefined), ({ slug }) =>
                navigate({
                   to: "/$slug",

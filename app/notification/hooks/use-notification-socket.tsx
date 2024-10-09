@@ -67,8 +67,7 @@ export function useNotificationSocket() {
       party: "inbox",
       room: organizationId,
       onMessage(event) {
-         const message: NotificationEvent = JSON.parse(event.data)
-         match(message)
+         match(JSON.parse(event.data) as NotificationEvent)
             .with({ senderId: user.id }, () => {})
             .with({ type: "insert" }, (msg) => {
                insertNotificationToQueryData({ input: msg.notification })

@@ -89,9 +89,9 @@ export function IssueDetails() {
       title !== lastSavedState.current.title ||
       description !== lastSavedState.current.description
 
-   useEventListener("beforeunload", (e) => {
-      match(hasUnsavedChanges).with(true, () => e.preventDefault())
-   })
+   useEventListener("beforeunload", (e) =>
+      match(hasUnsavedChanges).with(true, () => e.preventDefault()),
+   )
 
    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
    const debouncedSaveIssue = useMemo(
@@ -186,6 +186,7 @@ export function IssueDetails() {
             <div className="overflow-y-auto">
                <div className="mx-auto w-full max-w-[51rem] px-4 py-6 md:py-8">
                   <Input
+                     key={issueId}
                      autoComplete="off"
                      defaultValue={issue.title}
                      name="title"
@@ -203,8 +204,9 @@ export function IssueDetails() {
                   />
                   <EditorRoot>
                      <EditorContent
+                        key={issueId}
                         className="mt-3"
-                        content={description}
+                        content={issue.description}
                         onUpdate={({ editor }) => {
                            const description = editor.getHTML()
                            setDescription(description)

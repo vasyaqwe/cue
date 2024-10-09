@@ -38,7 +38,8 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
       ref,
    ) => {
       const editor = useEditor({
-         extensions: props.extensions,
+         content,
+         ...props,
       })
 
       const classAttr =

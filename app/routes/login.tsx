@@ -43,9 +43,7 @@ function Component() {
    })
 
    useEffect(() => {
-      const organization = organizationToJoin.data
-
-      match(organization)
+      match(organizationToJoin.data)
          .with(undefined, () => {})
          .otherwise((org) =>
             toast.custom(

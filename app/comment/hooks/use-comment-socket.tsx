@@ -22,9 +22,7 @@ export function useCommentSocket() {
       party: "comment",
       room: organizationId,
       onMessage(event) {
-         const message: CommentEvent = JSON.parse(event.data)
-
-         return match(message)
+         return match(JSON.parse(event.data) as CommentEvent)
             .with({ senderId: user.id }, () => {})
             .with({ type: "insert" }, (msg) =>
                insertCommentToQueryData({ input: msg.comment }),

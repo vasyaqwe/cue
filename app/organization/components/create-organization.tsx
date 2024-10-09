@@ -12,6 +12,7 @@ import { useServerFn } from "@tanstack/start"
 import type { TRPCError } from "@trpc/server"
 import { useState } from "react"
 import { toast } from "sonner"
+import { match } from "ts-pattern"
 import * as organization from "../functions"
 
 const makeSlug = (name: string) => name.toLowerCase().replaceAll(" ", "-")
@@ -45,11 +46,11 @@ export function CreateOrganization({
          navigate({ to: `/${makeSlug(name)}` })
       },
       onError: (error) => {
-         const parsedError = parseError(error)
-         if (parsedError?.body?.code === "CONFLICT")
-            return toast.error("Organization URL is not available")
-
-         toast.error("An unknown error occurred")
+         match(parseError(error))
+            .with({ body: { code: "CONFLICT" } }, () =>
+               toast.error("Organization URL is not available"),
+            )
+            .otherwise(() => toast.error("An unknown error occurred"))
       },
    })
 

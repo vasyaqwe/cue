@@ -21,9 +21,7 @@ export function useIssueSocket() {
       party: "issue",
       room: organizationId,
       onMessage(event) {
-         const message: IssueEvent = JSON.parse(event.data)
-
-         return match(message)
+         return match(JSON.parse(event.data) as IssueEvent)
             .with({ senderId: user.id }, () => {})
             .with({ type: "insert" }, (msg) =>
                insertIssueToQueryData({ input: msg.issue }),

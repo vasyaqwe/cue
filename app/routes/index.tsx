@@ -11,11 +11,12 @@ export const Route = createFileRoute("/")({
          organizationMembershipsQuery(),
       )
 
-      const firstSlug = memberships?.[0]?.organization.slug
-
-      match(firstSlug).with(P.not(undefined), (slug) => {
-         throw redirect({ to: "/$slug", params: { slug } })
-      })
+      match(memberships?.[0]?.organization.slug).with(
+         P.not(undefined),
+         (slug) => {
+            throw redirect({ to: "/$slug", params: { slug } })
+         },
+      )
    },
    errorComponent: Homepage,
 })

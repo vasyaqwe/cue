@@ -85,16 +85,17 @@ export const logInWithGoogle = createServerFn(
 export const logout = createServerFn(
    "POST",
    publicProcedure.mutation(async () => {
-      const sessionId = parseCookies()[lucia.sessionCookieName]
-      if (!sessionId) return "OK"
+      return match(parseCookies()[lucia.sessionCookieName])
+         .with(undefined, () => "OK")
+         .otherwise(async (sessionId) => {
+            await lucia.invalidateSession(sessionId)
+            const sessionCookie = lucia.createBlankSessionCookie()
 
-      await lucia.invalidateSession(sessionId)
-      const sessionCookie = lucia.createBlankSessionCookie()
+            setCookie(sessionCookie.name, sessionCookie.value, {
+               ...sessionCookie.npmCookieOptions(),
+            })
 
-      setCookie(sessionCookie.name, sessionCookie.value, {
-         ...sessionCookie.npmCookieOptions(),
-      })
-
-      return "OK"
+            return "OK"
+         })
    }),
 )

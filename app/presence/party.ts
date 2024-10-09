@@ -51,16 +51,17 @@ export default class PresenceServer implements Party.Server {
    }
 
    onMessage(message: string, _sender: Party.Connection<unknown>) {
-      const event: PresenceEvent = JSON.parse(message)
+      match(JSON.parse(message) as PresenceEvent).with(
+         { type: "get_online_users" },
+         () => {
+            const onlineUsers = Array.from(this.onlineUsers.keys())
+            const payload = {
+               type: "online_users",
+               onlineUsers,
+            } satisfies PresenceEvent
 
-      match(event).with({ type: "get_online_users" }, () => {
-         const onlineUsers = Array.from(this.onlineUsers.keys())
-         const payload = {
-            type: "online_users",
-            onlineUsers,
-         } satisfies PresenceEvent
-
-         return this.room.broadcast(JSON.stringify(payload))
-      })
+            return this.room.broadcast(JSON.stringify(payload))
+         },
+      )
    }
 }

@@ -101,36 +101,36 @@ export function useUpdateIssue() {
                issueByIdQuery({ issueId: issueIdParam, organizationId }),
             )
 
-         if (error || !issue) return
+         match(error).with(null, () => {
+            match(issue).with({ status: "done" }, (issue) =>
+               insertNotification.mutate({
+                  organizationId,
+                  issueId: issue.id,
+                  type: "issue_resolved",
+                  content: `Marked as done by ${user.name}`,
+                  issue: {
+                     title: issue.title,
+                     status: issue.status,
+                  },
+               }),
+            )
 
-         if (issue.status === "done") {
-            insertNotification.mutate({
-               organizationId,
-               issueId: issue.id,
-               type: "issue_resolved",
-               content: `Marked as done by ${user.name}`,
+            sendNotificationEvent({
+               type: "issue_update",
+               senderId: user.id,
                issue: {
+                  id: issue.id,
                   title: issue.title,
                   status: issue.status,
                },
             })
-         }
 
-         sendNotificationEvent({
-            type: "issue_update",
-            senderId: user.id,
-            issue: {
-               id: issue.id,
-               title: issue.title,
-               status: issue.status,
-            },
-         })
-
-         sendIssueEvent({
-            type: "update",
-            issueId: issue.id,
-            issue,
-            senderId: user.id,
+            sendIssueEvent({
+               type: "update",
+               issueId: issue.id,
+               issue,
+               senderId: user.id,
+            })
          })
       },
    })
