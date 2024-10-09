@@ -5,7 +5,6 @@ import { Kbd } from "@/ui/components/kbd"
 import { Logo } from "@/ui/components/logo"
 import { cn } from "@/ui/utils"
 import { Link, useNavigate } from "@tanstack/react-router"
-import { useEffect } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { match } from "ts-pattern"
 
@@ -18,13 +17,8 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
          .otherwise(() => navigate({ to: "/" })),
    )
 
-   useEffect(() => {
-      if (typeof window === "undefined") return
-      document.documentElement.style.overflow = "unset"
-   }, [])
-
    return (
-      <div className="w-full">
+      <div className="max-h-svh w-full overflow-y-auto">
          <header className="mx-auto flex w-full max-w-[68rem] items-center justify-between px-4 py-4">
             <Link
                to="/"
