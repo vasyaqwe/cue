@@ -19,15 +19,8 @@ const ContextMenuPortal = ContextMenuPrimitive.Portal
 function ContextMenu({ ...props }: ContextMenuPrimitive.ContextMenuProps) {
    const { isMobile } = useUIStore()
 
-   return (
-      <>
-         {isMobile ? (
-            <Drawer {...props} />
-         ) : (
-            <ContextMenuPrimitive.Root {...props} />
-         )}
-      </>
-   )
+   if (isMobile) return <Drawer {...props} />
+   return <ContextMenuPrimitive.Root {...props} />
 }
 
 function ContextMenuSub({
@@ -35,9 +28,7 @@ function ContextMenuSub({
 }: ContextMenuPrimitive.ContextMenuSubProps) {
    const { isMobile } = useUIStore()
 
-   if (isMobile) {
-      return <DrawerNested {...props} />
-   }
+   if (isMobile) return <DrawerNested {...props} />
    return <ContextMenuPrimitive.Sub {...props} />
 }
 
@@ -66,7 +57,8 @@ function ContextMenuSubTrigger({
    destructive?: boolean
 }) {
    const isMobile = useUIStore().isMobile
-   if (isMobile) {
+
+   if (isMobile)
       return (
          <DrawerTrigger
             className={commandItemVariants({
@@ -78,7 +70,6 @@ function ContextMenuSubTrigger({
             {children}
          </DrawerTrigger>
       )
-   }
    return (
       <ContextMenuPrimitive.ContextMenuSubTrigger
          className={cn(
@@ -202,7 +193,7 @@ function ContextMenuItem({
 }) {
    const isMobile = useUIStore().isMobile
 
-   if (isMobile) {
+   if (isMobile)
       return (
          <CommandItem
             variant={destructive ? "destructive" : "default"}
@@ -212,7 +203,6 @@ function ContextMenuItem({
             {...props}
          />
       )
-   }
 
    return (
       <ContextMenuPrimitive.Item
@@ -241,7 +231,7 @@ function ContextMenuCheckboxItem({
 }) {
    const isMobile = useUIStore().isMobile
 
-   if (isMobile) {
+   if (isMobile)
       return (
          <CommandItem
             onSelect={onSelect}
@@ -252,7 +242,6 @@ function ContextMenuCheckboxItem({
             {children}
          </CommandItem>
       )
-   }
    return (
       <ContextMenuPrimitive.CheckboxItem
          checked={checked}

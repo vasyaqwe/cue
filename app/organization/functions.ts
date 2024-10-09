@@ -3,6 +3,7 @@ import {
    protectedProcedure,
    publicProcedure,
 } from "@/lib/trpc"
+import { RESERVED_SLUGS } from "@/organization/constants"
 import {
    insertOrganizationParams,
    organization,
@@ -100,6 +101,9 @@ export const insert = createServerFn(
    protectedProcedure
       .input(insertOrganizationParams)
       .mutation(async ({ ctx, input }) => {
+         if (RESERVED_SLUGS.includes(input.name.trim().toLowerCase()))
+            throw new TRPCError({ code: "CONFLICT" })
+
          const existingOrg = await ctx.db.query.organization.findFirst({
             where: eq(organization.slug, input.slug),
          })

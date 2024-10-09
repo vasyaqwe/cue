@@ -1,7 +1,6 @@
 import { useThrottle } from "@/interactions/use-throttle"
 import { MIN_REFRESH_DURATION } from "@/ui/constants"
 import { useCallback, useEffect, useMemo, useRef } from "react"
-import { match } from "ts-pattern"
 
 export function useRefreshState({
    refetch,
@@ -15,15 +14,7 @@ export function useRefreshState({
    const isRefreshing = useRef(false)
 
    useEffect(() => {
-      match({ isRefetching, isRefreshing: isRefreshing.current }).with(
-         {
-            isRefetching: false,
-            isRefreshing: true,
-         },
-         () => {
-            isRefreshing.current = false
-         },
-      )
+      if (!isRefetching && isRefreshing.current) isRefreshing.current = false
    }, [isRefetching])
 
    const refresh = useCallback(() => {

@@ -91,7 +91,7 @@ function DropdownMenuItem({
 }) {
    const isMobile = useUIStore().isMobile
 
-   if (isMobile) {
+   if (isMobile)
       return (
          <CommandItem
             variant={destructive ? "destructive" : "default"}
@@ -101,8 +101,6 @@ function DropdownMenuItem({
             {...props}
          />
       )
-   }
-
    return (
       <DropdownMenuPrimitive.Item
          onSelect={onSelect}

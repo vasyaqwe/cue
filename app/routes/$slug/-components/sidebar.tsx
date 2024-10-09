@@ -151,11 +151,10 @@ export function Sidebar() {
                         }
                         activeProps={{
                            onMouseUp: () =>
-                              match(refreshNotifications.isRefreshing)
-                                 .with(true, () => {})
-                                 .otherwise(() =>
-                                    refreshNotifications.refresh(),
-                                 ),
+                              match(refreshNotifications.isRefreshing).with(
+                                 false,
+                                 () => refreshNotifications.refresh(),
+                              ),
                            className:
                               "!border-border/80 bg-elevated opacity-100",
                            "aria-current": "page",
@@ -176,9 +175,10 @@ export function Sidebar() {
                         activeOptions={{ exact: true }}
                         activeProps={{
                            onMouseUp: () =>
-                              match(refreshIssues.isRefreshing)
-                                 .with(true, () => {})
-                                 .otherwise(() => refreshIssues.refresh()),
+                              match(refreshIssues.isRefreshing).with(
+                                 false,
+                                 () => refreshIssues.refresh(),
+                              ),
                            className:
                               "!border-border/80 bg-elevated opacity-100",
                            "aria-current": "page",

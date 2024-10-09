@@ -1,4 +1,5 @@
 import { env } from "@/env"
+import { RESERVED_SLUGS } from "@/organization/constants"
 import { organizationMembershipsQuery } from "@/organization/queries"
 import { Button } from "@/ui/components/button"
 import { Input } from "@/ui/components/input"
@@ -28,8 +29,6 @@ const parseError = (error: Error) => {
       console.error("Failed to parse error message as JSON:", jsonError)
    }
 }
-
-const RESERVED_SLUGS = ["new", "homepage", "login"]
 
 export function CreateOrganization({
    isFirstOrganization = true,
@@ -77,13 +76,15 @@ export function CreateOrganization({
             <form
                onSubmit={(e) => {
                   e.preventDefault()
-                  if (RESERVED_SLUGS.includes(name.trim().toLowerCase()))
-                     return toast.error("This name is reserved")
 
-                  insert.mutate({
-                     name,
-                     slug: makeSlug(name),
-                  })
+                  match(RESERVED_SLUGS.includes(name.trim().toLowerCase()))
+                     .with(true, () => toast.error("This name is reserved"))
+                     .otherwise(() =>
+                        insert.mutate({
+                           name,
+                           slug: makeSlug(name),
+                        }),
+                     )
                }}
                className="w-full"
             >

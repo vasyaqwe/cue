@@ -61,9 +61,9 @@ export function BottomMenu() {
                   activeOptions={{ exact: true }}
                   activeProps={{
                      onTouchEnd: () =>
-                        match(refreshIssues.isRefreshing)
-                           .with(true, () => {})
-                           .otherwise(() => refreshIssues.refresh()),
+                        match(refreshIssues.isRefreshing).with(false, () =>
+                           refreshIssues.refresh(),
+                        ),
                      "aria-current": "page",
                   }}
                   to={homeRoute.to}
@@ -77,9 +77,10 @@ export function BottomMenu() {
                   params={{ slug }}
                   activeProps={{
                      onTouchEnd: () =>
-                        match(refreshNotifications.isRefreshing)
-                           .with(true, () => {})
-                           .otherwise(() => refreshNotifications.refresh()),
+                        match(refreshNotifications.isRefreshing).with(
+                           false,
+                           () => refreshNotifications.refresh(),
+                        ),
                      "aria-current": "page",
                   }}
                   onClick={() =>
