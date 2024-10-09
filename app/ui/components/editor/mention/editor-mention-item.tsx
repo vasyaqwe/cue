@@ -1,5 +1,4 @@
 import { commandItemVariants } from "@/ui/components/command"
-import { useEditorStore } from "@/ui/components/editor/store"
 import { cn } from "@/ui/utils"
 import type { Editor, Range } from "@tiptap/core"
 import { useCurrentEditor } from "@tiptap/react"
@@ -20,18 +19,16 @@ type Props = {
 export const EditorMentionItem = forwardRef<
    HTMLDivElement,
    Props & ComponentPropsWithoutRef<typeof CommandItem>
->(({ children, onSelect, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
    const { editor } = useCurrentEditor()
-   const range = useEditorStore().range
 
-   if (!editor || !range) return null
+   if (!editor) return null
 
    return (
       <CommandItem
          ref={ref}
          className={cn(commandItemVariants(), "rounded-xl", className)}
          {...props}
-         onSelect={() => onSelect({ editor, range })}
       >
          {children}
       </CommandItem>

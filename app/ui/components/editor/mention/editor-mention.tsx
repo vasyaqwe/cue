@@ -1,7 +1,7 @@
 import { useEventListener } from "@/interactions/use-event-listener"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { Command } from "cmdk"
-import { forwardRef, useEffect } from "react"
+import { forwardRef } from "react"
 import type { ComponentPropsWithoutRef } from "react"
 import { P, match } from "ts-pattern"
 
@@ -23,10 +23,6 @@ export const EditorMention = forwardRef<
          )
       }),
    )
-
-   useEffect(() => {
-      useEditorStore.setState({ query })
-   }, [query])
 
    return (
       <Command

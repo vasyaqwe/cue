@@ -142,7 +142,7 @@ function Component() {
                         <div key={member.user.email}>
                            <div className="flex items-center gap-3">
                               <UserAvatar
-                                 className="size-11 [&>[data-indicator]]:size-4"
+                                 className="size-11 [--indicator-size:1rem]"
                                  user={member.user}
                               />
                               <div>

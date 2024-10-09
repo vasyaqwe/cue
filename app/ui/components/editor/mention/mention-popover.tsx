@@ -7,7 +7,9 @@ import {
    EditorMentionEmpty,
    EditorMentionItem,
 } from "@/ui/components/editor/mention/editor-mention-item"
+import { Loading } from "@/ui/components/loading"
 import { Popover, PopoverContent } from "@/ui/components/popover"
+import { UserAvatar } from "@/ui/components/user-avatar"
 import { useAuth } from "@/user/hooks"
 import { useQuery } from "@tanstack/react-query"
 import { forwardRef, useImperativeHandle, useState } from "react"
@@ -60,7 +62,7 @@ export default forwardRef<
             container={document.body}
             side="bottom"
             align="start"
-            className="mt-2 min-w-56"
+            className="relative mt-2 h-40 min-w-56 overflow-y-auto"
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
             style={{
@@ -69,20 +71,28 @@ export default forwardRef<
                top: position.bottom,
             }}
          >
-            <EditorMention query={query}>
-               <EditorMentionEmpty>No results</EditorMentionEmpty>
-               <EditorMentionList>
-                  {members.data?.map(({ user }) => (
-                     <EditorMentionItem
-                        key={user.name}
-                        value={user.name}
-                        onSelect={() => command?.({ label: user.name })}
-                     >
-                        {user.name}
-                     </EditorMentionItem>
-                  ))}
-               </EditorMentionList>
-            </EditorMention>
+            {members.isPending ? (
+               <Loading className="absolute inset-0 m-auto" />
+            ) : (
+               <EditorMention query={query}>
+                  <EditorMentionEmpty>No results</EditorMentionEmpty>
+                  <EditorMentionList>
+                     {members.data?.map(({ user }) => (
+                        <EditorMentionItem
+                           key={user.name}
+                           value={user.name}
+                           onSelect={() => command?.({ label: user.name })}
+                        >
+                           <UserAvatar
+                              className="size-6 [--indicator-size:0.75rem]"
+                              user={user}
+                           />
+                           {user.name}
+                        </EditorMentionItem>
+                     ))}
+                  </EditorMentionList>
+               </EditorMention>
+            )}
          </PopoverContent>
       </Popover>
    )

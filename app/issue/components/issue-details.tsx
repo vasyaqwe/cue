@@ -253,7 +253,7 @@ export function IssueDetails() {
                   <div>
                      <div className="mt-5 flex items-center gap-1">
                         <UserAvatar
-                           className="mr-[11px] ml-0.5 size-7 [&>[data-indicator]]:size-3"
+                           className="mr-[11px] ml-0.5 size-7"
                            user={{ ...issue.author, id: issue.authorId }}
                         />
                         <div className="md:-mt-px">

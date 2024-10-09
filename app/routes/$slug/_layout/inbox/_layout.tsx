@@ -188,7 +188,7 @@ function Notification({
                >
                   <UserAvatar
                      user={notification.sender}
-                     className="size-10 [&>[data-indicator]]:size-4"
+                     className="size-10 [--indicator-size:1rem]"
                   />
                   <div className="flex-1">
                      <div className="-mt-px flex w-full items-center">
