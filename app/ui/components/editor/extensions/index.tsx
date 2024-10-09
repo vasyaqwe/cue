@@ -8,7 +8,7 @@ import Placeholder from "@tiptap/extension-placeholder"
 import { ReactRenderer } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion"
-import type { RefObject } from "react"
+import { type RefObject, useState } from "react"
 import type { ReactNode } from "react"
 import { match } from "ts-pattern"
 import { EditorCommandOut } from "../editor-command"
@@ -44,11 +44,13 @@ const SlashCommandPopover = ({
    query: string
    range: Range
 }) => {
+   const [open, setOpen] = useState(true)
    const position = clientRect()
 
    return (
       <Popover
-         open
+         open={open}
+         onOpenChange={setOpen}
          drawerOnMobile={false}
       >
          <PopoverContent
@@ -88,7 +90,6 @@ const renderItems = (_elementRef?: RefObject<Element> | null) => {
       }) => {
          component = new ReactRenderer(SlashCommandPopover, {
             props: {
-               editor: props.editor,
                clientRect: props.clientRect,
                query: props.query,
                range: props.range,
@@ -119,9 +120,6 @@ const renderItems = (_elementRef?: RefObject<Element> | null) => {
          })
       },
       onKeyDown: (props: { event: KeyboardEvent }) => {
-         if (props.event.key === "Escape") {
-            return true
-         }
          // @ts-expect-error
          return component?.ref?.onKeyDown(props)
       },
