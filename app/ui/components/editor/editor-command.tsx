@@ -1,6 +1,5 @@
 import { useEventListener } from "@/interactions/use-event-listener"
 import { useEditorStore } from "@/ui/components/editor/store"
-import { cn } from "@/ui/utils"
 import type { Range } from "@tiptap/core"
 import { Command } from "cmdk"
 import { createContext, forwardRef, useEffect } from "react"
@@ -56,7 +55,7 @@ export const EditorCommandOut: FC<EditorCommandOutProps> = ({
 export const EditorCommand = forwardRef<
    HTMLDivElement,
    ComponentPropsWithoutRef<typeof Command>
->(({ children, className, ...props }, ref) => {
+>(({ children, ...props }, ref) => {
    const query = useEditorStore().query
 
    return (
@@ -69,16 +68,13 @@ export const EditorCommand = forwardRef<
                      e.stopPropagation()
                   }}
                   id="slash-command"
-                  className={cn(
-                     "!p-1 z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg outline-none",
-                     className,
-                  )}
                   {...props}
                >
                   <Command.Input
                      value={query}
                      onValueChange={() => useEditorStore.setState({ query })}
                      style={{ display: "none" }}
+                     autoFocus={false}
                   />
                   {children}
                </Command>

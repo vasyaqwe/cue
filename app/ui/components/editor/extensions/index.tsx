@@ -1,4 +1,5 @@
 import { suggestionItems } from "@/ui/components/editor/extensions/slash-command"
+import { Popover, PopoverContent } from "@/ui/components/popover"
 import { cn } from "@/ui/utils"
 import { Extension } from "@tiptap/core"
 import type { Editor, Range } from "@tiptap/core"
@@ -9,11 +10,6 @@ import StarterKit from "@tiptap/starter-kit"
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion"
 import type { RefObject } from "react"
 import type { ReactNode } from "react"
-import tippy, {
-   type GetReferenceClientRect,
-   type Instance,
-   type Props,
-} from "tippy.js"
 import { match } from "ts-pattern"
 import { EditorCommandOut } from "../editor-command"
 
@@ -39,60 +35,97 @@ const slashCommandExtension = Extension.create({
    },
 })
 
-const renderItems = (elementRef?: RefObject<Element> | null) => {
-   let component: ReactRenderer | null = null
-   let popup: Instance<Props>[] | null = null
+const SlashCommandPopover = ({
+   clientRect,
+   query,
+   range,
+}: {
+   clientRect: () => DOMRect
+   query: string
+   range: Range
+}) => {
+   const position = clientRect()
 
+   return (
+      <Popover
+         open
+         drawerOnMobile={false}
+      >
+         <PopoverContent
+            drawerOnMobile={false}
+            title="Command"
+            container={document.body}
+            side="bottom"
+            align="start"
+            className="mt-2 min-w-56"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            onCloseAutoFocus={(e) => e.preventDefault()}
+            style={{
+               position: "absolute",
+               left: position.left,
+               top: position.bottom,
+            }}
+         >
+            <EditorCommandOut
+               query={query}
+               range={range}
+            />
+         </PopoverContent>
+      </Popover>
+   )
+}
+
+const renderItems = (_elementRef?: RefObject<Element> | null) => {
+   let component: ReactRenderer | null = null
    return {
-      onStart: (props: { editor: Editor; clientRect: DOMRect }) => {
-         component = new ReactRenderer(EditorCommandOut, {
-            props,
+      onStart: (props: {
+         editor: Editor
+         clientRect: DOMRect
+         items: SuggestionItem[]
+         command: never
+         range: Range
+         query: string
+      }) => {
+         component = new ReactRenderer(SlashCommandPopover, {
+            props: {
+               editor: props.editor,
+               clientRect: props.clientRect,
+               query: props.query,
+               range: props.range,
+            },
             editor: props.editor,
          })
 
          const { selection } = props.editor.state
-
          const parentNode = selection.$from.node(selection.$from.depth)
          const blockType = parentNode.type.name
-
          if (blockType === "codeBlock") {
             return false
          }
-
-         // @ts-ignore
-         popup = tippy("body", {
-            getReferenceClientRect: props.clientRect,
-            appendTo: () => (elementRef ? elementRef.current : document.body),
-            content: component.element,
-            showOnCreate: true,
-            interactive: true,
-            trigger: "manual",
-            placement: "bottom-start",
-         })
       },
       onUpdate: (props: {
          editor: Editor
-         clientRect: GetReferenceClientRect
+         clientRect: never
+         items: SuggestionItem[]
+         command: never
+         range: Range
+         query: string
       }) => {
-         component?.updateProps(props)
-
-         popup?.[0]?.setProps({
-            getReferenceClientRect: props.clientRect,
+         component?.updateProps({
+            editor: props.editor,
+            clientRect: props.clientRect,
+            query: props.query,
+            range: props.range,
          })
       },
-
       onKeyDown: (props: { event: KeyboardEvent }) => {
          if (props.event.key === "Escape") {
-            popup?.[0]?.hide()
-
             return true
          }
-
-         // @ts-ignore
+         // @ts-expect-error
          return component?.ref?.onKeyDown(props)
       },
       onExit: () => {
-         popup?.[0]?.destroy()
          component?.destroy()
       },
    }

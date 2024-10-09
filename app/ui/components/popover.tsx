@@ -1,7 +1,6 @@
 import {
    Drawer,
    DrawerContent,
-   DrawerNested,
    DrawerTitle,
    DrawerTrigger,
 } from "@/ui/components/drawer"
@@ -19,40 +18,40 @@ const PopoverAnchor = PopoverPrimitive.Anchor
 
 function Popover({
    nested = false,
+   drawerOnMobile = true,
    ...props
-}: PopoverPrimitive.PopoverProps & { nested?: boolean }) {
+}: PopoverPrimitive.PopoverProps & {
+   nested?: boolean
+   drawerOnMobile?: boolean
+}) {
    const isMobile = useUIStore().isMobile
-   return (
-      <>
-         {isMobile ? (
-            nested ? (
-               <DrawerNested {...props} />
-            ) : (
-               <Drawer
-                  repositionInputs={false}
-                  {...props}
-               />
-            )
-         ) : (
-            <PopoverPrimitive.Root {...props} />
-         )}
-      </>
-   )
+
+   if (isMobile && drawerOnMobile)
+      return (
+         <Drawer
+            nested
+            repositionInputs={false}
+            {...props}
+         />
+      )
+   return <PopoverPrimitive.Root {...props} />
 }
 
-function PopoverTrigger(props: PopoverPrimitive.PopoverTriggerProps) {
+function PopoverTrigger({ ...props }: PopoverPrimitive.PopoverTriggerProps) {
    const isMobile = useUIStore().isMobile
 
-   return isMobile ? (
-      <DrawerTrigger {...props} />
-   ) : (
-      <PopoverPrimitive.Trigger {...props} />
-   )
+   if (isMobile) return <DrawerTrigger {...props} />
+   return <PopoverPrimitive.Trigger {...props} />
 }
 
 const PopoverContent = forwardRef<
    ElementRef<typeof PopoverPrimitive.Content>,
-   ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & { title: string }
+   ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & {
+      title: string
+      drawerOnMobile?: boolean
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      container?: any
+   }
 >(
    (
       {
@@ -61,13 +60,15 @@ const PopoverContent = forwardRef<
          align = "center",
          sideOffset = 4,
          title,
+         container,
+         drawerOnMobile = true,
          ...props
       },
       ref,
    ) => {
       const isMobile = useUIStore().isMobile
 
-      if (isMobile)
+      if (isMobile && drawerOnMobile)
          return (
             <DrawerContent
                className={cn("px-0.5", className)}
@@ -79,7 +80,7 @@ const PopoverContent = forwardRef<
          )
 
       return (
-         <PopoverPortal>
+         <PopoverPortal container={container}>
             <PopoverPrimitive.Content
                ref={ref}
                align={align}

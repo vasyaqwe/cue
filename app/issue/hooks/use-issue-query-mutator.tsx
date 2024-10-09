@@ -118,7 +118,22 @@ export function useIssueQueryMutator() {
          (oldData) =>
             match(oldData)
                .with(P.nullish, (data) => data)
-               .otherwise((data) => ({ ...data, ...input })),
+               .otherwise((data) =>
+                  produce(data, (draft) => {
+                     draft.title = input.title
+
+                     match(input)
+                        .with({ description: P.not(undefined) }, (input) => {
+                           draft.description = input.description
+                        })
+                        .with({ label: P.not(undefined) }, (input) => {
+                           draft.label = input.label
+                        })
+                        .with({ status: P.not(undefined) }, (input) => {
+                           draft.status = input.status
+                        })
+                  }),
+               ),
       )
    }
 

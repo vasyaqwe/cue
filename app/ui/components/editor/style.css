@@ -49,15 +49,6 @@ div.ProseMirror > p.is-editor-empty:first-child::before {
       transform: rotate(360deg);
    }
 }
-[data-tippy-root] {
-   width: 200px;
-}
-.tippy-box {
-   transition: none;
-   width: 100%;
-   max-width: 200px !important;
-   pointer-events: all;
-}
 
 .ProseMirror:not(.dragging) .ProseMirror-selectednode {
    outline: none !important;
