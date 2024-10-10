@@ -205,6 +205,11 @@ function Notification({
    const { updateNotification } = useUpdateNotification()
    const { deleteNotifications } = useDeleteNotifications()
 
+   const hash =
+      notification.type === "new_issue_comment"
+         ? notification.commentId ?? ""
+         : undefined
+
    return (
       <ContextMenu>
          <ContextMenuTrigger
@@ -221,8 +226,10 @@ function Notification({
                         slug,
                         issueId: notification.issueId,
                      },
+                     hash,
                   }}
                   to="/$slug/inbox/issue/$issueId"
+                  hash={hash}
                   params={{
                      slug,
                      issueId: notification.issueId,

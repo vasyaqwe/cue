@@ -9,7 +9,8 @@ import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { formatDateRelative } from "@/utils/format"
-import { useParams } from "@tanstack/react-router"
+import { useLocation, useParams } from "@tanstack/react-router"
+import type { Timeout } from "node_modules/@tanstack/react-router/dist/esm/utils"
 import { useEffect, useState } from "react"
 import { P, match } from "ts-pattern"
 
@@ -20,10 +21,34 @@ export function Comment({
    if (!issueId) throw new Error("Comment must be used in an $issueId route")
 
    const { user, organizationId } = useAuth()
+   const { hash } = useLocation()
    const { deleteComment } = useDeleteComment()
    const { updateComment } = useUpdateComment()
    const resolvedBy = comment.resolvedBy
+
    const [isExpanded, setIsExpanded] = useState(!resolvedBy)
+   const [isHighlighted, setIsHighlighted] = useState(false)
+
+   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+   useEffect(() => {
+      let timeout: Timeout | null = null
+      match(hash).with(comment.id, () => {
+         setIsHighlighted(true)
+
+         timeout = setTimeout(() => {
+            setIsHighlighted(false)
+         }, 3000)
+
+         match(document.getElementById(hash)).with(
+            P.not(P.nullish),
+            (element) => element.scrollIntoView({ behavior: "smooth" }),
+         )
+      })
+
+      return () => {
+         if (timeout) clearTimeout(timeout)
+      }
+   }, [])
 
    useEffect(() => {
       match(resolvedBy)
@@ -34,12 +59,20 @@ export function Comment({
    const delayedResolvedBy = useDelayedValue(resolvedBy, 500)
 
    return (
-      <>
+      <div
+         id={comment.id}
+         className={cn(
+            "px-4 py-2 transition-colors 2xl:rounded-lg",
+            isHighlighted
+               ? "bg-highlight/80 duration-300"
+               : "bg-transparent duration-1000",
+         )}
+      >
          <TransitionHeight
             className="mt-2"
             data-expanded={isExpanded}
          >
-            <div className="group relative flex gap-3 pt-5">
+            <div className="group relative flex gap-3">
                <UserAvatar user={comment.author} />
                <div className={cn("flex-1")}>
                   <div className="-mt-[4px] flex max-h-[22px] items-center justify-between">
@@ -146,7 +179,7 @@ export function Comment({
                </button>
             </div>
          </TransitionHeight>
-      </>
+      </div>
    )
 }
 

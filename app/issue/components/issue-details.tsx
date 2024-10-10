@@ -186,97 +186,99 @@ export function IssueDetails() {
                   </DropdownMenuContent>
                </DropdownMenu>
             </Header>
-            <div className="overflow-y-auto">
-               <div className="mx-auto w-full max-w-[51rem] px-4 py-6 md:py-8">
-                  <Input
-                     key={issueId}
-                     autoComplete="off"
-                     defaultValue={issue.title}
-                     name="title"
-                     id="title"
-                     placeholder="Issue title"
-                     required
-                     onChange={(e) => {
-                        setTitle(e.target.value)
-                        debouncedSaveIssue.call({
-                           ...issue,
-                           title: e.target.value,
-                        })
-                     }}
-                     className="!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
-                  />
-                  <EditorRoot>
-                     <EditorContent
+            <div className="overflow-y-auto scroll-smooth">
+               <div className="mx-auto w-full max-w-[51rem] py-6 md:py-8">
+                  <div className="px-4">
+                     <Input
                         key={issueId}
-                        className="mt-3"
-                        content={issue.description}
-                        onUpdate={({ editor }) => {
-                           const description = editor.getHTML()
-                           setDescription(description)
+                        autoComplete="off"
+                        defaultValue={issue.title}
+                        name="title"
+                        id="title"
+                        placeholder="Issue title"
+                        required
+                        onChange={(e) => {
+                           setTitle(e.target.value)
                            debouncedSaveIssue.call({
                               ...issue,
-                              description,
+                              title: e.target.value,
                            })
                         }}
-                        extensions={[
-                           starterKit,
-                           placeholder(
-                              "Add description (press '/' for commands)",
-                           ),
-                           link,
-                           slashCommand,
-                           mention,
-                        ]}
-                        placeholder="Add description (press '/' for commands)"
-                     >
-                        <EditorCommand>
-                           <EditorCommandEmpty>No results</EditorCommandEmpty>
-                           <EditorCommandList>
-                              {commandItems.map((item) => (
-                                 <EditorCommandItem
-                                    value={item.title}
-                                    onSelect={(value) =>
-                                       item.command?.(value as never)
-                                    }
-                                    key={item.title}
-                                 >
-                                    {item.icon}
-                                    {item.title}
-                                 </EditorCommandItem>
-                              ))}
-                           </EditorCommandList>
-                        </EditorCommand>
-                     </EditorContent>
-                  </EditorRoot>
-                  <hr className="mt-7 mb-5 border-border border-t-2 border-dotted" />
-                  <p className="font-semibold text-lg">Activity</p>
-                  <div>
-                     <div className="mt-5 flex items-center gap-1">
-                        <UserAvatar
-                           className="mr-[11px] ml-0.5 size-7"
-                           user={{ ...issue.author, id: issue.authorId }}
-                        />
-                        <div className="md:-mt-px">
-                           <strong className="font-semibold text-foreground">
-                              {issue.author.name}
-                           </strong>{" "}
-                           <span className="text-foreground/70">
-                              created this issue{" "}
-                           </span>
-                           <small className="text-foreground/60 text-sm">
-                              — {formatDateRelative(issue.createdAt)}
-                           </small>
+                        className="!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
+                     />
+                     <EditorRoot>
+                        <EditorContent
+                           key={issueId}
+                           className="mt-3"
+                           content={issue.description}
+                           onUpdate={({ editor }) => {
+                              const description = editor.getHTML()
+                              setDescription(description)
+                              debouncedSaveIssue.call({
+                                 ...issue,
+                                 description,
+                              })
+                           }}
+                           extensions={[
+                              starterKit,
+                              placeholder(
+                                 "Add description (press '/' for commands)",
+                              ),
+                              link,
+                              slashCommand,
+                              mention,
+                           ]}
+                           placeholder="Add description (press '/' for commands)"
+                        >
+                           <EditorCommand>
+                              <EditorCommandEmpty>
+                                 No results
+                              </EditorCommandEmpty>
+                              <EditorCommandList>
+                                 {commandItems.map((item) => (
+                                    <EditorCommandItem
+                                       value={item.title}
+                                       onSelect={(value) =>
+                                          item.command?.(value as never)
+                                       }
+                                       key={item.title}
+                                    >
+                                       {item.icon}
+                                       {item.title}
+                                    </EditorCommandItem>
+                                 ))}
+                              </EditorCommandList>
+                           </EditorCommand>
+                        </EditorContent>
+                     </EditorRoot>
+                     <hr className="mt-7 mb-5 border-border border-t-2 border-dotted" />
+                     <p className="font-semibold text-lg">Activity</p>
+                     <div>
+                        <div className="mt-5 mb-3 flex items-center gap-1">
+                           <UserAvatar
+                              className="mr-[11px] ml-0.5 size-7"
+                              user={{ ...issue.author, id: issue.authorId }}
+                           />
+                           <div className="md:-mt-px">
+                              <strong className="font-semibold text-foreground">
+                                 {issue.author.name}
+                              </strong>{" "}
+                              <span className="text-foreground/70">
+                                 created this issue{" "}
+                              </span>
+                              <small className="text-foreground/60 text-sm">
+                                 — {formatDateRelative(issue.createdAt)}
+                              </small>
+                           </div>
                         </div>
                      </div>
                   </div>
-                  <div>
-                     {comments.data.map((comment) => (
-                        <Comment
-                           key={comment.id}
-                           comment={comment}
-                        />
-                     ))}
-                  </div>
+                  {comments.data.map((comment) => (
+                     <Comment
+                        key={comment.id}
+                        comment={comment}
+                     />
+                  ))}
                </div>
                <div
                   className="h-px w-full"
