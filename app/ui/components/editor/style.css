@@ -12,20 +12,6 @@ div.ProseMirror > p.is-editor-empty:first-child::before {
    height: 0;
 }
 
-.ProseMirror img {
-   transition: filter 0.1s ease-in-out;
-
-   &:hover {
-      cursor: pointer;
-      filter: brightness(90%);
-   }
-
-   &.ProseMirror-selectednode {
-      outline: 3px solid #5abbf7;
-      filter: brightness(90%);
-   }
-}
-
 .img-placeholder {
    position: relative;
 

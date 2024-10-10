@@ -13,12 +13,16 @@ import { UserAvatar } from "@/ui/components/user-avatar"
 import { useAuth } from "@/user/hooks"
 import { useQuery } from "@tanstack/react-query"
 import { forwardRef, useImperativeHandle, useState } from "react"
+import { match } from "ts-pattern"
 
 export default forwardRef<
    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
    any,
    {
-      command: ({ label }: { label: string }) => void
+      command: (args: {
+         label: string
+         userId: string
+      }) => void
       clientRect: () => DOMRect
       query: string
       range: Range
@@ -31,22 +35,9 @@ export default forwardRef<
 
    useImperativeHandle(ref, () => ({
       onKeyDown: ({ event }: { event: KeyboardEvent }) => {
-         if (event.key === "ArrowUp") {
-            //  upHandler()
-            return true
-         }
-
-         if (event.key === "ArrowDown") {
-            //  downHandler()
-            return true
-         }
-
-         if (event.key === "Enter") {
-            //  enterHandler()
-            return true
-         }
-
-         return false
+         return match(event.key)
+            .with("ArrowUp", "ArrowDown", "Enter", () => true)
+            .otherwise(() => false)
       },
    }))
 
@@ -81,7 +72,12 @@ export default forwardRef<
                         <EditorMentionItem
                            key={user.name}
                            value={user.name}
-                           onSelect={() => command?.({ label: user.name })}
+                           onSelect={() =>
+                              command?.({
+                                 label: user.name,
+                                 userId: user.id,
+                              })
+                           }
                         >
                            <UserAvatar
                               className="size-6 [--indicator-size:0.75rem]"

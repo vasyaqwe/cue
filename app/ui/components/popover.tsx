@@ -82,6 +82,8 @@ const PopoverContent = forwardRef<
       return (
          <PopoverPortal container={container}>
             <PopoverPrimitive.Content
+               onWheel={(e) => e.stopPropagation()}
+               onTouchMove={(e) => e.stopPropagation()}
                ref={ref}
                align={align}
                sideOffset={sideOffset}
