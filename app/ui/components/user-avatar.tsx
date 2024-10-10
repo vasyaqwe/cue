@@ -4,6 +4,7 @@ import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import type { User } from "@/user/schema"
 import type { ComponentProps } from "react"
+import { match } from "ts-pattern"
 
 type UserAvatarProps = ComponentProps<typeof Avatar> & {
    user: Omit<Partial<User>, "createdAt" | "updatedAt">
@@ -19,10 +20,9 @@ export function UserAvatar({
    ...props
 }: UserAvatarProps) {
    const { user: currentUser } = useAuth()
-   const name =
-      user.name && user.name !== ""
-         ? user.name[0]?.toUpperCase()
-         : user.email?.[0]?.toUpperCase() ?? "?"
+   const name = match(user.name)
+      .with(undefined, () => user.email?.[0]?.toUpperCase())
+      .otherwise((name) => name[0]?.toUpperCase())
 
    const { isUserOnline } = usePresenceStoreBase()
    const isOnline = user.id === currentUser.id || isUserOnline(user.id ?? "")
@@ -47,7 +47,7 @@ export function UserAvatar({
          ) : (
             <AvatarFallback
                className={cn(
-                  "border bg-background text-foreground/75 shadow-inner",
+                  "bg-background font-semibold text-foreground/75 shadow-button",
                   className,
                )}
             >

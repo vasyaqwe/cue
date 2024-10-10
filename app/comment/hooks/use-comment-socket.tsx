@@ -9,8 +9,6 @@ import { match } from "ts-pattern"
 
 export function useCommentSocket() {
    const { organizationId, user } = useAuth()
-   // const { slug } = useParams({ from: "/$slug/_layout" })
-   // const navigate = useNavigate()
    const {
       insertCommentToQueryData,
       deleteCommentFromQueryData,

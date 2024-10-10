@@ -4,7 +4,7 @@ import { useUpdateNotification } from "@/notification/hooks/use-update-notificat
 import { useNotificationStore } from "@/notification/store"
 import type { NotificationEvent } from "@/notification/types"
 import { useAuth } from "@/user/hooks"
-import { useNavigate, useParams } from "@tanstack/react-router"
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router"
 import usePartySocket from "partysocket/react"
 import { useEffect } from "react"
 import { match } from "ts-pattern"
@@ -12,6 +12,7 @@ import { match } from "ts-pattern"
 export function useNotificationSocket() {
    const { organizationId, user } = useAuth()
    const { slug } = useParams({ from: "/$slug/_layout" })
+   const { pathname } = useLocation()
    const navigate = useNavigate()
    const {
       insertNotificationToQueryData,
@@ -29,6 +30,13 @@ export function useNotificationSocket() {
       body: string
       issueId: string
    }) => {
+      if (pathname.includes(issueId))
+         return updateNotification.mutate({
+            issueIds: [issueId],
+            isRead: true,
+            organizationId,
+         })
+
       if (!("Notification" in window))
          return console.log(
             "This browser does not support desktop notification",

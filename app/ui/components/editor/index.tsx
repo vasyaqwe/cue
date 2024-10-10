@@ -55,7 +55,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
          >
             {editor === null ? (
                <>
-                  {content === "<p></p>" ? (
+                  {content === "<p></p>" || content === "" ? (
                      <p
                         className={cn(
                            "prose mt-2 min-h-9 max-w-full break-all text-foreground/40 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground focus:outline-none",
