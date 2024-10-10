@@ -1,4 +1,5 @@
 import { StatusIcon } from "@/issue/components/icons"
+import { issueListQuery } from "@/issue/queries"
 import { organizationMembersQuery } from "@/organization/queries"
 import {
    mentionLabelIssueClassName,
@@ -21,29 +22,52 @@ export function MentionLabel({ node }: NodeViewProps) {
    const { organizationId } = useAuth()
    const { slug } = useParams({ from: "/$slug/_layout" })
    const members = useQuery(organizationMembersQuery({ organizationId }))
+   const issues = useQuery(issueListQuery({ organizationId }))
 
    const label = node.attrs.label
    const userId = node.attrs.userId
    const issueId = node.attrs.issueId
    const status = node.attrs.status
    const user = members.data?.find(({ user }) => user.id === userId)?.user
+   const issue = issues.data?.find(({ id }) => id === issueId)
+
+   const isIssueError = issues.isError || !issue
 
    return (
       <NodeViewWrapper className="inline w-fit">
-         {issueId && status ? (
+         {issueId ? (
             <Link
                to={"/$slug/issue/$issueId"}
                params={{
                   issueId,
                   slug,
                }}
-               className={cn(mentionLabelIssueClassName)}
+               className={cn(
+                  cn(
+                     mentionLabelIssueClassName,
+                     issues.isPending ? "text-transparent" : "",
+                  ),
+               )}
             >
-               <StatusIcon
-                  className="-mt-1 mr-1 inline-block size-4"
-                  status={status}
-               />
-               {label}
+               {isIssueError ? (
+                  <>
+                     <StatusIcon
+                        status={status}
+                        className="-mt-1 mr-1 inline-block size-4"
+                     />
+                     {label}
+                  </>
+               ) : issues.isPending ? (
+                  `@ ${label}`
+               ) : (
+                  <>
+                     <StatusIcon
+                        className="-mt-1 mr-1 inline-block size-4"
+                        status={issue.status}
+                     />
+                     {issue.title}
+                  </>
+               )}
             </Link>
          ) : userId ? (
             <HoverCard

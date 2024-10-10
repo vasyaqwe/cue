@@ -77,10 +77,10 @@ const baseMention = Mention.extend({
          "span",
          mergeAttributes(HTMLAttributes, {
             class: node.attrs.issueId
-               ? mentionLabelIssueClassName
+               ? cn(mentionLabelIssueClassName, "text-transparent")
                : mentionLabelPersonClassName,
          }),
-         node.attrs.issueId ? `${node.attrs.label}` : `@${node.attrs.label}`,
+         node.attrs.issueId ? `@ ${node.attrs.label}` : `@${node.attrs.label}`,
       ]
    },
 })

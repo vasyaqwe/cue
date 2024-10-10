@@ -112,7 +112,7 @@ export default forwardRef<
                         {issues.data?.map((issue) => (
                            <EditorMentionItem
                               key={issue.id}
-                              value={issue.title}
+                              value={`${issue.title} ${issue.id}`}
                               onSelect={() =>
                                  command?.({
                                     label: issue.title,
