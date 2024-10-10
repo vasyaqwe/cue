@@ -99,7 +99,7 @@ export const commandItems = [
       title: "Bullet List",
       icon: (
          <svg
-            className="md:!size-[22px] !size-[28px] ml-[-4px] md:ml-[-2px]"
+            className="ml-[-2px] size-[22px]"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -121,7 +121,7 @@ export const commandItems = [
       title: "Numbered List",
       icon: (
          <svg
-            className="md:!size-[22px] !size-[28px] ml-[-4px] md:ml-[-2px]"
+            className="ml-[-2px] size-[22px]"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

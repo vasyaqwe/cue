@@ -1,8 +1,12 @@
+import type { IssueStatus } from "@/issue/schema"
 import {
    commandItems,
    renderCommandItems,
 } from "@/ui/components/editor/command/extension"
-import { mentionLabelClassName } from "@/ui/components/editor/mention/constants"
+import {
+   mentionLabelIssueClassName,
+   mentionLabelPersonClassName,
+} from "@/ui/components/editor/mention/constants"
 import { renderMentionItems } from "@/ui/components/editor/mention/extension"
 import { MentionLabel } from "@/ui/components/editor/mention/mention-label"
 import { cn } from "@/ui/utils"
@@ -60,15 +64,23 @@ const baseMention = Mention.extend({
          userId: {
             default: null,
          },
+         issueId: {
+            default: null,
+         },
+         status: {
+            default: null,
+         },
       }
    },
    renderHTML({ HTMLAttributes, node }) {
       return [
          "span",
          mergeAttributes(HTMLAttributes, {
-            class: mentionLabelClassName,
+            class: node.attrs.issueId
+               ? mentionLabelIssueClassName
+               : mentionLabelPersonClassName,
          }),
-         `@${node.attrs.label}`,
+         node.attrs.issueId ? `${node.attrs.label}` : `@${node.attrs.label}`,
       ]
    },
 })
@@ -77,9 +89,11 @@ const mention = baseMention.configure({
    suggestion: {
       render: renderMentionItems,
       command: ({ editor, range, props: _props }) => {
-         const props = _props as unknown as {
+         const { label, issueId, userId, status } = _props as unknown as {
             label: string
-            userId: string
+            userId?: string | undefined
+            issueId?: string | undefined
+            status?: IssueStatus | undefined
          }
          editor
             .chain()
@@ -88,8 +102,10 @@ const mention = baseMention.configure({
                {
                   type: "mention",
                   attrs: {
-                     label: props.label,
-                     userId: props.userId,
+                     label,
+                     userId,
+                     issueId,
+                     status,
                   },
                },
             ])

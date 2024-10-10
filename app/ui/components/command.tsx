@@ -70,3 +70,27 @@ export function CommandItem({
       </Command.Item>
    )
 }
+
+export function CommandLabel({ className, ...props }: ComponentProps<"p">) {
+   return (
+      <p
+         className={cn(
+            "px-4 py-1.5 text-foreground/75 text-sm md:px-2",
+            className,
+         )}
+         {...props}
+      />
+   )
+}
+
+export function CommandSeparator({
+   className,
+   ...props
+}: ComponentProps<typeof Command.Separator>) {
+   return (
+      <Command.Separator
+         className={cn("-mx-1 my-1 h-px bg-border/75", className)}
+         {...props}
+      />
+   )
+}

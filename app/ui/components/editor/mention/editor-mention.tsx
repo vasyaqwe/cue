@@ -1,4 +1,5 @@
 import { useEventListener } from "@/interactions/use-event-listener"
+import { CommandLabel, CommandSeparator } from "@/ui/components/command"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { Command } from "cmdk"
 import { forwardRef } from "react"
@@ -45,3 +46,6 @@ export const EditorMention = forwardRef<
 })
 
 export const EditorMentionList = Command.List
+export const EditorMentionGroup = Command.Group
+export const EditorMentionLabel = CommandLabel
+export const EditorMentionSeparator = CommandSeparator

@@ -29,7 +29,11 @@ export const EditorCommandItem = forwardRef<
    return (
       <CommandItem
          ref={ref}
-         className={cn(commandItemVariants(), "rounded-xl", className)}
+         className={cn(
+            commandItemVariants(),
+            "rounded-xl [&_svg]:size-5 max-md:h-11 max-md:text-base",
+            className,
+         )}
          {...props}
          onSelect={() => onSelect({ editor, range })}
       >

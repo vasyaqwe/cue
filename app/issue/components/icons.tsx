@@ -44,7 +44,10 @@ export function StatusIcon({
       <svg
          viewBox="0 0 14 14"
          fill="none"
-         className={cn("size-[18px] transition-all duration-500", className)}
+         className={cn(
+            "size-[18px] shrink-0 transition-all duration-500",
+            className,
+         )}
          {...props}
       >
          <circle

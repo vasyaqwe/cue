@@ -1,7 +1,13 @@
+import { StatusIcon } from "@/issue/components/icons"
+import { issueListQuery } from "@/issue/queries"
+import type { IssueStatus } from "@/issue/schema"
 import { organizationMembersQuery } from "@/organization/queries"
 import {
    EditorMention,
+   EditorMentionGroup,
+   EditorMentionLabel,
    EditorMentionList,
+   EditorMentionSeparator,
 } from "@/ui/components/editor/mention/editor-mention"
 import {
    EditorMentionEmpty,
@@ -21,7 +27,9 @@ export default forwardRef<
    {
       command: (args: {
          label: string
-         userId: string
+         userId?: string | undefined
+         issueId?: string | undefined
+         status?: IssueStatus | undefined
       }) => void
       clientRect: () => DOMRect
       query: string
@@ -32,6 +40,7 @@ export default forwardRef<
    const position = clientRect()
    const { organizationId } = useAuth()
    const members = useQuery(organizationMembersQuery({ organizationId }))
+   const issues = useQuery(issueListQuery({ organizationId }))
 
    useImperativeHandle(ref, () => ({
       onKeyDown: ({ event }: { event: KeyboardEvent }) => {
@@ -53,7 +62,7 @@ export default forwardRef<
             container={document.body}
             side="bottom"
             align="start"
-            className="relative mt-2 h-40 min-w-56 overflow-y-auto"
+            className="relative mt-2 h-56 w-64 overflow-y-auto"
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
             style={{
@@ -62,30 +71,66 @@ export default forwardRef<
                top: position.bottom,
             }}
          >
-            {members.isPending ? (
+            {members.isPending || issues.isPending ? (
                <Loading className="absolute inset-0 m-auto" />
+            ) : members.isError || issues.isError ? (
+               <>
+                  <p className="text-foreground/75">
+                     Something went wrong. Please try again later.
+                  </p>
+               </>
             ) : (
                <EditorMention query={query}>
                   <EditorMentionEmpty>No results</EditorMentionEmpty>
                   <EditorMentionList>
-                     {members.data?.map(({ user }) => (
-                        <EditorMentionItem
-                           key={user.name}
-                           value={user.name}
-                           onSelect={() =>
-                              command?.({
-                                 label: user.name,
-                                 userId: user.id,
-                              })
-                           }
-                        >
-                           <UserAvatar
-                              className="size-6 [--indicator-size:0.75rem]"
-                              user={user}
-                           />
-                           {user.name}
-                        </EditorMentionItem>
-                     ))}
+                     <EditorMentionGroup>
+                        <EditorMentionLabel>People</EditorMentionLabel>
+                        {members.data?.map(({ user }) => (
+                           <EditorMentionItem
+                              key={user.name}
+                              value={user.name}
+                              onSelect={() =>
+                                 command?.({
+                                    label: user.name,
+                                    userId: user.id,
+                                 })
+                              }
+                           >
+                              <UserAvatar
+                                 className="size-6 [--indicator-size:0.75rem]"
+                                 user={user}
+                              />
+                              <span className="line-clamp-1 break-all">
+                                 {user.name}
+                              </span>
+                           </EditorMentionItem>
+                        ))}
+                     </EditorMentionGroup>
+                     <EditorMentionSeparator />
+                     <EditorMentionGroup>
+                        <EditorMentionLabel>Issues</EditorMentionLabel>
+                        {issues.data?.map((issue) => (
+                           <EditorMentionItem
+                              key={issue.id}
+                              value={issue.title}
+                              onSelect={() =>
+                                 command?.({
+                                    label: issue.title,
+                                    issueId: issue.id,
+                                    status: issue.status,
+                                 })
+                              }
+                           >
+                              <StatusIcon
+                                 className="!size-[18px]"
+                                 status={issue.status}
+                              />
+                              <span className="line-clamp-1 break-all">
+                                 {issue.title}
+                              </span>
+                           </EditorMentionItem>
+                        ))}
+                     </EditorMentionGroup>
                   </EditorMentionList>
                </EditorMention>
             )}
