@@ -62,7 +62,7 @@ export default forwardRef<
             container={document.body}
             side="bottom"
             align="start"
-            className="relative mt-2 h-56 w-64 overflow-y-auto"
+            className="relative mt-2 h-56 w-64 scroll-py-1 overflow-y-auto"
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
             style={{

@@ -282,7 +282,7 @@ function ContextMenuSeparator({
 }: ComponentProps<typeof ContextMenuPrimitive.Separator>) {
    return (
       <ContextMenuPrimitive.Separator
-         className={cn("-mx-1 my-1 h-px bg-border/75", className)}
+         className={cn("-mx-0.5 md:-mx-1 my-1 h-px bg-border/75", className)}
          {...props}
       />
    )
