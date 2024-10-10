@@ -45,7 +45,9 @@ export function useUpdateIssue() {
             .otherwise((notificationsWithUpdatedIssue) =>
                updateNotificationsInQueryData({
                   input: {
-                     ids: notificationsWithUpdatedIssue.map((n) => n.id),
+                     issueIds: notificationsWithUpdatedIssue.map(
+                        (n) => n.issueId,
+                     ),
                      issue: {
                         title: input.title,
                         status: input.status,

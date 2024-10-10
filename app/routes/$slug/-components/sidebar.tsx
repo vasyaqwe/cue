@@ -147,7 +147,9 @@ export function Sidebar() {
                      <Link
                         params={{ slug }}
                         onClick={() =>
-                           useNotificationStore.setState({ activeItemId: null })
+                           useNotificationStore.setState({
+                              activeItemIssueId: null,
+                           })
                         }
                         activeProps={{
                            onMouseUp: () =>

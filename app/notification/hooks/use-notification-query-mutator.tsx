@@ -15,8 +15,12 @@ export function useNotificationQueryMutator() {
    const { organizationId } = useAuth()
 
    const deleteNotificationsFromQueryData = ({
-      notificationIds,
-   }: { notificationIds: string[] }) => {
+      issueIds,
+      notificationId,
+   }: {
+      issueIds: string[] | undefined
+      notificationId: string | undefined
+   }) => {
       let unreadCountToRemove = 0
 
       queryClient.setQueryData(
@@ -26,36 +30,55 @@ export function useNotificationQueryMutator() {
                .with(undefined, (data) => data)
                .otherwise((data) =>
                   produce(data, (draft) => {
-                     for (const notificationId of notificationIds) {
-                        const notificationIndex = draft?.findIndex(
-                           (notification) => notification.id === notificationId,
+                     match({ notificationId, issueIds })
+                        .with(
+                           {
+                              notificationId: P.not(undefined),
+                           },
+                           ({ notificationId }) => {
+                              const notificationIndex = draft.findIndex(
+                                 (notification) =>
+                                    notification.id === notificationId,
+                              )
+                              if (notificationIndex !== -1) {
+                                 const notification = draft[notificationIndex]
+                                 if (!notification?.isRead)
+                                    unreadCountToRemove++
+                                 draft.splice(notificationIndex, 1)
+                              }
+                           },
                         )
-
-                        if (notificationIndex === -1) continue
-
-                        const notification = draft[notificationIndex]
-
-                        draft.splice(notificationIndex, 1)
-
-                        if (!notification?.isRead) unreadCountToRemove++
-                     }
+                        .with(
+                           { issueIds: P.not(undefined) },
+                           ({ issueIds }) => {
+                              for (let i = draft.length - 1; i >= 0; i--) {
+                                 const notification = draft[i]
+                                 if (
+                                    notification &&
+                                    issueIds.includes(notification.issueId)
+                                 ) {
+                                    if (!notification.isRead)
+                                       unreadCountToRemove++
+                                    draft.splice(i, 1)
+                                 }
+                              }
+                           },
+                        )
                   }),
                ),
       )
 
-      match(unreadCountToRemove)
-         .with(0, () => {})
-         .otherwise(() =>
-            queryClient.setQueryData(
-               notificationUnreadCountQuery({ organizationId }).queryKey,
-               (oldData) =>
-                  match(oldData)
-                     .with(undefined, (data) => data)
-                     .otherwise((data) => ({
-                        count: Math.max(data.count - unreadCountToRemove, 0),
-                     })),
-            ),
+      if (unreadCountToRemove > 0) {
+         queryClient.setQueryData(
+            notificationUnreadCountQuery({ organizationId }).queryKey,
+            (oldData) =>
+               match(oldData)
+                  .with(undefined, (data) => data)
+                  .otherwise((data) => ({
+                     count: Math.max(data.count - unreadCountToRemove, 0),
+                  })),
          )
+      }
    }
 
    const insertNotificationToQueryData = ({
@@ -96,7 +119,7 @@ export function useNotificationQueryMutator() {
 
                   return produce(data, (draft) => {
                      for (const notification of draft) {
-                        if (input.ids.includes(notification.id)) {
+                        if (input.issueIds.includes(notification.issueId)) {
                            const wasUnread = notification.isRead === false
 
                            Object.assign(notification, {

@@ -83,8 +83,14 @@ function NotFound() {
       <div className="grid h-svh place-items-center text-center">
          <div>
             <div className="relative mb-6">
-               <Card className="absolute inset-0 mx-auto grid h-28 w-[5.5rem] rotate-6 place-content-center rounded-xl" />
-               <Card className="-rotate-6 mx-auto grid h-28 w-[5.5rem] place-content-center rounded-xl">
+               <Card
+                  variant={"secondary"}
+                  className="absolute inset-0 mx-auto grid h-28 w-[5.5rem] rotate-6 place-content-center rounded-xl"
+               />
+               <Card
+                  variant={"secondary"}
+                  className="-rotate-6 mx-auto grid h-28 w-[5.5rem] place-content-center rounded-xl"
+               >
                   <svg
                      width="24"
                      height="24"

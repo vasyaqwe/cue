@@ -7,7 +7,7 @@ type State = {
    socket: PartySocket | null
    sendEvent: (event: NotificationEvent) => void
    isRefreshing: boolean
-   activeItemId: string | null
+   activeItemIssueId: string | null
 }
 
 const store = create<State>()((_set, get) => ({
@@ -16,7 +16,7 @@ const store = create<State>()((_set, get) => ({
       get().socket?.send(JSON.stringify(event))
    },
    isRefreshing: false,
-   activeItemId: null,
+   activeItemIssueId: null,
 }))
 
 export const useNotificationStore = createSelectors(store)

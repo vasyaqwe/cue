@@ -31,16 +31,15 @@ export function useCommentQueryMutator() {
          .with([], () => {})
          .otherwise((data) =>
             match(
-               data.filter(
+               data.find(
                   (notification) => notification.commentId === commentId,
                ),
             )
-               .with([], () => {})
-               .otherwise((notificationsToDelete) =>
+               .with(undefined, () => {})
+               .otherwise((notificationToDelete) =>
                   deleteNotificationsFromQueryData({
-                     notificationIds: notificationsToDelete.map(
-                        (notification) => notification.id,
-                     ),
+                     notificationId: notificationToDelete.id,
+                     issueIds: undefined,
                   }),
                ),
          )

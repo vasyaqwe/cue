@@ -291,7 +291,7 @@ export function IssueDetails() {
                            block: "end",
                            behavior: "smooth",
                         })
-                     }, 200)
+                     }, 100)
                   }
                   className="mx-auto w-full max-w-[49rem]"
                />

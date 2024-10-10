@@ -23,7 +23,7 @@ export function useIssueQueryMutator() {
    const isOnIssueIdPage = "issueId" in params && params.issueId
 
    const deleteIssueFromQueryData = ({ issueId }: { issueId: string }) => {
-      if (isOnIssueIdPage) {
+      if (isOnIssueIdPage && params.issueId === issueId) {
          navigate({ to: "/$slug", params: { slug: params.slug } })
       }
 
@@ -47,9 +47,10 @@ export function useIssueQueryMutator() {
                .with([], () => {})
                .otherwise((notificationsToDelete) =>
                   deleteNotificationsFromQueryData({
-                     notificationIds: notificationsToDelete.map(
-                        (notification) => notification.id,
+                     issueIds: notificationsToDelete.map(
+                        (notification) => notification.issueId,
                      ),
+                     notificationId: undefined,
                   }),
                ),
          )

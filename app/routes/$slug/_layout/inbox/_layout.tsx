@@ -29,6 +29,7 @@ import {
    useParams,
 } from "@tanstack/react-router"
 import type { ComponentProps } from "react"
+import * as R from "remeda"
 import { match } from "ts-pattern"
 
 export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
@@ -60,9 +61,32 @@ function Component() {
       notificationListQuery({ organizationId }),
    )
    const isRefreshing = useNotificationStore().isRefreshing
-   const activeItemId = useNotificationStore().activeItemId
+   const activeItemIssueId = useNotificationStore().activeItemIssueId
 
    const { updateNotification } = useUpdateNotification()
+
+   const groupedNotifications = R.pipe(
+      notifications.data,
+      R.groupBy((notification) => notification.issueId),
+      R.mapValues((groupedNotifications) => {
+         const sortedNotifications = [...groupedNotifications].sort(
+            (a, b) =>
+               new Date(b.createdAt).getTime() -
+               new Date(a.createdAt).getTime(),
+         )
+
+         const latestNotification = sortedNotifications[0]
+         const unreadNotifications = groupedNotifications.filter(
+            (n) => !n.isRead,
+         )
+
+         return {
+            latestNotification,
+            hasUnread: unreadNotifications.length > 0,
+            unreadNotificationIds: unreadNotifications.map((n) => n.id),
+         }
+      }),
+   )
 
    return (
       <Main className="flex overflow-visible pb-0">
@@ -83,9 +107,9 @@ function Component() {
                   <Button
                      onClick={() =>
                         updateNotification.mutate({
-                           ids: notifications.data
+                           issueIds: notifications.data
                               .filter((n) => !n.isRead)
-                              .map((notification) => notification.id),
+                              .map((notification) => notification.issueId),
                            isRead: true,
                            organizationId,
                         })
@@ -117,26 +141,46 @@ function Component() {
                      </div>
                   ) : (
                      <div className="w-full space-y-1.5 p-1.5">
-                        {notifications.data.map((notification) => (
-                           <Notification
-                              key={notification.id}
-                              onLinkClick={() => {
-                                 useNotificationStore.setState({
-                                    activeItemId: notification.id,
-                                 })
+                        {Object.values(groupedNotifications).map(
+                           ({
+                              latestNotification,
+                              hasUnread,
+                              unreadNotificationIds,
+                           }) =>
+                              match(latestNotification)
+                                 .with(undefined, () => null)
+                                 .otherwise((latestNotification) => (
+                                    <Notification
+                                       key={latestNotification.issueId}
+                                       notification={{
+                                          ...latestNotification,
+                                          isRead: !hasUnread,
+                                       }}
+                                       onLinkClick={() => {
+                                          useNotificationStore.setState({
+                                             activeItemIssueId:
+                                                latestNotification.issueId,
+                                          })
 
-                                 match(notification.isRead).with(false, () =>
-                                    updateNotification.mutate({
-                                       ids: [notification.id],
-                                       isRead: true,
-                                       organizationId,
-                                    }),
-                                 )
-                              }}
-                              data-active={activeItemId === notification.id}
-                              notification={notification}
-                           />
-                        ))}
+                                          match(unreadNotificationIds.length)
+                                             .with(0, () => {})
+                                             .otherwise(() =>
+                                                updateNotification.mutate({
+                                                   issueIds: [
+                                                      latestNotification.issueId,
+                                                   ],
+                                                   isRead: true,
+                                                   organizationId,
+                                                }),
+                                             )
+                                       }}
+                                       data-active={
+                                          activeItemIssueId ===
+                                          latestNotification.issueId
+                                       }
+                                    />
+                                 )),
+                        )}
                      </div>
                   )}
                </div>
@@ -243,7 +287,7 @@ function Notification({
             <ContextMenuItem
                onSelect={() =>
                   updateNotification.mutate({
-                     ids: [notification.id],
+                     issueIds: [notification.issueId],
                      isRead: !notification.isRead,
                      organizationId,
                   })
@@ -279,7 +323,7 @@ function Notification({
                destructive
                onSelect={() =>
                   deleteNotifications.mutate({
-                     notificationIds: [notification.id],
+                     issueIds: [notification.issueId],
                   })
                }
             >

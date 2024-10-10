@@ -84,7 +84,7 @@ export function BottomMenu() {
                      "aria-current": "page",
                   }}
                   onClick={() =>
-                     useNotificationStore.setState({ activeItemId: null })
+                     useNotificationStore.setState({ activeItemIssueId: null })
                   }
                   to={inboxRoute.to}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"

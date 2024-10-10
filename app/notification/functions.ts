@@ -119,20 +119,20 @@ export const update = createServerFn(
             .set({
                isRead: input.isRead,
             })
-            .where(inArray(notification.id, input.ids))
+            .where(inArray(notification.issueId, input.issueIds))
       }),
 )
 
 export const deleteFn = createServerFn(
    "POST",
    protectedProcedure
-      .input(z.object({ notificationIds: z.array(z.string()) }))
+      .input(z.object({ issueIds: z.array(z.string()) }))
       .mutation(async ({ ctx, input }) => {
          await ctx.db
             .delete(notification)
             .where(
                and(
-                  inArray(notification.id, input.notificationIds),
+                  inArray(notification.issueId, input.issueIds),
                   eq(notification.receiverId, ctx.user.id),
                ),
             )

@@ -24,12 +24,10 @@ export function useNotificationSocket() {
       title,
       body,
       issueId,
-      notificationId,
    }: {
       title: string
       body: string
       issueId: string
-      notificationId: string
    }) => {
       if (!("Notification" in window))
          return console.log(
@@ -41,10 +39,10 @@ export function useNotificationSocket() {
             params: { slug, issueId },
          }).then(() => {
             useNotificationStore.setState({
-               activeItemId: notificationId,
+               activeItemIssueId: issueId,
             })
             updateNotification.mutate({
-               ids: [notificationId],
+               issueIds: [issueId],
                isRead: true,
                organizationId,
             })
@@ -78,7 +76,6 @@ export function useNotificationSocket() {
                         title: `${msg.notification.sender.name} reported an issue`,
                         body: msg.notification.issue.title,
                         issueId: msg.notification.issueId,
-                        notificationId: msg.notification.id,
                      }),
                   )
                   .with("issue_resolved", () =>
@@ -86,7 +83,6 @@ export function useNotificationSocket() {
                         title: "Issue resolved",
                         body: `${msg.notification.sender.name} resolved ${msg.notification.issue.title}`,
                         issueId: msg.notification.issueId,
-                        notificationId: msg.notification.id,
                      }),
                   )
                   .with("new_issue_comment", () =>
@@ -94,7 +90,6 @@ export function useNotificationSocket() {
                         title: `${msg.notification.sender.name} commented on ${msg.notification.issue.title}`,
                         body: msg.notification.content,
                         issueId: msg.notification.issueId,
-                        notificationId: msg.notification.id,
                      }),
                   )
                   .exhaustive()
