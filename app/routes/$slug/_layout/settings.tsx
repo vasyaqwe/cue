@@ -89,11 +89,11 @@ function Component() {
    })
 
    return (
-      <>
+      <Main>
          <Header>
             <HeaderTitle>Settings</HeaderTitle>
          </Header>
-         <Main className="mx-auto max-w-5xl px-4 pt-5 pb-safe-4 md:pt-8">
+         <main className="mx-auto max-w-5xl px-4 pt-5 pb-safe-4 md:pt-8">
             <Card variant={"secondary"}>
                <CardHeader>
                   <CardTitle>Your profile</CardTitle>
@@ -234,7 +234,7 @@ function Component() {
                   </Modal>
                </CardContent>
             </Card>
-         </Main>
-      </>
+         </main>
+      </Main>
    )
 }

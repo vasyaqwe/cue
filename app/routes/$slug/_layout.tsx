@@ -113,7 +113,9 @@ function Component() {
                "h-[calc(100svh-var(--bottom-menu-height))] md:h-svh md:flex-1",
             )}
          >
-            <Outlet />
+            <div className="flex h-full w-full">
+               <Outlet />
+            </div>
          </div>
          <BottomMenu />
       </>

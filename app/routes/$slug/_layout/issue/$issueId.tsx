@@ -28,25 +28,25 @@ export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
    },
    meta: ({ loaderData }) => [{ title: loaderData.title }],
    pendingComponent: () => (
-      <>
+      <Main>
          <Header>
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
-         <Main className="flex">
+         <main className="flex flex-1">
             <div className="relative flex-1">
                <Loading className="absolute inset-0 m-auto" />
             </div>
             <div className={"ml-auto max-w-72 flex-1 max-md:hidden"} />
-         </Main>
-      </>
+         </main>
+      </Main>
    ),
    preload: false,
 })
 
 function Component() {
    return (
-      <Main className="z-[6] flex h-full overflow-y-visible md:h-full">
+      <main className="relative z-[6] flex w-full">
          <IssueDetails />
-      </Main>
+      </main>
    )
 }

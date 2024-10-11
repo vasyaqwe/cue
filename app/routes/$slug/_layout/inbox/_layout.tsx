@@ -41,14 +41,14 @@ export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
       )
    },
    pendingComponent: () => (
-      <>
+      <Main>
          <Header className="md:max-w-[420px] md:border-r md:pl-0">
             <HeaderTitle>Inbox</HeaderTitle>
          </Header>
-         <Main className="border-border/75 md:max-w-[420px] md:border-r">
+         <main className="relative flex-1 border-border/75 md:max-w-[420px] md:border-r">
             <Loading className="absolute inset-0 m-auto" />
-         </Main>
-      </>
+         </main>
+      </Main>
    ),
 })
 
@@ -89,7 +89,10 @@ function Component() {
    )
 
    return (
-      <Main className="flex h-full overflow-visible md:h-full md:pb-0">
+      <Main
+         asMain
+         className="flex-row"
+      >
          <div
             className={cn(
                "flex flex-1 shrink-0 flex-col border-border/75 2xl:max-w-[400px] lg:max-w-[320px] lg:border-r",
@@ -128,7 +131,7 @@ function Component() {
             <RefreshControl isRefreshing={isRefreshing}>
                <div
                   className={cn(
-                     "relative flex flex-1 shrink-0 overflow-y-auto pb-safe-4",
+                     "relative flex flex-1 shrink-0 flex-col space-y-1.5 overflow-y-auto p-1.5",
                      issueId ? "max-md:hidden" : "",
                   )}
                >
@@ -140,55 +143,51 @@ function Component() {
                         </p>
                      </div>
                   ) : (
-                     <div className="w-full space-y-1.5 p-1.5">
-                        {Object.values(groupedNotifications).map(
-                           ({
-                              latestNotification,
-                              hasUnread,
-                              unreadNotificationIds,
-                           }) =>
-                              match(latestNotification)
-                                 .with(undefined, () => null)
-                                 .otherwise((latestNotification) => (
-                                    <Notification
-                                       key={latestNotification.issueId}
-                                       notification={{
-                                          ...latestNotification,
-                                          isRead: !hasUnread,
-                                       }}
-                                       onLinkClick={() => {
-                                          useNotificationStore.setState({
-                                             activeItemIssueId:
-                                                latestNotification.issueId,
-                                          })
+                     Object.values(groupedNotifications).map(
+                        ({
+                           latestNotification,
+                           hasUnread,
+                           unreadNotificationIds,
+                        }) =>
+                           match(latestNotification)
+                              .with(undefined, () => null)
+                              .otherwise((latestNotification) => (
+                                 <Notification
+                                    key={latestNotification.issueId}
+                                    notification={{
+                                       ...latestNotification,
+                                       isRead: !hasUnread,
+                                    }}
+                                    onLinkClick={() => {
+                                       useNotificationStore.setState({
+                                          activeItemIssueId:
+                                             latestNotification.issueId,
+                                       })
 
-                                          match(unreadNotificationIds.length)
-                                             .with(0, () => {})
-                                             .otherwise(() =>
-                                                updateNotification.mutate({
-                                                   issueIds: [
-                                                      latestNotification.issueId,
-                                                   ],
-                                                   isRead: true,
-                                                   organizationId,
-                                                }),
-                                             )
-                                       }}
-                                       data-active={
-                                          activeItemIssueId ===
-                                          latestNotification.issueId
-                                       }
-                                    />
-                                 )),
-                        )}
-                     </div>
+                                       match(unreadNotificationIds.length)
+                                          .with(0, () => {})
+                                          .otherwise(() =>
+                                             updateNotification.mutate({
+                                                issueIds: [
+                                                   latestNotification.issueId,
+                                                ],
+                                                isRead: true,
+                                                organizationId,
+                                             }),
+                                          )
+                                    }}
+                                    data-active={
+                                       activeItemIssueId ===
+                                       latestNotification.issueId
+                                    }
+                                 />
+                              )),
+                     )
                   )}
                </div>
             </RefreshControl>
          </div>
-         <div className={cn(!issueId ? "max-lg:hidden" : "", "flex-1")}>
-            <Outlet />
-         </div>
+         <Outlet />
       </Main>
    )
 }

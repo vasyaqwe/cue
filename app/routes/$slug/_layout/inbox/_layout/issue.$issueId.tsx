@@ -21,31 +21,21 @@ export const Route = createFileRoute(
       return issue
    },
    pendingComponent: () => (
-      <>
+      <Main>
          <Header className="md:pl-0">
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
-         <Main
-            className="flex"
-            asMain={false}
-         >
+         <main className="flex flex-1">
             <div className="relative flex-1">
                <Loading className="absolute inset-0 m-auto" />
             </div>
             <div className={"ml-auto max-w-72 flex-1 max-xl:hidden"} />
-         </Main>
-      </>
+         </main>
+      </Main>
    ),
    preload: false,
 })
 
 function Component() {
-   return (
-      <Main
-         asMain={false}
-         className="z-[6] flex h-full overflow-y-visible md:h-full"
-      >
-         <IssueDetails />
-      </Main>
-   )
+   return <IssueDetails />
 }

@@ -31,14 +31,14 @@ export const Route = createFileRoute("/$slug/_layout/people")({
       )
    },
    pendingComponent: () => (
-      <>
+      <Main>
          <Header>
             <HeaderTitle>People</HeaderTitle>
          </Header>
-         <Main>
+         <main>
             <Loading className="absolute inset-0 m-auto" />
-         </Main>
-      </>
+         </main>
+      </Main>
    ),
 })
 
@@ -61,11 +61,11 @@ function Component() {
    }
 
    return (
-      <>
+      <Main>
          <Header>
             <HeaderTitle>People</HeaderTitle>
          </Header>
-         <Main className="pt-5 pb-safe-4 md:pt-8">
+         <main className="pt-5 pb-safe-4 md:pt-8">
             {members.data.length === 0 ? (
                <p className="absolute inset-0 m-auto size-fit">No members</p>
             ) : (
@@ -159,7 +159,7 @@ function Component() {
                   </div>
                </div>
             )}
-         </Main>
-      </>
+         </main>
+      </Main>
    )
 }

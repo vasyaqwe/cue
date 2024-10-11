@@ -43,14 +43,14 @@ export const Route = createFileRoute("/$slug/_layout/")({
    },
    meta: () => [{ title: "Issues" }],
    pendingComponent: () => (
-      <>
+      <Main>
          <Header>
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
-         <Main>
+         <main>
             <Loading className="absolute inset-0 m-auto" />
-         </Main>
-      </>
+         </main>
+      </Main>
    ),
 })
 
@@ -74,11 +74,11 @@ function Component() {
    )
 
    return (
-      <>
+      <Main>
          <Header>
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
-         <Main>
+         <main className="overflow-y-auto">
             <RefreshControl isRefreshing={isRefreshing}>
                {issues.data.length === 0 ? (
                   <div className="absolute inset-0 m-auto h-fit">
@@ -124,8 +124,8 @@ function Component() {
                   )
                )}
             </RefreshControl>
-         </Main>
-      </>
+         </main>
+      </Main>
    )
 }
 
