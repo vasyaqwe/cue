@@ -65,11 +65,11 @@ function Component() {
          <Header>
             <HeaderTitle>People</HeaderTitle>
          </Header>
-         <Main>
+         <Main className="pt-5 pb-safe-4 md:pt-8">
             {members.data.length === 0 ? (
                <p className="absolute inset-0 m-auto size-fit">No members</p>
             ) : (
-               <div className="mx-auto mt-5 flex max-w-3xl flex-col md:mt-8">
+               <div className="mx-auto flex max-w-3xl flex-col">
                   <Modal>
                      <ModalTrigger
                         className={cn(
@@ -79,7 +79,7 @@ function Component() {
                      >
                         Invite your team
                      </ModalTrigger>
-                     <ModalContent>
+                     <ModalContent className="pb-safe-2">
                         <ModalHeader>
                            <ModalTitle>Invite your team</ModalTitle>
                         </ModalHeader>

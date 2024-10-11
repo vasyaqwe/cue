@@ -49,7 +49,6 @@ export function Header({
       <header
          className={cn(
             "z-[5] flex h-[var(--header-height)] w-full shrink-0 items-center border-border/75 border-b bg-background shadow-sm md:pl-[17px]",
-
             className,
          )}
          {...props}
@@ -76,7 +75,8 @@ export function Header({
                )}
             </div>
             {children}
-            {pathname === `/${slug}` ? (
+            {pathname.includes(`/${slug}/issue/`) ||
+            pathname.includes(`/${slug}/inbox`) ? null : (
                <DropdownMenu>
                   <DropdownMenuTrigger
                      className={cn(
@@ -132,7 +132,7 @@ export function Header({
                      </DropdownMenuItem>
                   </DropdownMenuContent>
                </DropdownMenu>
-            ) : null}
+            )}
          </div>
       </header>
    )

@@ -43,7 +43,7 @@ function Component() {
    return (
       <Main
          asMain={false}
-         className="z-[6] flex overflow-y-visible pb-0"
+         className="z-[6] flex h-full overflow-y-visible pb-0"
       >
          <IssueDetails />
       </Main>

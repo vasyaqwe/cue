@@ -29,6 +29,11 @@ const dialogVariants = cva(
    },
 )
 
+export type DialogContentProps = ComponentProps<
+   typeof DialogPrimitive.Content
+> &
+   VariantProps<typeof dialogVariants>
+
 function DialogContent({
    className,
    children,

@@ -1,6 +1,7 @@
 import {
    Dialog,
    DialogContent,
+   type DialogContentProps,
    DialogDescription,
    DialogFooter,
    DialogHeader,
@@ -56,8 +57,7 @@ function ModalFooter(props: any) {
    return <DialogFooter {...props} />
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function ModalContent(props: any) {
+function ModalContent(props: DialogContentProps) {
    const isMobile = useUIStore().isMobile
 
    if (isMobile) return <DrawerContent {...props} />
