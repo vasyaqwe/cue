@@ -106,6 +106,7 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
                      status: issue.data.status,
                   },
                   commentId: comment.id,
+                  receiverIds: [],
                })
             },
          )

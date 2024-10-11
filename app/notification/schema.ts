@@ -12,6 +12,7 @@ export const notificationTypes = [
    "new_issue",
    "issue_resolved",
    "new_issue_comment",
+   "issue_mention",
 ] as const
 
 export const notification = createTable(
@@ -77,6 +78,7 @@ export const insertNotificationParams = createInsertSchema(notification)
          title: z.string(),
          status: z.enum(issueStatuses),
       }),
+      receiverIds: z.array(z.string()),
    })
 export const updateNotificationParams = createSelectSchema(notification)
    .omit({

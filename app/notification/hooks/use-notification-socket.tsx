@@ -86,6 +86,13 @@ export function useNotificationSocket() {
                         issueId: msg.notification.issueId,
                      }),
                   )
+                  .with("issue_mention", () =>
+                     notify({
+                        title: `${msg.notification.sender.name} mentioned you in an issue`,
+                        body: msg.notification.issue.title,
+                        issueId: msg.notification.issueId,
+                     }),
+                  )
                   .with("issue_resolved", () =>
                      notify({
                         title: "Issue resolved",

@@ -18,7 +18,7 @@
    --color-destructive: #ef4444;
    --color-destructive-foreground: #fff;
    --color-elevated: #f8f6f6;
-   --color-highlight: rgba(230, 157, 11, 0.2);
+   --color-highlight: rgba(230, 157, 11, 0.175);
    --color-highlight-foreground: #764d08;
 
    --shadow-button: 0px 3px 3px -1px rgba(24, 24, 24, 0.09), 0px 0px 0px 1px

@@ -6,6 +6,8 @@ import { useInsertNotification } from "@/notification/hooks/use-insert-notificat
 import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
 import { notificationListQuery } from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"
+import { getMentionedUserIds } from "@/ui/components/editor/mention/utils"
+import { useEditorStore } from "@/ui/components/editor/store"
 import { useAuth } from "@/user/hooks"
 import {
    useMutation,
@@ -15,7 +17,7 @@ import {
 import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
-import { match } from "ts-pattern"
+import { P, match } from "ts-pattern"
 
 export function useUpdateIssue() {
    const queryClient = useQueryClient()
@@ -29,6 +31,9 @@ export function useUpdateIssue() {
    const notificatons = useSuspenseQuery(
       notificationListQuery({ organizationId }),
    )
+
+   const mentionedUserIds = useEditorStore().mentionedUserIds
+   const _unmentionedUserIds = useEditorStore().unmentionedUserIds
 
    const issueIdParam = "issueId" in params ? params.issueId : null
 
@@ -96,44 +101,83 @@ export function useUpdateIssue() {
             )
          toast.error("Failed to update issue")
       },
-      onSettled: (_, error, issue) => {
+      onSettled: (issue, error, payload) => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
          if (issueIdParam)
             queryClient.invalidateQueries(
                issueByIdQuery({ issueId: issueIdParam, organizationId }),
             )
 
-         match(error).with(null, () => {
-            match(issue).with({ status: "done" }, (issue) =>
-               insertNotification.mutate({
-                  organizationId,
-                  issueId: issue.id,
-                  type: "issue_resolved",
-                  content: `Marked as done by ${user.name}`,
+         match({ error, issue }).with(
+            { error: null, issue: P.not(undefined) },
+            ({ issue }) => {
+               const existingMentionedUserIds = !payload.description
+                  ? []
+                  : getMentionedUserIds(payload.description)
+
+               const filteredMentionedUserIds =
+                  existingMentionedUserIds.length > 1
+                     ? mentionedUserIds.filter(
+                          (id) => !existingMentionedUserIds.includes(id),
+                       )
+                     : mentionedUserIds
+
+               match(filteredMentionedUserIds)
+                  .with([], () => {})
+                  .otherwise(() =>
+                     insertNotification.mutate({
+                        organizationId,
+                        issueId: issue.id,
+                        type: "issue_mention",
+                        content: `${user.name} mentioned you in issue`,
+                        issue: {
+                           title: issue.title,
+                           status: issue.status,
+                        },
+                        receiverIds: mentionedUserIds,
+                     }),
+                  )
+
+               useEditorStore.setState({
+                  mentionedUserIds: [],
+                  unmentionedUserIds: [],
+               })
+
+               match(payload).with({ status: "done" }, (issue) =>
+                  insertNotification.mutate({
+                     organizationId,
+                     issueId: issue.id,
+                     type: "issue_resolved",
+                     content: `Marked as done by ${user.name}`,
+                     issue: {
+                        title: issue.title,
+                        status: issue.status,
+                     },
+                     receiverIds: [],
+                  }),
+               )
+
+               sendNotificationEvent({
+                  type: "issue_update",
+                  senderId: user.id,
                   issue: {
+                     id: issue.id,
                      title: issue.title,
                      status: issue.status,
                   },
-               }),
-            )
+               })
 
-            sendNotificationEvent({
-               type: "issue_update",
-               senderId: user.id,
-               issue: {
-                  id: issue.id,
-                  title: issue.title,
-                  status: issue.status,
-               },
-            })
-
-            sendIssueEvent({
-               type: "update",
-               issueId: issue.id,
-               issue,
-               senderId: user.id,
-            })
-         })
+               sendIssueEvent({
+                  type: "update",
+                  issueId: issue.id,
+                  issue: {
+                     ...issue,
+                     organizationId,
+                  },
+                  senderId: user.id,
+               })
+            },
+         )
       },
    })
 

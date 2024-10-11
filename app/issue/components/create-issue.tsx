@@ -120,6 +120,7 @@ export function CreateIssue() {
                title: issue.title,
                status: issue.status,
             },
+            receiverIds: [],
          })
       },
    })

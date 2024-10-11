@@ -64,6 +64,12 @@ export const update = createServerFn(
                status: input.status,
             })
             .where(eq(issue.id, input.id))
+            .returning({
+               id: issue.id,
+               title: issue.title,
+               status: issue.status,
+            })
+            .get()
       }),
 )
 

@@ -255,20 +255,29 @@ function Notification({
                            {notification.issue.title}
                         </p>
                         <span className="ml-auto">
-                           {notification.type === "issue_resolved" ? (
-                              <StatusIcon
-                                 className="size-4"
-                                 status={notification.issue.status}
-                              />
-                           ) : notification.type === "new_issue_comment" ? (
-                              <span className="grid size-4 place-items-center rounded-full border border-foreground/10 bg-border text-foreground/90 text-xl leading-[1.1]">
-                                 ❞
-                              </span>
-                           ) : (
-                              <span className="grid size-4 place-items-center rounded-full border border-foreground/10 bg-border">
-                                 <Icons.plus className="size-3" />
-                              </span>
-                           )}
+                           {match(notification.type)
+                              .with("issue_resolved", () => (
+                                 <StatusIcon
+                                    className="size-4"
+                                    status={notification.issue.status}
+                                 />
+                              ))
+                              .with("new_issue_comment", () => (
+                                 <span className="grid size-4 place-items-center rounded-full border border-foreground/10 bg-border pl-px text-foreground/90 text-xl leading-[1.1]">
+                                    ❞
+                                 </span>
+                              ))
+                              .with("issue_mention", () => (
+                                 <span className="grid size-4 place-items-center rounded-full border border-foreground/10 bg-border text-foreground/90">
+                                    <Icons.mention className="size-3.5" />
+                                 </span>
+                              ))
+                              .with("new_issue", () => (
+                                 <span className="grid size-4 place-items-center rounded-full border border-foreground/10 bg-border">
+                                    <Icons.plus className="size-3" />
+                                 </span>
+                              ))
+                              .exhaustive()}
                         </span>
                      </div>
                      <div className="flex w-full items-center gap-2">

@@ -74,23 +74,31 @@ export const insert = createServerFn(
    organizationProtectedProcedure
       .input(insertNotificationParams)
       .mutation(async ({ ctx, input }) => {
-         const members = await ctx.db.query.organizationMember.findMany({
-            where: eq(organizationMember.organizationId, input.organizationId),
-            columns: {
-               id: true,
-            },
-         })
-         const filteredMembers = members.filter(
-            (member) => member.id !== ctx.user.id,
-         )
+         let receiverIds = input.receiverIds
 
-         const promises = filteredMembers.map(async (member) => {
+         if (input.receiverIds.length === 0) {
+            const members = await ctx.db.query.organizationMember.findMany({
+               where: eq(
+                  organizationMember.organizationId,
+                  input.organizationId,
+               ),
+               columns: {
+                  id: true,
+               },
+            })
+
+            receiverIds = members
+               .filter((member) => member.id !== ctx.user.id)
+               .map((member) => member.id)
+         }
+
+         const promises = receiverIds.map(async (receiverId) => {
             return await ctx.db
                .insert(notification)
                .values({
                   organizationId: input.organizationId,
                   issueId: input.issueId,
-                  receiverId: member.id,
+                  receiverId,
                   senderId: ctx.user.id,
                   type: input.type,
                   content: input.content,
@@ -103,6 +111,7 @@ export const insert = createServerFn(
          const result = await Promise.all(promises)
 
          const createdNotification = result[0]
+
          if (!createdNotification) return
 
          return { ...createdNotification, issue: input.issue }

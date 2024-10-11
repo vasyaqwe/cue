@@ -13,6 +13,7 @@ import {
    EditorMentionEmpty,
    EditorMentionItem,
 } from "@/ui/components/editor/mention/editor-mention-item"
+import { useEditorStore } from "@/ui/components/editor/store"
 import { Loading } from "@/ui/components/loading"
 import { Popover, PopoverContent } from "@/ui/components/popover"
 import { UserAvatar } from "@/ui/components/user-avatar"
@@ -38,9 +39,11 @@ export default forwardRef<
 >(({ clientRect, query, command }, ref) => {
    const [open, setOpen] = useState(true)
    const position = clientRect()
-   const { organizationId } = useAuth()
+   const { organizationId, user: currentUser } = useAuth()
    const members = useQuery(organizationMembersQuery({ organizationId }))
    const issues = useQuery(issueListQuery({ organizationId }))
+
+   const addMentionedUserId = useEditorStore().addMentionedUserId
 
    useImperativeHandle(ref, () => ({
       onKeyDown: ({ event }: { event: KeyboardEvent }) => {
@@ -89,12 +92,16 @@ export default forwardRef<
                            <EditorMentionItem
                               key={user.name}
                               value={user.name}
-                              onSelect={() =>
+                              onSelect={() => {
                                  command?.({
                                     label: user.name,
                                     userId: user.id,
                                  })
-                              }
+
+                                 if (currentUser.id === user.id) return
+
+                                 addMentionedUserId(user.id)
+                              }}
                            >
                               <UserAvatar
                                  className="size-6 [--indicator-size:0.75rem]"
@@ -113,13 +120,13 @@ export default forwardRef<
                            <EditorMentionItem
                               key={issue.id}
                               value={`${issue.title} ${issue.id}`}
-                              onSelect={() =>
+                              onSelect={() => {
                                  command?.({
                                     label: issue.title,
                                     issueId: issue.id,
                                     status: issue.status,
                                  })
-                              }
+                              }}
                            >
                               <StatusIcon
                                  className="!size-[18px]"

@@ -127,7 +127,7 @@ export function IssueDetails() {
                      lastSavedState.current = payload
                   })
             },
-            { waitMs: 2000 },
+            { waitMs: 1500 },
          ),
       [issueId, organizationId],
    )

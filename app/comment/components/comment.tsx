@@ -64,7 +64,7 @@ export function Comment({
          className={cn(
             "px-4 py-2 transition-colors 2xl:rounded-lg",
             isHighlighted
-               ? "bg-highlight/80 duration-300"
+               ? "bg-highlight/60 duration-300"
                : "bg-transparent duration-1000",
          )}
       >

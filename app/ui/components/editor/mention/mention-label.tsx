@@ -1,10 +1,12 @@
 import { StatusIcon } from "@/issue/components/icons"
 import { issueListQuery } from "@/issue/queries"
+import type { IssueStatus } from "@/issue/schema"
 import { organizationMembersQuery } from "@/organization/queries"
 import {
    mentionLabelIssueClassName,
    mentionLabelPersonClassName,
 } from "@/ui/components/editor/mention/constants"
+import { useEditorStore } from "@/ui/components/editor/store"
 import {
    HoverCard,
    HoverCardContent,
@@ -17,21 +19,35 @@ import { useAuth } from "@/user/hooks"
 import { useQuery } from "@tanstack/react-query"
 import { Link, useParams } from "@tanstack/react-router"
 import { type NodeViewProps, NodeViewWrapper } from "@tiptap/react"
+import { useEffect } from "react"
+import { P, match } from "ts-pattern"
 
 export function MentionLabel({ node }: NodeViewProps) {
-   const { organizationId } = useAuth()
+   const { organizationId, user: currentUser } = useAuth()
    const { slug } = useParams({ from: "/$slug/_layout" })
    const members = useQuery(organizationMembersQuery({ organizationId }))
    const issues = useQuery(issueListQuery({ organizationId }))
 
-   const label = node.attrs.label
-   const userId = node.attrs.userId
-   const issueId = node.attrs.issueId
-   const status = node.attrs.status
+   const label = node.attrs.label as string | undefined
+   const userId = node.attrs.userId as string | undefined
+   const issueId = node.attrs.issueId as string | undefined
+   const status = node.attrs.status as IssueStatus | undefined
    const user = members.data?.find(({ user }) => user.id === userId)?.user
    const issue = issues.data?.find(({ id }) => id === issueId)
 
+   const removeMentionedUserId = useEditorStore().removeMentionedUserId
+
    const isIssueError = issues.isError || !issue
+
+   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+   useEffect(() => {
+      return () => {
+         match(userId).with(P.not(undefined), (id) => {
+            if (id === currentUser.id) return
+            removeMentionedUserId(id)
+         })
+      }
+   }, [])
 
    return (
       <NodeViewWrapper className="inline w-fit">
@@ -49,7 +65,7 @@ export function MentionLabel({ node }: NodeViewProps) {
                   ),
                )}
             >
-               {isIssueError ? (
+               {isIssueError && status ? (
                   <>
                      <StatusIcon
                         status={status}
@@ -58,8 +74,8 @@ export function MentionLabel({ node }: NodeViewProps) {
                      {label}
                   </>
                ) : issues.isPending ? (
-                  `@ ${label}`
-               ) : (
+                  <>@{label}</>
+               ) : issue ? (
                   <>
                      <StatusIcon
                         className="-mt-1 mr-1 inline-block size-4"
@@ -67,7 +83,7 @@ export function MentionLabel({ node }: NodeViewProps) {
                      />
                      {issue.title}
                   </>
-               )}
+               ) : null}
             </Link>
          ) : userId ? (
             <HoverCard
@@ -104,7 +120,7 @@ export function MentionLabel({ node }: NodeViewProps) {
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
-                              strokeWidth="1.5"
+                              strokeWidth="2"
                               stroke="currentColor"
                            >
                               <path
