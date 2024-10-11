@@ -138,11 +138,11 @@ function CatchBoundary({ error }: ErrorComponentProps) {
 
    return (
       <div className="grid h-svh w-full place-items-center text-center">
-         {import.meta.env.DEV && (
-            <div className="absolute top-0">
-               <ErrorComponent error={error} />{" "}
-            </div>
-         )}
+         {/* {import.meta.env.DEV && ( */}
+         <div className="absolute top-0">
+            <ErrorComponent error={error} />{" "}
+         </div>
+         {/* )} */}
 
          <div>
             {/* <div className="relative mb-6">
