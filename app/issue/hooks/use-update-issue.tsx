@@ -6,7 +6,6 @@ import { useInsertNotification } from "@/notification/hooks/use-insert-notificat
 import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
 import { notificationListQuery } from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"
-import { getMentionedUserIds } from "@/ui/components/editor/mention/utils"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { useAuth } from "@/user/hooks"
 import {
@@ -111,18 +110,8 @@ export function useUpdateIssue() {
          match({ error, issue }).with(
             { error: null, issue: P.not(undefined) },
             ({ issue }) => {
-               const existingMentionedUserIds = !payload.description
-                  ? []
-                  : getMentionedUserIds(payload.description)
-
-               const filteredMentionedUserIds =
-                  existingMentionedUserIds.length > 1
-                     ? mentionedUserIds.filter(
-                          (id) => !existingMentionedUserIds.includes(id),
-                       )
-                     : mentionedUserIds
-
-               match(filteredMentionedUserIds)
+               console.log(mentionedUserIds)
+               match(mentionedUserIds)
                   .with([], () => {})
                   .otherwise(() =>
                      insertNotification.mutate({

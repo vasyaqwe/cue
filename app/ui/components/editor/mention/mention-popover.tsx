@@ -13,12 +13,14 @@ import {
    EditorMentionEmpty,
    EditorMentionItem,
 } from "@/ui/components/editor/mention/editor-mention-item"
+import { getMentionedUserIds } from "@/ui/components/editor/mention/utils"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { Loading } from "@/ui/components/loading"
 import { Popover, PopoverContent } from "@/ui/components/popover"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { useAuth } from "@/user/hooks"
 import { useQuery } from "@tanstack/react-query"
+import type { Editor } from "@tiptap/core"
 import { forwardRef, useImperativeHandle, useState } from "react"
 import { match } from "ts-pattern"
 
@@ -35,8 +37,9 @@ export default forwardRef<
       clientRect: () => DOMRect
       query: string
       range: Range
+      editor: Editor
    }
->(({ clientRect, query, command }, ref) => {
+>(({ clientRect, query, command, editor }, ref) => {
    const [open, setOpen] = useState(true)
    const position = clientRect()
    const { organizationId, user: currentUser } = useAuth()
@@ -98,7 +101,18 @@ export default forwardRef<
                                     userId: user.id,
                                  })
 
-                                 if (currentUser.id === user.id) return
+                                 const existingMentionedUserIds =
+                                    getMentionedUserIds(
+                                       editor.getHTML(),
+                                    ).filter((id) => id === user.id)
+                                 const userAlreadyMentioned =
+                                    existingMentionedUserIds.length > 1
+
+                                 if (
+                                    currentUser.id === user.id ||
+                                    userAlreadyMentioned
+                                 )
+                                    return
 
                                  addMentionedUserId(user.id)
                               }}
