@@ -4,9 +4,11 @@ import { commentListQuery } from "@/comment/queries"
 import { useCommentStore } from "@/comment/store"
 import { issueByIdQuery } from "@/issue/queries"
 import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
+import { organizationTeammatesIdsQuery } from "@/organization/queries"
 import { useAuth } from "@/user/hooks"
 import {
    useMutation,
+   useQuery,
    useQueryClient,
    useSuspenseQuery,
 } from "@tanstack/react-query"
@@ -29,6 +31,10 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
 
    const insertFn = useServerFn(comment.insert)
    const { insertCommentToQueryData } = useCommentQueryMutator()
+
+   const teammatesIds = useQuery(
+      organizationTeammatesIdsQuery({ organizationId }),
+   )
 
    const insertComment = useMutation({
       mutationFn: insertFn,
@@ -96,18 +102,22 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
                   senderId: user.id,
                })
 
-               insertNotification.mutate({
-                  organizationId,
-                  issueId: comment.issueId,
-                  type: "new_issue_comment",
-                  content: comment.content,
-                  issue: {
-                     title: issue.data.title,
-                     status: issue.data.status,
-                  },
-                  commentId: comment.id,
-                  receiverIds: [],
-               })
+               match(teammatesIds.data ?? [])
+                  .with([], () => {})
+                  .otherwise((receiverIds) =>
+                     insertNotification.mutate({
+                        organizationId,
+                        issueId: comment.issueId,
+                        type: "new_issue_comment",
+                        content: comment.content,
+                        issue: {
+                           title: issue.data.title,
+                           status: issue.data.status,
+                        },
+                        commentId: comment.id,
+                        receiverIds,
+                     }),
+                  )
             },
          )
       },

@@ -4,7 +4,6 @@ import {
    notification,
    updateNotificationParams,
 } from "@/notification/schema"
-import { organizationMember } from "@/organization/schema"
 import { createServerFn } from "@tanstack/start"
 import { and, count, desc, eq, inArray } from "drizzle-orm"
 import { z } from "zod"
@@ -74,25 +73,7 @@ export const insert = createServerFn(
    organizationProtectedProcedure
       .input(insertNotificationParams)
       .mutation(async ({ ctx, input }) => {
-         let receiverIds = input.receiverIds
-
-         if (input.receiverIds.length === 0) {
-            const members = await ctx.db.query.organizationMember.findMany({
-               where: eq(
-                  organizationMember.organizationId,
-                  input.organizationId,
-               ),
-               columns: {
-                  id: true,
-               },
-            })
-
-            receiverIds = members
-               .filter((member) => member.id !== ctx.user.id)
-               .map((member) => member.id)
-         }
-
-         const promises = receiverIds.map(async (receiverId) => {
+         const promises = input.receiverIds.map(async (receiverId) => {
             return await ctx.db
                .insert(notification)
                .values({

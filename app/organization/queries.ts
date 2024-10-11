@@ -16,6 +16,14 @@ export const organizationMembersQuery = ({
       queryFn: () => organization.members({ organizationId }),
    })
 
+export const organizationTeammatesIdsQuery = ({
+   organizationId,
+}: { organizationId: string }) =>
+   queryOptions({
+      queryKey: ["organization_teammates_ids"],
+      queryFn: () => organization.teammatesIds({ organizationId }),
+   })
+
 export const organizationMembershipsQuery = () =>
    queryOptions({
       queryKey: ["organization_memberships"],

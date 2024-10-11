@@ -26,6 +26,7 @@ import {
 } from "@/ui/components/combobox"
 import { EditorContent, EditorRoot } from "@/ui/components/editor"
 
+import { organizationTeammatesIdsQuery } from "@/organization/queries"
 import {
    EditorCommand,
    EditorCommandList,
@@ -42,15 +43,17 @@ import {
    slashCommand,
    starterKit,
 } from "@/ui/components/editor/extensions"
+import { useEditorStore } from "@/ui/components/editor/store"
 import { inputVariants } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { useRef } from "react"
 import { toast } from "sonner"
+import { match } from "ts-pattern"
 import * as issue from "../functions"
 
 export function CreateIssue() {
@@ -77,6 +80,12 @@ export function CreateIssue() {
    )
 
    const { insertNotification } = useInsertNotification()
+
+   const _mentionedUserIds = useEditorStore().mentionedUserIds
+
+   const teammatesIds = useQuery(
+      organizationTeammatesIdsQuery({ organizationId }),
+   )
 
    const insertFn = useServerFn(issue.insert)
    const insert = useMutation({
@@ -111,17 +120,21 @@ export function CreateIssue() {
             },
          })
 
-         insertNotification.mutate({
-            organizationId,
-            issueId: issue.id,
-            type: "new_issue",
-            content: `New issue added by ${user.name}`,
-            issue: {
-               title: issue.title,
-               status: issue.status,
-            },
-            receiverIds: [],
-         })
+         match(teammatesIds.data ?? [])
+            .with([], () => {})
+            .otherwise((receiverIds) =>
+               insertNotification.mutate({
+                  organizationId,
+                  issueId: issue.id,
+                  type: "new_issue",
+                  content: `New issue added by ${user.name}`,
+                  issue: {
+                     title: issue.title,
+                     status: issue.status,
+                  },
+                  receiverIds,
+               }),
+            )
       },
    })
 

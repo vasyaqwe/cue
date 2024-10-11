@@ -13,7 +13,7 @@ import { session } from "@/user/schema"
 import { redirect } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/start"
 import { TRPCError } from "@trpc/server"
-import { and, eq } from "drizzle-orm"
+import { and, eq, ne } from "drizzle-orm"
 import { z } from "zod"
 
 export const byInviteCode = createServerFn(
@@ -74,6 +74,25 @@ export const members = createServerFn(
                },
             },
          })
+      }),
+)
+
+export const teammatesIds = createServerFn(
+   "GET",
+   organizationProtectedProcedure
+      .input(z.object({ organizationId: z.string() }))
+      .query(async ({ ctx, input }) => {
+         return (
+            await ctx.db.query.organizationMember.findMany({
+               where: and(
+                  eq(organizationMember.organizationId, input.organizationId),
+                  ne(organizationMember.id, ctx.user.id),
+               ),
+               columns: {
+                  id: true,
+               },
+            })
+         ).map((m) => m.id)
       }),
 )
 

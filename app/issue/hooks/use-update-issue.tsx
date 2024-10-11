@@ -6,10 +6,12 @@ import { useInsertNotification } from "@/notification/hooks/use-insert-notificat
 import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
 import { notificationListQuery } from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"
+import { organizationTeammatesIdsQuery } from "@/organization/queries"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { useAuth } from "@/user/hooks"
 import {
    useMutation,
+   useQuery,
    useQueryClient,
    useSuspenseQuery,
 } from "@tanstack/react-query"
@@ -35,6 +37,10 @@ export function useUpdateIssue() {
    const _unmentionedUserIds = useEditorStore().unmentionedUserIds
 
    const issueIdParam = "issueId" in params ? params.issueId : null
+
+   const teammatesIds = useQuery(
+      organizationTeammatesIdsQuery({ organizationId }),
+   )
 
    const updateFn = useServerFn(issue.update)
    const updateIssue = useMutation({
@@ -110,7 +116,6 @@ export function useUpdateIssue() {
          match({ error, issue }).with(
             { error: null, issue: P.not(undefined) },
             ({ issue }) => {
-               console.log(mentionedUserIds)
                match(mentionedUserIds)
                   .with([], () => {})
                   .otherwise(() =>
@@ -133,17 +138,21 @@ export function useUpdateIssue() {
                })
 
                match(payload).with({ status: "done" }, (issue) =>
-                  insertNotification.mutate({
-                     organizationId,
-                     issueId: issue.id,
-                     type: "issue_resolved",
-                     content: `Marked as done by ${user.name}`,
-                     issue: {
-                        title: issue.title,
-                        status: issue.status,
-                     },
-                     receiverIds: [],
-                  }),
+                  match(teammatesIds.data ?? [])
+                     .with([], () => {})
+                     .otherwise((receiverIds) =>
+                        insertNotification.mutate({
+                           organizationId,
+                           issueId: issue.id,
+                           type: "issue_resolved",
+                           content: `Marked as done by ${user.name}`,
+                           issue: {
+                              title: issue.title,
+                              status: issue.status,
+                           },
+                           receiverIds,
+                        }),
+                     ),
                )
 
                sendNotificationEvent({
