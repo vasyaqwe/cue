@@ -89,7 +89,7 @@ function Component() {
    )
 
    return (
-      <Main className="flex overflow-visible pb-safe md:pb-0">
+      <Main className="flex h-full overflow-visible md:pb-0">
          <div
             className={cn(
                "flex flex-1 shrink-0 flex-col border-border/75 2xl:max-w-[400px] lg:max-w-[320px] lg:border-r",

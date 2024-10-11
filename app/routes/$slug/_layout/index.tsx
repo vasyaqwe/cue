@@ -78,7 +78,7 @@ function Component() {
          <Header>
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
-         <Main className="pb-safe-2">
+         <Main>
             <RefreshControl isRefreshing={isRefreshing}>
                {issues.data.length === 0 ? (
                   <div className="absolute inset-0 m-auto h-fit">
@@ -94,7 +94,7 @@ function Component() {
                            <div
                               key={status}
                               data-first={idx === 0}
-                              className="relative z-[2] last:[&>div:last-of-type]:border-border/75 data-[first=true]:[&>div]:border-t-transparent last:[&>div:last-of-type]:border-b"
+                              className="relative z-[2] last:[&>div:last-of-type]:border-border/75 data-[first=true]:[&>div]:border-t-transparent last:[&>div:last-of-type]:border-b max-md:last:[&>div:last-of-type]:border-b-transparent"
                            >
                               <div className="border-border/75 border-y bg-elevated py-2">
                                  <div className="px-4 md:px-8">
