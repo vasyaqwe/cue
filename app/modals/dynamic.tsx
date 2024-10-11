@@ -21,13 +21,13 @@ import { useUIStore } from "@/ui/store"
 import type { DialogTriggerProps } from "@radix-ui/react-dialog"
 import type { DialogProps } from "vaul"
 
-function Modal(props: DialogProps) {
+function Modal({ repositionInputs, ...props }: DialogProps) {
    const isMobile = useUIStore().isMobile
 
    if (isMobile)
       return (
          <Drawer
-            repositionInputs={false}
+            repositionInputs={repositionInputs}
             {...props}
          />
       )

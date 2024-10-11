@@ -1,6 +1,7 @@
 import {
    Drawer,
    DrawerContent,
+   DrawerNested,
    DrawerTitle,
    DrawerTrigger,
 } from "@/ui/components/drawer"
@@ -19,18 +20,24 @@ const PopoverAnchor = PopoverPrimitive.Anchor
 function Popover({
    nested = false,
    drawerOnMobile = true,
+   repositionInputs = false,
    ...props
 }: PopoverPrimitive.PopoverProps & {
    nested?: boolean
    drawerOnMobile?: boolean
+   repositionInputs?: boolean
 }) {
    const isMobile = useUIStore().isMobile
 
    if (isMobile && drawerOnMobile)
-      return (
+      return nested ? (
+         <DrawerNested
+            repositionInputs={repositionInputs}
+            {...props}
+         />
+      ) : (
          <Drawer
-            nested
-            repositionInputs={false}
+            repositionInputs={repositionInputs}
             {...props}
          />
       )
