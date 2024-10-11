@@ -12,7 +12,7 @@ export function Main({
    return (
       <Comp
          className={cn(
-            "relative h-[calc(100%-var(--bottom-menu-height)+4px)] w-full overflow-y-auto md:h-[calc(100%-var(--header-height)-1px)]",
+            "relative h-[calc(100%-var(--bottom-menu-height)+4px-max(env(safe-area-inset-bottom),0px))] w-full overflow-y-auto md:h-[calc(100%-var(--header-height)-1px)]",
             className,
          )}
          {...props}
