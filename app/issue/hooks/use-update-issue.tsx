@@ -108,27 +108,27 @@ export function useUpdateIssue() {
             )
          toast.error("Failed to update issue")
       },
-      onSettled: (issue, error, payload) => {
+      onSettled: (updatedIssue, error, input) => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
          if (issueIdParam)
             queryClient.invalidateQueries(
                issueByIdQuery({ issueId: issueIdParam, organizationId }),
             )
 
-         match({ error, issue }).with(
-            { error: null, issue: P.not(undefined) },
-            ({ issue }) => {
+         match({ error, updatedIssue }).with(
+            { error: null, updatedIssue: P.not(undefined) },
+            ({ updatedIssue }) => {
                match(mentionedUserIds)
                   .with([], () => {})
                   .otherwise((receiverIds) =>
                      insertNotification.mutate({
                         organizationId,
-                        issueId: issue.id,
+                        issueId: input.id,
                         type: "issue_mention",
                         content: `${user.name} mentioned you in issue`,
                         issue: {
-                           title: issue.title,
-                           status: issue.status,
+                           title: input.title,
+                           status: updatedIssue.status,
                         },
                         receiverIds,
                      }),
@@ -138,7 +138,7 @@ export function useUpdateIssue() {
                   .with([], () => {})
                   .otherwise((receiverIds) =>
                      deleteNotifications.mutate({
-                        issueIds: [issue.id],
+                        issueIds: [input.id],
                         receiverIds,
                      }),
                   )
@@ -148,7 +148,7 @@ export function useUpdateIssue() {
                   unmentionedUserIds: [],
                })
 
-               match(payload).with({ status: "done" }, (issue) =>
+               match(input).with({ status: "done" }, (issue) =>
                   match(teammatesIds.data ?? [])
                      .with([], () => {})
                      .otherwise((receiverIds) =>
@@ -170,17 +170,18 @@ export function useUpdateIssue() {
                   type: "issue_update",
                   senderId: user.id,
                   issue: {
-                     id: issue.id,
-                     title: issue.title,
-                     status: issue.status,
+                     id: input.id,
+                     title: input.title,
+                     status: updatedIssue.status,
                   },
                })
 
                sendIssueEvent({
                   type: "update",
-                  issueId: issue.id,
+                  issueId: input.id,
                   issue: {
-                     ...issue,
+                     ...input,
+                     status: updatedIssue.status,
                      organizationId,
                   },
                   senderId: user.id,
