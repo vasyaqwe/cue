@@ -45,7 +45,9 @@ import {
 } from "@/ui/components/editor/extensions"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { inputVariants } from "@/ui/components/input"
+import { Kbd } from "@/ui/components/kbd"
 import { Loading } from "@/ui/components/loading"
+import { Tooltip } from "@/ui/components/tooltip"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -211,6 +213,30 @@ export function CreateIssue() {
                   ]}
                   placeholder="Add description (press '/' for commands)"
                   editorProps={{
+                     handleKeyDown: (_, e) => {
+                        return match(e)
+                           .with(
+                              {
+                                 key: "Enter",
+                                 ctrlKey: true,
+                              },
+                              {
+                                 key: "Enter",
+                                 metaKey: true,
+                              },
+                              () => {
+                                 insert.mutate({
+                                    title,
+                                    description,
+                                    label,
+                                    status,
+                                    organizationId,
+                                 })
+                                 return true
+                              },
+                           )
+                           .otherwise(() => false)
+                     },
                      attributes: {
                         class: "md:min-h-16 min-h-72",
                      },
@@ -311,21 +337,33 @@ export function CreateIssue() {
                   ))}
                </ComboboxContent>
             </Combobox>
-            <Button
-               type="submit"
-               disabled={insert.isPending || insert.isSuccess}
-               form="create_issue"
-               className="ml-auto"
+            <Tooltip
+               content={
+                  <span className="flex items-center gap-2">
+                     Create issue
+                     <span className="inline-flex items-center gap-1">
+                        <Kbd>Ctrl</Kbd>
+                        <Kbd>Enter</Kbd>
+                     </span>
+                  </span>
+               }
             >
-               {insert.isPending || insert.isSuccess ? (
-                  <>
-                     <Loading />
-                     Creating..
-                  </>
-               ) : (
-                  "Create"
-               )}
-            </Button>
+               <Button
+                  type="submit"
+                  disabled={insert.isPending || insert.isSuccess}
+                  form="create_issue"
+                  className="ml-auto"
+               >
+                  {insert.isPending || insert.isSuccess ? (
+                     <>
+                        <Loading />
+                        Creating..
+                     </>
+                  ) : (
+                     "Create"
+                  )}
+               </Button>
+            </Tooltip>
          </ModalFooter>
       </ModalContent>
    )
