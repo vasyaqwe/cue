@@ -12,7 +12,7 @@ export function Main({
    return (
       <Comp
          className={cn(
-            "relative h-full w-full overflow-y-auto pb-16",
+            "relative h-full w-full overflow-y-auto md:pb-16",
             className,
          )}
          {...props}

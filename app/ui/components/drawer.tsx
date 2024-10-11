@@ -48,7 +48,7 @@ function DrawerContent({
             )}
             {...props}
          >
-            <div className="flex max-h-[88svh] flex-1 flex-col overflow-y-auto [scrollbar-gutter:stable]">
+            <div className="flex max-h-[88svh] flex-1 flex-col overflow-y-auto overflow-x-hidden">
                <div className="!p-0 mx-auto mt-1 min-h-1 w-8 rounded-full bg-foreground/75 group-[&[vaul-drawer-direction=right]]:hidden" />
                {children}
             </div>

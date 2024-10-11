@@ -71,7 +71,7 @@ const PopoverContent = forwardRef<
       if (isMobile && drawerOnMobile)
          return (
             <DrawerContent
-               className={cn("px-0.5", className)}
+               className={cn("px-0.5 pb-safe-1", className)}
                {...props}
             >
                <DrawerTitle className="sr-only">{title}</DrawerTitle>

@@ -109,7 +109,7 @@ function ContextMenuContent({
    if (isMobile)
       return (
          <DrawerContent
-            className={cn("px-0.5 pb-safe", className)}
+            className={cn("px-0.5 pb-safe-1", className)}
             {...props}
          >
             <DrawerTitle className="sr-only">{title}</DrawerTitle>
@@ -152,7 +152,7 @@ function ContextMenuSubContent({
    if (isMobile)
       return (
          <DrawerContent
-            className={cn("px-0.5 pb-safe", className)}
+            className={cn("px-0.5 pb-safe-1", className)}
             {...props}
          >
             <DrawerTitle className="sr-only">{title}</DrawerTitle>

@@ -45,12 +45,16 @@ export function useDeleteNotifications() {
 
          return { data }
       },
-      onError: (_err, _data, context) => {
+      onError: (_err, data, context) => {
          queryClient.setQueryData(
             notificationListQuery({ organizationId }).queryKey,
             context?.data,
          )
-         toast.error("Failed to delete notification")
+
+         // only show toast if deleting your own notifications
+         match(data.receiverIds).with([], () =>
+            toast.error("Failed to delete notification"),
+         )
       },
       onSettled: (_, _error, _data) => {
          queryClient.invalidateQueries(

@@ -78,7 +78,7 @@ function Component() {
          <Header>
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
-         <Main>
+         <Main className="pb-safe-2">
             <RefreshControl isRefreshing={isRefreshing}>
                {issues.data.length === 0 ? (
                   <div className="absolute inset-0 m-auto h-fit">
