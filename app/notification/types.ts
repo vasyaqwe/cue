@@ -15,3 +15,9 @@ export type NotificationEvent =
         }
         senderId: string
      }
+   | {
+        type: "issue_mention_delete"
+        receiverIds: string[] | undefined
+        senderId: string
+        issueId: string
+     }

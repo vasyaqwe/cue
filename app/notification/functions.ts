@@ -6,6 +6,7 @@ import {
 } from "@/notification/schema"
 import { createServerFn } from "@tanstack/start"
 import { and, count, desc, eq, inArray } from "drizzle-orm"
+import { match } from "ts-pattern"
 import { z } from "zod"
 
 export const list = createServerFn(
@@ -116,15 +117,36 @@ export const update = createServerFn(
 export const deleteFn = createServerFn(
    "POST",
    protectedProcedure
-      .input(z.object({ issueIds: z.array(z.string()) }))
+      .input(
+         z.object({
+            issueIds: z.array(z.string()),
+            receiverIds: z.array(z.string()),
+         }),
+      )
       .mutation(async ({ ctx, input }) => {
-         await ctx.db
-            .delete(notification)
-            .where(
-               and(
-                  inArray(notification.issueId, input.issueIds),
-                  eq(notification.receiverId, ctx.user.id),
-               ),
+         match(input.receiverIds)
+            .with(
+               [],
+               async () =>
+                  await ctx.db
+                     .delete(notification)
+                     .where(
+                        and(
+                           inArray(notification.issueId, input.issueIds),
+                           eq(notification.receiverId, ctx.user.id),
+                        ),
+                     ),
+            )
+            .otherwise(
+               async (receiverIds) =>
+                  await ctx.db
+                     .delete(notification)
+                     .where(
+                        and(
+                           inArray(notification.receiverId, receiverIds),
+                           eq(notification.type, "issue_mention"),
+                        ),
+                     ),
             )
       }),
 )

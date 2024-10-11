@@ -2,6 +2,7 @@ import * as issue from "@/issue/functions"
 import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
+import { useDeleteNotifications } from "@/notification/hooks/use-delete-notification"
 import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
 import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
 import { notificationListQuery } from "@/notification/queries"
@@ -29,12 +30,13 @@ export function useUpdateIssue() {
    const { updateIssueInQueryData } = useIssueQueryMutator()
    const { updateNotificationsInQueryData } = useNotificationQueryMutator()
    const { insertNotification } = useInsertNotification()
+   const { deleteNotifications } = useDeleteNotifications()
    const notificatons = useSuspenseQuery(
       notificationListQuery({ organizationId }),
    )
 
    const mentionedUserIds = useEditorStore().mentionedUserIds
-   const _unmentionedUserIds = useEditorStore().unmentionedUserIds
+   const unmentionedUserIds = useEditorStore().unmentionedUserIds
 
    const issueIdParam = "issueId" in params ? params.issueId : null
 
@@ -118,7 +120,7 @@ export function useUpdateIssue() {
             ({ issue }) => {
                match(mentionedUserIds)
                   .with([], () => {})
-                  .otherwise(() =>
+                  .otherwise((receiverIds) =>
                      insertNotification.mutate({
                         organizationId,
                         issueId: issue.id,
@@ -128,7 +130,16 @@ export function useUpdateIssue() {
                            title: issue.title,
                            status: issue.status,
                         },
-                        receiverIds: mentionedUserIds,
+                        receiverIds,
+                     }),
+                  )
+
+               match(unmentionedUserIds)
+                  .with([], () => {})
+                  .otherwise((receiverIds) =>
+                     deleteNotifications.mutate({
+                        issueIds: [issue.id],
+                        receiverIds,
                      }),
                   )
 

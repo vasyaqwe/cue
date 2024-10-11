@@ -340,6 +340,7 @@ function Notification({
                onSelect={() =>
                   deleteNotifications.mutate({
                      issueIds: [notification.issueId],
+                     receiverIds: [],
                   })
                }
             >

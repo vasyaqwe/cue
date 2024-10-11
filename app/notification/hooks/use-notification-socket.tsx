@@ -1,9 +1,11 @@
 import { env } from "@/env"
 import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
 import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
+import { notificationListQuery } from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"
 import type { NotificationEvent } from "@/notification/types"
 import { useAuth } from "@/user/hooks"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { useLocation, useNavigate, useParams } from "@tanstack/react-router"
 import usePartySocket from "partysocket/react"
 import { useEffect } from "react"
@@ -17,7 +19,11 @@ export function useNotificationSocket() {
    const {
       insertNotificationToQueryData,
       updateIssuesInNotificationsQueryData,
+      deleteNotificationsFromQueryData,
    } = useNotificationQueryMutator()
+   const notifications = useSuspenseQuery(
+      notificationListQuery({ organizationId }),
+   )
 
    const { updateNotification } = useUpdateNotification()
 
@@ -113,6 +119,26 @@ export function useNotificationSocket() {
                updateIssuesInNotificationsQueryData({
                   updatedIssue: msg.issue,
                }),
+            )
+            .with({ type: "issue_mention_delete" }, (msg) =>
+               match(msg).when(
+                  (msg) => msg.receiverIds?.includes(user.id),
+                  () =>
+                     match(
+                        notifications.data.find(
+                           (n) =>
+                              n.type === "issue_mention" &&
+                              n.issueId === msg.issueId,
+                        ),
+                     )
+                        .with(undefined, () => {})
+                        .otherwise((notificationToDelete) =>
+                           deleteNotificationsFromQueryData({
+                              issueIds: [],
+                              notificationId: notificationToDelete.id,
+                           }),
+                        ),
+               ),
             )
             .exhaustive()
       },
