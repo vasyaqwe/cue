@@ -107,7 +107,7 @@ export function CreateIssue() {
          setTimeout(() => {
             setTitle("")
             setDescription("")
-         }, 100)
+         }, 150)
 
          toast.success("Issue created", {
             action: {
@@ -174,6 +174,10 @@ export function CreateIssue() {
             id="create_issue"
             onSubmit={(e) => {
                e.preventDefault()
+               if (title.trim().length === 0) {
+                  toast.error("Title is required")
+                  return true
+               }
                insert.mutate({
                   title,
                   description,
@@ -225,6 +229,10 @@ export function CreateIssue() {
                                  metaKey: true,
                               },
                               () => {
+                                 if (title.trim().length === 0) {
+                                    toast.error("Title is required")
+                                    return true
+                                 }
                                  insert.mutate({
                                     title,
                                     description,

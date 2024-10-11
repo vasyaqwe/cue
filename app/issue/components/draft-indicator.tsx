@@ -34,7 +34,7 @@ export function DraftIndicator() {
                ? false
                : !!((issueTitle && issueTitle.length > 0) || !descriptionEmpty)
          }
-         className="md:-translate-y-1/2 -right-3 -top-1 absolute block size-3 rounded-full border-[2.5px] border-background bg-primary opacity-0 transition-opacity md:top-1/2 md:right-2 md:size-[11px] md:border-2 data-[visible=true]:opacity-100"
+         className="md:-translate-y-1/2 -right-px absolute top-0 block size-3 rounded-full border-[2.5px] border-background bg-primary opacity-0 transition-opacity md:top-1/2 md:right-2 md:size-[11px] max-md:border-[2.5px] md:border-2 data-[visible=true]:opacity-100"
       />
    )
 }

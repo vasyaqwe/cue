@@ -99,7 +99,7 @@ export function BottomMenu() {
                   className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-md text-foreground/50 transition-colors active:text-foreground"
                >
                   <div className="relative">
-                     <Icons.pencil className="size-[27px] [&>path:first-child]:opacity-0" />
+                     <Icons.pencil className="size-[28px] [&>path:first-child]:opacity-0" />
                      <DraftIndicator />
                   </div>
                </button>

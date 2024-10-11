@@ -85,6 +85,10 @@ body,
 #root {
    height: 100%;
 }
+* {
+   scrollbar-width: thin;
+   scrollbar-color: #a3a3a3 transparent;
+}
 @layer components {
    .squircle {
       clip-path: polygon(

@@ -6,6 +6,7 @@ import { useEventListener } from "@/interactions/use-event-listener"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
 import { useDeleteIssue } from "@/issue/hooks/use-delete-issue"
+import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { issueByIdQuery } from "@/issue/queries"
 import {
@@ -78,10 +79,9 @@ export function IssueDetails() {
       commentListQuery({ organizationId, issueId }),
    )
    const issue = query.data
+   const { updateIssueInQueryData } = useIssueQueryMutator()
    const { deleteIssue } = useDeleteIssue()
    const { updateIssue } = useUpdateIssue()
-   const [title, setTitle] = useState(issue?.title ?? "")
-   const [description, setDescription] = useState(issue?.description ?? "")
 
    const lastSavedState = useRef({
       title: issue?.title,
@@ -89,8 +89,8 @@ export function IssueDetails() {
    })
 
    const hasUnsavedChanges =
-      title !== lastSavedState.current.title ||
-      description !== lastSavedState.current.description
+      issue?.title !== lastSavedState.current.title ||
+      issue?.description !== lastSavedState.current.description
 
    useEventListener("beforeunload", (e) =>
       match(hasUnsavedChanges).with(true, () => e.preventDefault()),
@@ -186,7 +186,7 @@ export function IssueDetails() {
                   </DropdownMenuContent>
                </DropdownMenu>
             </Header>
-            <div className="overflow-y-auto scroll-smooth">
+            <div className="overflow-y-auto scroll-smooth [scrollbar-gutter:stable]">
                <div className="mx-auto w-full max-w-[51rem] py-6 md:py-8">
                   <div className="px-4">
                      <Input
@@ -198,7 +198,13 @@ export function IssueDetails() {
                         placeholder="Issue title"
                         required
                         onChange={(e) => {
-                           setTitle(e.target.value)
+                           updateIssueInQueryData({
+                              input: {
+                                 id: issueId,
+                                 organizationId,
+                                 title: e.target.value,
+                              },
+                           })
                            debouncedSaveIssue.call({
                               ...issue,
                               title: e.target.value,
@@ -213,7 +219,14 @@ export function IssueDetails() {
                            content={issue.description}
                            onUpdate={({ editor }) => {
                               const description = editor.getHTML()
-                              setDescription(description)
+                              updateIssueInQueryData({
+                                 input: {
+                                    id: issueId,
+                                    organizationId,
+                                    title: issue.title,
+                                    description,
+                                 },
+                              })
                               debouncedSaveIssue.call({
                                  ...issue,
                                  description,
