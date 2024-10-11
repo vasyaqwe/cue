@@ -21,7 +21,6 @@ import {
    createFileRoute,
    notFound,
    redirect,
-   useLocation,
 } from "@tanstack/react-router"
 import { useEffect } from "react"
 import { Sidebar } from "./-components/sidebar"
@@ -65,7 +64,6 @@ function Component() {
    useNotificationSocket()
    useCommentSocket()
    const { organizationId } = useAuth()
-   const { pathname } = useLocation()
 
    const unreadCount = useSuspenseQuery(
       notificationUnreadCountQuery({ organizationId }),
@@ -105,8 +103,6 @@ function Component() {
       }
    }, [])
 
-   const isOnIssuePage = pathname.includes("/issue/")
-
    return (
       <>
          <Presence />
@@ -114,10 +110,7 @@ function Component() {
          <Sidebar />
          <div
             className={cn(
-               "md:h-svh md:flex-1",
-               isOnIssuePage
-                  ? "h-svh"
-                  : "h-[calc(100svh-var(--bottom-menu-height))]",
+               "h-[calc(100svh-var(--bottom-menu-height))] md:h-svh md:flex-1",
             )}
          >
             <Outlet />

@@ -214,20 +214,22 @@ body,
 }
 
 @layer utilities {
-   .pb-safe {
-      padding-bottom: max(env(safe-area-inset-bottom), 0rem);
-   }
-   .pb-safe-1 {
-      padding-bottom: max(env(safe-area-inset-bottom), 0.25rem);
-   }
-   .pb-safe-2 {
-      padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
-   }
-   .pb-safe-3 {
-      padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
-   }
-   .pb-safe-4 {
-      padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+   @media (max-width: 768px) {
+      .pb-safe {
+         padding-bottom: max(env(safe-area-inset-bottom), 0rem);
+      }
+      .pb-safe-1 {
+         padding-bottom: max(env(safe-area-inset-bottom), 0.25rem);
+      }
+      .pb-safe-2 {
+         padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+      }
+      .pb-safe-3 {
+         padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
+      }
+      .pb-safe-4 {
+         padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+      }
    }
 }
 

@@ -158,7 +158,7 @@ export function Comment({
                </span>
                <button
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="-ml-1 flex w-full cursor-pointer items-center gap-1 rounded-full px-2 py-1.5 text-start text-foreground/75 transition-colors hover:bg-border/50"
+                  className="-ml-1 flex w-full cursor-pointer items-center gap-3 rounded-full px-2 py-1.5 text-start text-foreground/75 transition-colors hover:bg-border/50"
                >
                   <span>
                      <strong className="font-semibold">

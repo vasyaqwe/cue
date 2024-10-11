@@ -78,7 +78,7 @@ function Component() {
          <Header>
             <HeaderTitle>Issues</HeaderTitle>
          </Header>
-         <Main className="pb-safe">
+         <Main>
             <RefreshControl isRefreshing={isRefreshing}>
                {issues.data.length === 0 ? (
                   <div className="absolute inset-0 m-auto h-fit">
@@ -142,7 +142,7 @@ function Issue({
       <ContextMenu>
          <ContextMenuTrigger
             asChild
-            className="flex w-full items-center gap-2 md:gap-4 data-[state=open]:bg-elevated hover:bg-elevated"
+            className="flex w-full items-center gap-2 md:gap-4 data-[state=open]:bg-elevated hover:bg-elevated max-md:transition-colors"
          >
             <div className="">
                <Link
