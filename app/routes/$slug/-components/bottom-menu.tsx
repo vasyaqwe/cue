@@ -15,13 +15,12 @@ import { Icons } from "@/ui/components/icons"
 import { useRefreshState } from "@/ui/components/refresh-control/use-refresh-state"
 import { useAuth } from "@/user/hooks"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { useLocation, useParams } from "@tanstack/react-router"
+import { useParams } from "@tanstack/react-router"
 import { Link } from "@tanstack/react-router"
 import { match } from "ts-pattern"
 
 export function BottomMenu() {
    const { slug } = useParams({ from: "/$slug/_layout" })
-   const { pathname } = useLocation()
    const { organizationId } = useAuth()
    const unreadCount = useSuspenseQuery(
       notificationUnreadCountQuery({ organizationId }),
@@ -49,11 +48,8 @@ export function BottomMenu() {
          }),
    })
 
-   const isOnIssuePage = pathname.includes("/issue/")
-   if (isOnIssuePage) return null
-
    return (
-      <nav className="fixed bottom-0 z-[2] h-[calc(var(--bottom-menu-height)+max(env(safe-area-inset-bottom),0px))] w-full border-border border-t bg-background p-1.5 shadow md:hidden">
+      <nav className="fixed bottom-0 z-[2] h-[var(--bottom-menu-height)] w-full border-border border-t bg-background p-1.5 shadow md:hidden">
          <ul className="flex flex-1 items-center justify-around gap-2">
             <li className="flex flex-1">
                <Link
@@ -87,7 +83,7 @@ export function BottomMenu() {
                      useNotificationStore.setState({ activeItemIssueId: null })
                   }
                   to={inboxRoute.to}
-                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
+                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/[.42] transition-colors aria-[current=page]:text-foreground/95"
                   data-has-unread={unreadCount.data.count > 0}
                >
                   <Icons.inbox className="size-[29px]" />

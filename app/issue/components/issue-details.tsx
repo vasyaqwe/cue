@@ -298,7 +298,7 @@ export function IssueDetails() {
                   ref={scrollRef}
                />
             </div>
-            <div className="mt-auto w-full border-border/75 border-t bg-popover px-3 py-3 pb-safe-3 shadow-sm xl:py-4">
+            <div className="mt-auto w-full border-border/75 border-t bg-popover px-3 py-3 shadow-sm xl:py-4">
                <CreateComment
                   onMutate={() =>
                      setTimeout(() => {

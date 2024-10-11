@@ -26,7 +26,7 @@ export const Route = createFileRoute(
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
          <Main
-            className="flex pb-0"
+            className="flex"
             asMain={false}
          >
             <div className="relative flex-1">
@@ -43,7 +43,7 @@ function Component() {
    return (
       <Main
          asMain={false}
-         className="z-[6] flex h-full overflow-y-visible pb-0"
+         className="z-[6] flex h-[calc(100%-var(--bottom-menu-height))] overflow-y-visible md:pb-0"
       >
          <IssueDetails />
       </Main>

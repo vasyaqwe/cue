@@ -68,11 +68,8 @@ export function Comment({
                : "bg-transparent duration-1000",
          )}
       >
-         <TransitionHeight
-            className="mt-2"
-            data-expanded={isExpanded}
-         >
-            <div className="group relative flex gap-3">
+         <TransitionHeight data-expanded={isExpanded}>
+            <div className="group relative flex gap-3 pt-3">
                <UserAvatar user={comment.author} />
                <div className={cn("flex-1")}>
                   <div className="-mt-[4px] flex max-h-[22px] items-center justify-between">

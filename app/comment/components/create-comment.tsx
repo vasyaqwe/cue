@@ -48,7 +48,7 @@ export function CreateComment({
          <input
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full border-transparent pt-2 pb-5 text-[0.96rem] text-base outline-none placeholder:text-muted-foreground/70"
+            className="w-full border-transparent pt-2 pb-4 text-[0.96rem] text-base outline-none placeholder:text-muted-foreground/70"
             placeholder="Leave a comment.."
          />
          <div className="mt-1 flex items-center gap-2">
