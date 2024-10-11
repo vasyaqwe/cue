@@ -41,7 +41,7 @@ export default forwardRef<
    }
 >(({ clientRect, query, command, editor }, ref) => {
    const [open, setOpen] = useState(true)
-   const position = clientRect()
+   const position = clientRect() ?? { left: 0, bottom: 0 }
    const { organizationId, user: currentUser } = useAuth()
    const members = useQuery(organizationMembersQuery({ organizationId }))
    const issues = useQuery(issueListQuery({ organizationId }))
