@@ -18,6 +18,7 @@ import {
    slashCommand,
    starterKit,
 } from "@/ui/components/editor/extensions"
+import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { Icons } from "@/ui/components/icons"
 import { Kbd } from "@/ui/components/kbd"
 import { Tooltip } from "@/ui/components/tooltip"
@@ -70,65 +71,69 @@ export function CreateComment({
          {...props}
       >
          <EditorRoot>
-            <EditorContent
-               onCreate={({ editor }) => {
-                  editorRef.current = editor
-               }}
-               content={content}
-               onUpdate={({ editor }) => {
-                  setContent(editor.getHTML())
-               }}
-               className="p-3 py-0"
-               extensions={[
-                  starterKit,
-                  placeholder("Leave a comment.."),
-                  link,
-                  slashCommand,
-                  mention,
-               ]}
-               placeholder="Leave a comment.."
-               editorProps={{
-                  handleKeyDown: (_view, e) => {
-                     return match(e)
-                        .with(
-                           {
-                              key: "Enter",
-                              ctrlKey: true,
-                           },
-                           {
-                              key: "Enter",
-                              metaKey: true,
-                           },
-                           () => {
-                              editorRef.current?.commands.clearContent()
-                              formRef.current?.requestSubmit()
-                              return true
-                           },
-                        )
-                        .otherwise(() => false)
-                  },
+            <MentionProvider value="comment">
+               <EditorContent
+                  onCreate={({ editor }) => {
+                     editorRef.current = editor
+                  }}
+                  content={content}
+                  onUpdate={({ editor }) => {
+                     setContent(editor.getHTML())
+                  }}
+                  className="p-3 py-0"
+                  extensions={[
+                     starterKit,
+                     placeholder("Leave a comment.."),
+                     link,
+                     slashCommand,
+                     mention,
+                  ]}
+                  placeholder="Leave a comment.."
+                  editorProps={{
+                     handleKeyDown: (_view, e) => {
+                        return match(e)
+                           .with(
+                              {
+                                 key: "Enter",
+                                 ctrlKey: true,
+                              },
+                              {
+                                 key: "Enter",
+                                 metaKey: true,
+                              },
+                              () => {
+                                 editorRef.current?.commands.clearContent()
+                                 formRef.current?.requestSubmit()
+                                 return true
+                              },
+                           )
+                           .otherwise(() => false)
+                     },
 
-                  attributes: {
-                     class: "md:min-h-12",
-                  },
-               }}
-            >
-               <EditorCommand>
-                  <EditorCommandEmpty>No results</EditorCommandEmpty>
-                  <EditorCommandList>
-                     {commandItems.map((item) => (
-                        <EditorCommandItem
-                           value={item.title}
-                           onSelect={(value) => item.command?.(value as never)}
-                           key={item.title}
-                        >
-                           {item.icon}
-                           {item.title}
-                        </EditorCommandItem>
-                     ))}
-                  </EditorCommandList>
-               </EditorCommand>
-            </EditorContent>
+                     attributes: {
+                        class: "md:min-h-12",
+                     },
+                  }}
+               >
+                  <EditorCommand>
+                     <EditorCommandEmpty>No results</EditorCommandEmpty>
+                     <EditorCommandList>
+                        {commandItems.map((item) => (
+                           <EditorCommandItem
+                              value={item.title}
+                              onSelect={(value) =>
+                                 item.command?.(value as never)
+                              }
+                              key={item.title}
+                           >
+                              {item.icon}
+                              {item.title}
+                           </EditorCommandItem>
+                        ))}
+                     </EditorCommandList>
+                  </EditorCommand>
+               </EditorContent>
+            </MentionProvider>
          </EditorRoot>
          <div className="sticky bottom-0 flex items-center gap-2 bg-secondary p-3 pt-1">
             <Tooltip

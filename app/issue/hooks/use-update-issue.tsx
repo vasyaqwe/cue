@@ -35,8 +35,9 @@ export function useUpdateIssue() {
       notificationListQuery({ organizationId }),
    )
 
-   const mentionedUserIds = useEditorStore().mentionedUserIds
-   const unmentionedUserIds = useEditorStore().unmentionedUserIds
+   const mentionedUserIds = useEditorStore().getMentionedUserIds("issue")
+   const unmentionedUserIds = useEditorStore().getUnmentionedUserIds("issue")
+   const clearMentions = useEditorStore().clearMentions
 
    const issueIdParam = "issueId" in params ? params.issueId : null
 
@@ -143,10 +144,7 @@ export function useUpdateIssue() {
                      }),
                   )
 
-               useEditorStore.setState({
-                  mentionedUserIds: [],
-                  unmentionedUserIds: [],
-               })
+               clearMentions("issue")
 
                match(input).with({ status: "done" }, (issue) =>
                   match(teammatesIds.data ?? [])

@@ -13,6 +13,7 @@ import {
    ContextMenuItem,
    ContextMenuTrigger,
 } from "@/ui/components/context-menu"
+import { stripHTML } from "@/ui/components/editor/utils"
 import { Icons } from "@/ui/components/icons"
 import { Loading } from "@/ui/components/loading"
 import RefreshControl from "@/ui/components/refresh-control"
@@ -302,11 +303,7 @@ function Notification({
                            {notification.type === "new_issue_comment"
                               ? `${notification.sender.name} commented: `
                               : null}
-                           <span
-                              dangerouslySetInnerHTML={{
-                                 __html: notification.content,
-                              }}
-                           />
+                           {stripHTML(notification.content)}
                         </p>
                         <span className="ml-auto whitespace-nowrap text-xs opacity-75">
                            {formatDateRelative(

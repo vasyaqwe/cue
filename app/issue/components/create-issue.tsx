@@ -42,6 +42,7 @@ import {
    slashCommand,
    starterKit,
 } from "@/ui/components/editor/extensions"
+import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { inputVariants } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
@@ -82,7 +83,8 @@ export function CreateIssue() {
 
    const { insertNotification } = useInsertNotification()
 
-   const mentionedUserIds = useEditorStore().mentionedUserIds
+   const mentionedUserIds = useEditorStore().getMentionedUserIds("issue")
+   const clearMentions = useEditorStore().clearMentions
 
    const teammatesIds = useQuery(
       organizationTeammatesIdsQuery({ organizationId }),
@@ -158,9 +160,7 @@ export function CreateIssue() {
                }),
             )
 
-         useEditorStore.setState({
-            mentionedUserIds: [],
-         })
+         clearMentions("issue")
       },
    })
 
@@ -202,71 +202,73 @@ export function CreateIssue() {
                )}
             />
             <EditorRoot>
-               <EditorContent
-                  content={description}
-                  onUpdate={({ editor }) => {
-                     setDescription(editor.getHTML())
-                  }}
-                  extensions={[
-                     starterKit,
-                     placeholder("Add description (press '/' for commands)"),
-                     link,
-                     slashCommand,
-                     mention,
-                  ]}
-                  placeholder="Add description (press '/' for commands)"
-                  editorProps={{
-                     handleKeyDown: (_, e) => {
-                        return match(e)
-                           .with(
-                              {
-                                 key: "Enter",
-                                 ctrlKey: true,
-                              },
-                              {
-                                 key: "Enter",
-                                 metaKey: true,
-                              },
-                              () => {
-                                 if (title.trim().length === 0) {
-                                    toast.error("Title is required")
+               <MentionProvider value="issue">
+                  <EditorContent
+                     content={description}
+                     onUpdate={({ editor }) => {
+                        setDescription(editor.getHTML())
+                     }}
+                     extensions={[
+                        starterKit,
+                        placeholder("Add description (press '/' for commands)"),
+                        link,
+                        slashCommand,
+                        mention,
+                     ]}
+                     placeholder="Add description (press '/' for commands)"
+                     editorProps={{
+                        handleKeyDown: (_, e) => {
+                           return match(e)
+                              .with(
+                                 {
+                                    key: "Enter",
+                                    ctrlKey: true,
+                                 },
+                                 {
+                                    key: "Enter",
+                                    metaKey: true,
+                                 },
+                                 () => {
+                                    if (title.trim().length === 0) {
+                                       toast.error("Title is required")
+                                       return true
+                                    }
+                                    insert.mutate({
+                                       title,
+                                       description,
+                                       label,
+                                       status,
+                                       organizationId,
+                                    })
                                     return true
+                                 },
+                              )
+                              .otherwise(() => false)
+                        },
+                        attributes: {
+                           class: "md:min-h-16 min-h-72",
+                        },
+                     }}
+                  >
+                     <EditorCommand>
+                        <EditorCommandEmpty>No results</EditorCommandEmpty>
+                        <EditorCommandList>
+                           {commandItems.map((item) => (
+                              <EditorCommandItem
+                                 value={item.title}
+                                 onSelect={(value) =>
+                                    item.command?.(value as never)
                                  }
-                                 insert.mutate({
-                                    title,
-                                    description,
-                                    label,
-                                    status,
-                                    organizationId,
-                                 })
-                                 return true
-                              },
-                           )
-                           .otherwise(() => false)
-                     },
-                     attributes: {
-                        class: "md:min-h-16 min-h-72",
-                     },
-                  }}
-               >
-                  <EditorCommand>
-                     <EditorCommandEmpty>No results</EditorCommandEmpty>
-                     <EditorCommandList>
-                        {commandItems.map((item) => (
-                           <EditorCommandItem
-                              value={item.title}
-                              onSelect={(value) =>
-                                 item.command?.(value as never)
-                              }
-                              key={item.title}
-                           >
-                              {item.icon}
-                              {item.title}
-                           </EditorCommandItem>
-                        ))}
-                     </EditorCommandList>
-                  </EditorCommand>
-               </EditorContent>
+                                 key={item.title}
+                              >
+                                 {item.icon}
+                                 {item.title}
+                              </EditorCommandItem>
+                           ))}
+                        </EditorCommandList>
+                     </EditorCommand>
+                  </EditorContent>
+               </MentionProvider>
             </EditorRoot>
          </form>
          <ModalFooter className="gap-2 md:mt-0">

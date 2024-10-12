@@ -6,6 +6,7 @@ import {
    mentionLabelIssueClassName,
    mentionLabelPersonClassName,
 } from "@/ui/components/editor/mention/constants"
+import { useMentionContext } from "@/ui/components/editor/mention/context"
 import { useEditorStore } from "@/ui/components/editor/store"
 import {
    HoverCard,
@@ -35,16 +36,17 @@ export function MentionLabel({ node }: NodeViewProps) {
    const user = members.data?.find(({ user }) => user.id === userId)?.user
    const issue = issues.data?.find(({ id }) => id === issueId)
 
-   const removeMentionedUserId = useEditorStore().removeMentionedUserId
+   const removeMentionedUser = useEditorStore().removeMentionedUser
 
    const isIssueError = issues.isError || !issue
 
+   const context = useMentionContext()
    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
    useEffect(() => {
       return () => {
          match(userId).with(P.not(undefined), (id) => {
             if (id === currentUser.id) return
-            removeMentionedUserId(id)
+            removeMentionedUser(context, id)
          })
       }
    }, [])

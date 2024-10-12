@@ -47,6 +47,7 @@ import {
    slashCommand,
    starterKit,
 } from "@/ui/components/editor/extensions"
+import { MentionProvider } from "@/ui/components/editor/mention/context"
 import {} from "@/ui/components/editor/mention/editor-mention"
 import {} from "@/ui/components/editor/mention/editor-mention-item"
 import { Icons } from "@/ui/components/icons"
@@ -213,56 +214,58 @@ export function IssueDetails() {
                         className="!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
                      />
                      <EditorRoot>
-                        <EditorContent
-                           key={issueId}
-                           className="mt-3"
-                           content={issue.description}
-                           onUpdate={({ editor }) => {
-                              const description = editor.getHTML()
-                              updateIssueInQueryData({
-                                 input: {
-                                    id: issueId,
-                                    organizationId,
-                                    title: issue.title,
+                        <MentionProvider value="issue">
+                           <EditorContent
+                              key={issueId}
+                              className="mt-3"
+                              content={issue.description}
+                              onUpdate={({ editor }) => {
+                                 const description = editor.getHTML()
+                                 updateIssueInQueryData({
+                                    input: {
+                                       id: issueId,
+                                       organizationId,
+                                       title: issue.title,
+                                       description,
+                                    },
+                                 })
+                                 debouncedSaveIssue.call({
+                                    ...issue,
                                     description,
-                                 },
-                              })
-                              debouncedSaveIssue.call({
-                                 ...issue,
-                                 description,
-                              })
-                           }}
-                           extensions={[
-                              starterKit,
-                              placeholder(
-                                 "Add description (press '/' for commands)",
-                              ),
-                              link,
-                              slashCommand,
-                              mention,
-                           ]}
-                           placeholder="Add description (press '/' for commands)"
-                        >
-                           <EditorCommand>
-                              <EditorCommandEmpty>
-                                 No results
-                              </EditorCommandEmpty>
-                              <EditorCommandList>
-                                 {commandItems.map((item) => (
-                                    <EditorCommandItem
-                                       value={item.title}
-                                       onSelect={(value) =>
-                                          item.command?.(value as never)
-                                       }
-                                       key={item.title}
-                                    >
-                                       {item.icon}
-                                       {item.title}
-                                    </EditorCommandItem>
-                                 ))}
-                              </EditorCommandList>
-                           </EditorCommand>
-                        </EditorContent>
+                                 })
+                              }}
+                              extensions={[
+                                 starterKit,
+                                 placeholder(
+                                    "Add description (press '/' for commands)",
+                                 ),
+                                 link,
+                                 slashCommand,
+                                 mention,
+                              ]}
+                              placeholder="Add description (press '/' for commands)"
+                           >
+                              <EditorCommand>
+                                 <EditorCommandEmpty>
+                                    No results
+                                 </EditorCommandEmpty>
+                                 <EditorCommandList>
+                                    {commandItems.map((item) => (
+                                       <EditorCommandItem
+                                          value={item.title}
+                                          onSelect={(value) =>
+                                             item.command?.(value as never)
+                                          }
+                                          key={item.title}
+                                       >
+                                          {item.icon}
+                                          {item.title}
+                                       </EditorCommandItem>
+                                    ))}
+                                 </EditorCommandList>
+                              </EditorCommand>
+                           </EditorContent>
+                        </MentionProvider>
                      </EditorRoot>
                      <hr className="mt-7 mb-5 border-border border-t-2 border-dotted" />
                      <p className="font-semibold text-lg">Activity</p>

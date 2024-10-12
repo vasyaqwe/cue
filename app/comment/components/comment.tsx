@@ -4,6 +4,7 @@ import { useUpdateComment } from "@/comment/hooks/use-update-comment"
 import { Button } from "@/ui/components/button"
 import { EditorContent, EditorRoot } from "@/ui/components/editor"
 import { link, mention, starterKit } from "@/ui/components/editor/extensions"
+import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { Icons } from "@/ui/components/icons"
 import { Tooltip } from "@/ui/components/tooltip"
 import { TransitionHeight } from "@/ui/components/transition-height"
@@ -140,16 +141,18 @@ export function Comment({
                      </div>
                   </div>
                   <EditorRoot>
-                     <EditorContent
-                        editorProps={{
-                           editable: () => false,
-                           attributes: {
-                              class: "mt-1",
-                           },
-                        }}
-                        content={comment.content}
-                        extensions={[starterKit, link, mention]}
-                     />
+                     <MentionProvider value="comment">
+                        <EditorContent
+                           editorProps={{
+                              editable: () => false,
+                              attributes: {
+                                 class: "mt-1",
+                              },
+                           }}
+                           content={comment.content}
+                           extensions={[starterKit, link, mention]}
+                        />
+                     </MentionProvider>
                   </EditorRoot>
                </div>
             </div>

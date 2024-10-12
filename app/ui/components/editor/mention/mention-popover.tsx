@@ -2,6 +2,7 @@ import { StatusIcon } from "@/issue/components/icons"
 import { issueListQuery } from "@/issue/queries"
 import type { IssueStatus } from "@/issue/schema"
 import { organizationMembersQuery } from "@/organization/queries"
+import { useMentionContext } from "@/ui/components/editor/mention/context"
 import {
    EditorMention,
    EditorMentionGroup,
@@ -51,7 +52,8 @@ export default forwardRef<
    const members = useQuery(organizationMembersQuery({ organizationId }))
    const issues = useQuery(issueListQuery({ organizationId }))
 
-   const addMentionedUserId = useEditorStore().addMentionedUserId
+   const context = useMentionContext()
+   const addMentionedUser = useEditorStore().addMentionedUser
 
    useImperativeHandle(ref, () => ({
       onKeyDown: ({ event }: { event: KeyboardEvent }) => {
@@ -122,7 +124,7 @@ export default forwardRef<
                                  )
                                     return
 
-                                 addMentionedUserId(user.id)
+                                 addMentionedUser(context, user.id)
                               }}
                            >
                               <UserAvatar

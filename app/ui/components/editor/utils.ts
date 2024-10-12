@@ -1,6 +1,8 @@
 import type { EditorInstance } from "@/ui/components/editor/types"
 import { Fragment, type Node } from "@tiptap/pm/model"
 
+export const stripHTML = (string: string) => string.replace(/<[^>]*>/g, "")
+
 export const isValidUrl = (url: string) => {
    try {
       new URL(url)

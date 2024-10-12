@@ -1,42 +1,77 @@
+import type { MentionContextType as MentionContext } from "@/ui/components/editor/mention/context"
 import { createSelectors } from "@/utils/misc"
 import type { Range } from "@tiptap/core"
 import { create } from "zustand"
 
+type MentionContextType = NonNullable<MentionContext>
+
 type State = {
    query: string
    range: Range | null
-   mentionedUserIds: string[]
-   unmentionedUserIds: string[]
+   mentionedUsers: Record<MentionContextType, Set<string>>
+   unmentionedUsers: Record<MentionContextType, Set<string>>
 }
 
 type Actions = {
-   addMentionedUserId: (id: string) => void
-   removeMentionedUserId: (id: string) => void
+   addMentionedUser: (context: MentionContextType, userId: string) => void
+   removeMentionedUser: (context: MentionContextType, userId: string) => void
+   getMentionedUserIds: (context: MentionContextType) => string[]
+   getUnmentionedUserIds: (context: MentionContextType) => string[]
+   clearMentions: (context: MentionContextType) => void
 }
 
-const store = create<State & Actions>()(() => ({
+const store = create<State & Actions>()((set, get) => ({
    query: "",
    range: null,
-   mentionedUserIds: [],
-   unmentionedUserIds: [],
-   addMentionedUserId: (id) => {
-      store.setState((state) => ({
-         mentionedUserIds: Array.from(new Set([...state.mentionedUserIds, id])),
-         unmentionedUserIds: state.unmentionedUserIds.filter(
-            (userId) => userId !== id,
-         ),
-      }))
+   mentionedUsers: {
+      issue: new Set<string>(),
+      comment: new Set<string>(),
    },
-   removeMentionedUserId: (id) => {
-      store.setState((state) => ({
-         unmentionedUserIds: Array.from(
-            new Set([...state.unmentionedUserIds, id]),
-         ),
-         mentionedUserIds: state.mentionedUserIds.filter(
-            (userId) => userId !== id,
-         ),
-      }))
+   unmentionedUsers: {
+      issue: new Set<string>(),
+      comment: new Set<string>(),
    },
+   addMentionedUser: (context, userId) =>
+      set((state) => ({
+         mentionedUsers: {
+            ...state.mentionedUsers,
+            [context]: new Set(state.mentionedUsers[context]).add(userId),
+         },
+         unmentionedUsers: {
+            ...state.unmentionedUsers,
+            [context]: new Set(
+               [...state.unmentionedUsers[context]].filter(
+                  (id) => id !== userId,
+               ),
+            ),
+         },
+      })),
+   removeMentionedUser: (context, userId) =>
+      set((state) => ({
+         mentionedUsers: {
+            ...state.mentionedUsers,
+            [context]: new Set(
+               [...state.mentionedUsers[context]].filter((id) => id !== userId),
+            ),
+         },
+         unmentionedUsers: {
+            ...state.unmentionedUsers,
+            [context]: new Set(state.unmentionedUsers[context]).add(userId),
+         },
+      })),
+   getMentionedUserIds: (context) => [...get().mentionedUsers[context]],
+   getUnmentionedUserIds: (context) => [...get().unmentionedUsers[context]],
+   clearMentions: (context) =>
+      set((state) => ({
+         mentionedUsers: {
+            ...state.mentionedUsers,
+            [context]: new Set(),
+         },
+         unmentionedUsers: {
+            ...state.unmentionedUsers,
+            [context]: new Set(),
+         },
+      })),
 }))
 
 export const useEditorStore = createSelectors(store)
