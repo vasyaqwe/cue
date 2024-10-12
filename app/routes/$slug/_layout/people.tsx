@@ -65,7 +65,7 @@ function Component() {
          <Header>
             <HeaderTitle>People</HeaderTitle>
          </Header>
-         <main className="pt-5 pb-safe-4 md:pt-8">
+         <main className="overflow-y-auto py-5 md:py-8">
             {members.data.length === 0 ? (
                <p className="absolute inset-0 m-auto size-fit">No members</p>
             ) : (

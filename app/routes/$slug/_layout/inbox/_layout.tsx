@@ -212,7 +212,7 @@ function Notification({
    return (
       <ContextMenu>
          <ContextMenuTrigger
-            className="flex w-full items-center gap-2 rounded-xl last:mb-1.5 md:gap-4 data-[state=open]:bg-border/40 has-[a:focus-visible]:bg-border/60 hover:bg-border/40 md:data-[active=true]:bg-border/60"
+            className="flex w-full items-center gap-2 rounded-xl last:mb-0 md:gap-4 data-[state=open]:bg-border/40 has-[a:focus-visible]:bg-border/60 hover:bg-border/40 md:data-[active=true]:bg-border/60"
             asChild
             {...props}
          >

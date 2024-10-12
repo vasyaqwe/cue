@@ -93,147 +93,155 @@ function Component() {
          <Header>
             <HeaderTitle>Settings</HeaderTitle>
          </Header>
-         <main className="mx-auto max-w-5xl px-4 pt-5 pb-safe-4 md:pt-8">
-            <Card variant={"secondary"}>
-               <CardHeader>
-                  <CardTitle>Your profile</CardTitle>
-                  <CardDescription>
-                     Manage your profile and how you appear to others.
-                  </CardDescription>
-               </CardHeader>
-               <CardContent>
-                  <form
-                     onSubmit={(e) => {
-                        e.preventDefault()
+         <main className="overflow-y-auto py-5 pb-safe-4 md:py-8">
+            <div className="mx-auto max-w-4xl px-4">
+               <Card variant={"secondary"}>
+                  <CardHeader>
+                     <CardTitle>Your profile</CardTitle>
+                     <CardDescription>
+                        Manage your profile and how you appear to others.
+                     </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                     <form
+                        onSubmit={(e) => {
+                           e.preventDefault()
 
-                        const formData = Object.fromEntries(
-                           new FormData(e.target as HTMLFormElement).entries(),
-                        ) as {
-                           name: string
-                        }
+                           const formData = Object.fromEntries(
+                              new FormData(
+                                 e.target as HTMLFormElement,
+                              ).entries(),
+                           ) as {
+                              name: string
+                           }
 
-                        if (!formData.name || formData.name.trim().length < 1)
-                           return toast.error("Name is required")
+                           if (
+                              !formData.name ||
+                              formData.name.trim().length < 1
+                           )
+                              return toast.error("Name is required")
 
-                        if (formData.name === user.name)
-                           return toast.success("Saved")
+                           if (formData.name === user.name)
+                              return toast.success("Saved")
 
-                        updateUser.mutate({
-                           name: formData.name,
-                        })
-                     }}
-                  >
-                     <Label htmlFor="name">Name</Label>
-                     <Input
-                        defaultValue={user.name ?? ""}
-                        name="name"
-                        id="name"
-                        className="max-w-[300px]"
-                        placeholder="Your name"
-                     />
-                     <Button
-                        disabled={updateUser.isPending}
-                        className="mt-3"
+                           updateUser.mutate({
+                              name: formData.name,
+                           })
+                        }}
                      >
-                        Save
-                     </Button>
-                  </form>
-               </CardContent>
-            </Card>
-            <Card
-               className="mt-5"
-               variant={"secondary"}
-            >
-               <CardHeader>
-                  <CardTitle>Danger zone</CardTitle>
-               </CardHeader>
-               <CardContent className="flex justify-between gap-4 max-lg:flex-col lg:items-center">
-                  <div className="flex items-center gap-3">
-                     <div className="grid size-10 shrink-0 place-content-center rounded-full border border-destructive/10 bg-destructive/15">
-                        <Icons.trash className="size-5 text-destructive" />
-                     </div>
-                     <div>
-                        <p>Delete organization</p>
-                        <p className="text-foreground/75 text-sm">
-                           This is permanent. Organization will be fully
-                           deleted.
-                        </p>
-                     </div>
-                  </div>
-                  <Modal>
-                     <ModalTrigger
-                        className={cn(
-                           buttonVariants({
-                              variant: "destructive",
-                           }),
-                           "max-lg:w-full",
-                        )}
-                     >
-                        Delete organization
-                     </ModalTrigger>
-                     <ModalContent variant={"alert"}>
-                        <ModalHeader>
-                           <ModalTitle>Delete this organization?</ModalTitle>
-                           <ModalDescription>
-                              This action cannot be undone. Your organization
-                              and all of its data will be fully deleted.
-                           </ModalDescription>
-                        </ModalHeader>
-                        <div className="p-4">
-                           <form
-                              onSubmit={(e) => {
-                                 e.preventDefault()
-                                 deleteOrganization.mutate({
-                                    organizationId,
-                                 })
-                              }}
-                              id={"delete_organization"}
-                           >
-                              <Label htmlFor="confirmation">
-                                 To confirm, enter{" "}
-                                 <strong>delete this organization</strong> below
-                              </Label>
-                              <Input
-                                 autoComplete="off"
-                                 autoFocus={!isMobile}
-                                 id="confirmation"
-                                 name="confirmation"
-                                 placeholder="delete this organization"
-                                 value={confirmDeletion}
-                                 onChange={(e) =>
-                                    setConfirmDeletion(e.target.value)
-                                 }
-                              />
-                           </form>
+                        <Label htmlFor="name">Name</Label>
+                        <Input
+                           defaultValue={user.name ?? ""}
+                           name="name"
+                           id="name"
+                           className="max-w-[300px]"
+                           placeholder="Your name"
+                        />
+                        <Button
+                           disabled={updateUser.isPending}
+                           className="mt-3"
+                        >
+                           Save
+                        </Button>
+                     </form>
+                  </CardContent>
+               </Card>
+               <Card
+                  className="mt-5"
+                  variant={"secondary"}
+               >
+                  <CardHeader>
+                     <CardTitle>Danger zone</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex justify-between gap-4 max-lg:flex-col lg:items-center">
+                     <div className="flex items-center gap-3">
+                        <div className="grid size-10 shrink-0 place-content-center rounded-full border border-destructive/10 bg-destructive/15">
+                           <Icons.trash className="size-5 text-destructive" />
                         </div>
-                        <ModalFooter>
-                           <Button
-                              className="ml-auto"
-                              form={"delete_organization"}
-                              type="submit"
-                              disabled={
-                                 confirmDeletion.trim() !==
-                                    "delete this organization" ||
-                                 deleteOrganization.isPending ||
-                                 deleteOrganization.isSuccess
-                              }
-                              variant={"destructive"}
-                           >
-                              {deleteOrganization.isPending ||
-                              deleteOrganization.isSuccess ? (
-                                 <>
-                                    <Loading />
-                                    Deleting..
-                                 </>
-                              ) : (
-                                 "Delete forever"
-                              )}
-                           </Button>
-                        </ModalFooter>
-                     </ModalContent>
-                  </Modal>
-               </CardContent>
-            </Card>
+                        <div>
+                           <p>Delete organization</p>
+                           <p className="text-foreground/75 text-sm">
+                              This is permanent. Organization will be fully
+                              deleted.
+                           </p>
+                        </div>
+                     </div>
+                     <Modal>
+                        <ModalTrigger
+                           className={cn(
+                              buttonVariants({
+                                 variant: "destructive",
+                              }),
+                              "max-lg:w-full",
+                           )}
+                        >
+                           Delete organization
+                        </ModalTrigger>
+                        <ModalContent variant={"alert"}>
+                           <ModalHeader>
+                              <ModalTitle>Delete this organization?</ModalTitle>
+                              <ModalDescription>
+                                 This action cannot be undone. Your organization
+                                 and all of its data will be fully deleted.
+                              </ModalDescription>
+                           </ModalHeader>
+                           <div className="p-4">
+                              <form
+                                 onSubmit={(e) => {
+                                    e.preventDefault()
+                                    deleteOrganization.mutate({
+                                       organizationId,
+                                    })
+                                 }}
+                                 id={"delete_organization"}
+                              >
+                                 <Label htmlFor="confirmation">
+                                    To confirm, enter{" "}
+                                    <strong>delete this organization</strong>{" "}
+                                    below
+                                 </Label>
+                                 <Input
+                                    autoComplete="off"
+                                    autoFocus={!isMobile}
+                                    id="confirmation"
+                                    name="confirmation"
+                                    placeholder="delete this organization"
+                                    value={confirmDeletion}
+                                    onChange={(e) =>
+                                       setConfirmDeletion(e.target.value)
+                                    }
+                                 />
+                              </form>
+                           </div>
+                           <ModalFooter>
+                              <Button
+                                 className="ml-auto"
+                                 form={"delete_organization"}
+                                 type="submit"
+                                 disabled={
+                                    confirmDeletion.trim() !==
+                                       "delete this organization" ||
+                                    deleteOrganization.isPending ||
+                                    deleteOrganization.isSuccess
+                                 }
+                                 variant={"destructive"}
+                              >
+                                 {deleteOrganization.isPending ||
+                                 deleteOrganization.isSuccess ? (
+                                    <>
+                                       <Loading />
+                                       Deleting..
+                                    </>
+                                 ) : (
+                                    "Delete forever"
+                                 )}
+                              </Button>
+                           </ModalFooter>
+                        </ModalContent>
+                     </Modal>
+                  </CardContent>
+               </Card>
+            </div>
          </main>
       </Main>
    )

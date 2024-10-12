@@ -62,14 +62,14 @@ export function Comment({
       <div
          id={comment.id}
          className={cn(
-            "px-4 py-2 transition-colors 2xl:rounded-lg",
+            "px-4 transition-colors 2xl:rounded-xl",
             isHighlighted
                ? "bg-highlight/60 duration-300"
                : "bg-transparent duration-1000",
          )}
       >
          <TransitionHeight data-expanded={isExpanded}>
-            <div className="group relative flex gap-3 pt-3">
+            <div className="group relative flex gap-3 py-3">
                <UserAvatar user={comment.author} />
                <div className={cn("flex-1")}>
                   <div className="-mt-[4px] flex max-h-[22px] items-center justify-between">
@@ -145,15 +145,15 @@ export function Comment({
             className="group"
             data-expanded={!!resolvedBy}
          >
-            <div className="relative flex items-center gap-[12px] pt-3">
+            <div className="relative flex items-center gap-[12px] pt-2 pb-4">
                <span
                   className={
-                     "ml-[3px] grid size-[26px] shrink-0 place-items-center rounded-full border-[3px] border-background bg-primary text-white"
+                     "ml-[3px] grid size-[25px] shrink-0 place-items-center rounded-full bg-primary text-white"
                   }
                >
                   <Icons.check
-                     strokeWidth={3}
-                     className="size-4"
+                     strokeWidth={4}
+                     className="size-[17px]"
                   />
                </span>
                <button
