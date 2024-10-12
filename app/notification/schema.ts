@@ -13,6 +13,7 @@ export const notificationTypes = [
    "issue_resolved",
    "new_issue_comment",
    "issue_mention",
+   "issue_comment_mention",
 ] as const
 
 export const notification = createTable(

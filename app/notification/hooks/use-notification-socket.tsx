@@ -99,6 +99,13 @@ export function useNotificationSocket() {
                         issueId: msg.notification.issueId,
                      }),
                   )
+                  .with("issue_comment_mention", () =>
+                     notify({
+                        title: msg.notification.content,
+                        body: msg.notification.issue.title,
+                        issueId: msg.notification.issueId,
+                     }),
+                  )
                   .with("issue_resolved", () =>
                      notify({
                         title: "Issue resolved",

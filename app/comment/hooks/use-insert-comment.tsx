@@ -5,6 +5,7 @@ import { useCommentStore } from "@/comment/store"
 import { issueByIdQuery } from "@/issue/queries"
 import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
 import { organizationTeammatesIdsQuery } from "@/organization/queries"
+import { useEditorStore } from "@/ui/components/editor/store"
 import { useAuth } from "@/user/hooks"
 import {
    useMutation,
@@ -36,10 +37,18 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
       organizationTeammatesIdsQuery({ organizationId }),
    )
 
+   const mentionedUserIds =
+      useEditorStore().getPendingMentionedUserIds("comment")
+   const setPendingMentions = useEditorStore().setPendingMentions
+   const clearPendingMentions = useEditorStore().clearPendingMentions
+
    const insertComment = useMutation({
       mutationFn: insertFn,
       onMutate: async (input) => {
          onMutate?.()
+
+         setPendingMentions("comment")
+
          await queryClient.cancelQueries(
             commentListQuery({ organizationId, issueId }),
          )
@@ -102,7 +111,11 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
                   senderId: user.id,
                })
 
-               match(teammatesIds.data ?? [])
+               match(
+                  teammatesIds.data?.filter(
+                     (userId) => !mentionedUserIds.includes(userId),
+                  ) ?? [],
+               )
                   .with([], () => {})
                   .otherwise((receiverIds) =>
                      insertNotification.mutate({
@@ -118,8 +131,26 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
                         receiverIds,
                      }),
                   )
+
+               match(mentionedUserIds)
+                  .with([], () => {})
+                  .otherwise(() =>
+                     insertNotification.mutate({
+                        organizationId,
+                        issueId: comment.issueId,
+                        type: "issue_comment_mention",
+                        content: `${user.name} mentioned you in a new comment`,
+                        issue: {
+                           title: issue.data.title,
+                           status: issue.data.status,
+                        },
+                        commentId: comment.id,
+                        receiverIds: mentionedUserIds,
+                     }),
+                  )
             },
          )
+         clearPendingMentions("comment")
       },
    })
 

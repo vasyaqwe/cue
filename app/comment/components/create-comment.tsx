@@ -66,6 +66,7 @@ export function CreateComment({
                issueId,
                organizationId,
             })
+            editorRef.current?.commands.clearContent()
             setContent("")
          }}
          {...props}
@@ -102,7 +103,6 @@ export function CreateComment({
                                  metaKey: true,
                               },
                               () => {
-                                 editorRef.current?.commands.clearContent()
                                  formRef.current?.requestSubmit()
                                  return true
                               },

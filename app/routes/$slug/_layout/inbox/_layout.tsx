@@ -206,7 +206,8 @@ function Notification({
    const { deleteNotifications } = useDeleteNotifications()
 
    const hash =
-      notification.type === "new_issue_comment"
+      notification.type === "new_issue_comment" ||
+      notification.type === "issue_comment_mention"
          ? notification.commentId ?? ""
          : undefined
 
@@ -239,7 +240,7 @@ function Notification({
                >
                   <UserAvatar
                      user={notification.sender}
-                     className="size-10"
+                     className="size-9"
                      showActiveIndicator={false}
                   >
                      {match(notification.type)
@@ -271,6 +272,11 @@ function Notification({
                               <Icons.mention className="size-3.5" />
                            </span>
                         ))
+                        .with("issue_comment_mention", () => (
+                           <span className="-right-px -bottom-px absolute grid size-4 place-items-center rounded-full border border-foreground/10 bg-border text-foreground/90 outline-2 outline-background">
+                              <Icons.mention className="size-3.5" />
+                           </span>
+                        ))
                         .with("new_issue", () => (
                            <span className="-right-px -bottom-px absolute grid size-4 place-items-center rounded-full border border-foreground/10 bg-border outline-2 outline-background">
                               <Icons.plus className="size-3" />
@@ -288,28 +294,30 @@ function Notification({
                                  : "mr-1 size-2.5",
                            )}
                         />
-                        <p className="mr-2 line-clamp-1 font-semibold">
+                        <p className="mr-2 line-clamp-1 font-semibold leading-snug">
                            {notification.issue.title}
                         </p>
                         <span className="ml-auto">
                            <StatusIcon
-                              className="size-4"
+                              className="size-[15px]"
                               status={notification.issue.status}
                            />
                         </span>
                      </div>
                      <div className="flex w-full items-center gap-2">
-                        <p className="line-clamp-1 text-sm opacity-75">
+                        <p
+                           title={stripHTML(notification.content)}
+                           className="line-clamp-1 text-sm tracking-normal opacity-75"
+                        >
                            {notification.type === "new_issue_comment"
                               ? `${notification.sender.name} commented: `
                               : null}
                            {stripHTML(notification.content)}
                         </p>
                         <span className="ml-auto whitespace-nowrap text-xs opacity-75">
-                           {formatDateRelative(
-                              notification.createdAt,
-                              "narrow",
-                           ).replace("ago", "")}
+                           {formatDateRelative(notification.createdAt, "narrow")
+                              .replace("ago", "")
+                              .replace("yesterday", "1d")}
                         </span>
                      </div>
                   </div>

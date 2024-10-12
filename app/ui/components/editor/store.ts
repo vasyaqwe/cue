@@ -10,6 +10,7 @@ type State = {
    range: Range | null
    mentionedUsers: Record<MentionContextType, Set<string>>
    unmentionedUsers: Record<MentionContextType, Set<string>>
+   pendingMentions: Record<MentionContextType, Set<string>>
 }
 
 type Actions = {
@@ -17,6 +18,9 @@ type Actions = {
    removeMentionedUser: (context: MentionContextType, userId: string) => void
    getMentionedUserIds: (context: MentionContextType) => string[]
    getUnmentionedUserIds: (context: MentionContextType) => string[]
+   setPendingMentions: (context: MentionContextType) => void
+   getPendingMentionedUserIds: (context: MentionContextType) => string[]
+   clearPendingMentions: (context: MentionContextType) => void
    clearMentions: (context: MentionContextType) => void
 }
 
@@ -28,6 +32,10 @@ const store = create<State & Actions>()((set, get) => ({
       comment: new Set<string>(),
    },
    unmentionedUsers: {
+      issue: new Set<string>(),
+      comment: new Set<string>(),
+   },
+   pendingMentions: {
       issue: new Set<string>(),
       comment: new Set<string>(),
    },
@@ -61,6 +69,21 @@ const store = create<State & Actions>()((set, get) => ({
       })),
    getMentionedUserIds: (context) => [...get().mentionedUsers[context]],
    getUnmentionedUserIds: (context) => [...get().unmentionedUsers[context]],
+   getPendingMentionedUserIds: (context) => [...get().pendingMentions[context]],
+   setPendingMentions: (context) =>
+      set((state) => ({
+         pendingMentions: {
+            ...state.pendingMentions,
+            [context]: new Set(state.mentionedUsers[context]),
+         },
+      })),
+   clearPendingMentions: (context) =>
+      set((state) => ({
+         pendingMentions: {
+            ...state.pendingMentions,
+            [context]: new Set(),
+         },
+      })),
    clearMentions: (context) =>
       set((state) => ({
          mentionedUsers: {

@@ -84,7 +84,6 @@ export function CreateIssue() {
    const { insertNotification } = useInsertNotification()
 
    const mentionedUserIds = useEditorStore().getMentionedUserIds("issue")
-   const clearMentions = useEditorStore().clearMentions
 
    const teammatesIds = useQuery(
       organizationTeammatesIdsQuery({ organizationId }),
@@ -123,12 +122,11 @@ export function CreateIssue() {
             },
          })
 
-         const filteredReceiverIds =
+         match(
             teammatesIds.data?.filter(
                (userId) => !mentionedUserIds.includes(userId),
-            ) ?? []
-
-         match(filteredReceiverIds)
+            ) ?? [],
+         )
             .with([], () => {})
             .otherwise((receiverIds) =>
                insertNotification.mutate({
@@ -159,8 +157,6 @@ export function CreateIssue() {
                   receiverIds: mentionedUserIds,
                }),
             )
-
-         clearMentions("issue")
       },
    })
 
