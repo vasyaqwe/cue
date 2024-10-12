@@ -1,13 +1,32 @@
 import { useInsertComment } from "@/comment/hooks/use-insert-comment"
 import { Button } from "@/ui/components/button"
 import { cardVariants } from "@/ui/components/card"
+import { EditorContent, EditorRoot } from "@/ui/components/editor"
+import {
+   EditorCommand,
+   EditorCommandList,
+} from "@/ui/components/editor/command/editor-command"
+import {
+   EditorCommandEmpty,
+   EditorCommandItem,
+} from "@/ui/components/editor/command/editor-command-item"
+import { commandItems } from "@/ui/components/editor/command/extension"
+import {
+   link,
+   mention,
+   placeholder,
+   slashCommand,
+   starterKit,
+} from "@/ui/components/editor/extensions"
 import { Icons } from "@/ui/components/icons"
 import { Kbd } from "@/ui/components/kbd"
 import { Tooltip } from "@/ui/components/tooltip"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { useParams } from "@tanstack/react-router"
-import { type ComponentProps, useState } from "react"
+import type { Editor } from "@tiptap/core"
+import { type ComponentProps, useRef, useState } from "react"
+import { match } from "ts-pattern"
 
 export function CreateComment({
    onMutate,
@@ -21,15 +40,21 @@ export function CreateComment({
    const [content, setContent] = useState("")
    const { organizationId, user } = useAuth()
 
-   const { insertComment } = useInsertComment({ onMutate })
+   const { insertComment } = useInsertComment({
+      onMutate,
+   })
+
+   const formRef = useRef<HTMLFormElement>(null)
+   const editorRef = useRef<Editor>()
 
    const isEmpty = content.trim() === ""
 
    return (
       <form
+         ref={formRef}
          className={cn(
             cardVariants(),
-            "border-border/45 pt-0 transition-colors has-focus:border-border",
+            "max-h-[50svh] overflow-y-auto border-border/45 p-0 pt-0 transition-colors has-focus:border-border",
             className,
          )}
          onSubmit={(e) => {
@@ -40,22 +65,78 @@ export function CreateComment({
                issueId,
                organizationId,
             })
-
             setContent("")
          }}
          {...props}
       >
-         <input
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full border-transparent pt-2 pb-4 text-[0.96rem] text-base outline-none placeholder:text-muted-foreground/70"
-            placeholder="Leave a comment.."
-         />
-         <div className="mt-1 flex items-center gap-2">
+         <EditorRoot>
+            <EditorContent
+               onCreate={({ editor }) => {
+                  editorRef.current = editor
+               }}
+               content={content}
+               onUpdate={({ editor }) => {
+                  setContent(editor.getHTML())
+               }}
+               className="p-3 py-0"
+               extensions={[
+                  starterKit,
+                  placeholder("Leave a comment.."),
+                  link,
+                  slashCommand,
+                  mention,
+               ]}
+               placeholder="Leave a comment.."
+               editorProps={{
+                  handleKeyDown: (_view, e) => {
+                     return match(e)
+                        .with(
+                           {
+                              key: "Enter",
+                              ctrlKey: true,
+                           },
+                           {
+                              key: "Enter",
+                              metaKey: true,
+                           },
+                           () => {
+                              editorRef.current?.commands.clearContent()
+                              formRef.current?.requestSubmit()
+                              return true
+                           },
+                        )
+                        .otherwise(() => false)
+                  },
+
+                  attributes: {
+                     class: "md:min-h-12",
+                  },
+               }}
+            >
+               <EditorCommand>
+                  <EditorCommandEmpty>No results</EditorCommandEmpty>
+                  <EditorCommandList>
+                     {commandItems.map((item) => (
+                        <EditorCommandItem
+                           value={item.title}
+                           onSelect={(value) => item.command?.(value as never)}
+                           key={item.title}
+                        >
+                           {item.icon}
+                           {item.title}
+                        </EditorCommandItem>
+                     ))}
+                  </EditorCommandList>
+               </EditorCommand>
+            </EditorContent>
+         </EditorRoot>
+         <div className="sticky bottom-0 flex items-center gap-2 bg-secondary p-3 pt-1">
             <Tooltip
+               alignOffset={-7}
+               align="start"
                content={
                   <span className="flex items-center gap-2">
-                     Attach files
+                     Attach files (coming soon)
                      <span className="inline-flex items-center gap-1">
                         <Kbd>Ctrl</Kbd>
                         <Kbd className="px-0.5 py-0">
@@ -76,6 +157,8 @@ export function CreateComment({
                </Button>
             </Tooltip>
             <Tooltip
+               alignOffset={-7}
+               align="end"
                content={
                   <span className="flex items-center gap-2">
                      Submit

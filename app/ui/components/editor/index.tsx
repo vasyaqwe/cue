@@ -30,12 +30,12 @@ export type EditorContentProps = Omit<EditorProviderProps, "content"> & {
    children?: ReactNode
    className?: string
    content?: string
-   placeholder: string
+   placeholder?: string
 }
 
 export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
    (
-      { className, children, content, placeholder, editorProps, ...props },
+      { className, children, content, placeholder = "", editorProps, ...props },
       ref,
    ) => {
       const editor = useEditor({

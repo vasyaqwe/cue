@@ -106,7 +106,7 @@ export function MentionLabel({ node }: NodeViewProps) {
                      <>
                         <div className="mb-4 flex items-center gap-3">
                            <UserAvatar
-                              className="[&>img]:m-0"
+                              className="size-7 [--indicator-size:0.75rem] [&>img]:m-0"
                               user={user}
                            />
                            <p className="!my-0 font-semibold text-base">

@@ -5,7 +5,7 @@ import type { ComponentProps } from "react"
 const cardVariants = cva(`border border-border p-3 rounded-xl`, {
    variants: {
       variant: {
-         default: `bg-muted/50`,
+         default: `bg-secondary`,
          secondary: "bg-background",
       },
    },

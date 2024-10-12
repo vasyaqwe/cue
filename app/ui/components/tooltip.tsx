@@ -48,13 +48,15 @@ function Tooltip({
          delayDuration={delayDuration}
       >
          <TooltipTrigger asChild>{children}</TooltipTrigger>
-         <TooltipContent
-            side="top"
-            align="center"
-            {...props}
-         >
-            {content}
-         </TooltipContent>
+         <>
+            <TooltipContent
+               side="top"
+               align="center"
+               {...props}
+            >
+               {content}
+            </TooltipContent>
+         </>
       </TooltipPrimitive.Root>
    )
 }

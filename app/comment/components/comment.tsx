@@ -2,6 +2,8 @@ import type * as commentFns from "@/comment/functions"
 import { useDeleteComment } from "@/comment/hooks/use-delete-comment"
 import { useUpdateComment } from "@/comment/hooks/use-update-comment"
 import { Button } from "@/ui/components/button"
+import { EditorContent, EditorRoot } from "@/ui/components/editor"
+import { link, mention, starterKit } from "@/ui/components/editor/extensions"
 import { Icons } from "@/ui/components/icons"
 import { Tooltip } from "@/ui/components/tooltip"
 import { TransitionHeight } from "@/ui/components/transition-height"
@@ -69,7 +71,7 @@ export function Comment({
          )}
       >
          <TransitionHeight data-expanded={isExpanded}>
-            <div className="group relative flex gap-3 py-3">
+            <div className="group relative flex gap-3 pt-3.5 pb-0.5">
                <UserAvatar user={comment.author} />
                <div className={cn("flex-1")}>
                   <div className="-mt-[4px] flex max-h-[22px] items-center justify-between">
@@ -81,7 +83,7 @@ export function Comment({
                            {formatDateRelative(comment.createdAt, "narrow")}
                         </small>
                      </p>
-                     <div className="max-md:-top-0.5 relative top-px right-px flex items-center rounded-full p-0.5 transition-opacity md:pointer-events-none md:group-hover:pointer-events-auto md:absolute md:group-hover:opacity-100 md:opacity-0 md:shadow-button">
+                     <div className="max-md:-top-0.5 relative top-px right-px flex items-center rounded-full bg-background p-0.5 transition-opacity md:pointer-events-none md:group-hover:pointer-events-auto md:absolute md:group-hover:opacity-100 md:opacity-0 md:shadow-button">
                         {resolvedBy ? (
                            <Tooltip content="Reopen comment">
                               <Button
@@ -137,7 +139,18 @@ export function Comment({
                         )}
                      </div>
                   </div>
-                  <p className="mt-0.5">{comment.content}</p>
+                  <EditorRoot>
+                     <EditorContent
+                        editorProps={{
+                           editable: () => false,
+                           attributes: {
+                              class: "mt-1",
+                           },
+                        }}
+                        content={comment.content}
+                        extensions={[starterKit, link, mention]}
+                     />
+                  </EditorRoot>
                </div>
             </div>
          </TransitionHeight>
@@ -145,7 +158,7 @@ export function Comment({
             className="group"
             data-expanded={!!resolvedBy}
          >
-            <div className="relative flex items-center gap-[12px] pt-2 pb-4">
+            <div className="relative flex items-center gap-[12px] py-2">
                <span
                   className={
                      "ml-[3px] grid size-[25px] shrink-0 place-items-center rounded-full bg-primary text-white"

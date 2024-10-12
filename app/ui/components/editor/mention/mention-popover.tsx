@@ -16,12 +16,18 @@ import {
 import { getMentionedUserIds } from "@/ui/components/editor/mention/utils"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { Loading } from "@/ui/components/loading"
-import { Popover, PopoverContent } from "@/ui/components/popover"
+import { Popover, PopoverAnchor, PopoverContent } from "@/ui/components/popover"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { useAuth } from "@/user/hooks"
 import { useQuery } from "@tanstack/react-query"
 import type { Editor } from "@tiptap/core"
-import { forwardRef, useImperativeHandle, useState } from "react"
+import {
+   forwardRef,
+   useEffect,
+   useImperativeHandle,
+   useRef,
+   useState,
+} from "react"
 import { match } from "ts-pattern"
 
 export default forwardRef<
@@ -41,7 +47,6 @@ export default forwardRef<
    }
 >(({ clientRect, query, command, editor }, ref) => {
    const [open, setOpen] = useState(true)
-   const position = clientRect() ?? { left: 0, bottom: 0 }
    const { organizationId, user: currentUser } = useAuth()
    const members = useQuery(organizationMembersQuery({ organizationId }))
    const issues = useQuery(issueListQuery({ organizationId }))
@@ -56,26 +61,29 @@ export default forwardRef<
       },
    }))
 
+   const virtualRef = useRef({
+      getBoundingClientRect: clientRect,
+   })
+
+   useEffect(() => {
+      virtualRef.current.getBoundingClientRect = clientRect
+   }, [clientRect])
+
    return (
       <Popover
          open={open}
          onOpenChange={setOpen}
          drawerOnMobile={false}
       >
+         <PopoverAnchor virtualRef={virtualRef} />
          <PopoverContent
             drawerOnMobile={false}
             title="Command"
-            container={document.body}
-            side="bottom"
+            sideOffset={8}
             align="start"
-            className="relative mt-2 h-56 w-64 scroll-py-1 overflow-y-auto"
+            className="relative h-56 w-64 scroll-py-1 overflow-y-auto"
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
-            style={{
-               position: "absolute",
-               left: position.left,
-               top: position.bottom,
-            }}
          >
             {members.isPending || issues.isPending ? (
                <Loading className="absolute inset-0 m-auto" />

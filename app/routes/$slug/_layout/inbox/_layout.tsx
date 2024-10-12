@@ -302,7 +302,11 @@ function Notification({
                            {notification.type === "new_issue_comment"
                               ? `${notification.sender.name} commented: `
                               : null}
-                           {notification.content}
+                           <span
+                              dangerouslySetInnerHTML={{
+                                 __html: notification.content,
+                              }}
+                           />
                         </p>
                         <span className="ml-auto whitespace-nowrap text-xs opacity-75">
                            {formatDateRelative(

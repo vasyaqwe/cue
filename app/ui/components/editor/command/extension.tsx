@@ -1,9 +1,8 @@
-import { EditorCommandOut } from "@/ui/components/editor/command/editor-command"
-import { Popover, PopoverContent } from "@/ui/components/popover"
+import { SlashCommandPopover } from "@/ui/components/editor/command/command-popover"
 import type { Range } from "@tiptap/core"
 import type { Editor } from "@tiptap/core"
 import { ReactRenderer } from "@tiptap/react"
-import { type ReactNode, useState } from "react"
+import type { ReactNode } from "react"
 
 type CommandItem = {
    title: string
@@ -140,48 +139,6 @@ export const commandItems = [
       },
    },
 ] satisfies CommandItem[]
-
-function SlashCommandPopover({
-   clientRect,
-   query,
-   range,
-}: {
-   clientRect: () => DOMRect
-   query: string
-   range: Range
-}) {
-   const [open, setOpen] = useState(true)
-   const position = clientRect()
-
-   return (
-      <Popover
-         open={open}
-         onOpenChange={setOpen}
-         drawerOnMobile={false}
-      >
-         <PopoverContent
-            drawerOnMobile={false}
-            title="Command"
-            container={document.body}
-            side="bottom"
-            align="start"
-            className="mt-2 min-w-56"
-            onOpenAutoFocus={(e) => e.preventDefault()}
-            onCloseAutoFocus={(e) => e.preventDefault()}
-            style={{
-               position: "absolute",
-               left: position.left,
-               top: position.bottom,
-            }}
-         >
-            <EditorCommandOut
-               query={query}
-               range={range}
-            />
-         </PopoverContent>
-      </Popover>
-   )
-}
 
 export const renderCommandItems = () => {
    let component: ReactRenderer | null = null

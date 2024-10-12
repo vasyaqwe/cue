@@ -17,6 +17,7 @@ import {
    ModalTitle,
 } from "@/modals/dynamic"
 import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
+import { organizationTeammatesIdsQuery } from "@/organization/queries"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
    Combobox,
@@ -25,8 +26,6 @@ import {
    ComboboxTrigger,
 } from "@/ui/components/combobox"
 import { EditorContent, EditorRoot } from "@/ui/components/editor"
-
-import { organizationTeammatesIdsQuery } from "@/organization/queries"
 import {
    EditorCommand,
    EditorCommandList,
