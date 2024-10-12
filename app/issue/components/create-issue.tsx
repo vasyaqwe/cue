@@ -161,7 +161,7 @@ export function CreateIssue() {
    })
 
    return (
-      <ModalContent onAnimationEndCapture={() => titleRef.current?.focus()}>
+      <ModalContent>
          <ModalHeader className="max-md:hidden">
             <ModalTitle>New issue</ModalTitle>
          </ModalHeader>
@@ -190,6 +190,7 @@ export function CreateIssue() {
                id="title"
                placeholder="Issue title"
                required
+               disabled={insert.isPending || insert.isSuccess}
                value={title}
                onChange={(e) => setTitle(e.target.value)}
                className={cn(
@@ -213,6 +214,7 @@ export function CreateIssue() {
                      ]}
                      placeholder="Add description (press '/' for commands)"
                      editorProps={{
+                        editable: () => !(insert.isPending || insert.isSuccess),
                         handleKeyDown: (_, e) => {
                            return match(e)
                               .with(

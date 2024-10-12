@@ -8,17 +8,18 @@ export function SlashCommandPopover({
    query,
    range,
 }: {
-   clientRect: () => DOMRect
+   clientRect: () => DOMRect | undefined
    query: string
    range: Range
 }) {
    const [open, setOpen] = useState(true)
    const virtualRef = useRef({
-      getBoundingClientRect: clientRect,
+      getBoundingClientRect: () => clientRect() ?? new DOMRect(0, 0, 0, 0),
    })
 
    useEffect(() => {
-      virtualRef.current.getBoundingClientRect = clientRect
+      virtualRef.current.getBoundingClientRect = () =>
+         clientRect() ?? new DOMRect(0, 0, 0, 0)
    }, [clientRect])
 
    return (

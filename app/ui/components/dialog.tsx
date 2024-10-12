@@ -11,7 +11,7 @@ const DialogPortal = DialogPrimitive.Portal
 const DialogClose = DialogPrimitive.Close
 
 const dialogVariants = cva(
-   `data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed [scrollbar-gutter:stable] overflow-y-auto z-50 grid w-full inset-0 !h-max max-h-[90svh] m-auto rounded-xl bg-background data-[state=open]:animate-in data-[state=closed]:animate-out`,
+   `data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed overflow-y-auto z-50 grid w-full inset-0 !h-max max-h-[90svh] m-auto rounded-xl bg-background data-[state=open]:animate-in data-[state=closed]:animate-out`,
    {
       variants: {
          variant: {

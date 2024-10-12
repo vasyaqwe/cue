@@ -41,7 +41,7 @@ export default forwardRef<
          issueId?: string | undefined
          status?: IssueStatus | undefined
       }) => void
-      clientRect: () => DOMRect
+      clientRect: () => DOMRect | undefined
       query: string
       range: Range
       editor: Editor
@@ -64,11 +64,12 @@ export default forwardRef<
    }))
 
    const virtualRef = useRef({
-      getBoundingClientRect: clientRect,
+      getBoundingClientRect: () => clientRect() ?? new DOMRect(0, 0, 0, 0),
    })
 
    useEffect(() => {
-      virtualRef.current.getBoundingClientRect = clientRect
+      virtualRef.current.getBoundingClientRect = () =>
+         clientRect() ?? new DOMRect(0, 0, 0, 0)
    }, [clientRect])
 
    return (
