@@ -103,7 +103,7 @@ export function useNotificationSocket() {
                   .with("issue_comment_mention", () =>
                      notify({
                         title: msg.notification.content,
-                        body: msg.notification.issue.title,
+                        body: stripHTML(msg.commentContent ?? ""),
                         issueId: msg.notification.issueId,
                      }),
                   )

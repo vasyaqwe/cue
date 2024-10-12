@@ -81,6 +81,21 @@ export const insertNotificationParams = createInsertSchema(notification)
       }),
       receiverIds: z.array(z.string()),
    })
+   .and(
+      z.discriminatedUnion("type", [
+         z.object({
+            type: z.literal("issue_comment_mention"),
+            commentContent: z.string(),
+         }),
+         z.object({
+            type: z
+               .enum(notificationTypes)
+               .exclude(["issue_comment_mention"] as const),
+            commentContent: z.undefined().optional(),
+         }),
+      ]),
+   )
+
 export const updateNotificationParams = createSelectSchema(notification)
    .omit({
       content: true,

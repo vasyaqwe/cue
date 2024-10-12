@@ -96,7 +96,11 @@ export const insert = createServerFn(
 
          if (!createdNotification) return
 
-         return { ...createdNotification, issue: input.issue }
+         return {
+            ...createdNotification,
+            issue: input.issue,
+            commentContent: input.commentContent,
+         }
       }),
 )
 

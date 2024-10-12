@@ -166,6 +166,7 @@ export function useInsertComment({
                         issueId: comment.issueId,
                         type: "issue_comment_mention",
                         content: `${user.name} mentioned you in a comment`,
+                        commentContent: comment.content,
                         issue: {
                            title: issue.title,
                            status: issue.status,

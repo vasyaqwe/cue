@@ -64,6 +64,7 @@ export function useInsertNotification() {
                      avatarUrl: user.avatarUrl,
                   },
                },
+               commentContent: notif.commentContent,
                senderId: user.id,
             }),
          )
