@@ -1,10 +1,14 @@
 import * as issue from "@/issue/functions"
-import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
+import { useDeleteNotifications } from "@/notification/hooks/use-delete-notification"
 import { notificationListQuery } from "@/notification/queries"
 import { useAuth } from "@/user/hooks"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+   useMutation,
+   useQueryClient,
+   useSuspenseQuery,
+} from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
@@ -12,13 +16,51 @@ import { match } from "ts-pattern"
 
 export function useDeleteIssue() {
    const queryClient = useQueryClient()
+   const { organizationId, user } = useAuth()
    const sendEvent = useIssueStore().sendEvent
    const params = useParams({ from: "/$slug/_layout" })
    const navigate = useNavigate()
-   const { organizationId, user } = useAuth()
-   const { deleteIssueFromQueryData } = useIssueQueryMutator()
+
+   const { deleteNotificationsFromQueryData } = useDeleteNotifications()
+   const notificatons = useSuspenseQuery(
+      notificationListQuery({ organizationId }),
+   )
 
    const isOnIssueIdPage = "issueId" in params && params.issueId
+
+   const deleteIssueFromQueryData = ({ issueId }: { issueId: string }) => {
+      if (isOnIssueIdPage && params.issueId === issueId) {
+         navigate({ to: "/$slug", params: { slug: params.slug } })
+      }
+
+      queryClient.setQueryData(
+         issueListQuery({ organizationId }).queryKey,
+         (oldData) => oldData?.filter((issue) => issue.id !== issueId),
+      )
+
+      queryClient.setQueryData(
+         issueByIdQuery({ issueId, organizationId }).queryKey,
+         () => null,
+      )
+
+      // delete notifications that have issueId === deleted issue id (due on onCascade delete)
+      match(notificatons.data)
+         .with([], () => {})
+         .otherwise((data) =>
+            match(
+               data.filter((notification) => notification.issueId === issueId),
+            )
+               .with([], () => {})
+               .otherwise((notificationsToDelete) =>
+                  deleteNotificationsFromQueryData({
+                     issueIds: notificationsToDelete.map(
+                        (notification) => notification.issueId,
+                     ),
+                     notificationId: undefined,
+                  }),
+               ),
+         )
+   }
 
    const deleteFn = useServerFn(issue.deleteFn)
    const deleteIssue = useMutation({
@@ -68,5 +110,6 @@ export function useDeleteIssue() {
 
    return {
       deleteIssue,
+      deleteIssueFromQueryData,
    }
 }

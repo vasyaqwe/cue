@@ -6,7 +6,6 @@ import { useEventListener } from "@/interactions/use-event-listener"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
 import { useDeleteIssue } from "@/issue/hooks/use-delete-issue"
-import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { issueByIdQuery } from "@/issue/queries"
 import {
@@ -80,9 +79,8 @@ export function IssueDetails() {
       commentListQuery({ organizationId, issueId }),
    )
    const issue = query.data
-   const { updateIssueInQueryData } = useIssueQueryMutator()
    const { deleteIssue } = useDeleteIssue()
-   const { updateIssue } = useUpdateIssue()
+   const { updateIssue, updateIssueInQueryData } = useUpdateIssue()
 
    const lastSavedState = useRef({
       title: issue?.title,

@@ -1,37 +1,36 @@
 import * as comment from "@/comment/functions"
-import { useCommentQueryMutator } from "@/comment/hooks/use-comment-query-mutator"
 import { commentListQuery } from "@/comment/queries"
 import { useCommentStore } from "@/comment/store"
-import { issueByIdQuery } from "@/issue/queries"
+import type { IssueStatus } from "@/issue/schema"
 import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
 import { organizationTeammatesIdsQuery } from "@/organization/queries"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { useAuth } from "@/user/hooks"
-import {
-   useMutation,
-   useQuery,
-   useQueryClient,
-   useSuspenseQuery,
-} from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { toast } from "sonner"
 import { P, match } from "ts-pattern"
 
-export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
+export function useInsertComment({
+   onMutate,
+   issue,
+}: {
+   onMutate?: () => void
+   issue?: {
+      title: string
+      status: IssueStatus
+   }
+} = {}) {
    const { issueId } = useParams({ strict: false })
-   if (!issueId)
-      throw new Error("useInsertComment must be used in an $issueId route")
 
    const queryClient = useQueryClient()
    const { organizationId, user } = useAuth()
 
-   const issue = useSuspenseQuery(issueByIdQuery({ organizationId, issueId }))
    const sendEvent = useCommentStore().sendEvent
    const { insertNotification } = useInsertNotification()
 
    const insertFn = useServerFn(comment.insert)
-   const { insertCommentToQueryData } = useCommentQueryMutator()
 
    const teammatesIds = useQuery(
       organizationTeammatesIdsQuery({ organizationId }),
@@ -42,9 +41,26 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
    const setPendingMentions = useEditorStore().setPendingMentions
    const clearPendingMentions = useEditorStore().clearPendingMentions
 
+   const insertCommentToQueryData = ({
+      input,
+   }: { input: Awaited<ReturnType<typeof comment.list>>[number] }) => {
+      queryClient.setQueryData(
+         commentListQuery({ organizationId, issueId: input.issueId }).queryKey,
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) => [...data, input]),
+      )
+   }
+
    const insertComment = useMutation({
       mutationFn: insertFn,
       onMutate: async (input) => {
+         if (!issueId)
+            throw new Error(
+               "insertComment mutation must be used in an $issueId route",
+            )
+
          onMutate?.()
 
          setPendingMentions("comment")
@@ -75,6 +91,11 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
          return { data }
       },
       onError: (_err, _data, context) => {
+         if (!issueId)
+            throw new Error(
+               "insertComment mutation must be used in an $issueId route",
+            )
+
          queryClient.setQueryData(
             commentListQuery({ organizationId, issueId }).queryKey,
             context?.data,
@@ -82,6 +103,11 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
          toast.error("Failed to submit comment")
       },
       onSettled: (comment, error) => {
+         if (!issueId)
+            throw new Error(
+               "insertComment mutation must be used in an $issueId route",
+            )
+
          queryClient.invalidateQueries(
             commentListQuery({ organizationId, issueId }),
          )
@@ -90,7 +116,7 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
             {
                error: null,
                comment: P.not(undefined),
-               issue: { data: P.not(null) },
+               issue: P.not(undefined),
             },
             ({ comment, issue }) => {
                sendEvent({
@@ -107,7 +133,7 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
                         name: user.name,
                      },
                   },
-                  issueTitle: issue.data.title,
+                  issueTitle: issue.title,
                   senderId: user.id,
                })
 
@@ -124,8 +150,8 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
                         type: "new_issue_comment",
                         content: comment.content,
                         issue: {
-                           title: issue.data.title,
-                           status: issue.data.status,
+                           title: issue.title,
+                           status: issue.status,
                         },
                         commentId: comment.id,
                         receiverIds,
@@ -139,10 +165,10 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
                         organizationId,
                         issueId: comment.issueId,
                         type: "issue_comment_mention",
-                        content: `${user.name} mentioned you in a new comment`,
+                        content: `${user.name} mentioned you in a comment`,
                         issue: {
-                           title: issue.data.title,
-                           status: issue.data.status,
+                           title: issue.title,
+                           status: issue.status,
                         },
                         commentId: comment.id,
                         receiverIds: mentionedUserIds,
@@ -156,5 +182,6 @@ export function useInsertComment({ onMutate }: { onMutate?: () => void } = {}) {
 
    return {
       insertComment,
+      insertCommentToQueryData,
    }
 }

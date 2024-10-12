@@ -1,5 +1,8 @@
 import * as notification from "@/notification/functions"
-import { notificationListQuery } from "@/notification/queries"
+import {
+   notificationListQuery,
+   notificationUnreadCountQuery,
+} from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -10,6 +13,27 @@ export function useInsertNotification() {
    const queryClient = useQueryClient()
    const { organizationId, user } = useAuth()
    const sendEvent = useNotificationStore().sendEvent
+
+   const insertNotificationToQueryData = ({
+      input,
+   }: { input: Awaited<ReturnType<typeof notification.list>>[number] }) => {
+      queryClient.setQueryData(
+         notificationListQuery({ organizationId }).queryKey,
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) => [input, ...data]),
+      )
+      queryClient.setQueryData(
+         notificationUnreadCountQuery({ organizationId }).queryKey,
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) => ({
+                  count: data.count + 1,
+               })),
+      )
+   }
 
    const insertFn = useServerFn(notification.insert)
    const insertNotification = useMutation({
@@ -48,5 +72,6 @@ export function useInsertNotification() {
 
    return {
       insertNotification,
+      insertNotificationToQueryData,
    }
 }

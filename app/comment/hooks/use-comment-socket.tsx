@@ -1,4 +1,6 @@
-import { useCommentQueryMutator } from "@/comment/hooks/use-comment-query-mutator"
+import { useDeleteComment } from "@/comment/hooks/use-delete-comment"
+import { useInsertComment } from "@/comment/hooks/use-insert-comment"
+import { useUpdateComment } from "@/comment/hooks/use-update-comment"
 import { useCommentStore } from "@/comment/store"
 import type { CommentEvent } from "@/comment/types"
 import { env } from "@/env"
@@ -9,11 +11,10 @@ import { match } from "ts-pattern"
 
 export function useCommentSocket() {
    const { organizationId, user } = useAuth()
-   const {
-      insertCommentToQueryData,
-      deleteCommentFromQueryData,
-      updateCommentInQueryData,
-   } = useCommentQueryMutator()
+
+   const { deleteCommentFromQueryData } = useDeleteComment()
+   const { updateCommentInQueryData } = useUpdateComment()
+   const { insertCommentToQueryData } = useInsertComment()
 
    const socket = usePartySocket({
       host: env.VITE_PARTYKIT_URL,

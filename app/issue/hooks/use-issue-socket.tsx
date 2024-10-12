@@ -1,5 +1,7 @@
 import { env } from "@/env"
-import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
+import { useDeleteIssue } from "@/issue/hooks/use-delete-issue"
+import { useInsertIssue } from "@/issue/hooks/use-insert-issue"
+import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { useIssueStore } from "@/issue/store"
 import type { IssueEvent } from "@/issue/types"
 import { useAuth } from "@/user/hooks"
@@ -10,11 +12,9 @@ import { match } from "ts-pattern"
 export function useIssueSocket() {
    const { organizationId, user } = useAuth()
 
-   const {
-      deleteIssueFromQueryData,
-      insertIssueToQueryData,
-      updateIssueInQueryData,
-   } = useIssueQueryMutator()
+   const { insertIssueToQueryData } = useInsertIssue()
+   const { updateIssueInQueryData } = useUpdateIssue()
+   const { deleteIssueFromQueryData } = useDeleteIssue()
 
    const socket = usePartySocket({
       host: env.VITE_PARTYKIT_URL,

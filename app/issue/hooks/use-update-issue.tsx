@@ -1,10 +1,10 @@
 import * as issue from "@/issue/functions"
-import { useIssueQueryMutator } from "@/issue/hooks/use-issue-query-mutator"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
+import type { updateIssueParams } from "@/issue/schema"
 import { useIssueStore } from "@/issue/store"
 import { useDeleteNotifications } from "@/notification/hooks/use-delete-notification"
 import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
-import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
+import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
 import { notificationListQuery } from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"
 import { organizationTeammatesIdsQuery } from "@/organization/queries"
@@ -18,8 +18,10 @@ import {
 } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
+import { produce } from "immer"
 import { toast } from "sonner"
 import { P, match } from "ts-pattern"
+import type { z } from "zod"
 
 export function useUpdateIssue() {
    const queryClient = useQueryClient()
@@ -27,8 +29,7 @@ export function useUpdateIssue() {
    const sendNotificationEvent = useNotificationStore().sendEvent
    const params = useParams({ strict: false })
    const { organizationId, user } = useAuth()
-   const { updateIssueInQueryData } = useIssueQueryMutator()
-   const { updateNotificationsInQueryData } = useNotificationQueryMutator()
+   const { updateNotificationsInQueryData } = useUpdateNotification()
    const { insertNotification } = useInsertNotification()
    const { deleteNotifications } = useDeleteNotifications()
    const notificatons = useSuspenseQuery(
@@ -44,6 +45,65 @@ export function useUpdateIssue() {
    const teammatesIds = useQuery(
       organizationTeammatesIdsQuery({ organizationId }),
    )
+
+   const updateIssueInQueryData = ({
+      input,
+   }: {
+      input: z.infer<typeof updateIssueParams>
+   }) => {
+      queryClient.setQueryData(
+         issueListQuery({ organizationId }).queryKey,
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) =>
+                  produce(data, (draft) =>
+                     match(draft?.find((issue) => issue.id === input.id))
+                        .with(undefined, () => {})
+                        .otherwise((issue) => {
+                           issue.title = input.title
+
+                           match(input)
+                              .with(
+                                 { description: P.not(undefined) },
+                                 (input) => {
+                                    issue.description = input.description
+                                 },
+                              )
+                              .with({ label: P.not(undefined) }, (input) => {
+                                 issue.label = input.label
+                              })
+                              .with({ status: P.not(undefined) }, (input) => {
+                                 issue.status = input.status
+                              })
+                        }),
+                  ),
+               ),
+      )
+
+      queryClient.setQueryData(
+         issueByIdQuery({ issueId: input.id, organizationId }).queryKey,
+         (oldData) =>
+            match(oldData)
+               .with(P.nullish, (data) => data)
+               .otherwise((data) =>
+                  produce(data, (draft) => {
+                     draft.title = input.title
+
+                     match(input)
+                        .with({ description: P.not(undefined) }, (input) => {
+                           draft.description = input.description
+                        })
+                        .with({ label: P.not(undefined) }, (input) => {
+                           draft.label = input.label
+                        })
+                        .with({ status: P.not(undefined) }, (input) => {
+                           draft.status = input.status
+                        })
+                  }),
+               ),
+      )
+   }
 
    const updateFn = useServerFn(issue.update)
    const updateIssue = useMutation({
@@ -191,5 +251,6 @@ export function useUpdateIssue() {
 
    return {
       updateIssue,
+      updateIssueInQueryData,
    }
 }

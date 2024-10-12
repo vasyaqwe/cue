@@ -1,9 +1,11 @@
 import { env } from "@/env"
-import { useNotificationQueryMutator } from "@/notification/hooks/use-notification-query-mutator"
+import { useDeleteNotifications } from "@/notification/hooks/use-delete-notification"
+import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
 import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
 import { notificationListQuery } from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"
 import type { NotificationEvent } from "@/notification/types"
+import { stripHTML } from "@/ui/components/editor/utils"
 import { useAuth } from "@/user/hooks"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useLocation, useNavigate, useParams } from "@tanstack/react-router"
@@ -16,16 +18,15 @@ export function useNotificationSocket() {
    const { slug } = useParams({ from: "/$slug/_layout" })
    const { pathname } = useLocation()
    const navigate = useNavigate()
-   const {
-      insertNotificationToQueryData,
-      updateIssuesInNotificationsQueryData,
-      deleteNotificationsFromQueryData,
-   } = useNotificationQueryMutator()
+
    const notifications = useSuspenseQuery(
       notificationListQuery({ organizationId }),
    )
 
-   const { updateNotification } = useUpdateNotification()
+   const { updateNotification, updateIssuesInNotificationsQueryData } =
+      useUpdateNotification()
+   const { insertNotificationToQueryData } = useInsertNotification()
+   const { deleteNotificationsFromQueryData } = useDeleteNotifications()
 
    const notify = ({
       title,
@@ -116,7 +117,7 @@ export function useNotificationSocket() {
                   .with("new_issue_comment", () =>
                      notify({
                         title: `${msg.notification.sender.name} commented on ${msg.notification.issue.title}`,
-                        body: msg.notification.content,
+                        body: stripHTML(msg.notification.content),
                         issueId: msg.notification.issueId,
                      }),
                   )

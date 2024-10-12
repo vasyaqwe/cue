@@ -1,4 +1,5 @@
 import { useInsertComment } from "@/comment/hooks/use-insert-comment"
+import { issueByIdQuery } from "@/issue/queries"
 import { Button } from "@/ui/components/button"
 import { cardVariants } from "@/ui/components/card"
 import { EditorContent, EditorRoot } from "@/ui/components/editor"
@@ -24,6 +25,7 @@ import { Kbd } from "@/ui/components/kbd"
 import { Tooltip } from "@/ui/components/tooltip"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
 import type { Editor } from "@tiptap/core"
 import { type ComponentProps, useRef, useState } from "react"
@@ -38,17 +40,28 @@ export function CreateComment({
    if (!issueId)
       throw new Error("CreateComment must be used in an $issueId route")
 
-   const [content, setContent] = useState("")
    const { organizationId, user } = useAuth()
+
+   const issue = useSuspenseQuery(issueByIdQuery({ organizationId, issueId }))
+
+   const [content, setContent] = useState("")
 
    const { insertComment } = useInsertComment({
       onMutate,
+      issue: issue?.data
+         ? {
+              title: issue.data.title,
+              status: issue.data.status,
+           }
+         : undefined,
    })
 
    const formRef = useRef<HTMLFormElement>(null)
    const editorRef = useRef<Editor>()
 
    const isEmpty = content.trim() === ""
+
+   if (!issue?.data) return null
 
    return (
       <form
