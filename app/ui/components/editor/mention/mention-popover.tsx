@@ -132,7 +132,7 @@ export default forwardRef<
                                  className="size-6 [--indicator-size:0.75rem]"
                                  user={user}
                               />
-                              <span className="line-clamp-1 break-all">
+                              <span className="line-clamp-1 break-all break-all">
                                  {user.name}
                               </span>
                            </EditorMentionItem>
@@ -157,7 +157,7 @@ export default forwardRef<
                                  className="!size-[18px]"
                                  status={issue.status}
                               />
-                              <span className="line-clamp-1 break-all">
+                              <span className="line-clamp-1 break-all break-all">
                                  {issue.title}
                               </span>
                            </EditorMentionItem>

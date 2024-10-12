@@ -76,7 +76,7 @@ export function Comment({
                <UserAvatar user={comment.author} />
                <div className={cn("flex-1")}>
                   <div className="-mt-[4px] flex max-h-[22px] items-center justify-between">
-                     <p className="line-clamp-1">
+                     <p className="line-clamp-1 break-all">
                         <strong className="mr-1 font-semibold">
                            {comment.author.name}
                         </strong>

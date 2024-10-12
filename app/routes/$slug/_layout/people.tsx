@@ -146,10 +146,10 @@ function Component() {
                                  user={member.user}
                               />
                               <div>
-                                 <p className="line-clamp-1 font-semibold">
+                                 <p className="line-clamp-1 break-all font-semibold">
                                     {member.user.name}
                                  </p>
-                                 <p className="line-clamp-1 opacity-75">
+                                 <p className="line-clamp-1 break-all opacity-75">
                                     {member.user.email}
                                  </p>
                               </div>

@@ -294,7 +294,7 @@ function Notification({
                                  : "mr-1 size-2.5",
                            )}
                         />
-                        <p className="mr-2 line-clamp-1 font-semibold leading-snug">
+                        <p className="mr-2 line-clamp-1 break-all font-semibold leading-snug">
                            {notification.issue.title}
                         </p>
                         <span className="ml-auto">
@@ -307,7 +307,7 @@ function Notification({
                      <div className="flex w-full items-center gap-2">
                         <p
                            title={stripHTML(notification.content)}
-                           className="line-clamp-1 text-sm tracking-normal opacity-75"
+                           className="line-clamp-1 break-all text-sm tracking-normal opacity-75"
                         >
                            {notification.type === "new_issue_comment"
                               ? `${notification.sender.name} commented: `
