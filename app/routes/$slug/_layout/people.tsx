@@ -12,7 +12,7 @@ import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { Button, buttonVariants } from "@/ui/components/button"
 import { Icons } from "@/ui/components/icons"
-import { inputVariants } from "@/ui/components/input"
+import { Input } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
@@ -89,12 +89,12 @@ function Component() {
                            </p>
 
                            <div className="relative mt-4 flex items-center gap-1.5">
-                              <input
+                              <Input
                                  readOnly
                                  ref={inputRef}
                                  onClick={copyLink}
                                  value={joinLink}
-                                 className={cn(inputVariants(), "truncate")}
+                                 className={"truncate"}
                                  onFocus={(e) => e.target.select()}
                               />
                               <Button

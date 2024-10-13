@@ -2,17 +2,12 @@ import { Comment } from "@/comment/components/comment"
 import { CreateComment } from "@/comment/components/create-comment"
 import { commentListQuery } from "@/comment/queries"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
-import { useEventListener } from "@/interactions/use-event-listener"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
 import { useDeleteIssue } from "@/issue/hooks/use-delete-issue"
 import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { issueByIdQuery } from "@/issue/queries"
-import {
-   issueLabels,
-   issueStatuses,
-   type updateIssueParams,
-} from "@/issue/schema"
+import { issueLabels, issueStatuses } from "@/issue/schema"
 import { useOnPushModal } from "@/modals"
 import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
 import { Button, buttonVariants } from "@/ui/components/button"
@@ -59,12 +54,11 @@ import { useAuth } from "@/user/hooks"
 import { formatDateRelative } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useLocation, useParams } from "@tanstack/react-router"
-import { useMemo, useRef, useState } from "react"
+import type { Editor } from "@tiptap/core"
+import { useEffect, useRef, useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
-import { debounce } from "remeda"
 import { toast } from "sonner"
 import { match } from "ts-pattern"
-import type { z } from "zod"
 
 export function IssueDetails() {
    const { issueId } = useParams({ strict: false })
@@ -82,55 +76,6 @@ export function IssueDetails() {
    const { deleteIssue } = useDeleteIssue()
    const { updateIssue, updateIssueInQueryData } = useUpdateIssue()
 
-   const lastSavedState = useRef({
-      title: issue?.title,
-      description: issue?.description,
-   })
-
-   const hasUnsavedChanges =
-      issue?.title !== lastSavedState.current.title ||
-      issue?.description !== lastSavedState.current.description
-
-   useEventListener("beforeunload", (e) =>
-      match(hasUnsavedChanges).with(true, () => e.preventDefault()),
-   )
-
-   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-   const debouncedSaveIssue = useMemo(
-      () =>
-         debounce(
-            (updatedFields: z.infer<typeof updateIssueParams>) => {
-               match({
-                  updatedTitle: updatedFields.title,
-                  updatedDescription: updatedFields.description,
-               })
-                  .with(
-                     {
-                        updatedTitle: lastSavedState.current.title,
-                        updatedDescription: lastSavedState.current.description,
-                     },
-                     () => {},
-                  )
-                  .otherwise(() => {
-                     const payload = {
-                        title: updatedFields.title,
-                        description: updatedFields.description,
-                     }
-
-                     updateIssue.mutate({
-                        ...payload,
-                        id: issueId,
-                        organizationId,
-                     })
-
-                     lastSavedState.current = payload
-                  })
-            },
-            { waitMs: 1500 },
-         ),
-      [issueId, organizationId],
-   )
-
    const { copy } = useCopyToClipboard()
 
    const onCopyIssueUrl = () => {
@@ -141,6 +86,35 @@ export function IssueDetails() {
       e.preventDefault()
       onCopyIssueUrl()
    })
+
+   const titleRef = useRef<HTMLInputElement>(null)
+   const descriptionRef = useRef<Editor>()
+
+   // handle browser back button press
+   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+   useEffect(() => {
+      if (!issue || updateIssue.isPending || pathname.includes(issueId)) return
+
+      // input blur works reliably
+      titleRef.current?.blur()
+
+      // editor blur doesn't, so update directly
+      match(descriptionRef.current?.getHTML()).when(
+         (description) => description !== issue.description,
+         (description) => {
+            const input = {
+               id: issueId,
+               organizationId,
+               title: issue.title,
+               description,
+            }
+            updateIssueInQueryData({
+               input,
+            })
+            updateIssue.mutate(input)
+         },
+      )
+   }, [pathname])
 
    const [createIssueOpen, setCreateIssueOpen] = useState(false)
    useOnPushModal("create_issue", (open) => setCreateIssueOpen(open))
@@ -190,47 +164,59 @@ export function IssueDetails() {
                   <div className="px-4">
                      <Input
                         key={issueId}
+                        ref={titleRef}
                         autoComplete="off"
                         defaultValue={issue.title}
                         name="title"
                         id="title"
                         placeholder="Issue title"
-                        required
-                        onChange={(e) => {
-                           updateIssueInQueryData({
-                              input: {
-                                 id: issueId,
-                                 organizationId,
-                                 title: e.target.value,
+                        onBlur={(e) => {
+                           const title = e.target.value
+                           match(title).when(
+                              (title) => title !== issue.title,
+                              (title) => {
+                                 const input = {
+                                    id: issueId,
+                                    organizationId,
+                                    title,
+                                 }
+                                 updateIssueInQueryData({
+                                    input,
+                                 })
+                                 updateIssue.mutate(input)
+                                 toast("title updated")
                               },
-                           })
-                           debouncedSaveIssue.call({
-                              ...issue,
-                              title: e.target.value,
-                           })
+                           )
                         }}
                         className="!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
                      />
                      <EditorRoot>
                         <MentionProvider value="issue">
                            <EditorContent
+                              onCreate={({ editor }) => {
+                                 descriptionRef.current = editor
+                              }}
                               key={issueId}
                               className="mt-3"
                               content={issue.description}
-                              onUpdate={({ editor }) => {
+                              onBlur={({ editor }) => {
                                  const description = editor.getHTML()
-                                 updateIssueInQueryData({
-                                    input: {
-                                       id: issueId,
-                                       organizationId,
-                                       title: issue.title,
-                                       description,
+                                 match(description).when(
+                                    (description) =>
+                                       description !== issue.description,
+                                    (description) => {
+                                       const input = {
+                                          id: issueId,
+                                          organizationId,
+                                          title: issue.title,
+                                          description,
+                                       }
+                                       updateIssueInQueryData({
+                                          input,
+                                       })
+                                       updateIssue.mutate(input)
                                     },
-                                 })
-                                 debouncedSaveIssue.call({
-                                    ...issue,
-                                    description,
-                                 })
+                                 )
                               }}
                               extensions={[
                                  starterKit,

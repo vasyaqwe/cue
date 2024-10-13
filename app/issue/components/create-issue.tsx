@@ -44,7 +44,7 @@ import {
 } from "@/ui/components/editor/extensions"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { useEditorStore } from "@/ui/components/editor/store"
-import { inputVariants } from "@/ui/components/input"
+import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
 import { Loading } from "@/ui/components/loading"
 import { Tooltip } from "@/ui/components/tooltip"
@@ -183,7 +183,7 @@ export function CreateIssue() {
             }}
             className="flex w-full flex-col p-4 pt-3"
          >
-            <input
+            <Input
                ref={titleRef}
                autoComplete="off"
                name="title"
@@ -194,7 +194,6 @@ export function CreateIssue() {
                value={title}
                onChange={(e) => setTitle(e.target.value)}
                className={cn(
-                  inputVariants(),
                   "!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-bold text-xl",
                )}
             />

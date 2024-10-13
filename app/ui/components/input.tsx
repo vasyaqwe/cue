@@ -1,6 +1,6 @@
 import { cn } from "@/ui/utils"
 import { cva } from "class-variance-authority"
-import type { ComponentProps } from "react"
+import { type ComponentProps, forwardRef } from "react"
 import { buttonVariants } from "./button"
 
 const inputVariants = cva(
@@ -9,14 +9,17 @@ const inputVariants = cva(
     has-[+button[data-clearinput]:active]:border-primary
     has-[+button[data-clearinput]:active]:outline-primary/30 appearance-none`,
 )
-function Input({ className, ...props }: ComponentProps<"input">) {
-   return (
-      <input
-         className={cn(inputVariants(), className)}
-         {...props}
-      />
-   )
-}
+const Input = forwardRef<HTMLInputElement, ComponentProps<"input">>(
+   ({ className, ...props }, ref) => {
+      return (
+         <input
+            ref={ref}
+            className={cn(inputVariants(), className)}
+            {...props}
+         />
+      )
+   },
+)
 
 function ClearInputButton({
    className,

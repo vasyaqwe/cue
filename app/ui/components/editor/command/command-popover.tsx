@@ -36,7 +36,7 @@ export function SlashCommandPopover({
             sideOffset={8}
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
-            className="h-[181px] min-w-56 scroll-py-1 overflow-y-auto"
+            className="h-[183px] min-w-56 scroll-py-1 overflow-y-auto"
          >
             <EditorCommandOut
                query={query}
