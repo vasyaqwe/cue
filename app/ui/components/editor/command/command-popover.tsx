@@ -26,6 +26,7 @@ export function SlashCommandPopover({
       <Popover
          open={open}
          onOpenChange={setOpen}
+         drawerOnMobile={false}
       >
          <PopoverAnchor virtualRef={virtualRef} />
          <PopoverContent
