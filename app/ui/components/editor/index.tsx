@@ -39,7 +39,15 @@ export type EditorContentProps = Omit<EditorProviderProps, "content"> & {
 
 export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
    (
-      { className, children, content, placeholder = "", editorProps, ...props },
+      {
+         className,
+         children,
+         content,
+         onUpdate,
+         placeholder = "",
+         editorProps,
+         ...props
+      },
       ref,
    ) => {
       const { user } = useAuth()
@@ -57,7 +65,6 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
       const mentionedUserIds = useEditorStore().getMentionedUserIds(context)
       const addMentionedUser = useEditorStore().addMentionedUser
       const removeMentionedUser = useEditorStore().removeMentionedUser
-      console.log(mentionedUserIds)
 
       return (
          <div
@@ -120,7 +127,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                         }
                      }
 
-                     props?.onUpdate?.({ editor, transaction })
+                     onUpdate?.({ editor, transaction })
                   }}
                   editorProps={{
                      ...editorProps,
