@@ -146,7 +146,7 @@ export function Comment({
                            editorProps={{
                               editable: () => false,
                               attributes: {
-                                 class: "mt-1",
+                                 class: "mt-[3px]",
                               },
                            }}
                            content={comment.content}
