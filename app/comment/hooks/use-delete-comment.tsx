@@ -1,7 +1,7 @@
 import * as comment from "@/comment/functions"
 import { commentListQuery } from "@/comment/queries"
 import { useCommentStore } from "@/comment/store"
-import { useDeleteNotifications } from "@/notification/hooks/use-delete-notification"
+import { useDeleteNotifications } from "@/notification/hooks/use-delete-notifications"
 import { notificationListQuery } from "@/notification/queries"
 import { useAuth } from "@/user/hooks"
 import {

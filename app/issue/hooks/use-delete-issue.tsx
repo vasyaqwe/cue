@@ -1,7 +1,7 @@
 import * as issue from "@/issue/functions"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
-import { useDeleteNotifications } from "@/notification/hooks/use-delete-notification"
+import { useDeleteNotifications } from "@/notification/hooks/use-delete-notifications"
 import { notificationListQuery } from "@/notification/queries"
 import { useAuth } from "@/user/hooks"
 import {

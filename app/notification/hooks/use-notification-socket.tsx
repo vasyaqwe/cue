@@ -1,5 +1,5 @@
 import { env } from "@/env"
-import { useDeleteNotifications } from "@/notification/hooks/use-delete-notification"
+import { useDeleteNotifications } from "@/notification/hooks/use-delete-notifications"
 import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
 import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
 import { notificationListQuery } from "@/notification/queries"

@@ -2,7 +2,7 @@ import * as issue from "@/issue/functions"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import type { updateIssueParams } from "@/issue/schema"
 import { useIssueStore } from "@/issue/store"
-import { useDeleteNotifications } from "@/notification/hooks/use-delete-notification"
+import { useDeleteNotifications } from "@/notification/hooks/use-delete-notifications"
 import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
 import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
 import { notificationListQuery } from "@/notification/queries"
@@ -194,6 +194,8 @@ export function useUpdateIssue() {
                         receiverIds,
                      }),
                   )
+
+               console.log(unmentionedUserIds)
 
                match(unmentionedUserIds)
                   .with([], () => {})

@@ -96,10 +96,13 @@ export function useDeleteNotifications() {
             notificationListQuery({ organizationId }).queryKey,
          )
 
-         deleteNotificationsFromQueryData({
-            issueIds,
-            notificationId: undefined,
-         })
+         // only if you are deleting your own notifications
+         match(receiverIds).with([], () =>
+            deleteNotificationsFromQueryData({
+               issueIds,
+               notificationId: undefined,
+            }),
+         )
 
          match(receiverIds)
             .with([], () => {})

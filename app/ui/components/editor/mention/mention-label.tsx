@@ -6,8 +6,6 @@ import {
    mentionLabelIssueClassName,
    mentionLabelPersonClassName,
 } from "@/ui/components/editor/mention/constants"
-import { useMentionContext } from "@/ui/components/editor/mention/context"
-import { useEditorStore } from "@/ui/components/editor/store"
 import {
    HoverCard,
    HoverCardContent,
@@ -20,11 +18,10 @@ import { useAuth } from "@/user/hooks"
 import { useQuery } from "@tanstack/react-query"
 import { Link, useParams } from "@tanstack/react-router"
 import { type NodeViewProps, NodeViewWrapper } from "@tiptap/react"
-import { useEffect } from "react"
-import { P, match } from "ts-pattern"
+import {} from "ts-pattern"
 
 export function MentionLabel({ node }: NodeViewProps) {
-   const { organizationId, user: currentUser } = useAuth()
+   const { organizationId } = useAuth()
    const { slug } = useParams({ from: "/$slug/_layout" })
    const members = useQuery(organizationMembersQuery({ organizationId }))
    const issues = useQuery(issueListQuery({ organizationId }))
@@ -36,20 +33,7 @@ export function MentionLabel({ node }: NodeViewProps) {
    const user = members.data?.find(({ user }) => user.id === userId)?.user
    const issue = issues.data?.find(({ id }) => id === issueId)
 
-   const removeMentionedUser = useEditorStore().removeMentionedUser
-
    const isIssueError = issues.isError || !issue
-
-   const context = useMentionContext()
-   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-   useEffect(() => {
-      return () => {
-         match(userId).with(P.not(undefined), (id) => {
-            if (id === currentUser.id) return
-            removeMentionedUser(context, id)
-         })
-      }
-   }, [])
 
    return (
       <NodeViewWrapper className="inline w-fit">

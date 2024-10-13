@@ -1,6 +1,6 @@
 import { StatusIcon } from "@/issue/components/icons"
 import type * as notificationFns from "@/notification/functions"
-import { useDeleteNotifications } from "@/notification/hooks/use-delete-notification"
+import { useDeleteNotifications } from "@/notification/hooks/use-delete-notifications"
 import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
 import { notificationListQuery } from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"

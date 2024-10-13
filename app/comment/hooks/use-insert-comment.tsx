@@ -39,7 +39,7 @@ export function useInsertComment({
    const mentionedUserIds =
       useEditorStore().getPendingMentionedUserIds("comment")
    const setPendingMentions = useEditorStore().setPendingMentions
-   const clearPendingMentions = useEditorStore().clearPendingMentions
+   const clearMentions = useEditorStore().clearMentions
 
    const insertCommentToQueryData = ({
       input,
@@ -177,7 +177,8 @@ export function useInsertComment({
                   )
             },
          )
-         clearPendingMentions("comment")
+
+         clearMentions("comment")
       },
    })
 

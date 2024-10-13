@@ -2,7 +2,6 @@ import { StatusIcon } from "@/issue/components/icons"
 import { issueListQuery } from "@/issue/queries"
 import type { IssueStatus } from "@/issue/schema"
 import { organizationMembersQuery } from "@/organization/queries"
-import { useMentionContext } from "@/ui/components/editor/mention/context"
 import {
    EditorMention,
    EditorMentionGroup,
@@ -14,8 +13,6 @@ import {
    EditorMentionEmpty,
    EditorMentionItem,
 } from "@/ui/components/editor/mention/editor-mention-item"
-import { getMentionedUserIds } from "@/ui/components/editor/mention/utils"
-import { useEditorStore } from "@/ui/components/editor/store"
 import { Loading } from "@/ui/components/loading"
 import { Popover, PopoverAnchor, PopoverContent } from "@/ui/components/popover"
 import { UserAvatar } from "@/ui/components/user-avatar"
@@ -46,14 +43,11 @@ export default forwardRef<
       range: Range
       editor: Editor
    }
->(({ clientRect, query, command, editor }, ref) => {
+>(({ clientRect, query, command }, ref) => {
    const [open, setOpen] = useState(true)
-   const { organizationId, user: currentUser } = useAuth()
+   const { organizationId } = useAuth()
    const members = useQuery(organizationMembersQuery({ organizationId }))
    const issues = useQuery(issueListQuery({ organizationId }))
-
-   const context = useMentionContext()
-   const addMentionedUser = useEditorStore().addMentionedUser
 
    useImperativeHandle(ref, () => ({
       onKeyDown: ({ event }: { event: KeyboardEvent }) => {
@@ -111,21 +105,6 @@ export default forwardRef<
                                     label: user.name,
                                     userId: user.id,
                                  })
-
-                                 const existingMentionedUserIds =
-                                    getMentionedUserIds(
-                                       editor.getHTML(),
-                                    ).filter((id) => id === user.id)
-                                 const userAlreadyMentioned =
-                                    existingMentionedUserIds.length > 1
-
-                                 if (
-                                    currentUser.id === user.id ||
-                                    userAlreadyMentioned
-                                 )
-                                    return
-
-                                 addMentionedUser(context, user.id)
                               }}
                            >
                               <UserAvatar

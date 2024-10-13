@@ -184,7 +184,6 @@ export function IssueDetails() {
                                     input,
                                  })
                                  updateIssue.mutate(input)
-                                 toast("title updated")
                               },
                            )
                         }}

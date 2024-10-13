@@ -1,5 +1,9 @@
 import { EditorCommandTunnelContext } from "@/ui/components/editor/command/editor-command"
+import { useMentionContext } from "@/ui/components/editor/mention/context"
+import { getMentionsFromDoc } from "@/ui/components/editor/mention/utils"
+import { useEditorStore } from "@/ui/components/editor/store"
 import { cn } from "@/ui/utils"
+import { useAuth } from "@/user/hooks"
 import { EditorProvider, useEditor } from "@tiptap/react"
 import type { EditorProviderProps } from "@tiptap/react"
 import { forwardRef, useRef } from "react"
@@ -38,6 +42,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
       { className, children, content, placeholder = "", editorProps, ...props },
       ref,
    ) => {
+      const { user } = useAuth()
       const editor = useEditor({
          content,
          ...props,
@@ -47,6 +52,12 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
          editorProps?.attributes && "class" in editorProps.attributes
             ? editorProps?.attributes.class
             : ""
+
+      const context = useMentionContext()
+      const mentionedUserIds = useEditorStore().getMentionedUserIds(context)
+      const addMentionedUser = useEditorStore().addMentionedUser
+      const removeMentionedUser = useEditorStore().removeMentionedUser
+      console.log(mentionedUserIds)
 
       return (
          <div
@@ -79,6 +90,38 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
             ) : (
                <EditorProvider
                   {...props}
+                  onUpdate={({ editor, transaction }) => {
+                     const mentionsBefore = getMentionsFromDoc(
+                        transaction.before,
+                     )
+                     const mentionsAfter = getMentionsFromDoc(transaction.doc)
+
+                     const removedMentions = mentionsBefore.filter(
+                        (mention) =>
+                           !mentionsAfter.some(
+                              (m) => m.userId === mention.userId,
+                           ),
+                     )
+
+                     const addedMentions = mentionsAfter.filter(
+                        (mention) =>
+                           !mentionsBefore.some(
+                              (m) => m.userId === mention.userId,
+                           ) && mention.userId !== user.id,
+                     )
+
+                     for (const mention of removedMentions) {
+                        removeMentionedUser(context, mention.userId)
+                     }
+
+                     for (const mention of addedMentions) {
+                        if (!mentionedUserIds?.includes(mention.userId)) {
+                           addMentionedUser(context, mention.userId)
+                        }
+                     }
+
+                     props?.onUpdate?.({ editor, transaction })
+                  }}
                   editorProps={{
                      ...editorProps,
                      //  handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
