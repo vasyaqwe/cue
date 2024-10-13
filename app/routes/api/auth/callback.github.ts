@@ -53,7 +53,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
                status: 302,
                headers: {
                   Location: inviteCode ? `/join/${inviteCode}` : "/",
-                  "Set-Cookie": sessionCookie.serialize(),
+                  "Set-Cookie": sessionCookie,
                },
             })
          }
@@ -121,7 +121,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
             status: 302,
             headers: {
                Location: inviteCode ? `/join/${inviteCode}` : "/",
-               "Set-Cookie": sessionCookie.serialize(),
+               "Set-Cookie": sessionCookie,
             },
          })
       } catch (e) {

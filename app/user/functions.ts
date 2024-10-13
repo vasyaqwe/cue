@@ -1,12 +1,18 @@
 import { protectedProcedure, publicProcedure } from "@/lib/trpc"
-import { github, google, lucia } from "@/user/auth"
+import {
+   deleteSessionTokenCookie,
+   getSessionToken,
+   github,
+   google,
+   invalidateSession,
+} from "@/user/auth"
 import { COOKIE_OPTIONS } from "@/user/constants"
 import { user } from "@/user/schema"
 import { createServerFn } from "@tanstack/start"
 import { generateCodeVerifier, generateState } from "arctic"
 import { eq } from "drizzle-orm"
 import { P, match } from "ts-pattern"
-import { deleteCookie, parseCookies, setCookie, setHeader } from "vinxi/http"
+import { deleteCookie, setCookie, setHeader } from "vinxi/http"
 import { z } from "zod"
 
 export const me = createServerFn(
@@ -85,15 +91,11 @@ export const logInWithGoogle = createServerFn(
 export const logout = createServerFn(
    "POST",
    publicProcedure.mutation(async () => {
-      return match(parseCookies()[lucia.sessionCookieName])
+      return match(getSessionToken())
          .with(undefined, () => "OK")
          .otherwise(async (sessionId) => {
-            await lucia.invalidateSession(sessionId)
-            const sessionCookie = lucia.createBlankSessionCookie()
-
-            setCookie(sessionCookie.name, sessionCookie.value, {
-               ...sessionCookie.npmCookieOptions(),
-            })
+            await invalidateSession(sessionId)
+            deleteSessionTokenCookie()
 
             return "OK"
          })

@@ -32,7 +32,6 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
             codeVerifier,
          )
          const userProfile = await fetch(
-            // https://openidconnect.googleapis.com/v1/userinfo
             "https://www.googleapis.com/oauth2/v2/userinfo",
             {
                headers: {
@@ -58,13 +57,12 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
          })
 
          if (existingAccount) {
-            const sessionCookie = await createSession(existingAccount.userId)
+            await createSession(existingAccount.userId)
 
             return new Response(null, {
                status: 302,
                headers: {
                   Location: inviteCode ? `/join/${inviteCode}` : "/",
-                  "Set-Cookie": sessionCookie.serialize(),
                },
             })
          }
@@ -94,12 +92,12 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
 
          if (!result.newUser) throw new Error("Failed to create user")
 
-         const sessionCookie = await createSession(result.newUser.id)
+         await createSession(result.newUser.id)
+
          return new Response(null, {
             status: 302,
             headers: {
                Location: inviteCode ? `/join/${inviteCode}` : "/",
-               "Set-Cookie": sessionCookie.serialize(),
             },
          })
       } catch (error) {

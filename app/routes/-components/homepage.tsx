@@ -191,7 +191,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                            fillOpacity="0.12"
                         />
                      </svg>
-                     Mobile optimized, add it to homescreen on IOS or Android.
+                     Mobile optimized, add to your phone's homescreen.
                   </li>
                </ul>
             </section>

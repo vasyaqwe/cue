@@ -1,60 +1,23 @@
 import { type Database, db } from "@/db"
 import { env } from "@/env"
+import { TimeSpan, createDate, isWithinExpirationDate } from "@/lib/date"
 import { organizationMember } from "@/organization/schema"
 import {
    type Session,
    type User,
-   type User as UserType,
    emailVerificationCode,
    session,
    user,
 } from "@/user/schema"
+import { sha256 } from "@oslojs/crypto/sha2"
+import {
+   encodeBase32LowerCaseNoPadding,
+   encodeHexLowerCase,
+} from "@oslojs/encoding"
 import { GitHub, Google } from "arctic"
 import { eq } from "drizzle-orm"
-import type { DatabaseAdapter, SessionAndUser } from "lucia"
-import { Lucia, generateSessionId } from "lucia"
-import { TimeSpan, createDate, isWithinExpirationDate } from "oslo"
 import { alphabet, generateRandomString } from "oslo/crypto"
-import { parseCookies, setCookie } from "vinxi/http"
-
-const adapter: DatabaseAdapter<Session, User> = {
-   getSessionAndUser: async (
-      sessionId: string,
-   ): Promise<SessionAndUser<Session, UserType>> => {
-      const result =
-         (await db
-            .select({
-               user: user,
-               session: session,
-            })
-            .from(session)
-            .innerJoin(user, eq(session.userId, user.id))
-            .where(eq(session.id, sessionId))
-            .get()) ?? null
-
-      if (result === null) return { session: null, user: null }
-
-      return result
-   },
-   deleteSession: async (sessionId: string): Promise<void> => {
-      db.delete(session).where(eq(session.id, sessionId)).run()
-   },
-   updateSessionExpiration: async (
-      sessionId: string,
-      expiresAt: Date,
-   ): Promise<void> => {
-      db.update(session)
-         .set({
-            expiresAt,
-         })
-         .where(eq(session.id, sessionId))
-         .run()
-   },
-}
-
-export const lucia = new Lucia(adapter, {
-   secureCookies: !import.meta.env.DEV,
-})
+import { getCookie, getHeader, getWebRequest, setCookie } from "vinxi/http"
 
 export const github = new GitHub(
    env.GITHUB_CLIENT_ID,
@@ -76,47 +39,55 @@ export const createSession = async (userId: string) => {
       },
    })
 
-   const newSession: Session = {
-      id: generateSessionId(),
+   const token = generateSessionToken()
+
+   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)))
+   const newSession = {
+      id: sessionId,
       userId: userId,
-      expiresAt: lucia.getNewSessionExpiration(),
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
       organizationMemberships,
    }
 
-   await db.insert(session).values(newSession)
+   await db.insert(session).values(newSession).returning()
 
-   const sessionCookie = lucia.createSessionCookie(
-      newSession.id,
-      newSession.expiresAt,
-   )
-
-   return sessionCookie
+   setSessionTokenCookie(token, newSession.expiresAt)
 }
 
-export const auth = async () => {
-   const sessionId = parseCookies()[lucia.sessionCookieName]
+export const SESSION_COOKIE_NAME = "auth_session"
 
-   if (!sessionId) {
+export const getSessionToken = () => getCookie(SESSION_COOKIE_NAME)
+
+export const auth = async () => {
+   // csrf protection
+   const request = getWebRequest()
+   if (request.method !== "GET") {
+      const origin = getHeader("Origin")
+      // You can also compare it against the Host or X-Forwarded-Host header.
+      if (origin === null || origin !== env.VITE_BASE_URL) {
+         return {
+            user: null,
+            session: null,
+         }
+      }
+   }
+
+   const sessionToken = getSessionToken()
+
+   if (!sessionToken)
       return {
          user: null,
          session: null,
       }
-   }
 
-   const { session, user } = await lucia.validateSession(sessionId)
+   const { session, user } = await validateSessionToken(sessionToken)
 
    if (session !== null && Date.now() >= session.expiresAt.getTime()) {
-      const sessionCookie = await createSession(user.id)
-      setCookie(sessionCookie.name, sessionCookie.value, {
-         ...sessionCookie.npmCookieOptions(),
-      })
+      await createSession(user.id)
    }
 
    if (!session) {
-      const sessionCookie = lucia.createBlankSessionCookie()
-      setCookie(sessionCookie.name, sessionCookie.value, {
-         ...sessionCookie.npmCookieOptions(),
-      })
+      deleteSessionTokenCookie()
    }
 
    return {
@@ -126,6 +97,82 @@ export const auth = async () => {
 }
 
 export type Auth = Awaited<ReturnType<typeof auth>>
+
+export const setSessionTokenCookie = (token: string, expiresAt: Date) => {
+   setCookie(SESSION_COOKIE_NAME, token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: import.meta.env.PROD,
+      expires: expiresAt,
+      path: "/",
+   })
+}
+
+export const deleteSessionTokenCookie = () => {
+   setCookie(SESSION_COOKIE_NAME, "", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: import.meta.env.PROD,
+      maxAge: 0,
+      path: "/",
+   })
+}
+
+export const generateSessionToken = () => {
+   const bytes = new Uint8Array(20)
+   crypto.getRandomValues(bytes)
+   const token = encodeBase32LowerCaseNoPadding(bytes)
+   return token
+}
+
+export const validateSessionToken = async (token: string) => {
+   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)))
+
+   const found = await db
+      .select({ foundUser: user, foundSession: session })
+      .from(session)
+      .innerJoin(user, eq(session.userId, user.id))
+      .where(eq(session.id, sessionId))
+      .get()
+
+   if (!found) return { session: null, user: null }
+
+   const { foundUser, foundSession } = found
+
+   if (Date.now() >= foundSession.expiresAt.getTime()) {
+      await db.delete(session).where(eq(session.id, foundSession.id))
+      return { session: null, user: null }
+   }
+
+   if (
+      Date.now() >=
+      foundSession.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15
+   ) {
+      foundSession.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
+      await db
+         .update(session)
+         .set({
+            expiresAt: foundSession.expiresAt,
+         })
+         .where(eq(session.id, foundSession.id))
+   }
+
+   return { session: foundSession, user: foundUser }
+}
+
+export const invalidateSession = async (sessionId: string) =>
+   await db
+      .delete(session)
+      .where(
+         eq(
+            session.id,
+            encodeHexLowerCase(sha256(new TextEncoder().encode(sessionId))),
+         ),
+      )
+
+export type SessionValidationResult =
+   | { session: Session; user: User }
+   | { session: null; user: null }
 
 export const generateEmailVerificationCode = async ({
    tx,
