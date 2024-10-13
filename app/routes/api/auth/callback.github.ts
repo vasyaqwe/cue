@@ -47,13 +47,12 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
          })
 
          if (existingAccount) {
-            const sessionCookie = await createSession(existingAccount.userId)
+            await createSession(existingAccount.userId)
 
             return new Response(null, {
                status: 302,
                headers: {
                   Location: inviteCode ? `/join/${inviteCode}` : "/",
-                  "Set-Cookie": sessionCookie,
                },
             })
          }
@@ -116,12 +115,12 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
 
          if (!result.newUser) throw new Error("Error")
 
-         const sessionCookie = await createSession(result.newUser.id)
+         await createSession(result.newUser.id)
+
          return new Response(null, {
             status: 302,
             headers: {
                Location: inviteCode ? `/join/${inviteCode}` : "/",
-               "Set-Cookie": sessionCookie,
             },
          })
       } catch (e) {
