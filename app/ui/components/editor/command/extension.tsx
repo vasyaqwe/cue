@@ -1,7 +1,9 @@
 import { SlashCommandPopover } from "@/ui/components/editor/command/command-popover"
 import type { Range } from "@tiptap/core"
 import type { Editor } from "@tiptap/core"
+import { Extension } from "@tiptap/core"
 import { ReactRenderer } from "@tiptap/react"
+import suggesionExtension, { type SuggestionOptions } from "@tiptap/suggestion"
 import type { ReactNode } from "react"
 
 type CommandItem = {
@@ -176,3 +178,32 @@ export const renderCommandItems = () => {
       },
    }
 }
+
+const slashCommandExtension = Extension.create({
+   name: "slash-command",
+   addOptions() {
+      return {
+         suggestion: {
+            char: "/",
+            command: ({ editor, range, props }) => {
+               props.command({ editor, range })
+            },
+         } as SuggestionOptions,
+      }
+   },
+   addProseMirrorPlugins() {
+      return [
+         suggesionExtension({
+            editor: this.editor,
+            ...this.options.suggestion,
+         }),
+      ]
+   },
+})
+
+export const slashCommand = slashCommandExtension.configure({
+   suggestion: {
+      items: () => commandItems,
+      render: renderCommandItems,
+   },
+})

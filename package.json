@@ -37,6 +37,7 @@
     "@tanstack/router-plugin": "^1.58.12",
     "@tanstack/start": "^1.58.16",
     "@tiptap/core": "^2.8.0",
+    "@tiptap/extension-image": "^2.8.0",
     "@tiptap/extension-link": "^2.8.0",
     "@tiptap/extension-mention": "^2.8.0",
     "@tiptap/extension-placeholder": "^2.8.0",
@@ -45,6 +46,7 @@
     "@tiptap/starter-kit": "^2.8.0",
     "@tiptap/suggestion": "^2.8.0",
     "@trpc/server": "11.0.0-rc.467",
+    "@vercel/blob": "^0.25.1",
     "@vitejs/plugin-react": "^4.3.1",
     "arctic": "^1.9.2",
     "base-x": "^5.0.0",
@@ -69,7 +71,7 @@
     "vaul": "^1.0.0",
     "vinxi": "^0.4.3",
     "zod": "^3.23.8",
-    "zustand": "^5.0.0-rc.2"
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.2",

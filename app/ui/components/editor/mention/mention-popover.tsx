@@ -120,27 +120,33 @@ export default forwardRef<
                      <EditorMentionSeparator />
                      <EditorMentionGroup>
                         <EditorMentionLabel>Issues</EditorMentionLabel>
-                        {issues.data?.map((issue) => (
-                           <EditorMentionItem
-                              key={issue.id}
-                              value={`${issue.title} ${issue.id}`}
-                              onSelect={() => {
-                                 command?.({
-                                    label: issue.title,
-                                    issueId: issue.id,
-                                    status: issue.status,
-                                 })
-                              }}
-                           >
-                              <StatusIcon
-                                 className="!size-[18px]"
-                                 status={issue.status}
-                              />
-                              <span className="line-clamp-1 break-all break-all">
-                                 {issue.title}
-                              </span>
-                           </EditorMentionItem>
-                        ))}
+                        {issues.data?.length === 0 ? (
+                           <p className="mt-1 pl-2 text-foreground/75 text-sm">
+                              No issues.
+                           </p>
+                        ) : (
+                           issues.data?.map((issue) => (
+                              <EditorMentionItem
+                                 key={issue.id}
+                                 value={`${issue.title} ${issue.id}`}
+                                 onSelect={() => {
+                                    command?.({
+                                       label: issue.title,
+                                       issueId: issue.id,
+                                       status: issue.status,
+                                    })
+                                 }}
+                              >
+                                 <StatusIcon
+                                    className="!size-[18px]"
+                                    status={issue.status}
+                                 />
+                                 <span className="line-clamp-1 break-all break-all">
+                                    {issue.title}
+                                 </span>
+                              </EditorMentionItem>
+                           ))
+                        )}
                      </EditorMentionGroup>
                   </EditorMentionList>
                </EditorMention>

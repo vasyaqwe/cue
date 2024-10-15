@@ -195,8 +195,6 @@ export function useUpdateIssue() {
                      }),
                   )
 
-               console.log(unmentionedUserIds)
-
                match(unmentionedUserIds)
                   .with([], () => {})
                   .otherwise((receiverIds) =>

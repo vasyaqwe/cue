@@ -32,18 +32,24 @@ import {
    EditorCommandEmpty,
    EditorCommandItem,
 } from "@/ui/components/editor/command/editor-command-item"
-import { commandItems } from "@/ui/components/editor/command/extension"
+import {
+   commandItems,
+   slashCommand,
+} from "@/ui/components/editor/command/extension"
 
 import {
    link,
-   mention,
    placeholder,
-   slashCommand,
    starterKit,
 } from "@/ui/components/editor/extensions"
+import { file } from "@/ui/components/editor/file/extension"
+import {
+   handleFileDrop,
+   handleFilePaste,
+} from "@/ui/components/editor/file/plugin"
+import { uploadFile } from "@/ui/components/editor/file/upload"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
-import {} from "@/ui/components/editor/mention/editor-mention"
-import {} from "@/ui/components/editor/mention/editor-mention-item"
+import { mention } from "@/ui/components/editor/mention/extension"
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
@@ -124,6 +130,7 @@ export function IssueDetails() {
    if (!issue) return null
 
    const onInboxPage = pathname.includes("/inbox")
+   console.log(descriptionRef.current?.getHTML())
 
    return (
       <>
@@ -199,8 +206,7 @@ export function IssueDetails() {
                               className="mt-3"
                               content={issue.description}
                               onBlur={({ editor }) => {
-                                 const description = editor.getHTML()
-                                 match(description).when(
+                                 match(editor.getHTML()).when(
                                     (description) =>
                                        description !== issue.description,
                                     (description) => {
@@ -225,7 +231,45 @@ export function IssueDetails() {
                                  link,
                                  slashCommand,
                                  mention,
+                                 file,
                               ]}
+                              editorProps={{
+                                 handlePaste: (view, event) => {
+                                    match(
+                                       handleFilePaste(view, event, uploadFile),
+                                    ).with(true, () => {
+                                       const description = view.dom.innerHTML
+                                       const input = {
+                                          id: issueId,
+                                          organizationId,
+                                          title: issue.title,
+                                          description,
+                                       }
+                                       updateIssueInQueryData({ input })
+                                       updateIssue.mutate(input)
+                                    })
+                                 },
+                                 handleDrop: (view, event, _slice, moved) => {
+                                    match(
+                                       handleFileDrop(
+                                          view,
+                                          event,
+                                          moved,
+                                          uploadFile,
+                                       ),
+                                    ).with(true, () => {
+                                       const description = view.dom.innerHTML
+                                       const input = {
+                                          id: issueId,
+                                          organizationId,
+                                          title: issue.title,
+                                          description,
+                                       }
+                                       updateIssueInQueryData({ input })
+                                       updateIssue.mutate(input)
+                                    })
+                                 },
+                              }}
                               placeholder="Add description (press '/' for commands)"
                            >
                               <EditorCommand>

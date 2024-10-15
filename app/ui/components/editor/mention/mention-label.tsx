@@ -18,7 +18,6 @@ import { useAuth } from "@/user/hooks"
 import { useQuery } from "@tanstack/react-query"
 import { Link, useParams } from "@tanstack/react-router"
 import { type NodeViewProps, NodeViewWrapper } from "@tiptap/react"
-import {} from "ts-pattern"
 
 export function MentionLabel({ node }: NodeViewProps) {
    const { organizationId } = useAuth()

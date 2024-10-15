@@ -34,15 +34,17 @@ import {
    EditorCommandEmpty,
    EditorCommandItem,
 } from "@/ui/components/editor/command/editor-command-item"
-import { commandItems } from "@/ui/components/editor/command/extension"
+import {
+   commandItems,
+   slashCommand,
+} from "@/ui/components/editor/command/extension"
 import {
    link,
-   mention,
    placeholder,
-   slashCommand,
    starterKit,
 } from "@/ui/components/editor/extensions"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
+import { mention } from "@/ui/components/editor/mention/extension"
 import { useEditorStore } from "@/ui/components/editor/store"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"

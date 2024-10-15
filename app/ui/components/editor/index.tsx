@@ -76,7 +76,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                   {content === "<p></p>" || content === "" ? (
                      <p
                         className={cn(
-                           "prose mt-2 min-h-9 max-w-full break-words text-base text-foreground/40 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground prose-p:text-base focus:outline-none",
+                           "prose mt-2 min-h-9 max-w-full break-words text-base text-foreground/40 prose-img:m-0 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground prose-p:text-base focus:outline-none",
                            classAttr,
                         )}
                      >
@@ -85,7 +85,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                   ) : (
                      <div
                         className={cn(
-                           "prose mt-2 min-h-9 max-w-full break-words text-base prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground prose-p:text-base focus:outline-none",
+                           "prose mt-2 min-h-9 max-w-full break-words text-base prose-img:m-0 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground prose-p:text-base focus:outline-none",
                            classAttr,
                         )}
                         dangerouslySetInnerHTML={{
@@ -109,7 +109,6 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                               (m) => m.userId === mention.userId,
                            ),
                      )
-
                      const addedMentions = mentionsAfter.filter(
                         (mention) =>
                            !mentionsBefore.some(
@@ -131,9 +130,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                   }}
                   editorProps={{
                      ...editorProps,
-                     //  handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
-                     //  handleDrop: (view, event, _slice, moved) =>
-                     //    handleImageDrop(view, event, moved, uploadFn),
+
                      handleDOMEvents: {
                         ...editorProps?.handleDOMEvents,
                         keydown: (_view, event) =>
@@ -148,7 +145,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                      attributes: {
                         ...editorProps?.attributes,
                         class: cn(
-                           "prose mt-2 min-h-9 max-w-full break-words prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground prose-p:text-base focus:outline-none",
+                           "prose mt-2 min-h-9 max-w-full break-words prose-img:m-0 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-ol:pl-4 prose-ul:pl-4 prose-h1:text-2xl prose-h2:text-xl prose-headings:text-foreground prose-p:text-base focus:outline-none",
                            classAttr,
                         ),
                      },

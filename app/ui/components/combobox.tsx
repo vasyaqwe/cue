@@ -165,7 +165,10 @@ export function ComboboxEmpty({
 }: ComponentProps<"div">) {
    return (
       <CommandEmpty
-         className={cn("py-6 text-center text-sm", className)}
+         className={cn(
+            "py-6 text-center text-foreground/75 text-sm",
+            className,
+         )}
          {...props}
       >
          {children}

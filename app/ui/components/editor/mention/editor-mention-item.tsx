@@ -45,7 +45,7 @@ export function EditorMentionEmpty({
 }: ComponentProps<typeof CommandEmpty>) {
    return (
       <CommandEmpty
-         className={cn("py-6 text-center", className)}
+         className={cn("py-6 text-center text-foreground/75", className)}
          {...props}
       />
    )
