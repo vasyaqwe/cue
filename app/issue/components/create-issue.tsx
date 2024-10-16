@@ -43,6 +43,12 @@ import {
    placeholder,
    starterKit,
 } from "@/ui/components/editor/extensions"
+import { file } from "@/ui/components/editor/file/extension"
+import {
+   handleFileDrop,
+   handleFilePaste,
+} from "@/ui/components/editor/file/plugin"
+import { uploadFile } from "@/ui/components/editor/file/upload"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
 import { useEditorStore } from "@/ui/components/editor/store"
@@ -215,10 +221,24 @@ export function CreateIssue() {
                         link,
                         slashCommand,
                         mention,
+                        file,
                      ]}
                      placeholder="Add description (press '/' for commands)"
                      editorProps={{
                         editable: () => !(insert.isPending || insert.isSuccess),
+                        handlePaste: (view, event) => {
+                           match(handleFilePaste(view, event, uploadFile)).with(
+                              true,
+                              () => setDescription(view.dom.innerHTML),
+                           )
+                        },
+                        handleDrop: (view, event, _slice, moved) => {
+                           match(
+                              handleFileDrop(view, event, moved, uploadFile),
+                           ).with(true, () =>
+                              setDescription(view.dom.innerHTML),
+                           )
+                        },
                         handleKeyDown: (_, e) => {
                            return match(e)
                               .with(

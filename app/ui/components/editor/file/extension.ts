@@ -1,5 +1,6 @@
 import { uploadFile } from "@/ui/components/editor/file/plugin"
 import { cn } from "@/ui/utils"
+import { mergeAttributes } from "@tiptap/core"
 import imageExtension from "@tiptap/extension-image"
 
 export const file = imageExtension
@@ -22,6 +23,14 @@ export const file = imageExtension
                default: null,
             },
          }
+      },
+      renderHTML({ HTMLAttributes }) {
+         return [
+            "img",
+            mergeAttributes(HTMLAttributes, {
+               class: cn("active:!outline-2"),
+            }),
+         ]
       },
    })
    .configure({

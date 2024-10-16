@@ -89,7 +89,11 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                            classAttr,
                         )}
                         dangerouslySetInnerHTML={{
-                           __html: content ?? "",
+                           __html:
+                              content?.replaceAll(
+                                 "<p></p>",
+                                 "<p><br class='ProseMirror-trailingBreak'></p>",
+                              ) ?? "",
                         }}
                      />
                   )}
@@ -103,26 +107,33 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                      )
                      const mentionsAfter = getMentionsFromDoc(transaction.doc)
 
-                     const removedMentions = mentionsBefore.filter(
-                        (mention) =>
-                           !mentionsAfter.some(
-                              (m) => m.userId === mention.userId,
-                           ),
-                     )
-                     const addedMentions = mentionsAfter.filter(
-                        (mention) =>
-                           !mentionsBefore.some(
-                              (m) => m.userId === mention.userId,
-                           ) && mention.userId !== user.id,
-                     )
+                     const removedMentions = mentionsBefore
+                        .filter(
+                           (mention) =>
+                              !mentionsAfter.some(
+                                 (m) => m.userId === mention.userId,
+                              ),
+                        )
+                        .map((mention) => mention.userId)
+                        .filter(Boolean)
 
-                     for (const mention of removedMentions) {
-                        removeMentionedUser(context, mention.userId)
+                     const addedMentions = mentionsAfter
+                        .filter(
+                           (mention) =>
+                              !mentionsBefore.some(
+                                 (m) => m.userId === mention.userId,
+                              ) && mention.userId !== user.id,
+                        )
+                        .map((mention) => mention.userId)
+                        .filter(Boolean)
+
+                     for (const userId of removedMentions) {
+                        removeMentionedUser(context, userId)
                      }
 
-                     for (const mention of addedMentions) {
-                        if (!mentionedUserIds?.includes(mention.userId)) {
-                           addMentionedUser(context, mention.userId)
+                     for (const userId of addedMentions) {
+                        if (!mentionedUserIds?.includes(userId)) {
+                           addMentionedUser(context, userId)
                         }
                      }
 

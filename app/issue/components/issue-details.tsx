@@ -130,7 +130,6 @@ export function IssueDetails() {
    if (!issue) return null
 
    const onInboxPage = pathname.includes("/inbox")
-   console.log(descriptionRef.current?.getHTML())
 
    return (
       <>

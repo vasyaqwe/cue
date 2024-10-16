@@ -4,6 +4,7 @@ import { useUpdateComment } from "@/comment/hooks/use-update-comment"
 import { Button } from "@/ui/components/button"
 import { EditorContent, EditorRoot } from "@/ui/components/editor"
 import { link, starterKit } from "@/ui/components/editor/extensions"
+import { file } from "@/ui/components/editor/file/extension"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
 import { Icons } from "@/ui/components/icons"
@@ -151,7 +152,7 @@ export function Comment({
                               },
                            }}
                            content={comment.content}
-                           extensions={[starterKit, link, mention]}
+                           extensions={[starterKit, link, mention, file]}
                         />
                      </MentionProvider>
                   </EditorRoot>
