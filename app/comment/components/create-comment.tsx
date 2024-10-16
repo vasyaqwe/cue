@@ -22,12 +22,14 @@ import {
 } from "@/ui/components/editor/extensions"
 import { file } from "@/ui/components/editor/file/extension"
 import {
-   handleFileDrop,
-   handleFilePaste,
+   onFileDrop,
+   onFileInputChange,
+   onFilePaste,
 } from "@/ui/components/editor/file/plugin"
 import { uploadFile } from "@/ui/components/editor/file/upload"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
+import { FileTrigger } from "@/ui/components/file-trigger"
 import { Icons } from "@/ui/components/icons"
 import { Kbd } from "@/ui/components/kbd"
 import { Tooltip } from "@/ui/components/tooltip"
@@ -37,6 +39,7 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
 import type { Editor } from "@tiptap/core"
 import { type ComponentProps, useRef, useState } from "react"
+import { useHotkeys } from "react-hotkeys-hook"
 import { match } from "ts-pattern"
 
 export function CreateComment({
@@ -66,6 +69,11 @@ export function CreateComment({
 
    const formRef = useRef<HTMLFormElement>(null)
    const editorRef = useRef<Editor>()
+
+   const fileTriggerRef = useRef<HTMLButtonElement>(null)
+   useHotkeys("mod+shift+f", () => fileTriggerRef.current?.click(), {
+      enableOnContentEditable: true,
+   })
 
    const isEmpty = content.trim() === ""
 
@@ -109,20 +117,21 @@ export function CreateComment({
                      link,
                      slashCommand,
                      mention,
-                     file,
+                     file(),
                   ]}
                   placeholder="Leave a comment.."
                   editorProps={{
                      handlePaste: (view, event) => {
-                        match(handleFilePaste(view, event, uploadFile)).with(
+                        match(onFilePaste(view, event, uploadFile)).with(
                            true,
                            () => setContent(view.dom.innerHTML),
                         )
                      },
                      handleDrop: (view, event, _slice, moved) => {
-                        match(
-                           handleFileDrop(view, event, moved, uploadFile),
-                        ).with(true, () => setContent(view.dom.innerHTML))
+                        match(onFileDrop(view, event, moved, uploadFile)).with(
+                           true,
+                           () => setContent(view.dom.innerHTML),
+                        )
                      },
                      handleKeyDown: (_view, e) => {
                         return match(e)
@@ -142,7 +151,6 @@ export function CreateComment({
                            )
                            .otherwise(() => false)
                      },
-
                      attributes: {
                         class: "md:min-h-12",
                      },
@@ -174,7 +182,7 @@ export function CreateComment({
                align="start"
                content={
                   <span className="flex items-center gap-2">
-                     Attach files (coming soon)
+                     Add files
                      <span className="inline-flex items-center gap-1">
                         <Kbd>Ctrl</Kbd>
                         <Kbd className="px-0.5 py-0">
@@ -185,14 +193,20 @@ export function CreateComment({
                   </span>
                }
             >
-               <Button
+               <FileTrigger
                   type="button"
-                  aria-label="Attach files"
                   size="icon"
                   variant={"ghost"}
+                  ref={fileTriggerRef}
+                  onChange={(e) => {
+                     const view = editorRef.current?.view
+                     if (!view) return
+
+                     onFileInputChange(view, e, uploadFile)
+                  }}
                >
                   <Icons.paperClip className="size-5 opacity-80" />
-               </Button>
+               </FileTrigger>
             </Tooltip>
             <Tooltip
                alignOffset={-7}

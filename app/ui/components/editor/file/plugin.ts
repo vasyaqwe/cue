@@ -1,5 +1,6 @@
 import { type EditorState, Plugin, PluginKey } from "@tiptap/pm/state"
 import { Decoration, DecorationSet, type EditorView } from "@tiptap/pm/view"
+import type { ChangeEvent } from "react"
 
 const uploadKey = new PluginKey("upload-file")
 
@@ -111,7 +112,7 @@ export const createFileUpload =
 
 export type UploadFn = (file: File, view: EditorView, pos: number) => void
 
-export const handleFilePaste = (
+export const onFilePaste = (
    view: EditorView,
    event: ClipboardEvent,
    uploadFn: UploadFn,
@@ -127,7 +128,7 @@ export const handleFilePaste = (
    return false
 }
 
-export const handleFileDrop = (
+export const onFileDrop = (
    view: EditorView,
    event: DragEvent,
    moved: boolean,
@@ -145,4 +146,16 @@ export const handleFileDrop = (
       return true
    }
    return false
+}
+
+export const onFileInputChange = (
+   view: EditorView,
+   event: ChangeEvent<HTMLInputElement>,
+   uploadFn: UploadFn,
+) => {
+   const file = event.target.files?.[0]
+   if (file) {
+      const pos = view.state.selection.from
+      uploadFn(file, view, pos)
+   }
 }

@@ -152,7 +152,12 @@ export function Comment({
                               },
                            }}
                            content={comment.content}
-                           extensions={[starterKit, link, mention, file]}
+                           extensions={[
+                              starterKit,
+                              link,
+                              mention,
+                              file({ className: "!outline-none" }),
+                           ]}
                         />
                      </MentionProvider>
                   </EditorRoot>

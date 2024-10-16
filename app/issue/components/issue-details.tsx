@@ -43,10 +43,7 @@ import {
    starterKit,
 } from "@/ui/components/editor/extensions"
 import { file } from "@/ui/components/editor/file/extension"
-import {
-   handleFileDrop,
-   handleFilePaste,
-} from "@/ui/components/editor/file/plugin"
+import { onFileDrop, onFilePaste } from "@/ui/components/editor/file/plugin"
 import { uploadFile } from "@/ui/components/editor/file/upload"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
@@ -230,12 +227,12 @@ export function IssueDetails() {
                                  link,
                                  slashCommand,
                                  mention,
-                                 file,
+                                 file(),
                               ]}
                               editorProps={{
                                  handlePaste: (view, event) => {
                                     match(
-                                       handleFilePaste(view, event, uploadFile),
+                                       onFilePaste(view, event, uploadFile),
                                     ).with(true, () => {
                                        const description = view.dom.innerHTML
                                        const input = {
@@ -250,7 +247,7 @@ export function IssueDetails() {
                                  },
                                  handleDrop: (view, event, _slice, moved) => {
                                     match(
-                                       handleFileDrop(
+                                       onFileDrop(
                                           view,
                                           event,
                                           moved,
