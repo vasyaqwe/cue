@@ -44,21 +44,34 @@ import {
    starterKit,
 } from "@/ui/components/editor/extensions"
 import { file } from "@/ui/components/editor/file/extension"
-import { onFileDrop, onFilePaste } from "@/ui/components/editor/file/plugin"
+import {
+   onFileDrop,
+   onFileInputChange,
+   onFilePaste,
+} from "@/ui/components/editor/file/plugin"
 import { uploadFile } from "@/ui/components/editor/file/upload"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
 import { useEditorStore } from "@/ui/components/editor/store"
+import {
+   FILE_TRIGGER_HOTKEY,
+   FileTrigger,
+   FileTriggerTooltipContent,
+} from "@/ui/components/file-trigger"
+import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
 import { Loading } from "@/ui/components/loading"
 import { Tooltip } from "@/ui/components/tooltip"
+import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
+import type { Editor } from "@tiptap/core"
 import { useRef } from "react"
+import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
 import { match } from "ts-pattern"
 import * as issue from "../functions"
@@ -168,8 +181,17 @@ export function CreateIssue() {
       },
    })
 
+   const editorRef = useRef<Editor>()
+
+   const _fileTriggerOpen = useUIStore().fileTriggerOpen
+   const fileTriggerRef = useRef<HTMLButtonElement>(null)
+   useHotkeys(FILE_TRIGGER_HOTKEY, () => fileTriggerRef.current?.click(), {
+      enableOnContentEditable: true,
+      enableOnFormTags: true,
+   })
+
    return (
-      <ModalContent>
+      <ModalContent className="max-w-xl">
          <ModalHeader className="max-md:hidden">
             <ModalTitle>New issue</ModalTitle>
          </ModalHeader>
@@ -208,6 +230,9 @@ export function CreateIssue() {
             <EditorRoot>
                <MentionProvider value="issue">
                   <EditorContent
+                     onCreate={({ editor }) => {
+                        editorRef.current = editor
+                     }}
                      content={description}
                      onUpdate={({ editor }) => {
                         setDescription(editor.getHTML())
@@ -289,6 +314,23 @@ export function CreateIssue() {
                   </EditorContent>
                </MentionProvider>
             </EditorRoot>
+            <Tooltip content={<FileTriggerTooltipContent />}>
+               <FileTrigger
+                  type="button"
+                  size="icon"
+                  variant={"ghost"}
+                  ref={fileTriggerRef}
+                  onChange={(e) => {
+                     const view = editorRef.current?.view
+                     if (!view) return
+
+                     onFileInputChange(view, e, uploadFile)
+                  }}
+                  className="mt-3"
+               >
+                  <Icons.paperClip className="size-5 opacity-80" />
+               </FileTrigger>
+            </Tooltip>
          </form>
          <ModalFooter className="gap-2 md:mt-0">
             <Combobox

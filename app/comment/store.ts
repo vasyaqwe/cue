@@ -6,6 +6,7 @@ import { create } from "zustand"
 type State = {
    socket: PartySocket | null
    sendEvent: (event: CommentEvent) => void
+   createCommentEditorFocused: boolean
 }
 
 const store = create<State>()((_set, get) => ({
@@ -13,6 +14,7 @@ const store = create<State>()((_set, get) => ({
    sendEvent: (event: CommentEvent) => {
       get().socket?.send(JSON.stringify(event))
    },
+   createCommentEditorFocused: false,
 }))
 
 export const useCommentStore = createSelectors(store)

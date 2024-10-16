@@ -1,5 +1,7 @@
 import { useInsertComment } from "@/comment/hooks/use-insert-comment"
+import { useCommentStore } from "@/comment/store"
 import { issueByIdQuery } from "@/issue/queries"
+import { useOnPushModal } from "@/modals"
 import { Button } from "@/ui/components/button"
 import { cardVariants } from "@/ui/components/card"
 import { EditorContent, EditorRoot } from "@/ui/components/editor"
@@ -29,7 +31,11 @@ import {
 import { uploadFile } from "@/ui/components/editor/file/upload"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
-import { FileTrigger } from "@/ui/components/file-trigger"
+import {
+   FILE_TRIGGER_HOTKEY,
+   FileTrigger,
+   FileTriggerTooltipContent,
+} from "@/ui/components/file-trigger"
 import { Icons } from "@/ui/components/icons"
 import { Kbd } from "@/ui/components/kbd"
 import { Tooltip } from "@/ui/components/tooltip"
@@ -70,8 +76,13 @@ export function CreateComment({
    const formRef = useRef<HTMLFormElement>(null)
    const editorRef = useRef<Editor>()
 
+   const createCommentEditorFocused =
+      useCommentStore().createCommentEditorFocused
+   const [createIssueOpen, setCreateIssueOpen] = useState(false)
+   useOnPushModal("create_issue", (open) => setCreateIssueOpen(open))
    const fileTriggerRef = useRef<HTMLButtonElement>(null)
-   useHotkeys("mod+shift+f", () => fileTriggerRef.current?.click(), {
+   useHotkeys(FILE_TRIGGER_HOTKEY, () => fileTriggerRef.current?.click(), {
+      enabled: createCommentEditorFocused && !createIssueOpen,
       enableOnContentEditable: true,
    })
 
@@ -103,6 +114,16 @@ export function CreateComment({
          <EditorRoot>
             <MentionProvider value="comment">
                <EditorContent
+                  onFocus={() =>
+                     useCommentStore.setState({
+                        createCommentEditorFocused: true,
+                     })
+                  }
+                  onBlur={() =>
+                     useCommentStore.setState({
+                        createCommentEditorFocused: false,
+                     })
+                  }
                   onCreate={({ editor }) => {
                      editorRef.current = editor
                   }}
@@ -180,18 +201,7 @@ export function CreateComment({
             <Tooltip
                alignOffset={-7}
                align="start"
-               content={
-                  <span className="flex items-center gap-2">
-                     Add files
-                     <span className="inline-flex items-center gap-1">
-                        <Kbd>Ctrl</Kbd>
-                        <Kbd className="px-0.5 py-0">
-                           <Icons.shift className="h-5 w-[18px]" />
-                        </Kbd>
-                        <Kbd>F</Kbd>
-                     </span>
-                  </span>
-               }
+               content={<FileTriggerTooltipContent />}
             >
                <FileTrigger
                   type="button"

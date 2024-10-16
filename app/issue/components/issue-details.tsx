@@ -1,6 +1,7 @@
 import { Comment } from "@/comment/components/comment"
 import { CreateComment } from "@/comment/components/create-comment"
 import { commentListQuery } from "@/comment/queries"
+import { useCommentStore } from "@/comment/store"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
@@ -43,10 +44,19 @@ import {
    starterKit,
 } from "@/ui/components/editor/extensions"
 import { file } from "@/ui/components/editor/file/extension"
-import { onFileDrop, onFilePaste } from "@/ui/components/editor/file/plugin"
+import {
+   onFileDrop,
+   onFileInputChange,
+   onFilePaste,
+} from "@/ui/components/editor/file/plugin"
 import { uploadFile } from "@/ui/components/editor/file/upload"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
+import {
+   FILE_TRIGGER_HOTKEY,
+   FileTrigger,
+   FileTriggerTooltipContent,
+} from "@/ui/components/file-trigger"
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
@@ -123,6 +133,16 @@ export function IssueDetails() {
    useOnPushModal("create_issue", (open) => setCreateIssueOpen(open))
 
    const scrollRef = useRef<HTMLDivElement>(null)
+
+   const createCommentEditorFocused =
+      useCommentStore().createCommentEditorFocused
+
+   const fileTriggerRef = useRef<HTMLButtonElement>(null)
+   useHotkeys(FILE_TRIGGER_HOTKEY, () => fileTriggerRef.current?.click(), {
+      enabled: !createIssueOpen && !createCommentEditorFocused,
+      enableOnContentEditable: true,
+      enableOnFormTags: true,
+   })
 
    if (!issue) return null
 
@@ -290,7 +310,24 @@ export function IssueDetails() {
                            </EditorContent>
                         </MentionProvider>
                      </EditorRoot>
-                     <hr className="mt-7 mb-5 border-border border-t-2 border-dotted" />
+                     <Tooltip content={<FileTriggerTooltipContent />}>
+                        <FileTrigger
+                           type="button"
+                           size="icon"
+                           variant={"ghost"}
+                           ref={fileTriggerRef}
+                           onChange={(e) => {
+                              const view = descriptionRef.current?.view
+                              if (!view) return
+
+                              onFileInputChange(view, e, uploadFile)
+                           }}
+                           className="mt-4"
+                        >
+                           <Icons.paperClip className="size-5 opacity-80" />
+                        </FileTrigger>
+                     </Tooltip>
+                     <hr className="mt-3 mb-5 border-border border-t-2 border-dotted" />
                      <p className="font-semibold text-lg">Activity</p>
                      <div>
                         <div className="mt-5 mb-3 flex items-center gap-1">
