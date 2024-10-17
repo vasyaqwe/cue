@@ -45,7 +45,6 @@ export const Route = createRootRouteWithContext<{
             name: "description",
             content: description,
          },
-         { name: "keywords", content: "Cue, Issue tracking, App" },
          { name: "twitter:title", content: title },
          { name: "twitter:description", content: description },
          { name: "twitter:creator", content: "@vasyaqwee" },
@@ -53,11 +52,10 @@ export const Route = createRootRouteWithContext<{
          { name: "og:type", content: "website" },
          { name: "og:title", content: title },
          { name: "og:description", content: description },
-         //  [
-         //    { name: 'twitter:image', content: image },
-         //    { name: 'twitter:card', content: 'summary_large_image' },
-         //    { name: 'og:image', content: image },
-         //  ]
+         { name: "og:image", content: "https://cuehq.app/og.png" },
+         { name: "twitter:card", content: "summary_large_image" },
+         { name: "twitter:creator", content: "@vasyaqwee" },
+         { name: "twitter:site", content: "@vasyaqwee" },
       ]
    },
    links: () => [
@@ -79,23 +77,6 @@ export const Route = createRootRouteWithContext<{
          type: "font/otf",
          crossOrigin: "anonymous",
       },
-      // {
-      //    rel: "apple-touch-icon",
-      //    sizes: "180x180",
-      //    href: "/apple-touch-icon.png",
-      // },
-      // {
-      //    rel: "icon",
-      //    type: "image/png",
-      //    sizes: "32x32",
-      //    href: "/favicon-32x32.png",
-      // },
-      // {
-      //    rel: "icon",
-      //    type: "image/png",
-      //    sizes: "16x16",
-      //    href: "/favicon-16x16.png",
-      // },
    ],
    component: RootComponent,
 })
