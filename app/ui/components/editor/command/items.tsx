@@ -1,10 +1,6 @@
-import { SlashCommandPopover } from "@/ui/components/editor/command/command-popover"
-import type { Range } from "@tiptap/core"
+import type { ReactNode } from "@tanstack/react-router"
 import type { Editor } from "@tiptap/core"
-import { Extension } from "@tiptap/core"
-import { ReactRenderer } from "@tiptap/react"
-import suggesionExtension, { type SuggestionOptions } from "@tiptap/suggestion"
-import type { ReactNode } from "react"
+import type { Range } from "@tiptap/core"
 
 type CommandItem = {
    title: string
@@ -18,6 +14,7 @@ export const commandItems = [
       icon: (
          <svg
             viewBox="0 0 24 24"
+            strokeWidth="2"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
          >
@@ -100,7 +97,7 @@ export const commandItems = [
       title: "Bullet List",
       icon: (
          <svg
-            className="ml-[-2px] size-[22px]"
+            className="!size-[22px] ml-[-2px]"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -122,7 +119,7 @@ export const commandItems = [
       title: "Numbered List",
       icon: (
          <svg
-            className="ml-[-2px] size-[22px]"
+            className="!size-[22px] ml-[-2px]"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -140,70 +137,25 @@ export const commandItems = [
          editor.chain().focus().deleteRange(range).toggleOrderedList().run()
       },
    },
+   {
+      title: "Code",
+      icon: (
+         <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="2"
+            stroke="currentColor"
+         >
+            <path
+               strokeLinecap="round"
+               strokeLinejoin="round"
+               d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5"
+            />
+         </svg>
+      ),
+      command: ({ editor, range }) => {
+         editor.chain().focus().deleteRange(range).toggleCode().run()
+      },
+   },
 ] satisfies CommandItem[]
-
-export const renderCommandItems = () => {
-   let component: ReactRenderer | null = null
-   return {
-      onStart: (props: {
-         editor: Editor
-         clientRect: DOMRect
-         range: Range
-         query: string
-      }) => {
-         component = new ReactRenderer(SlashCommandPopover, {
-            props,
-            editor: props.editor,
-         })
-
-         const { selection } = props.editor.state
-         const parentNode = selection.$from.node(selection.$from.depth)
-         const blockType = parentNode.type.name
-
-         if (blockType === "codeBlock") return false
-      },
-      onUpdate: (props: {
-         clientRect: never
-         range: Range
-         query: string
-      }) => {
-         component?.updateProps(props)
-      },
-      onKeyDown: (props: { event: KeyboardEvent }) => {
-         // @ts-expect-error
-         return component?.ref?.onKeyDown(props)
-      },
-      onExit: () => {
-         component?.destroy()
-      },
-   }
-}
-
-const slashCommandExtension = Extension.create({
-   name: "slash-command",
-   addOptions() {
-      return {
-         suggestion: {
-            char: "/",
-            command: ({ editor, range, props }) => {
-               props.command({ editor, range })
-            },
-         } as SuggestionOptions,
-      }
-   },
-   addProseMirrorPlugins() {
-      return [
-         suggesionExtension({
-            editor: this.editor,
-            ...this.options.suggestion,
-         }),
-      ]
-   },
-})
-
-export const slashCommand = slashCommandExtension.configure({
-   suggestion: {
-      items: () => commandItems,
-      render: renderCommandItems,
-   },
-})

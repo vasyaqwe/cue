@@ -33,11 +33,8 @@ import {
    EditorCommandEmpty,
    EditorCommandItem,
 } from "@/ui/components/editor/command/editor-command-item"
-import {
-   commandItems,
-   slashCommand,
-} from "@/ui/components/editor/command/extension"
-
+import { slashCommand } from "@/ui/components/editor/command/extension"
+import { commandItems } from "@/ui/components/editor/command/items"
 import {
    link,
    placeholder,

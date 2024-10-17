@@ -31,6 +31,14 @@ const starterKit = starterKitExtension.configure({
          class: cn("leading-normal"),
       },
    },
+   code: {
+      HTMLAttributes: {
+         class: cn(
+            "rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono",
+         ),
+         spellcheck: "false",
+      },
+   },
    gapcursor: false,
 })
 
