@@ -92,27 +92,24 @@ export function Sidebar() {
    })
 
    return (
-      <aside className="z-[10] h-svh w-60 max-md:hidden">
-         <div className="fixed flex h-full w-60 flex-col border-border/60 border-r px-4 py-5 shadow-sm">
+      <aside className="z-[10] h-svh w-[15.5rem] max-md:hidden">
+         <div className="fixed flex h-full w-[15.5rem] flex-col border-border/60 border-r px-4 py-5 shadow-sm">
             <div className="mb-3 flex items-center gap-px">
                <DropdownMenu>
                   <DropdownMenuTrigger
                      className={cn(
                         buttonVariants({ variant: "ghost" }),
-                        "justify-start whitespace-normal pr-1 pl-0.5 font-semibold text-[0.975rem]",
+                        "justify-start whitespace-normal px-0.5 font-semibold text-[0.975rem]",
                      )}
                   >
                      <Logo
                         className="size-[26px]"
                         rounded
                      />
-                     <span className="line-clamp-1 break-all text-left">
+                     <span className="mr-px line-clamp-1 break-all text-left">
                         {organization.name}
                      </span>
-                     <Icons.chevronDown
-                        className="ml-auto size-5 shrink-0"
-                        strokeWidth={2.5}
-                     />
+                     <Icons.chevronDown className="mt-[2px] mr-1.5 ml-auto size-2 shrink-0" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                      className="w-[199px]"

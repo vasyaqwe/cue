@@ -193,7 +193,7 @@ export function Comment({
                      {isExpanded ? "Collapse" : "Expand"}
                      <Icons.chevronDown
                         data-expanded={isExpanded}
-                        className="mt-px size-5 data-[expanded=true]:rotate-180"
+                        className="mx-1 mt-[2px] size-2 data-[expanded=true]:rotate-180"
                      />
                   </span>
                </button>
