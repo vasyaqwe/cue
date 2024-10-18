@@ -1,16 +1,25 @@
 import { cn } from "@/ui/utils"
 import type { ComponentProps } from "react"
 
-export function Logo({ className, ...props }: ComponentProps<"div">) {
+export function Logo({
+   className,
+   rounded = false,
+   ...props
+}: ComponentProps<"div"> & { rounded?: boolean }) {
    return (
       <div
          className={cn(
-            "size-12 drop-shadow-[0px_3px_3px_rgba(24,24,24,.1)]",
+            "size-12 shrink-0 drop-shadow-[0px_3px_3px_rgba(24,24,24,.1)]",
             className,
          )}
          {...props}
       >
-         <div className="squircle grid size-full shrink-0 transform-gpu place-content-center bg-background bg-gradient-to-b from-[#1e1448]/70 to-[#1e1448] text-background">
+         <div
+            className={cn(
+               rounded ? "rounded-full" : "squircle",
+               "grid size-full transform-gpu place-content-center bg-background bg-gradient-to-b from-[#1e1448]/70 to-[#1e1448] text-background",
+            )}
+         >
             <svg
                viewBox="0 0 21 13"
                fill="none"

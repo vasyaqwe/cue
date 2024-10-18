@@ -21,6 +21,7 @@ import { Route as JoinInviteCodeImport } from './routes/join/$inviteCode'
 import { Route as SlugLayoutImport } from './routes/$slug/_layout'
 import { Route as SlugLayoutIndexImport } from './routes/$slug/_layout/index'
 import { Route as SlugLayoutSettingsImport } from './routes/$slug/_layout/settings'
+import { Route as SlugLayoutSearchImport } from './routes/$slug/_layout/search'
 import { Route as SlugLayoutPeopleImport } from './routes/$slug/_layout/people'
 import { Route as SlugLayoutIssueIssueIdImport } from './routes/$slug/_layout/issue/$issueId'
 import { Route as SlugLayoutInboxLayoutImport } from './routes/$slug/_layout/inbox/_layout'
@@ -81,6 +82,11 @@ const SlugLayoutIndexRoute = SlugLayoutIndexImport.update({
 
 const SlugLayoutSettingsRoute = SlugLayoutSettingsImport.update({
   path: '/settings',
+  getParentRoute: () => SlugLayoutRoute,
+} as any)
+
+const SlugLayoutSearchRoute = SlugLayoutSearchImport.update({
+  path: '/search',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
@@ -172,6 +178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SlugLayoutPeopleImport
       parentRoute: typeof SlugLayoutImport
     }
+    '/$slug/_layout/search': {
+      id: '/$slug/_layout/search'
+      path: '/search'
+      fullPath: '/$slug/search'
+      preLoaderRoute: typeof SlugLayoutSearchImport
+      parentRoute: typeof SlugLayoutImport
+    }
     '/$slug/_layout/settings': {
       id: '/$slug/_layout/settings'
       path: '/settings'
@@ -256,6 +269,7 @@ const SlugLayoutInboxRouteWithChildren = SlugLayoutInboxRoute._addFileChildren(
 
 interface SlugLayoutRouteChildren {
   SlugLayoutPeopleRoute: typeof SlugLayoutPeopleRoute
+  SlugLayoutSearchRoute: typeof SlugLayoutSearchRoute
   SlugLayoutSettingsRoute: typeof SlugLayoutSettingsRoute
   SlugLayoutIndexRoute: typeof SlugLayoutIndexRoute
   SlugLayoutInboxRoute: typeof SlugLayoutInboxRouteWithChildren
@@ -264,6 +278,7 @@ interface SlugLayoutRouteChildren {
 
 const SlugLayoutRouteChildren: SlugLayoutRouteChildren = {
   SlugLayoutPeopleRoute: SlugLayoutPeopleRoute,
+  SlugLayoutSearchRoute: SlugLayoutSearchRoute,
   SlugLayoutSettingsRoute: SlugLayoutSettingsRoute,
   SlugLayoutIndexRoute: SlugLayoutIndexRoute,
   SlugLayoutInboxRoute: SlugLayoutInboxRouteWithChildren,
@@ -292,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/$slug': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
   '/$slug/people': typeof SlugLayoutPeopleRoute
+  '/$slug/search': typeof SlugLayoutSearchRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/': typeof SlugLayoutIndexRoute
   '/$slug/inbox': typeof SlugLayoutInboxLayoutRouteWithChildren
@@ -308,6 +324,7 @@ export interface FileRoutesByTo {
   '/$slug': typeof SlugLayoutIndexRoute
   '/join/$inviteCode': typeof JoinInviteCodeRoute
   '/$slug/people': typeof SlugLayoutPeopleRoute
+  '/$slug/search': typeof SlugLayoutSearchRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/inbox': typeof SlugLayoutInboxLayoutIndexRoute
   '/$slug/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
@@ -324,6 +341,7 @@ export interface FileRoutesById {
   '/$slug/_layout': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
   '/$slug/_layout/people': typeof SlugLayoutPeopleRoute
+  '/$slug/_layout/search': typeof SlugLayoutSearchRoute
   '/$slug/_layout/settings': typeof SlugLayoutSettingsRoute
   '/$slug/_layout/': typeof SlugLayoutIndexRoute
   '/$slug/_layout/inbox': typeof SlugLayoutInboxRouteWithChildren
@@ -343,6 +361,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/join/$inviteCode'
     | '/$slug/people'
+    | '/$slug/search'
     | '/$slug/settings'
     | '/$slug/'
     | '/$slug/inbox'
@@ -358,6 +377,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/join/$inviteCode'
     | '/$slug/people'
+    | '/$slug/search'
     | '/$slug/settings'
     | '/$slug/inbox'
     | '/$slug/issue/$issueId'
@@ -372,6 +392,7 @@ export interface FileRouteTypes {
     | '/$slug/_layout'
     | '/join/$inviteCode'
     | '/$slug/_layout/people'
+    | '/$slug/_layout/search'
     | '/$slug/_layout/settings'
     | '/$slug/_layout/'
     | '/$slug/_layout/inbox'
@@ -443,6 +464,7 @@ export const routeTree = rootRoute
       "parent": "/$slug",
       "children": [
         "/$slug/_layout/people",
+        "/$slug/_layout/search",
         "/$slug/_layout/settings",
         "/$slug/_layout/",
         "/$slug/_layout/inbox",
@@ -454,6 +476,10 @@ export const routeTree = rootRoute
     },
     "/$slug/_layout/people": {
       "filePath": "$slug/_layout/people.tsx",
+      "parent": "/$slug/_layout"
+    },
+    "/$slug/_layout/search": {
+      "filePath": "$slug/_layout/search.tsx",
       "parent": "/$slug/_layout"
     },
     "/$slug/_layout/settings": {

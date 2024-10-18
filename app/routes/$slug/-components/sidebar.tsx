@@ -86,42 +86,82 @@ export function Sidebar() {
       pushModal("create_issue")
    })
 
+   useHotkeys("/", (e) => {
+      e.preventDefault()
+      navigate({ to: "/$slug/search", params: { slug } })
+   })
+
    return (
-      <aside className="h-svh w-60 max-md:hidden">
-         <div className="fixed flex h-full w-60 flex-col border-border/60 border-r p-5 shadow-sm">
-            <DropdownMenu>
-               <DropdownMenuTrigger
-                  className={cn(
-                     buttonVariants({ variant: "ghost", size: "xl" }),
-                     "mb-3 justify-start pr-2 pl-1 font-semibold",
-                  )}
-               >
-                  <Logo className="size-7" /> {organization.name}
-                  <Icons.chevronDown className="ml-auto" />
-               </DropdownMenuTrigger>
-               <DropdownMenuContent
-                  className="w-[199px]"
-                  title="Organizations"
-               >
-                  <DropdownMenuLabel>Organizations</DropdownMenuLabel>
-                  {memberships.data.map((membership) => (
+      <aside className="z-[10] h-svh w-60 max-md:hidden">
+         <div className="fixed flex h-full w-60 flex-col border-border/60 border-r px-4 py-5 shadow-sm">
+            <div className="mb-3 flex items-center gap-px">
+               <DropdownMenu>
+                  <DropdownMenuTrigger
+                     className={cn(
+                        buttonVariants({ variant: "ghost" }),
+                        "justify-start whitespace-normal pr-1 pl-0.5 font-semibold text-[0.975rem]",
+                     )}
+                  >
+                     <Logo
+                        className="size-[26px]"
+                        rounded
+                     />
+                     <span className="line-clamp-1 break-all text-left">
+                        {organization.name}
+                     </span>
+                     <Icons.chevronDown
+                        className="ml-auto size-5 shrink-0"
+                        strokeWidth={2.5}
+                     />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                     className="w-[199px]"
+                     align="start"
+                     title="Organizations"
+                  >
+                     <DropdownMenuLabel>Organizations</DropdownMenuLabel>
+                     {memberships.data.map((membership) => (
+                        <DropdownMenuItem
+                           key={membership.organization.id}
+                           onSelect={() =>
+                              navigate({
+                                 to: `/${membership.organization.slug}`,
+                              })
+                           }
+                           className="line-clamp-1 break-all"
+                        >
+                           {membership.organization.name}
+                        </DropdownMenuItem>
+                     ))}
+                     <DropdownMenuSeparator />
                      <DropdownMenuItem
-                        key={membership.organization.id}
-                        onSelect={() =>
-                           navigate({
-                              to: `/${membership.organization.slug}`,
-                           })
-                        }
+                        onSelect={() => navigate({ to: "/new" })}
                      >
-                        {membership.organization.name}
+                        <Icons.plus /> New organization
                      </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onSelect={() => navigate({ to: "/new" })}>
-                     <Icons.plus /> New organization
-                  </DropdownMenuItem>
-               </DropdownMenuContent>
-            </DropdownMenu>
+                  </DropdownMenuContent>
+               </DropdownMenu>
+               <Tooltip
+                  content={
+                     <>
+                        Search <Kbd className="ml-1">/</Kbd>
+                     </>
+                  }
+               >
+                  <Link
+                     to="/$slug/search"
+                     params={{
+                        slug,
+                     }}
+                     className={cn(
+                        buttonVariants({ variant: "ghost", size: "icon" }),
+                        "ml-auto shrink-0 hover:bg-border/50",
+                     )}
+                  >
+                     <Icons.search className="size-5" />
+                  </Link>
+               </Tooltip>
+            </div>
             <Tooltip
                content={
                   <>
@@ -132,16 +172,14 @@ export function Sidebar() {
                <Button
                   variant={"outline"}
                   onClick={() => pushModal("create_issue")}
-                  className={cn(
-                     "relative mb-5 w-full font-semibold text-[0.95rem]",
-                  )}
+                  className={cn("relative w-full font-semibold text-[0.95rem]")}
                >
                   <Icons.pencil className="size-5" />
                   New issue
                   <DraftIndicator />
                </Button>
             </Tooltip>
-            <nav>
+            <nav className="mt-4">
                <ul className="space-y-1">
                   <li>
                      <Link

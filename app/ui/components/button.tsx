@@ -14,7 +14,7 @@ const buttonVariants = cva(
                       active:enabled:shadow-sm hover:enabled:text-primary-foreground disabled:!text-foreground/70`,
             secondary: `active:enabled:scale-[98%] bg-border/75 border-transparent hover:bg-border`,
             outline: `active:enabled:scale-[98%] bg-popover !shadow-button border border-transparent text-foreground disabled:!text-foreground/70 data-[state=open]:bg-elevated/75 hover:enabled:bg-elevated/75`,
-            ghost: "!shadow-none disabled:!text-foreground/70 border border-transparent active:enabled:scale-[98%] aria-[current=page]:bg-muted data-[state=open]:bg-muted hover:enabled:bg-border/50",
+            ghost: "!shadow-none disabled:!text-foreground/70 border border-transparent active:enabled:scale-[98%] data-[state=open]:bg-muted hover:enabled:bg-border/50",
             destructive: `active:enabled:scale-[98%] bg-destructive border-destructive hover:enabled:bg-destructive/90 text-destructive-foreground disabled:!text-destructive-foreground/70`,
             link: "!h-auto !p-0 !shadow-none inline-block border-transparent text-base text-foreground/70 underline transition-none hover:enabled:text-foreground",
          },
