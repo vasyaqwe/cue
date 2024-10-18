@@ -12,7 +12,7 @@ export const organizationMembersQuery = ({
    organizationId,
 }: { organizationId: string }) =>
    queryOptions({
-      queryKey: ["organization_members"],
+      queryKey: ["organization_members", organizationId],
       queryFn: () => organization.members({ organizationId }),
    })
 
@@ -20,7 +20,7 @@ export const organizationTeammatesIdsQuery = ({
    organizationId,
 }: { organizationId: string }) =>
    queryOptions({
-      queryKey: ["organization_teammates_ids"],
+      queryKey: ["organization_teammates_ids", organizationId],
       queryFn: () => organization.teammatesIds({ organizationId }),
    })
 
