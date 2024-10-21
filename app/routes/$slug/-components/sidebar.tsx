@@ -88,12 +88,12 @@ export function Sidebar() {
 
    useHotkeys("/", (e) => {
       e.preventDefault()
-      navigate({ to: "/$slug/search", params: { slug } })
+      navigate({ to: "/$slug/search", params: { slug }, search: { q: "" } })
    })
 
    return (
       <aside className="z-[10] h-svh w-[15.5rem] max-md:hidden">
-         <div className="fixed flex h-full w-[15.5rem] flex-col border-border/60 border-r px-4 py-5 shadow-sm">
+         <div className="fixed flex h-full w-[15.5rem] flex-col border-border/60 border-r p-4 shadow-sm">
             <div className="mb-3 flex items-center gap-px">
                <DropdownMenu>
                   <DropdownMenuTrigger
@@ -150,6 +150,7 @@ export function Sidebar() {
                      params={{
                         slug,
                      }}
+                     search={{ q: "" }}
                      className={cn(
                         buttonVariants({ variant: "ghost", size: "icon" }),
                         "ml-auto shrink-0 hover:bg-border/50",

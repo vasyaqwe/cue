@@ -1,3 +1,4 @@
+import { Icons } from "@/ui/components/icons"
 import { cn } from "@/ui/utils"
 import { cva } from "class-variance-authority"
 import { type ComponentProps, forwardRef } from "react"
@@ -33,21 +34,17 @@ function ClearInputButton({
          data-clearinput
          className={cn(
             buttonVariants({ variant: "outline" }),
-            "-translate-y-1/2 !size-[22px] !rounded-md absolute top-1/2 right-[7px] bg-background/90 p-[2px] text-foreground/70 shadow-shadow transition-all ",
-            !props.disabled
-               ? visible
-                  ? "scale-100 opacity-100"
-                  : "scale-50 opacity-0"
-               : "",
+            "-translate-y-1/2 !size-[22px] absolute top-1/2 right-2 bg-background/90 p-[2px] text-foreground/70 shadow-shadow transition-all ",
+            !props.disabled ? (visible ? "opacity-100" : "opacity-0") : "",
             className,
          )}
          {...props}
       >
          <span className="sr-only">Clear search</span>{" "}
-         {/* <xMarkIcon
-            className="size-5"
-            strokeWidth={2.5}
-         /> */}
+         <Icons.xMark
+            className="size-4"
+            strokeWidth={2}
+         />
       </button>
    )
 }

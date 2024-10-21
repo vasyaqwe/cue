@@ -45,6 +45,11 @@ export function Header({
 
    const memberships = useSuspenseQuery(organizationMembershipsQuery())
 
+   const hideProfileDrawer =
+      pathname.includes(`/${slug}/issue/`) ||
+      pathname.includes(`/${slug}/inbox`) ||
+      pathname.includes(`/${slug}/search`)
+
    return (
       <header
          className={cn(
@@ -75,8 +80,7 @@ export function Header({
                )}
             </div>
             {children}
-            {pathname.includes(`/${slug}/issue/`) ||
-            pathname.includes(`/${slug}/inbox`) ? null : (
+            {hideProfileDrawer ? null : (
                <DropdownMenu>
                   <DropdownMenuTrigger
                      className={cn(

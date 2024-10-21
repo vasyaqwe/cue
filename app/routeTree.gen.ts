@@ -36,31 +36,37 @@ const SlugLayoutInboxImport = createFileRoute('/$slug/_layout/inbox')()
 // Create/Update Routes
 
 const SlugRoute = SlugImport.update({
+  id: '/$slug',
   path: '/$slug',
   getParentRoute: () => rootRoute,
 } as any)
 
 const NewRoute = NewImport.update({
+  id: '/new',
   path: '/new',
   getParentRoute: () => rootRoute,
 } as any)
 
 const LoginRoute = LoginImport.update({
+  id: '/login',
   path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
 
 const HomepageRoute = HomepageImport.update({
+  id: '/homepage',
   path: '/homepage',
   getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
+  id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const JoinInviteCodeRoute = JoinInviteCodeImport.update({
+  id: '/join/$inviteCode',
   path: '/join/$inviteCode',
   getParentRoute: () => rootRoute,
 } as any)
@@ -71,31 +77,37 @@ const SlugLayoutRoute = SlugLayoutImport.update({
 } as any)
 
 const SlugLayoutInboxRoute = SlugLayoutInboxImport.update({
+  id: '/inbox',
   path: '/inbox',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
 const SlugLayoutIndexRoute = SlugLayoutIndexImport.update({
+  id: '/',
   path: '/',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
 const SlugLayoutSettingsRoute = SlugLayoutSettingsImport.update({
+  id: '/settings',
   path: '/settings',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
 const SlugLayoutSearchRoute = SlugLayoutSearchImport.update({
+  id: '/search',
   path: '/search',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
 const SlugLayoutPeopleRoute = SlugLayoutPeopleImport.update({
+  id: '/people',
   path: '/people',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
 const SlugLayoutIssueIssueIdRoute = SlugLayoutIssueIssueIdImport.update({
+  id: '/issue/$issueId',
   path: '/issue/$issueId',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
@@ -107,6 +119,7 @@ const SlugLayoutInboxLayoutRoute = SlugLayoutInboxLayoutImport.update({
 
 const SlugLayoutInboxLayoutIndexRoute = SlugLayoutInboxLayoutIndexImport.update(
   {
+    id: '/',
     path: '/',
     getParentRoute: () => SlugLayoutInboxLayoutRoute,
   } as any,
@@ -114,6 +127,7 @@ const SlugLayoutInboxLayoutIndexRoute = SlugLayoutInboxLayoutIndexImport.update(
 
 const SlugLayoutInboxLayoutIssueIssueIdRoute =
   SlugLayoutInboxLayoutIssueIssueIdImport.update({
+    id: '/issue/$issueId',
     path: '/issue/$issueId',
     getParentRoute: () => SlugLayoutInboxLayoutRoute,
   } as any)
