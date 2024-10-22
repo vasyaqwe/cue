@@ -137,10 +137,10 @@ function Component() {
                            <Link
                               onClick={(e) => {
                                  // @ts-expect-error ...
-                                 if (e.target.closest("button")) {
-                                    e.preventDefault()
-                                    return
-                                 }
+                                 if (e.target.closest("button"))
+                                    return e.preventDefault()
+
+                                 setQuery(q)
                               }}
                               className={cn(
                                  buttonVariants({ variant: "ghost" }),
