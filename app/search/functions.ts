@@ -112,26 +112,21 @@ export const list = createServerFn(
          const uniqueResults = [
             ...matchingIssues,
             ...issuesWithMatchingComments,
-         ]
-            .sort((a, b) => b.createdAt - a.createdAt)
-            .reduce(
-               (acc, current) => {
-                  const existingIndex = acc.findIndex(
-                     (item) => item.id === current.id,
-                  )
-                  if (existingIndex === -1) {
-                     acc.push(current)
-                  } else if (
-                     current.isComment &&
-                     !acc[existingIndex]?.isComment
-                  ) {
-                     // Replace issue match with comment match if we have both
-                     acc[existingIndex] = current
-                  }
-                  return acc
-               },
-               [] as typeof matchingIssues,
-            )
+         ].reduce(
+            (acc, current) => {
+               const existingIndex = acc.findIndex(
+                  (item) => item.id === current.id,
+               )
+               if (existingIndex === -1) {
+                  acc.push(current)
+               } else if (current.isComment && !acc[existingIndex]?.isComment) {
+                  // Replace issue match with comment match if we have both
+                  acc[existingIndex] = current
+               }
+               return acc
+            },
+            [] as typeof matchingIssues,
+         )
 
          return uniqueResults.map((result) => {
             let highlightedTitle = result.title

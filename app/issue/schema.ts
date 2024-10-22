@@ -33,6 +33,11 @@ export const issue = createTable(
          issueOrganizationIdIdx: index("issue_organization_id_idx").on(
             table.organizationId,
          ),
+         issueSearchIdx: index("issue_search_idx").on(
+            table.organizationId,
+            table.title,
+            table.description,
+         ),
       }
    },
 )

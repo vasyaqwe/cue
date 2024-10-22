@@ -28,6 +28,10 @@ export const comment = createTable(
    (table) => {
       return {
          commentIssueIdIdx: index("comment_issue_id_idx").on(table.issueId),
+         commentSearchIdx: index("comment_search_idx").on(
+            table.issueId,
+            table.content,
+         ),
       }
    },
 )
