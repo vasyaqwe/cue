@@ -66,6 +66,12 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
       const addMentionedUser = useEditorStore().addMentionedUser
       const removeMentionedUser = useEditorStore().removeMentionedUser
 
+      const baseClassName = cn(
+         "prose mt-2 min-h-9 max-w-full break-words prose-img:m-0 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3",
+         "prose-code:after:hidden prose-code:before:hidden prose-ol:pl-4 prose-ul:pl-4 prose-h3:font-bold prose-code:text-sm prose-h1:text-2xl",
+         "prose-h2:text-xl prose-h3:text-[1.1rem] prose-headings:text-foreground prose-p:text-base prose-p:text-foreground focus:outline-none",
+      )
+
       return (
          <div
             ref={ref}
@@ -76,7 +82,8 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                   {content === "<p></p>" || content === "" ? (
                      <p
                         className={cn(
-                           "prose mt-2 min-h-9 max-w-full break-words text-base text-foreground/40 prose-img:m-0 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-code:after:hidden prose-code:before:hidden prose-ol:pl-4 prose-ul:pl-4 prose-h3:font-bold prose-code:text-sm prose-h1:text-2xl prose-h2:text-xl prose-h3:text-[1.1rem] prose-headings:text-foreground prose-p:text-base focus:outline-none",
+                           baseClassName,
+                           "text-foreground/40",
                            classAttr,
                         )}
                      >
@@ -84,10 +91,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                      </p>
                   ) : (
                      <div
-                        className={cn(
-                           "prose mt-2 min-h-9 max-w-full break-words text-base prose-img:m-0 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-code:after:hidden prose-code:before:hidden prose-ol:pl-4 prose-ul:pl-4 prose-h3:font-bold prose-code:text-sm prose-h1:text-2xl prose-h2:text-xl prose-h3:text-[1.1rem] prose-headings:text-foreground prose-p:text-base focus:outline-none",
-                           classAttr,
-                        )}
+                        className={cn(baseClassName, classAttr)}
                         dangerouslySetInnerHTML={{
                            __html:
                               content?.replaceAll(
@@ -155,10 +159,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                      },
                      attributes: {
                         ...editorProps?.attributes,
-                        class: cn(
-                           "prose mt-2 min-h-9 max-w-full break-words prose-img:m-0 prose-p:my-2 prose-h2:mt-0 prose-h1:mb-3 prose-h2:mb-3 prose-code:after:hidden prose-code:before:hidden prose-ol:pl-4 prose-ul:pl-4 prose-h3:font-bold prose-code:text-sm prose-h1:text-2xl prose-h2:text-xl prose-h3:text-[1.1rem] prose-headings:text-foreground prose-p:text-base focus:outline-none",
-                           classAttr,
-                        ),
+                        class: cn(baseClassName, classAttr),
                      },
                   }}
                   content={content}
