@@ -1,6 +1,7 @@
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { useOnPushModal } from "@/modals"
-import { useEffect, useState } from "react"
+import { useIsClient } from "@/ui/hooks/use-is-client"
+import { useState } from "react"
 import { match } from "ts-pattern"
 
 export function DraftIndicator() {
@@ -18,12 +19,9 @@ export function DraftIndicator() {
          )
    })
 
-   const [isMounted, setIsMounted] = useState(false)
-   useEffect(() => {
-      setIsMounted(true)
-   }, [])
+   const { isClient } = useIsClient()
 
-   if (!isMounted) return null
+   if (!isClient) return null
 
    const descriptionEmpty = !issueDescription || issueDescription === "<p></p>"
 

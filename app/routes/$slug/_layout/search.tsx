@@ -1,9 +1,19 @@
+import { useLocalStorage } from "@/interactions/use-local-storage"
 import { Header } from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
+import { Button, buttonVariants } from "@/ui/components/button"
 import { Card } from "@/ui/components/card"
 import { Icons } from "@/ui/components/icons"
-import { Input } from "@/ui/components/input"
-import { createFileRoute, useNavigate, useParams } from "@tanstack/react-router"
+import { ClearInputButton, Input } from "@/ui/components/input"
+import { useIsClient } from "@/ui/hooks/use-is-client"
+import { cn } from "@/ui/utils"
+import {
+   Link,
+   createFileRoute,
+   useNavigate,
+   useParams,
+} from "@tanstack/react-router"
+import { useRef, useState } from "react"
 
 export const Route = createFileRoute("/$slug/_layout/search")({
    component: Component,
@@ -22,8 +32,17 @@ export const Route = createFileRoute("/$slug/_layout/search")({
 
 function Component() {
    const { slug } = useParams({ from: "/$slug/_layout" })
-   // const { q } = Route.useSearch()
+
+   const { q } = Route.useSearch()
    const navigate = useNavigate()
+   const [query, setQuery] = useState(q)
+   const [recentSearches, setRecentSearches] = useLocalStorage<string[]>(
+      `search_recent_${slug}`,
+      [],
+   )
+   const inputRef = useRef<HTMLInputElement>(null)
+
+   const { isClient } = useIsClient()
 
    return (
       <Main>
@@ -31,30 +50,105 @@ function Component() {
             <form
                onSubmit={(e) => {
                   e.preventDefault()
-                  const query = new FormData(e.target as HTMLFormElement).get(
-                     "q",
-                  ) as string
+                  const query = (
+                     new FormData(e.target as HTMLFormElement).get(
+                        "q",
+                     ) as string
+                  )
+                     .toString()
+                     .trim()
+
+                  if (query.length === 0) return
 
                   navigate({
                      to: "/$slug/search",
                      params: { slug },
                      search: { q: query },
                   })
+
+                  if (!recentSearches.includes(query))
+                     setRecentSearches((prev) => [...prev, query])
                }}
                className="relative col-span-2 flex w-full items-center"
             >
-               <Icons.search className="max-md:-translate-y-1/2 top-1/2 left-4 size-5 shrink-0 opacity-50 max-md:absolute" />
+               <Icons.search className="max-md:-translate-y-1/2 top-1/2 left-4 size-5 shrink-0 opacity-50 max-md:absolute md:top-[49%]" />
                <Input
+                  ref={inputRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
                   name="q"
                   autoFocus
                   placeholder="Search your workspace.."
                   className="md:!border-none md:!outline-none w-full max-md:ml-1 md:bg-transparent md:focus:bg-transparent max-md:pl-10"
                />
-               {/* <ClearInputButton visible={q.length > 0} /> */}
+               <ClearInputButton
+                  onClick={() => {
+                     setQuery("")
+                     navigate({
+                        to: "/$slug/search",
+                        params: { slug },
+                        search: { q: "" },
+                     })
+                     setTimeout(() => {
+                        inputRef.current?.focus()
+                     }, 0)
+                  }}
+                  visible={query.length > 0}
+               />
             </form>
          </Header>
-         <main className="relative flex-1 overflow-y-auto py-5 pb-safe-4 md:py-8">
-            <div className="md:-translate-y-10 absolute inset-0 m-auto h-fit">
+         <main className="relative flex-1 overflow-y-auto">
+            {!isClient || recentSearches.length === 0 ? null : (
+               <>
+                  <div className="my-2 flex items-center justify-between px-4 md:px-8">
+                     <p className="opacity-65">Recent searches</p>
+                     <Button
+                        onClick={() => setRecentSearches([])}
+                        size={"sm"}
+                        variant={"ghost"}
+                        className="-mr-3 text-foreground/80"
+                     >
+                        Clear
+                     </Button>
+                  </div>
+                  {recentSearches.map((q) => (
+                     <Link
+                        onClick={(e) => {
+                           // @ts-expect-error ...
+                           if (e.target.closest("button")) {
+                              e.preventDefault()
+                              return
+                           }
+                        }}
+                        className={cn(
+                           buttonVariants({ variant: "ghost" }),
+                           "group flex h-[34px] justify-between rounded-none px-4 transition-none hover:bg-border/50 md:px-8",
+                        )}
+                        key={q}
+                        to="/$slug/search"
+                        params={{ slug }}
+                        search={{ q }}
+                     >
+                        <span>{q}</span>
+
+                        <button
+                           onClick={(_e) => {
+                              setRecentSearches((prev) =>
+                                 prev.filter((item) => item !== q),
+                              )
+                           }}
+                           className="hidden size-6 cursor-pointer place-items-center rounded-full opacity-80 group-hover:grid hover:bg-border"
+                        >
+                           <Icons.xMark className="size-4" />
+                           <span className="sr-only">
+                              Remove recent search
+                           </span>{" "}
+                        </button>
+                     </Link>
+                  ))}
+               </>
+            )}
+            <div className="md:-translate-y-10 absolute inset-0 m-auto hidden h-fit">
                <div className="relative mb-6">
                   <Card className="absolute inset-0 mx-auto grid h-28 w-[5.5rem] rotate-6 place-content-center rounded-xl" />
                   <Card className="-rotate-6 mx-auto grid h-28 w-[5.5rem] place-content-center rounded-xl">
