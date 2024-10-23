@@ -65,7 +65,7 @@ export function BottomMenu() {
                   to={homeRoute.to}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
                >
-                  <Icons.issues className="size-7" />
+                  <Icons.home className="size-7" />
                </Link>
             </li>
             <li className="flex flex-1">
