@@ -330,7 +330,7 @@ export function IssueDetails() {
                         <div className="mt-5 mb-3 flex items-center gap-1">
                            <UserAvatar
                               className="mr-[11px] ml-0.5 size-7"
-                              user={{ ...issue.author, id: issue.authorId }}
+                              user={{ ...issue.author, id: issue.author.id }}
                            />
                            <div className="md:-mt-px">
                               <strong className="font-semibold text-foreground">

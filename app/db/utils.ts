@@ -10,6 +10,7 @@ const prefixes = {
    issue: "iss",
    notification: "ntf",
    comment: "com",
+   favorite: "fav",
 } as const
 
 const generateIdBase = (prefix: keyof typeof prefixes) => {

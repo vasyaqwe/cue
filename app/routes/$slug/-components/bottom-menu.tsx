@@ -63,7 +63,7 @@ export function BottomMenu() {
                      "aria-current": "page",
                   }}
                   to={homeRoute.to}
-                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
+                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/55 transition-colors aria-[current=page]:text-foreground"
                >
                   <Icons.home className="size-7" />
                </Link>
@@ -83,7 +83,7 @@ export function BottomMenu() {
                      useNotificationStore.setState({ activeItemIssueId: null })
                   }
                   to={inboxRoute.to}
-                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/[.42] transition-colors aria-[current=page]:text-foreground/95"
+                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground/95"
                   data-has-unread={unreadCount.data.count > 0}
                >
                   <Icons.inbox className="size-[29px]" />
@@ -96,7 +96,7 @@ export function BottomMenu() {
                         repositionInputs: true,
                      })
                   }
-                  className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-md text-foreground/50 transition-colors active:text-foreground"
+                  className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-md text-foreground/55 transition-colors active:text-foreground"
                >
                   <div className="relative">
                      <Icons.pencil className="size-[28px] [&>path:first-child]:opacity-0" />
@@ -106,7 +106,7 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <Link
-                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
+                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/55 transition-colors aria-[current=page]:text-foreground"
                   params={{ slug }}
                   activeProps={{
                      "aria-current": "page",
@@ -118,7 +118,7 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <Link
-                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/50 transition-colors aria-[current=page]:text-foreground"
+                  className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/55 transition-colors aria-[current=page]:text-foreground"
                   params={{ slug }}
                   activeProps={{
                      "aria-current": "page",

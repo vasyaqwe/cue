@@ -1,7 +1,9 @@
+import { favorite } from "@/favorite/schema"
 import { insertIssueParams, issue, updateIssueParams } from "@/issue/schema"
 import { organizationProtectedProcedure } from "@/lib/trpc"
+import { user } from "@/user/schema"
 import { createServerFn } from "@tanstack/start"
-import { desc, eq } from "drizzle-orm"
+import { and, desc, eq, exists, sql } from "drizzle-orm"
 import { z } from "zod"
 
 export const list = createServerFn(
@@ -21,19 +23,45 @@ export const byId = createServerFn(
    organizationProtectedProcedure
       .input(z.object({ issueId: z.string() }))
       .query(async ({ ctx, input }) => {
-         return (
-            (await ctx.db.query.issue.findFirst({
-               where: eq(issue.id, input.issueId),
-               with: {
-                  author: {
-                     columns: {
-                        name: true,
-                        avatarUrl: true,
-                     },
-                  },
+         const subquery = ctx.db
+            .select({
+               value: sql<boolean>`1`,
+            })
+            .from(favorite)
+            .where(
+               and(
+                  eq(favorite.entityId, issue.id),
+                  eq(favorite.entityType, "issue"),
+                  eq(favorite.userId, ctx.session.userId),
+               ),
+            )
+            .limit(1)
+            .as("fav_exists")
+
+         return await ctx.db
+            .select({
+               id: issue.id,
+               title: issue.title,
+               description: issue.description,
+               status: issue.status,
+               label: issue.label,
+               createdAt: issue.createdAt,
+               author: {
+                  id: user.id,
+                  name: user.name,
+                  avatarUrl: user.avatarUrl,
                },
-            })) ?? null
-         )
+               isFavorited: exists(subquery),
+            })
+            .from(issue)
+            .innerJoin(user, eq(issue.authorId, user.id))
+            .where(eq(issue.id, input.issueId))
+            .limit(1)
+            .then((rows) => {
+               const result = rows[0]
+               if (!result) return null
+               return { ...result, isFavorited: Boolean(result.isFavorited) }
+            })
       }),
 )
 
