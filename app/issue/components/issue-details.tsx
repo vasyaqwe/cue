@@ -155,7 +155,7 @@ export function IssueDetails() {
 
    const onInboxPage = pathname.includes("/inbox")
 
-   const toggleFavorite = async () =>
+   const toggleFavorite = () =>
       match(issue.isFavorited)
          .with(true, () => {
             deleteFavorite.mutate({
@@ -175,6 +175,11 @@ export function IssueDetails() {
                },
             })
          })
+
+   useHotkeys("alt+f", (e) => {
+      e.preventDefault()
+      toggleFavorite()
+   })
 
    return (
       <>
@@ -217,18 +222,30 @@ export function IssueDetails() {
                      </DropdownMenuItem>
                   </DropdownMenuContent>
                </DropdownMenu>
-               <Button
-                  variant={"ghost"}
-                  size={"icon"}
-                  className="ml-auto max-md:hidden"
-                  onClick={toggleFavorite}
-                  aria-label={issue.isFavorited ? "Unfavorite" : "Favorite"}
+               <Tooltip
+                  content={
+                     <span className="flex items-center gap-2">
+                        {issue.isFavorited ? "Unfavorite" : "Favorite"}
+                        <span className="inline-flex items-center gap-1">
+                           <Kbd>Alt</Kbd>
+                           <Kbd>F</Kbd>
+                        </span>
+                     </span>
+                  }
                >
-                  <Icons.star
-                     className="size-5"
-                     data-fill={issue.isFavorited}
-                  />
-               </Button>
+                  <Button
+                     variant={"ghost"}
+                     size={"icon"}
+                     className="ml-auto max-md:hidden"
+                     onClick={toggleFavorite}
+                     aria-label={issue.isFavorited ? "Unfavorite" : "Favorite"}
+                  >
+                     <Icons.star
+                        className="size-5"
+                        data-fill={issue.isFavorited}
+                     />
+                  </Button>
+               </Tooltip>
             </Header>
             <div className="overflow-y-auto scroll-smooth [scrollbar-gutter:stable]">
                <div className="mx-auto w-full max-w-[51rem] py-6 md:py-8">

@@ -70,7 +70,6 @@ export function FavoriteList() {
                                                 "md:!border-border/80 bg-border/50 max-md:scale-95 md:bg-elevated md:opacity-100",
                                              "aria-current": "page",
                                           }}
-                                          activeOptions={{ exact: true }}
                                           to={"/$slug/issue/$issueId"}
                                           className={cn(
                                              "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold transition-all md:h-9 max-md:active:scale-95 md:rounded-[11px] max-md:active:bg-border/50 md:pr-2 md:pl-2.5 md:text-[0.925rem] hover:opacity-100 md:opacity-80 max-md:transition-all max-md:duration-300",
@@ -91,7 +90,7 @@ export function FavoriteList() {
                                                    organizationId,
                                                 })
                                              }}
-                                             className="ml-auto grid size-5 shrink-0 cursor-pointer place-items-center rounded-full opacity-0 hover:bg-border group-hover:opacity-100"
+                                             className="ml-auto grid size-5 shrink-0 cursor-pointer place-items-center rounded-full opacity-0 hover:bg-border/60 group-hover:opacity-85"
                                           >
                                              <Icons.xMark className="size-3.5" />
                                              <span className="sr-only">
