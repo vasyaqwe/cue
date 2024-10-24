@@ -331,7 +331,7 @@ function NotificationPermissionCard() {
    if (permissionStatus === "granted") return null
 
    return (
-      <Card className="mb-3 animate-fade-in [--animation-delay:300ms]">
+      <Card className="mb-3 animate-fade-in opacity-0 [--animation-delay:250ms]">
          <p className="-mt-1 text-muted-foreground text-sm">
             Cue needs your permission to enable notifications.
          </p>

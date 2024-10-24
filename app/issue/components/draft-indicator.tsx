@@ -1,12 +1,17 @@
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { useOnPushModal } from "@/modals"
 import { useIsClient } from "@/ui/hooks/use-is-client"
+import { useParams } from "@tanstack/react-router"
 import { useState } from "react"
 import { match } from "ts-pattern"
 
 export function DraftIndicator() {
-   const [issueTitle] = useLocalStorage("create_issue_title", "")
-   const [issueDescription] = useLocalStorage("create_issue_description", "")
+   const { slug } = useParams({ from: "/$slug/_layout" })
+   const [issueTitle] = useLocalStorage(`create_issue_title_${slug}`, "")
+   const [issueDescription] = useLocalStorage(
+      `create_issue_description_${slug}`,
+      "",
+   )
    const [createIssueOpen, setCreateIssueOpen] = useState(false)
    useOnPushModal("create_issue", (open) => {
       match(open)

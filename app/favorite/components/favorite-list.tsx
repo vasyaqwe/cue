@@ -1,5 +1,6 @@
 import { useDeleteFavorite } from "@/favorite/hooks/use-delete-favorite"
 import { favoriteListQuery } from "@/favorite/queries"
+import { useFavoriteStore } from "@/favorite/store"
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { StatusIcon } from "@/issue/components/icons"
 import {
@@ -24,6 +25,8 @@ export function FavoriteList() {
 
    const { deleteFavorite } = useDeleteFavorite()
 
+   const isMounted = useFavoriteStore().isMounted
+
    return (
       <>
          {favorites.isError || favorites.isPending ? null : favorites.data
@@ -34,10 +37,16 @@ export function FavoriteList() {
                   value={value}
                   onValueChange={(value) => setValue(value)}
                   collapsible
-                  className="animate-fade-in [--animation-delay:0ms] [--animation-duration:250ms]"
+                  onAnimationEndCapture={() =>
+                     useFavoriteStore.setState({ isMounted: true })
+                  }
+                  className={cn(
+                     "[--animation-delay:0ms] [--animation-duration:250ms]",
+                     !isMounted ? "animate-fade-in opacity-0" : "",
+                  )}
                >
                   <AccordionItem value="favorites">
-                     <AccordionTrigger className="mt-3 w-full cursor-pointer rounded-lg py-3 pl-1 text-foreground/75 leading-none transition-colors md:mb-1.5 hover:bg-border/50 md:py-2 md:pl-3">
+                     <AccordionTrigger className="mt-3 w-full cursor-pointer rounded-lg py-3 pl-1 text-foreground/75 leading-none transition-colors md:mb-1.5 hover:bg-border/40 md:py-2 md:pl-3">
                         Favorites
                      </AccordionTrigger>
                      <AccordionContent asChild>

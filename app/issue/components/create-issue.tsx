@@ -79,9 +79,9 @@ export function CreateIssue() {
    const navigate = useNavigate()
    const { organizationId, user } = useAuth()
    const { slug } = useParams({ from: "/$slug/_layout" })
-   const [title, setTitle] = useLocalStorage("create_issue_title", "")
+   const [title, setTitle] = useLocalStorage(`create_issue_title_${slug}`, "")
    const [description, setDescription] = useLocalStorage(
-      "create_issue_description",
+      `create_issue_description_${slug}`,
       "",
    )
 
@@ -89,11 +89,11 @@ export function CreateIssue() {
    const sendEvent = useIssueStore().sendEvent
 
    const [status, setStatus] = useLocalStorage<IssueStatus>(
-      "create_issue_status",
+      `create_issue_status_${slug}`,
       "todo",
    )
    const [label, setLabel] = useLocalStorage<IssueLabel>(
-      "create_issue_label",
+      `create_issue_label_${slug}`,
       issueLabels[0],
    )
 
