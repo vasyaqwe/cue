@@ -8,7 +8,12 @@ import {
    ModalTrigger,
 } from "@/modals/dynamic"
 import { organizationMembersQuery } from "@/organization/queries"
-import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import {
+   Header,
+   HeaderBackButton,
+   HeaderProfileDrawer,
+   HeaderTitle,
+} from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { Button, buttonVariants } from "@/ui/components/button"
 import { Icons } from "@/ui/components/icons"
@@ -33,7 +38,9 @@ export const Route = createFileRoute("/$slug/_layout/people")({
    pendingComponent: () => (
       <Main>
          <Header>
+            <HeaderBackButton />
             <HeaderTitle>People</HeaderTitle>
+            <HeaderProfileDrawer />
          </Header>
          <main>
             <Loading className="absolute inset-0 m-auto" />
@@ -63,7 +70,9 @@ function Component() {
    return (
       <Main>
          <Header>
+            <HeaderBackButton />
             <HeaderTitle>People</HeaderTitle>
+            <HeaderProfileDrawer />
          </Header>
          <main className="overflow-y-auto py-5 md:py-8">
             {members.data.length === 0 ? (

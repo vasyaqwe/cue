@@ -4,7 +4,11 @@ import { useDeleteNotifications } from "@/notification/hooks/use-delete-notifica
 import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
 import { notificationListQuery } from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"
-import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import {
+   Header,
+   HeaderBackButton,
+   HeaderTitle,
+} from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { Button } from "@/ui/components/button"
 import {
@@ -44,6 +48,7 @@ export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
    pendingComponent: () => (
       <Main>
          <Header className="md:max-w-[420px] md:border-r md:pl-0">
+            <HeaderBackButton />
             <HeaderTitle>Inbox</HeaderTitle>
          </Header>
          <main className="relative flex-1 border-border/75 md:max-w-[420px] md:border-r">
@@ -106,6 +111,7 @@ function Component() {
                   issueId ? "max-md:hidden" : "",
                )}
             >
+               <HeaderBackButton />
                <HeaderTitle>Inbox</HeaderTitle>
                <Tooltip content={<>Mark all read</>}>
                   <Button

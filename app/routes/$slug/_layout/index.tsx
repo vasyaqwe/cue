@@ -1,11 +1,16 @@
 import { IssuesPage } from "@/issue/components/issues-page"
 import { issueListQuery } from "@/issue/queries"
-import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import {
+   Header,
+   HeaderProfileDrawer,
+   HeaderTitle,
+} from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { Card } from "@/ui/components/card"
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Loading } from "@/ui/components/loading"
+import { Logo } from "@/ui/components/logo"
 import { useAuth } from "@/user/hooks"
 import {
    Link,
@@ -35,7 +40,11 @@ function Component() {
          <IssuesPage className="max-md:hidden" />
          <Main className="md:hidden">
             <Header>
-               <HeaderTitle>{organization.name}</HeaderTitle>
+               <Logo className="size-8 md:hidden" />
+               <HeaderTitle className="mx-1.5 truncate">
+                  {organization.name}
+               </HeaderTitle>
+               <HeaderProfileDrawer className="md:hidden" />
             </Header>
             <main className="overflow-y-auto p-4">
                <form
@@ -101,6 +110,7 @@ function PendingComponent() {
    return (
       <Main>
          <Header>
+            <Logo className="size-8 md:hidden" />
             <HeaderTitle>{organization.name}</HeaderTitle>
          </Header>
          <main>

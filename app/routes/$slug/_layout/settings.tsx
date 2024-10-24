@@ -9,7 +9,12 @@ import {
 } from "@/modals/dynamic"
 import * as organization from "@/organization/functions"
 import { organizationMembershipsQuery } from "@/organization/queries"
-import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import {
+   Header,
+   HeaderBackButton,
+   HeaderProfileDrawer,
+   HeaderTitle,
+} from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
@@ -91,7 +96,9 @@ function Component() {
    return (
       <Main>
          <Header>
+            <HeaderBackButton />
             <HeaderTitle>Settings</HeaderTitle>
+            <HeaderProfileDrawer />
          </Header>
          <main className="overflow-y-auto py-5 pb-safe-4 md:py-8">
             <div className="mx-auto max-w-4xl px-4">

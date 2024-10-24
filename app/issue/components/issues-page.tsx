@@ -8,7 +8,12 @@ import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { issueListQuery } from "@/issue/queries"
 import { type IssueStatus, issueLabels, issueStatuses } from "@/issue/schema"
 import { useIssueStore } from "@/issue/store"
-import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import {
+   Header,
+   HeaderBackButton,
+   HeaderProfileDrawer,
+   HeaderTitle,
+} from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { Route as issueIdRoute } from "@/routes/$slug/_layout/issue/$issueId"
 import { Badge } from "@/ui/components/badge"
@@ -60,7 +65,9 @@ export function IssuesPage({ ...props }: ComponentProps<"div">) {
    return (
       <Main {...props}>
          <Header>
+            <HeaderBackButton />
             <HeaderTitle>Issues</HeaderTitle>
+            <HeaderProfileDrawer />
          </Header>
          <main className="overflow-y-auto">
             <RefreshControl isRefreshing={isRefreshing}>

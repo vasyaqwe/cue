@@ -10,7 +10,11 @@ import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { issueByIdQuery } from "@/issue/queries"
 import { issueLabels, issueStatuses } from "@/issue/schema"
 import { useOnPushModal } from "@/modals"
-import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import {
+   Header,
+   HeaderBackButton,
+   HeaderTitle,
+} from "@/routes/$slug/-components/header"
 import { Button, buttonVariants } from "@/ui/components/button"
 import {
    Combobox,
@@ -149,6 +153,7 @@ export function IssueDetails() {
       <>
          <div className="flex flex-1 flex-col">
             <Header className={onInboxPage ? "md:pl-0" : ""}>
+               <HeaderBackButton />
                <HeaderTitle>Issue</HeaderTitle>
                <DropdownMenu>
                   <DropdownMenuTrigger
@@ -178,6 +183,16 @@ export function IssueDetails() {
                      </DropdownMenuItem>
                   </DropdownMenuContent>
                </DropdownMenu>
+               {/* <Button
+                  variant={"ghost"}
+                  size={"icon"}
+                  className="ml-auto"
+               >
+                  <Icons.star
+                     className="size-5"
+                     data-fill={issue.isFavorited}
+                  />
+               </Button> */}
             </Header>
             <div className="overflow-y-auto scroll-smooth [scrollbar-gutter:stable]">
                <div className="mx-auto w-full max-w-[51rem] py-6 md:py-8">

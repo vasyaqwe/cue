@@ -1,6 +1,6 @@
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { StatusIcon } from "@/issue/components/icons"
-import { Header } from "@/routes/$slug/-components/header"
+import { Header, HeaderBackButton } from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { searchListQuery } from "@/search/queries"
 import { Button, buttonVariants } from "@/ui/components/button"
@@ -52,6 +52,7 @@ function Component() {
    return (
       <Main>
          <Header className="md:px-0">
+            <HeaderBackButton />
             <form
                onSubmit={(e) => {
                   e.preventDefault()

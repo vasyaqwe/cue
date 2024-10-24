@@ -1,7 +1,11 @@
 import { commentListQuery } from "@/comment/queries"
 import { IssueDetails } from "@/issue/components/issue-details"
 import { issueByIdQuery } from "@/issue/queries"
-import { Header, HeaderTitle } from "@/routes/$slug/-components/header"
+import {
+   Header,
+   HeaderBackButton,
+   HeaderTitle,
+} from "@/routes/$slug/-components/header"
 import { Main } from "@/routes/$slug/-components/main"
 import { Loading } from "@/ui/components/loading"
 import { createFileRoute, notFound } from "@tanstack/react-router"
@@ -30,6 +34,7 @@ export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
    pendingComponent: () => (
       <Main>
          <Header>
+            <HeaderBackButton />
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
          <main className="flex flex-1">
