@@ -152,15 +152,16 @@ function Component() {
                               params={{ slug }}
                               search={{ q }}
                            >
-                              <span>{q}</span>
-
+                              <span className="line-clamp-1 break-all">
+                                 {q}
+                              </span>
                               <button
                                  onClick={(_e) => {
                                     setRecentSearches((prev) =>
                                        prev.filter((item) => item !== q),
                                     )
                                  }}
-                                 className="hidden size-6 cursor-pointer place-items-center rounded-full opacity-80 group-hover:grid hover:bg-border"
+                                 className="hidden size-6 shrink-0 cursor-pointer place-items-center rounded-full opacity-80 group-hover:grid hover:bg-border"
                               >
                                  <Icons.xMark className="size-4" />
                                  <span className="sr-only">

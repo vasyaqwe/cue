@@ -1,3 +1,4 @@
+import { useDeleteFavorite } from "@/favorite/hooks/use-delete-favorite"
 import { favoriteListQuery } from "@/favorite/queries"
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { StatusIcon } from "@/issue/components/icons"
@@ -7,6 +8,7 @@ import {
    AccordionItem,
    AccordionTrigger,
 } from "@/ui/components/accordion"
+import { Icons } from "@/ui/components/icons"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { useQuery } from "@tanstack/react-query"
@@ -16,11 +18,11 @@ import { match } from "ts-pattern"
 export function FavoriteList() {
    const { organizationId } = useAuth()
    const { slug } = useParams({ from: "/$slug/_layout" })
-   const favorites = useQuery(
-      favoriteListQuery({ organizationId: organizationId }),
-   )
+   const favorites = useQuery(favoriteListQuery({ organizationId }))
 
    const [value, setValue] = useLocalStorage(`favs_value_${slug}`, "favorites")
+
+   const { deleteFavorite } = useDeleteFavorite()
 
    return (
       <>
@@ -45,6 +47,11 @@ export function FavoriteList() {
                                  .with("issue", () => (
                                     <li key={favorite.id}>
                                        <Link
+                                          onClick={(e) => {
+                                             // @ts-expect-error ...
+                                             if (e.target.closest("button"))
+                                                return e.preventDefault()
+                                          }}
                                           params={{
                                              slug,
                                              issueId: favorite.entityId,
@@ -57,16 +64,30 @@ export function FavoriteList() {
                                           activeOptions={{ exact: true }}
                                           to={"/$slug/issue/$issueId"}
                                           className={cn(
-                                             "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold transition-all md:h-9 max-md:active:scale-95 md:rounded-[11px] max-md:active:bg-border/50 md:px-2.5 md:text-[0.925rem] hover:opacity-100 md:opacity-80 max-md:transition-all max-md:duration-300",
+                                             "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold transition-all md:h-9 max-md:active:scale-95 md:rounded-[11px] max-md:active:bg-border/50 md:pr-2 md:pl-2.5 md:text-[0.925rem] hover:opacity-100 md:opacity-80 max-md:transition-all max-md:duration-300",
                                           )}
                                        >
                                           <StatusIcon
                                              className="ml-[3px] size-[18px]"
                                              status={favorite.issue.status}
                                           />
-                                          <span className="nav-link-text line-clamp-1 break-all">
+                                          <span className="line-clamp-1 break-all">
                                              {favorite.issue.title}
                                           </span>
+                                          <button
+                                             onClick={() => {
+                                                deleteFavorite.mutate({
+                                                   entityId: favorite.entityId,
+                                                   organizationId,
+                                                })
+                                             }}
+                                             className="ml-auto grid size-5 shrink-0 cursor-pointer place-items-center rounded-full opacity-0 hover:bg-border group-hover:opacity-100"
+                                          >
+                                             <Icons.xMark className="size-3.5" />
+                                             <span className="sr-only">
+                                                Remove favorite
+                                             </span>
+                                          </button>
                                        </Link>
                                     </li>
                                  ))
