@@ -2,6 +2,8 @@ import { Comment } from "@/comment/components/comment"
 import { CreateComment } from "@/comment/components/create-comment"
 import { commentListQuery } from "@/comment/queries"
 import { useCommentStore } from "@/comment/store"
+import { useDeleteFavorite } from "@/favorite/hooks/use-delete-favorite"
+import { useInsertFavorite } from "@/favorite/hooks/use-insert-favorite"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
@@ -145,6 +147,9 @@ export function IssueDetails() {
       enableOnFormTags: true,
    })
 
+   const { insertFavorite } = useInsertFavorite()
+   const { deleteFavorite } = useDeleteFavorite()
+
    if (!issue) return null
 
    const onInboxPage = pathname.includes("/inbox")
@@ -183,16 +188,36 @@ export function IssueDetails() {
                      </DropdownMenuItem>
                   </DropdownMenuContent>
                </DropdownMenu>
-               {/* <Button
+               <Button
                   variant={"ghost"}
                   size={"icon"}
-                  className="ml-auto"
+                  className="ml-auto max-md:hidden"
+                  onClick={() => {
+                     match(issue.isFavorited)
+                        .with(true, () => {
+                           deleteFavorite.mutate({
+                              entityId: issue.id,
+                              organizationId,
+                           })
+                        })
+                        .otherwise(() => {
+                           insertFavorite.mutate({
+                              entityId: issue.id,
+                              organizationId,
+                              entityType: "issue",
+                              issue: {
+                                 title: issue.title,
+                                 status: issue.status,
+                              },
+                           })
+                        })
+                  }}
                >
                   <Icons.star
                      className="size-5"
                      data-fill={issue.isFavorited}
                   />
-               </Button> */}
+               </Button>
             </Header>
             <div className="overflow-y-auto scroll-smooth [scrollbar-gutter:stable]">
                <div className="mx-auto w-full max-w-[51rem] py-6 md:py-8">
