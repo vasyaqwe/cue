@@ -32,10 +32,12 @@ export function useNotificationSocket() {
       title,
       body,
       issueId,
+      commentId,
    }: {
       title: string
       body: string
       issueId: string
+      commentId?: string | undefined
    }) => {
       if (pathname.includes(issueId))
          return updateNotification.mutate({
@@ -51,6 +53,7 @@ export function useNotificationSocket() {
       const onClick = () => {
          navigate({
             to: "/$slug/inbox/issue/$issueId",
+            hash: commentId,
             params: { slug, issueId },
          }).then(() => {
             useNotificationStore.setState({
@@ -105,6 +108,7 @@ export function useNotificationSocket() {
                         title: msg.notification.content,
                         body: stripHTML(msg.commentContent ?? ""),
                         issueId: msg.notification.issueId,
+                        commentId: msg.notification.commentId ?? undefined,
                      }),
                   )
                   .with("issue_resolved", () =>
@@ -119,6 +123,7 @@ export function useNotificationSocket() {
                         title: `${msg.notification.sender.name} commented on ${msg.notification.issue.title}`,
                         body: stripHTML(msg.notification.content),
                         issueId: msg.notification.issueId,
+                        commentId: msg.notification.commentId ?? undefined,
                      }),
                   )
                   .exhaustive()
