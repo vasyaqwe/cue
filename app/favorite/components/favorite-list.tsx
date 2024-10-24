@@ -33,13 +33,13 @@ export function FavoriteList() {
                                  }}
                                  activeProps={{
                                     className:
-                                       "md:!border-border/80 bg-border/50 max-md:scale-95 md:bg-elevated opacity-100",
+                                       "md:!border-border/80 bg-border/50 max-md:scale-95 md:bg-elevated md:opacity-100",
                                     "aria-current": "page",
                                  }}
                                  activeOptions={{ exact: true }}
                                  to={"/$slug/issue/$issueId"}
                                  className={cn(
-                                    "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold leading-none transition-all md:h-9 max-md:active:scale-95 md:rounded-[11px] max-md:active:bg-border/50 md:px-2.5 md:text-[0.925rem] hover:opacity-100 md:opacity-75 max-md:transition-all max-md:duration-300",
+                                    "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold leading-none transition-all md:h-9 max-md:active:scale-95 md:rounded-[11px] max-md:active:bg-border/50 md:px-2.5 md:text-[0.925rem] hover:opacity-100 md:opacity-80 max-md:transition-all max-md:duration-300",
                                  )}
                               >
                                  <StatusIcon
