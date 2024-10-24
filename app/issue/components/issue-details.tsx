@@ -28,6 +28,7 @@ import {
    DropdownMenu,
    DropdownMenuContent,
    DropdownMenuItem,
+   DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from "@/ui/components/dropdown-menu"
 import { EditorContent, EditorRoot } from "@/ui/components/editor"
@@ -154,6 +155,26 @@ export function IssueDetails() {
 
    const onInboxPage = pathname.includes("/inbox")
 
+   const toggleFavorite = async () =>
+      match(issue.isFavorited)
+         .with(true, () => {
+            deleteFavorite.mutate({
+               entityId: issue.id,
+               organizationId,
+            })
+         })
+         .otherwise(() => {
+            insertFavorite.mutate({
+               entityId: issue.id,
+               organizationId,
+               entityType: "issue",
+               issue: {
+                  title: issue.title,
+                  status: issue.status,
+               },
+            })
+         })
+
    return (
       <>
          <div className="flex flex-1 flex-col">
@@ -178,6 +199,13 @@ export function IssueDetails() {
                      title="Issue options"
                   >
                      <DropdownMenuItem
+                        onSelect={() => setTimeout(toggleFavorite, 100)}
+                     >
+                        <Icons.star data-fill={issue.isFavorited} />
+                        {issue.isFavorited ? "Unfavorite" : "Favorite"}
+                     </DropdownMenuItem>
+                     <DropdownMenuSeparator />
+                     <DropdownMenuItem
                         onSelect={() => {
                            deleteIssue.mutate({ issueId, organizationId })
                         }}
@@ -192,26 +220,8 @@ export function IssueDetails() {
                   variant={"ghost"}
                   size={"icon"}
                   className="ml-auto max-md:hidden"
-                  onClick={() => {
-                     match(issue.isFavorited)
-                        .with(true, () => {
-                           deleteFavorite.mutate({
-                              entityId: issue.id,
-                              organizationId,
-                           })
-                        })
-                        .otherwise(() => {
-                           insertFavorite.mutate({
-                              entityId: issue.id,
-                              organizationId,
-                              entityType: "issue",
-                              issue: {
-                                 title: issue.title,
-                                 status: issue.status,
-                              },
-                           })
-                        })
-                  }}
+                  onClick={toggleFavorite}
+                  aria-label={issue.isFavorited ? "Unfavorite" : "Favorite"}
                >
                   <Icons.star
                      className="size-5"
