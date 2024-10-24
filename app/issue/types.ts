@@ -2,10 +2,15 @@ import type { updateIssueParams } from "@/issue/schema"
 import type { z } from "zod"
 import type * as issue from "./functions"
 
+export type InsertIssueEventInput = Omit<
+   Awaited<ReturnType<typeof issue.list>>[number],
+   "isFavorited"
+>
+
 export type IssueEvent =
    | {
         type: "insert"
-        issue: Awaited<ReturnType<typeof issue.list>>[number]
+        issue: InsertIssueEventInput
         senderId: string
      }
    | {

@@ -64,9 +64,6 @@ export function useUpdateIssue() {
                         .otherwise((issue) => {
                            issue.title = input.title
 
-                           if (input.description) {
-                              issue.description = input.description
-                           }
                            if (input.label) {
                               issue.label = input.label
                            }

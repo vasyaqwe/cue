@@ -6,10 +6,14 @@ export type UpdateCommentEventInput = z.infer<typeof updateCommentParams> & {
    resolvedBy?: Awaited<ReturnType<typeof comment.list>>[number]["resolvedBy"]
 }
 
+export type InsertCommentEventInput = Awaited<
+   ReturnType<typeof comment.list>
+>[number]
+
 export type CommentEvent =
    | {
         type: "insert"
-        comment: Awaited<ReturnType<typeof comment.list>>[number]
+        comment: InsertCommentEventInput
         senderId: string
         issueTitle: string
      }

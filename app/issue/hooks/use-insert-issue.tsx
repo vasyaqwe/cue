@@ -1,8 +1,8 @@
 import { issueListQuery } from "@/issue/queries"
+import type { InsertIssueEventInput } from "@/issue/types"
 import { useAuth } from "@/user/hooks"
 import { useQueryClient } from "@tanstack/react-query"
 import { match } from "ts-pattern"
-import type * as notificationFns from "../functions"
 
 export function useInsertIssue() {
    const queryClient = useQueryClient()
@@ -11,7 +11,7 @@ export function useInsertIssue() {
    const insertIssueToQueryData = ({
       input,
    }: {
-      input: Awaited<ReturnType<typeof notificationFns.list>>[number]
+      input: InsertIssueEventInput
    }) => {
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
@@ -22,7 +22,7 @@ export function useInsertIssue() {
                   {
                      ...input,
                      id: input.id ?? crypto.randomUUID(),
-                     description: input.description ?? "",
+                     isFavorited: false,
                      createdAt: Date.now(),
                      updatedAt: Date.now(),
                   },

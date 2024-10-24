@@ -4,6 +4,7 @@ import {
    notificationUnreadCountQuery,
 } from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"
+import type { InsertNotificationEventInput } from "@/notification/types"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
@@ -16,7 +17,7 @@ export function useInsertNotification() {
 
    const insertNotificationToQueryData = ({
       input,
-   }: { input: Awaited<ReturnType<typeof notification.list>>[number] }) => {
+   }: { input: InsertNotificationEventInput }) => {
       queryClient.setQueryData(
          notificationListQuery({ organizationId }).queryKey,
          (oldData) =>

@@ -1,6 +1,7 @@
 import * as comment from "@/comment/functions"
 import { commentListQuery } from "@/comment/queries"
 import { useCommentStore } from "@/comment/store"
+import type { InsertCommentEventInput } from "@/comment/types"
 import type { IssueStatus } from "@/issue/schema"
 import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
 import { organizationTeammatesIdsQuery } from "@/organization/queries"
@@ -43,7 +44,7 @@ export function useInsertComment({
 
    const insertCommentToQueryData = ({
       input,
-   }: { input: Awaited<ReturnType<typeof comment.list>>[number] }) => {
+   }: { input: InsertCommentEventInput }) => {
       queryClient.setQueryData(
          commentListQuery({ organizationId, issueId: input.issueId }).queryKey,
          (oldData) =>
