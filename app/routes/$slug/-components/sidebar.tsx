@@ -1,5 +1,7 @@
+import { favoriteListQuery } from "@/favorite/queries"
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { DraftIndicator } from "@/issue/components/draft-indicator"
+import { StatusIcon } from "@/issue/components/icons"
 import { issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import { pushModal } from "@/modals"
@@ -32,7 +34,7 @@ import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import * as userFns from "@/user/functions"
 import { useAuth } from "@/user/hooks"
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query"
 import { Link, useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { useEffect } from "react"
@@ -90,6 +92,10 @@ export function Sidebar() {
       e.preventDefault()
       navigate({ to: "/$slug/search", params: { slug }, search: { q: "" } })
    })
+
+   const favorites = useQuery(
+      favoriteListQuery({ organizationId: organization.id }),
+   )
 
    return (
       <aside className="z-[10] h-svh w-[15.5rem] max-md:hidden">
@@ -170,14 +176,16 @@ export function Sidebar() {
                <Button
                   variant={"outline"}
                   onClick={() => pushModal("create_issue")}
-                  className={cn("relative w-full font-semibold text-[0.95rem]")}
+                  className={cn(
+                     "relative w-full shrink-0 font-semibold text-[0.95rem]",
+                  )}
                >
                   <Icons.pencil className="size-5" />
                   New issue
                   <DraftIndicator />
                </Button>
             </Tooltip>
-            <nav className="mt-4">
+            <nav className="my-4 overflow-y-auto">
                <ul className="space-y-1">
                   <li>
                      <Link
@@ -265,6 +273,48 @@ export function Sidebar() {
                      </Link>
                   </li>
                </ul>
+               {favorites.isError || favorites.isPending ? null : favorites.data
+                    .length === 0 ? null : (
+                  <>
+                     <h2 className="mt-3 mb-1 pl-3 text-foreground/70">
+                        Favorites
+                     </h2>
+                     <ul className="space-y-1">
+                        {favorites.data.map((favorite) =>
+                           match(favorite.entityType)
+                              .with("issue", () => (
+                                 <li key={favorite.id}>
+                                    <Link
+                                       params={{
+                                          slug,
+                                          issueId: favorite.entityId,
+                                       }}
+                                       activeOptions={{ exact: true }}
+                                       activeProps={{
+                                          className:
+                                             "!border-border/80 bg-elevated opacity-100",
+                                          "aria-current": "page",
+                                       }}
+                                       to={"/$slug/issue/$issueId"}
+                                       className={cn(
+                                          "group flex h-9 items-center gap-[11px] rounded-[11px] border border-transparent px-2.5 font-semibold text-[0.925rem] leading-none opacity-75 transition-all hover:opacity-100",
+                                       )}
+                                    >
+                                       <StatusIcon
+                                          className="ml-[3px] size-[18px]"
+                                          status={favorite.issue.status}
+                                       />
+                                       <span className="nav-link-text line-clamp-1 break-all">
+                                          {favorite.issue.title}
+                                       </span>
+                                    </Link>
+                                 </li>
+                              ))
+                              .otherwise(() => null),
+                        )}
+                     </ul>
+                  </>
+               )}
             </nav>
             <div className="mt-auto">
                {typeof window !== "undefined" && <NotificationPermissionCard />}

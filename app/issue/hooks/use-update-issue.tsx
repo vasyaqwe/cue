@@ -1,3 +1,4 @@
+import { favoriteListQuery } from "@/favorite/queries"
 import * as issue from "@/issue/functions"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import type { updateIssueParams } from "@/issue/schema"
@@ -63,19 +64,15 @@ export function useUpdateIssue() {
                         .otherwise((issue) => {
                            issue.title = input.title
 
-                           match(input)
-                              .with(
-                                 { description: P.not(undefined) },
-                                 (input) => {
-                                    issue.description = input.description
-                                 },
-                              )
-                              .with({ label: P.not(undefined) }, (input) => {
-                                 issue.label = input.label
-                              })
-                              .with({ status: P.not(undefined) }, (input) => {
-                                 issue.status = input.status
-                              })
+                           if (input.description) {
+                              issue.description = input.description
+                           }
+                           if (input.label) {
+                              issue.label = input.label
+                           }
+                           if (input.status) {
+                              issue.status = input.status
+                           }
                         }),
                   ),
                ),
@@ -90,17 +87,39 @@ export function useUpdateIssue() {
                   produce(data, (draft) => {
                      draft.title = input.title
 
-                     match(input)
-                        .with({ description: P.not(undefined) }, (input) => {
-                           draft.description = input.description
-                        })
-                        .with({ label: P.not(undefined) }, (input) => {
-                           draft.label = input.label
-                        })
-                        .with({ status: P.not(undefined) }, (input) => {
-                           draft.status = input.status
-                        })
+                     if (input.description) {
+                        draft.description = input.description
+                     }
+                     if (input.label) {
+                        draft.label = input.label
+                     }
+                     if (input.status) {
+                        draft.status = input.status
+                     }
                   }),
+               ),
+      )
+
+      queryClient.setQueryData(
+         favoriteListQuery({ organizationId }).queryKey,
+         (oldData) =>
+            match(oldData)
+               .with(undefined, (data) => data)
+               .otherwise((data) =>
+                  produce(data, (draft) =>
+                     match(
+                        draft?.find(
+                           (favorite) => favorite.entityId === input.id,
+                        ),
+                     )
+                        .with(undefined, () => {})
+                        .otherwise((favorite) => {
+                           favorite.issue.title = input.title
+                           if (input.status) {
+                              favorite.issue.status = input.status
+                           }
+                        }),
+                  ),
                ),
       )
    }

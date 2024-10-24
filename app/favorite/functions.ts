@@ -2,7 +2,7 @@ import { favorite, insertFavoriteParams } from "@/favorite/schema"
 import { issue } from "@/issue/schema"
 import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
-import { and, eq } from "drizzle-orm"
+import { and, desc, eq } from "drizzle-orm"
 import { z } from "zod"
 
 export const list = createServerFn(
@@ -34,6 +34,7 @@ export const list = createServerFn(
                   eq(favorite.userId, ctx.user.id),
                ),
             )
+            .orderBy(desc(favorite.createdAt))
       }),
 )
 

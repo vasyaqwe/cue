@@ -21,7 +21,7 @@ export function useInsertFavorite() {
          (oldData) =>
             match(oldData)
                .with(undefined, (data) => data)
-               .otherwise((data) => [...data, input]),
+               .otherwise((data) => [input, ...data]),
       )
 
       match(input.entityType).with("issue", () =>
