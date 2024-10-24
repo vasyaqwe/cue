@@ -38,7 +38,10 @@
 
    --ease-vaul: cubic-bezier(0.32, 0.72, 0, 1);
 
-   --animate-fade-in: fade-in 500ms var(--animation-delay) ease forwards;
+   --animate-fade-in: fade-in var(--animation-duration, 500ms)
+      var(--animation-delay) ease forwards;
+   --animate-accordion-down: accordion-down 0.15s var(--ease-vaul);
+   --animate-accordion-up: accordion-up 0.15s var(--ease-vaul);
 
    @keyframes fade-in {
       from {
@@ -46,6 +49,22 @@
       }
       to {
          opacity: 1;
+      }
+   }
+   @keyframes accordion-down {
+      from {
+         opacity: 0;
+      }
+      to {
+         opacity: 1;
+      }
+   }
+   @keyframes accordion-up {
+      from {
+         opacity: 1;
+      }
+      to {
+         opacity: 0;
       }
    }
 }

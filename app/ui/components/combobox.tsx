@@ -123,10 +123,6 @@ export function ComboboxInput({
 }: React.ComponentProps<typeof CommandInput>) {
    return (
       <div className="relative">
-         {/* <MagnifyingGlassIcon
-            className="-translate-y-1/2 absolute top-[49%] left-2 size-5 text-popover-foreground/50"
-            strokeWidth={2}
-         /> */}
          <CommandInput
             className={cn(
                "h-9 w-full border-transparent bg-transparent pr-3 pl-9 placeholder:text-popover-foreground/50 focus:outline-none",
