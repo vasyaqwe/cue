@@ -1,4 +1,6 @@
 import { env } from "@/env"
+import { useDeleteFavorite } from "@/favorite/hooks/use-delete-favorite"
+import { useInsertFavorite } from "@/favorite/hooks/use-insert-favorite"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
@@ -37,6 +39,7 @@ import { Link, useParams } from "@tanstack/react-router"
 import { type ComponentProps, memo } from "react"
 import * as R from "remeda"
 import { toast } from "sonner"
+import { match } from "ts-pattern"
 
 const sortOrder = [
    "in progress",
@@ -129,6 +132,9 @@ function Issue({
    const { deleteIssue } = useDeleteIssue()
    const { updateIssue } = useUpdateIssue()
 
+   const { insertFavorite } = useInsertFavorite()
+   const { deleteFavorite } = useDeleteFavorite()
+
    return (
       <ContextMenu>
          <ContextMenuTrigger
@@ -163,7 +169,10 @@ function Issue({
                <Icons.ellipsis className="mr-3 size-7 md:hidden" />
             </div>
          </ContextMenuTrigger>
-         <ContextMenuContent title="Issue options">
+         <ContextMenuContent
+            className="min-w-[150px]"
+            title="Issue options"
+         >
             <ContextMenuSub>
                <ContextMenuSubTrigger>
                   <Icons.token />
@@ -245,6 +254,32 @@ function Issue({
                </ContextMenuSubContent>
             </ContextMenuSub>
             <ContextMenuSeparator />
+            <ContextMenuItem
+               onSelect={() =>
+                  match(issue.isFavorited)
+                     .with(true, () => {
+                        deleteFavorite.mutate({
+                           entityId: issue.id,
+                           entityType: "issue",
+                           organizationId,
+                        })
+                     })
+                     .otherwise(() => {
+                        insertFavorite.mutate({
+                           entityId: issue.id,
+                           organizationId,
+                           entityType: "issue",
+                           issue: {
+                              title: issue.title,
+                              status: issue.status,
+                           },
+                        })
+                     })
+               }
+            >
+               <Icons.star data-fill={issue.isFavorited} />
+               {issue.isFavorited ? "Unfavorite" : "Favorite"}
+            </ContextMenuItem>
             <ContextMenuItem
                destructive
                onSelect={() =>

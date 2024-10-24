@@ -1,9 +1,10 @@
 import * as favorite from "@/favorite/functions"
 import { favoriteListQuery } from "@/favorite/queries"
-import { issueByIdQuery } from "@/issue/queries"
+import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/start"
+import { produce } from "immer"
 import { toast } from "sonner"
 import { P, match } from "ts-pattern"
 
@@ -24,7 +25,7 @@ export function useInsertFavorite() {
                .otherwise((data) => [input, ...data]),
       )
 
-      match(input.entityType).with("issue", () =>
+      match(input.entityType).with("issue", () => {
          queryClient.setQueryData(
             issueByIdQuery({ issueId: input.entityId, organizationId })
                .queryKey,
@@ -32,8 +33,25 @@ export function useInsertFavorite() {
                match(oldData)
                   .with(P.nullish, (data) => data)
                   .otherwise((data) => ({ ...data, isFavorited: true })),
-         ),
-      )
+         )
+         queryClient.setQueryData(
+            issueListQuery({ organizationId }).queryKey,
+            (oldData) =>
+               match(oldData)
+                  .with(undefined, (data) => data)
+                  .otherwise((data) =>
+                     produce(data, (draft) =>
+                        match(
+                           draft?.find((issue) => issue.id === input.entityId),
+                        )
+                           .with(undefined, () => {})
+                           .otherwise((issue) => {
+                              issue.isFavorited = true
+                           }),
+                     ),
+                  ),
+         )
+      })
    }
 
    const insertFavorite = useMutation({

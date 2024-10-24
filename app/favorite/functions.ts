@@ -1,4 +1,8 @@
-import { favorite, insertFavoriteParams } from "@/favorite/schema"
+import {
+   favorite,
+   favoriteEntityTypes,
+   insertFavoriteParams,
+} from "@/favorite/schema"
 import { issue } from "@/issue/schema"
 import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
 import { createServerFn } from "@tanstack/start"
@@ -59,7 +63,13 @@ export const insert = createServerFn(
 export const deleteFn = createServerFn(
    "POST",
    protectedProcedure
-      .input(z.object({ entityId: z.string(), organizationId: z.string() }))
+      .input(
+         z.object({
+            entityId: z.string(),
+            organizationId: z.string(),
+            entityType: z.enum(favoriteEntityTypes),
+         }),
+      )
       .mutation(async ({ ctx, input }) => {
          await ctx.db
             .delete(favorite)

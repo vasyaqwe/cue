@@ -87,6 +87,7 @@ export function FavoriteList() {
                                              onClick={() => {
                                                 deleteFavorite.mutate({
                                                    entityId: favorite.entityId,
+                                                   entityType: "issue",
                                                    organizationId,
                                                 })
                                              }}

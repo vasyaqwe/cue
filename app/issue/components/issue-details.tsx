@@ -160,6 +160,7 @@ export function IssueDetails() {
          .with(true, () => {
             deleteFavorite.mutate({
                entityId: issue.id,
+               entityType: "issue",
                organizationId,
             })
          })
