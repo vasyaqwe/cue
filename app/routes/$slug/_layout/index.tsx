@@ -1,3 +1,4 @@
+import { FavoriteList } from "@/favorite/components/favorite-list"
 import { IssuesPage } from "@/issue/components/issues-page"
 import { issueListQuery } from "@/issue/queries"
 import {
@@ -78,7 +79,7 @@ function Component() {
                   to="/$slug/issues"
                   params={{ slug }}
                >
-                  <Card className="mt-4 font-semibold">
+                  <Card className="mt-4 pb-2 font-semibold">
                      <div
                         className={
                            "mb-2 size-9 shrink-0 drop-shadow-[0px_3px_3px_rgba(24,24,24,.1)]"
@@ -98,6 +99,7 @@ function Component() {
                      </p>
                   </Card>
                </Link>
+               <FavoriteList />
             </main>
          </Main>
       </>
