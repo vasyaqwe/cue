@@ -431,30 +431,30 @@ export const Icons = {
          xmlns="http://www.w3.org/2000/svg"
          {...props}
       >
+         <path
+            d="M7.7 7.70001C6.38112 7.70001 5.33198 7.82219 4.54658 8.60758C3.69902 9.45516 3.5 10.759 3.5 13.4873V14.6448C3.5 17.3731 3.89837 18.3391 4.74593 19.1868C5.59351 20.0343 6.55928 20.4324 9.28757 20.4324H10.4451C13.1733 20.4324 14.3641 20.0343 15.2118 19.1868C15.9972 18.4014 16.2323 17.5 16.2323 16.1"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+         />
          <rect
-            x="8.25407"
-            y="3.01845"
+            x="8.72583"
+            y="4.21857"
+            width="10.8269"
+            height="10.8271"
+            rx="2.55911"
+            className="opacity-0 transition-opacity group-aria-[current=page]:opacity-15"
+            fill="currentColor"
+         />
+         <rect
+            x="7.75407"
+            y="3.24675"
             width="12.7705"
             height="12.7707"
             rx="3.48863"
             stroke="currentColor"
             strokeWidth="2"
-         />
-         <rect
-            x="9.22583"
-            y="3.99025"
-            width="10.8269"
-            height="10.8271"
-            rx="2.55911"
-            fill="currentColor"
-            className="opacity-0 transition-opacity group-aria-[current=page]:opacity-15"
-         />
-         <path
-            d="M8.23005 8.9749C5.88316 8.97912 4.85322 9.09708 4.06782 9.88247C3.22026 10.73 3.02124 12.0339 3.02124 14.7622V15.9197C3.02124 18.648 3.41961 19.614 4.26717 20.4617C5.11475 21.3092 6.08052 21.7073 8.80881 21.7073H9.96632C12.6946 21.7073 13.8854 21.3092 14.733 20.4617C15.5184 19.6763 15.7494 18.8453 15.7535 16.4984"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
          />
       </svg>
    ),
