@@ -209,7 +209,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                      media="(max-width: 768px)"
                   />
                   <img
-                     className="-mb-px md:-mb-[4px] mx-auto w-full rounded-t-xl border border-border/75 shadow-[0_-10px_32px_0px_#ebe9e8] max-md:max-w-[390px]"
+                     className="-mb-px md:-mb-[4px] mx-auto w-full rounded-t-xl border border-border shadow-[0_-10px_32px_0px_#ebe9e8] max-md:max-w-[390px]"
                      src={app}
                      alt="App screenshot"
                   />
