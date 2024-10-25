@@ -100,7 +100,7 @@ export function Sidebar() {
                   <DropdownMenuTrigger
                      className={cn(
                         buttonVariants({ variant: "ghost" }),
-                        "justify-start whitespace-normal px-0.5 font-semibold text-[0.975rem]",
+                        "justify-start whitespace-normal px-0 font-semibold text-[0.975rem]",
                      )}
                   >
                      <Logo
@@ -203,7 +203,7 @@ export function Sidebar() {
                         to={inboxRoute.to}
                         data-has-unread={unreadCount.data.count > 0}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
                         <Icons.inbox className="size-6" />
@@ -226,7 +226,7 @@ export function Sidebar() {
                         }}
                         to={homeRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
                         <Icons.issues className="size-6" />
@@ -243,7 +243,7 @@ export function Sidebar() {
                         }}
                         to={peopleRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
                         <Icons.people className="size-6" />
@@ -260,7 +260,7 @@ export function Sidebar() {
                         }}
                         to={settingsRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2.5 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}
                      >
                         <Icons.settings className="size-6" />

@@ -72,7 +72,7 @@ export function FavoriteList() {
                                           }}
                                           to={"/$slug/issue/$issueId"}
                                           className={cn(
-                                             "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold transition-all md:h-9 max-md:active:scale-95 md:rounded-[11px] max-md:active:bg-border/50 md:pr-2 md:pl-2.5 md:text-[0.925rem] hover:opacity-100 md:opacity-80 max-md:transition-all max-md:duration-300",
+                                             "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold transition-all md:h-9 max-md:active:scale-95 md:rounded-[12px] max-md:active:bg-border/50 md:pr-1.5 md:pl-2 md:text-[0.925rem] hover:opacity-100 md:opacity-80 max-md:transition-all max-md:duration-300",
                                           )}
                                        >
                                           <StatusIcon
