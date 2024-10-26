@@ -6,12 +6,12 @@ import {
    mentionLabelIssueClassName,
    mentionLabelPersonClassName,
 } from "@/ui/components/editor/mention/constants"
-import {
-   HoverCard,
-   HoverCardContent,
-   HoverCardTrigger,
-} from "@/ui/components/hover-card"
 import { Loading } from "@/ui/components/loading"
+import {
+   Popover,
+   PopoverContent,
+   PopoverTrigger,
+} from "@/ui/components/popover"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
@@ -71,55 +71,57 @@ export function MentionLabel({ node }: NodeViewProps) {
                ) : null}
             </Link>
          ) : userId ? (
-            <HoverCard
-               openDelay={250}
-               closeDelay={0}
-            >
-               <HoverCardTrigger>
+            <Popover>
+               <PopoverTrigger>
                   <span className={cn(mentionLabelPersonClassName)}>
                      @{label}
                   </span>
-               </HoverCardTrigger>
-               <HoverCardContent className="w-fit max-w-[400px]">
-                  {members.isPending ? (
-                     <Loading />
-                  ) : !user ? (
-                     <p className="text-base text-foreground/75">
-                        Couldn't find this person.
-                     </p>
-                  ) : (
-                     <>
-                        <div className="mb-4 flex items-center gap-3">
-                           <UserAvatar
-                              className="size-7 [--indicator-size:0.75rem] [&>img]:m-0"
-                              user={user}
-                           />
-                           <p className="!my-0 font-semibold text-base">
-                              {user.name}
-                           </p>
-                        </div>
-                        <hr className={cn("-mx-4 !my-1 border-border/75")} />
-                        <p className="!mb-0 !mt-3 font-medium text-foreground/75 text-sm">
-                           <svg
-                              className="-mt-px mr-1.5 inline-block size-[18px]"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth="2"
-                              stroke="currentColor"
-                           >
-                              <path
-                                 strokeLinecap="round"
-                                 strokeLinejoin="round"
-                                 d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
-                              />
-                           </svg>
-                           <span className=" break-all">{user.email}</span>
+               </PopoverTrigger>
+               <PopoverContent
+                  title="Profile"
+                  className="min-h-[110px] min-w-[200px] md:w-fit md:max-w-[400px]"
+               >
+                  <div className="p-4 md:p-3">
+                     {members.isPending ? (
+                        <Loading className="absolute inset-0 m-auto" />
+                     ) : !user ? (
+                        <p className="text-base text-foreground/75">
+                           Couldn't find this person.
                         </p>
-                     </>
-                  )}
-               </HoverCardContent>
-            </HoverCard>
+                     ) : (
+                        <>
+                           <div className="mb-4 flex items-center gap-3">
+                              <UserAvatar
+                                 className="size-7 [--indicator-size:0.75rem] [&>img]:m-0"
+                                 user={user}
+                              />
+                              <p className="!my-0 font-semibold text-base">
+                                 {user.name}
+                              </p>
+                           </div>
+                           <hr className={cn("-mx-4 !my-1 border-border/75")} />
+                           <p className="!mb-0 !mt-3 font-medium text-foreground/75 text-sm">
+                              <svg
+                                 className="-mt-px mr-1.5 inline-block size-[18px]"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 strokeWidth="2"
+                                 stroke="currentColor"
+                              >
+                                 <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+                                 />
+                              </svg>
+                              <span className=" break-all">{user.email}</span>
+                           </p>
+                        </>
+                     )}
+                  </div>
+               </PopoverContent>
+            </Popover>
          ) : null}
       </NodeViewWrapper>
    )
