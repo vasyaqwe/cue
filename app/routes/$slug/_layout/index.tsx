@@ -37,7 +37,7 @@ export const Route = createFileRoute("/$slug/_layout/")({
          issueListQuery({ organizationId: context.organizationId }),
       )
    },
-   meta: () => [{ title: "Issues" }],
+   meta: () => [{ title: "Home" }],
    pendingComponent: PendingComponent,
 })
 
