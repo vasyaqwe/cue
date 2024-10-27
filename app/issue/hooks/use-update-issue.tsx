@@ -157,33 +157,34 @@ export function useUpdateIssue() {
             )
          }
 
-         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-         let data: any
-
-         data = queryClient.getQueryData(
+         const listQueryData = queryClient.getQueryData(
             issueListQuery({ organizationId }).queryKey,
          )
-         if (issueIdParam) {
-            data = queryClient.getQueryData(
-               issueByIdQuery({ issueId: issueIdParam, organizationId })
-                  .queryKey,
-            )
-         }
 
-         return { data }
+         const byIdQueryData = issueIdParam
+            ? queryClient.getQueryData(
+                 issueByIdQuery({ issueId: issueIdParam, organizationId })
+                    .queryKey,
+              )
+            : null
+
+         return { byIdQueryData, listQueryData }
       },
       onError: (_err, _data, context) => {
+         toast.error("Failed to update issue")
+
          queryClient.setQueryData(
             issueListQuery({ organizationId }).queryKey,
-            context?.data,
+            context?.listQueryData,
          )
-         if (issueIdParam)
+         if (context?.byIdQueryData)
             queryClient.setQueryData(
-               issueByIdQuery({ issueId: issueIdParam, organizationId })
-                  .queryKey,
-               context?.data,
+               issueByIdQuery({
+                  issueId: context.byIdQueryData.id,
+                  organizationId,
+               }).queryKey,
+               context.byIdQueryData,
             )
-         toast.error("Failed to update issue")
       },
       onSettled: (updatedIssue, error, input) => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
