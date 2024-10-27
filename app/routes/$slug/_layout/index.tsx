@@ -110,14 +110,17 @@ function PendingComponent() {
    const { organization } = useAuth()
 
    return (
-      <Main>
-         <Header>
-            <Logo className="size-8 md:hidden" />
-            <HeaderTitle>{organization.name}</HeaderTitle>
-         </Header>
-         <main>
-            <Loading className="absolute inset-0 m-auto" />
-         </main>
-      </Main>
+      <>
+         <IssuesPage className="max-md:hidden" />
+         <Main>
+            <Header>
+               <Logo className="size-8 md:hidden" />
+               <HeaderTitle>{organization.name}</HeaderTitle>
+            </Header>
+            <main>
+               <Loading className="absolute inset-0 m-auto" />
+            </main>
+         </Main>
+      </>
    )
 }

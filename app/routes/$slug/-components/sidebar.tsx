@@ -100,7 +100,7 @@ export function Sidebar() {
                   <DropdownMenuTrigger
                      className={cn(
                         buttonVariants({ variant: "ghost" }),
-                        "justify-start whitespace-normal px-0 font-semibold text-[0.975rem]",
+                        "justify-start whitespace-normal px-0 pl-0.5 font-semibold text-[0.975rem]",
                      )}
                   >
                      <Logo
