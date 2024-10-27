@@ -111,7 +111,6 @@ function PendingComponent() {
 
    return (
       <>
-         <IssuesPage className="max-md:hidden" />
          <Main>
             <Header>
                <Logo className="size-8 md:hidden" />
