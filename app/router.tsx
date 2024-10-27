@@ -80,7 +80,7 @@ export function createRouter() {
 
 function NotFound() {
    return (
-      <div className="grid h-svh place-items-center text-center">
+      <div className="grid h-svh flex-1 place-items-center text-center">
          <div>
             <div className="relative mb-6">
                <Card className="absolute inset-0 mx-auto grid h-28 w-[5.5rem] rotate-6 place-content-center rounded-xl" />

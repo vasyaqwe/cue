@@ -10,8 +10,8 @@ import {
 } from "@/notification/queries"
 import { useNotificationStore } from "@/notification/store"
 import { organizationMembershipsQuery } from "@/organization/queries"
-import { Route as homeRoute } from "@/routes/$slug/_layout"
 import { Route as inboxRoute } from "@/routes/$slug/_layout/inbox/_layout/index"
+import { Route as issuesRoute } from "@/routes/$slug/_layout/issues/$view"
 import { Route as peopleRoute } from "@/routes/$slug/_layout/people"
 import { Route as settingsRoute } from "@/routes/$slug/_layout/settings"
 import { Button, buttonVariants } from "@/ui/components/button"
@@ -212,7 +212,7 @@ export function Sidebar() {
                   </li>
                   <li>
                      <Link
-                        params={{ slug }}
+                        params={{ slug, view: "all" }}
                         activeOptions={{ exact: true }}
                         activeProps={{
                            onMouseUp: () =>
@@ -224,7 +224,7 @@ export function Sidebar() {
                               "!border-border/80 bg-elevated opacity-100",
                            "aria-current": "page",
                         }}
-                        to={homeRoute.to}
+                        to={issuesRoute.to}
                         className={cn(
                            "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
                         )}

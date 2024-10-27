@@ -1,3 +1,4 @@
+import type { issueViews } from "@/issue/constants"
 import type { updateIssueParams } from "@/issue/schema"
 import type { z } from "zod"
 import type * as issue from "./functions"
@@ -24,3 +25,5 @@ export type IssueEvent =
         issue: z.infer<typeof updateIssueParams>
         senderId: string
      }
+
+export type IssueView = (typeof issueViews)[number]

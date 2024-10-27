@@ -16,12 +16,22 @@ import { useAuth } from "@/user/hooks"
 import {
    Link,
    createFileRoute,
+   redirect,
    useNavigate,
    useParams,
 } from "@tanstack/react-router"
+import { match } from "ts-pattern"
 
 export const Route = createFileRoute("/$slug/_layout/")({
    component: Component,
+   beforeLoad: async ({ params, context }) => {
+      match(context.device).with("desktop", () => {
+         throw redirect({
+            to: "/$slug/issues/$view",
+            params: { view: "all", slug: params.slug },
+         })
+      })
+   },
    loader: async ({ context }) => {
       context.queryClient.prefetchQuery(
          issueListQuery({ organizationId: context.organizationId }),
@@ -76,8 +86,8 @@ function Component() {
                   </div>
                </form>
                <Link
-                  to="/$slug/issues"
-                  params={{ slug }}
+                  to="/$slug/issues/$view"
+                  params={{ slug, view: "all" }}
                >
                   <Card className="mt-4 pb-2 font-semibold">
                      <div

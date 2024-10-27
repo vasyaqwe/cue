@@ -22,8 +22,15 @@ import {
    notFound,
    redirect,
 } from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/start"
 import { useEffect } from "react"
+import { getRequestHeader } from "vinxi/http"
 import { Sidebar } from "./-components/sidebar"
+
+export const getDevice = createServerFn("GET", () => {
+   const userAgent = getRequestHeader("user-agent") ?? ""
+   return /mobile/i.test(userAgent) ? "mobile" : "desktop"
+})
 
 export const Route = createFileRoute("/$slug/_layout")({
    component: Component,
@@ -47,6 +54,7 @@ export const Route = createFileRoute("/$slug/_layout")({
 
       return {
          organizationId: organization.id,
+         device: await getDevice(),
       }
    },
    pendingComponent: () => (

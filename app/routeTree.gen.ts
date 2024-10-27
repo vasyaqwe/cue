@@ -23,7 +23,7 @@ import { Route as SlugLayoutIndexImport } from './routes/$slug/_layout/index'
 import { Route as SlugLayoutSettingsImport } from './routes/$slug/_layout/settings'
 import { Route as SlugLayoutSearchImport } from './routes/$slug/_layout/search'
 import { Route as SlugLayoutPeopleImport } from './routes/$slug/_layout/people'
-import { Route as SlugLayoutIssuesImport } from './routes/$slug/_layout/issues'
+import { Route as SlugLayoutIssuesViewImport } from './routes/$slug/_layout/issues/$view'
 import { Route as SlugLayoutIssueIssueIdImport } from './routes/$slug/_layout/issue/$issueId'
 import { Route as SlugLayoutInboxLayoutImport } from './routes/$slug/_layout/inbox/_layout'
 import { Route as SlugLayoutInboxLayoutIndexImport } from './routes/$slug/_layout/inbox/_layout/index'
@@ -107,9 +107,9 @@ const SlugLayoutPeopleRoute = SlugLayoutPeopleImport.update({
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
-const SlugLayoutIssuesRoute = SlugLayoutIssuesImport.update({
-  id: '/issues',
-  path: '/issues',
+const SlugLayoutIssuesViewRoute = SlugLayoutIssuesViewImport.update({
+  id: '/issues/$view',
+  path: '/issues/$view',
   getParentRoute: () => SlugLayoutRoute,
 } as any)
 
@@ -192,13 +192,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JoinInviteCodeImport
       parentRoute: typeof rootRoute
     }
-    '/$slug/_layout/issues': {
-      id: '/$slug/_layout/issues'
-      path: '/issues'
-      fullPath: '/$slug/issues'
-      preLoaderRoute: typeof SlugLayoutIssuesImport
-      parentRoute: typeof SlugLayoutImport
-    }
     '/$slug/_layout/people': {
       id: '/$slug/_layout/people'
       path: '/people'
@@ -246,6 +239,13 @@ declare module '@tanstack/react-router' {
       path: '/issue/$issueId'
       fullPath: '/$slug/issue/$issueId'
       preLoaderRoute: typeof SlugLayoutIssueIssueIdImport
+      parentRoute: typeof SlugLayoutImport
+    }
+    '/$slug/_layout/issues/$view': {
+      id: '/$slug/_layout/issues/$view'
+      path: '/issues/$view'
+      fullPath: '/$slug/issues/$view'
+      preLoaderRoute: typeof SlugLayoutIssuesViewImport
       parentRoute: typeof SlugLayoutImport
     }
     '/$slug/_layout/inbox/_layout/': {
@@ -296,23 +296,23 @@ const SlugLayoutInboxRouteWithChildren = SlugLayoutInboxRoute._addFileChildren(
 )
 
 interface SlugLayoutRouteChildren {
-  SlugLayoutIssuesRoute: typeof SlugLayoutIssuesRoute
   SlugLayoutPeopleRoute: typeof SlugLayoutPeopleRoute
   SlugLayoutSearchRoute: typeof SlugLayoutSearchRoute
   SlugLayoutSettingsRoute: typeof SlugLayoutSettingsRoute
   SlugLayoutIndexRoute: typeof SlugLayoutIndexRoute
   SlugLayoutInboxRoute: typeof SlugLayoutInboxRouteWithChildren
   SlugLayoutIssueIssueIdRoute: typeof SlugLayoutIssueIssueIdRoute
+  SlugLayoutIssuesViewRoute: typeof SlugLayoutIssuesViewRoute
 }
 
 const SlugLayoutRouteChildren: SlugLayoutRouteChildren = {
-  SlugLayoutIssuesRoute: SlugLayoutIssuesRoute,
   SlugLayoutPeopleRoute: SlugLayoutPeopleRoute,
   SlugLayoutSearchRoute: SlugLayoutSearchRoute,
   SlugLayoutSettingsRoute: SlugLayoutSettingsRoute,
   SlugLayoutIndexRoute: SlugLayoutIndexRoute,
   SlugLayoutInboxRoute: SlugLayoutInboxRouteWithChildren,
   SlugLayoutIssueIssueIdRoute: SlugLayoutIssueIssueIdRoute,
+  SlugLayoutIssuesViewRoute: SlugLayoutIssuesViewRoute,
 }
 
 const SlugLayoutRouteWithChildren = SlugLayoutRoute._addFileChildren(
@@ -336,13 +336,13 @@ export interface FileRoutesByFullPath {
   '/new': typeof NewRoute
   '/$slug': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
-  '/$slug/issues': typeof SlugLayoutIssuesRoute
   '/$slug/people': typeof SlugLayoutPeopleRoute
   '/$slug/search': typeof SlugLayoutSearchRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/': typeof SlugLayoutIndexRoute
   '/$slug/inbox': typeof SlugLayoutInboxLayoutRouteWithChildren
   '/$slug/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
+  '/$slug/issues/$view': typeof SlugLayoutIssuesViewRoute
   '/$slug/inbox/': typeof SlugLayoutInboxLayoutIndexRoute
   '/$slug/inbox/issue/$issueId': typeof SlugLayoutInboxLayoutIssueIssueIdRoute
 }
@@ -354,12 +354,12 @@ export interface FileRoutesByTo {
   '/new': typeof NewRoute
   '/$slug': typeof SlugLayoutIndexRoute
   '/join/$inviteCode': typeof JoinInviteCodeRoute
-  '/$slug/issues': typeof SlugLayoutIssuesRoute
   '/$slug/people': typeof SlugLayoutPeopleRoute
   '/$slug/search': typeof SlugLayoutSearchRoute
   '/$slug/settings': typeof SlugLayoutSettingsRoute
   '/$slug/inbox': typeof SlugLayoutInboxLayoutIndexRoute
   '/$slug/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
+  '/$slug/issues/$view': typeof SlugLayoutIssuesViewRoute
   '/$slug/inbox/issue/$issueId': typeof SlugLayoutInboxLayoutIssueIssueIdRoute
 }
 
@@ -372,7 +372,6 @@ export interface FileRoutesById {
   '/$slug': typeof SlugRouteWithChildren
   '/$slug/_layout': typeof SlugLayoutRouteWithChildren
   '/join/$inviteCode': typeof JoinInviteCodeRoute
-  '/$slug/_layout/issues': typeof SlugLayoutIssuesRoute
   '/$slug/_layout/people': typeof SlugLayoutPeopleRoute
   '/$slug/_layout/search': typeof SlugLayoutSearchRoute
   '/$slug/_layout/settings': typeof SlugLayoutSettingsRoute
@@ -380,6 +379,7 @@ export interface FileRoutesById {
   '/$slug/_layout/inbox': typeof SlugLayoutInboxRouteWithChildren
   '/$slug/_layout/inbox/_layout': typeof SlugLayoutInboxLayoutRouteWithChildren
   '/$slug/_layout/issue/$issueId': typeof SlugLayoutIssueIssueIdRoute
+  '/$slug/_layout/issues/$view': typeof SlugLayoutIssuesViewRoute
   '/$slug/_layout/inbox/_layout/': typeof SlugLayoutInboxLayoutIndexRoute
   '/$slug/_layout/inbox/_layout/issue/$issueId': typeof SlugLayoutInboxLayoutIssueIssueIdRoute
 }
@@ -393,13 +393,13 @@ export interface FileRouteTypes {
     | '/new'
     | '/$slug'
     | '/join/$inviteCode'
-    | '/$slug/issues'
     | '/$slug/people'
     | '/$slug/search'
     | '/$slug/settings'
     | '/$slug/'
     | '/$slug/inbox'
     | '/$slug/issue/$issueId'
+    | '/$slug/issues/$view'
     | '/$slug/inbox/'
     | '/$slug/inbox/issue/$issueId'
   fileRoutesByTo: FileRoutesByTo
@@ -410,12 +410,12 @@ export interface FileRouteTypes {
     | '/new'
     | '/$slug'
     | '/join/$inviteCode'
-    | '/$slug/issues'
     | '/$slug/people'
     | '/$slug/search'
     | '/$slug/settings'
     | '/$slug/inbox'
     | '/$slug/issue/$issueId'
+    | '/$slug/issues/$view'
     | '/$slug/inbox/issue/$issueId'
   id:
     | '__root__'
@@ -426,7 +426,6 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/$slug/_layout'
     | '/join/$inviteCode'
-    | '/$slug/_layout/issues'
     | '/$slug/_layout/people'
     | '/$slug/_layout/search'
     | '/$slug/_layout/settings'
@@ -434,6 +433,7 @@ export interface FileRouteTypes {
     | '/$slug/_layout/inbox'
     | '/$slug/_layout/inbox/_layout'
     | '/$slug/_layout/issue/$issueId'
+    | '/$slug/_layout/issues/$view'
     | '/$slug/_layout/inbox/_layout/'
     | '/$slug/_layout/inbox/_layout/issue/$issueId'
   fileRoutesById: FileRoutesById
@@ -499,21 +499,17 @@ export const routeTree = rootRoute
       "filePath": "$slug/_layout.tsx",
       "parent": "/$slug",
       "children": [
-        "/$slug/_layout/issues",
         "/$slug/_layout/people",
         "/$slug/_layout/search",
         "/$slug/_layout/settings",
         "/$slug/_layout/",
         "/$slug/_layout/inbox",
-        "/$slug/_layout/issue/$issueId"
+        "/$slug/_layout/issue/$issueId",
+        "/$slug/_layout/issues/$view"
       ]
     },
     "/join/$inviteCode": {
       "filePath": "join/$inviteCode.tsx"
-    },
-    "/$slug/_layout/issues": {
-      "filePath": "$slug/_layout/issues.tsx",
-      "parent": "/$slug/_layout"
     },
     "/$slug/_layout/people": {
       "filePath": "$slug/_layout/people.tsx",
@@ -548,6 +544,10 @@ export const routeTree = rootRoute
     },
     "/$slug/_layout/issue/$issueId": {
       "filePath": "$slug/_layout/issue/$issueId.tsx",
+      "parent": "/$slug/_layout"
+    },
+    "/$slug/_layout/issues/$view": {
+      "filePath": "$slug/_layout/issues/$view.tsx",
       "parent": "/$slug/_layout"
     },
     "/$slug/_layout/inbox/_layout/": {

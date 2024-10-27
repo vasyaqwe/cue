@@ -21,7 +21,7 @@ export function useInsertIssue() {
                .otherwise((data) => [
                   {
                      ...input,
-                     id: input.id ?? crypto.randomUUID(),
+                     id: input.id,
                      isFavorited: false,
                      createdAt: Date.now(),
                      updatedAt: Date.now(),
