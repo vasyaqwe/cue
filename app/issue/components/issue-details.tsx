@@ -248,7 +248,7 @@ export function IssueDetails() {
                </Tooltip>
             </Header>
             <div className="overflow-y-auto scroll-smooth [scrollbar-gutter:stable]">
-               <div className="mx-auto w-full max-w-[51rem] py-6 md:py-8">
+               <div className="mx-auto w-full max-w-[51rem] py-4 md:py-8">
                   <div className="px-4">
                      <Input
                         key={issueId}

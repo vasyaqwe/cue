@@ -61,7 +61,6 @@ import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
 import { Loading } from "@/ui/components/loading"
 import { Tooltip } from "@/ui/components/tooltip"
-import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -181,7 +180,6 @@ export function CreateIssue() {
 
    const editorRef = useRef<Editor>()
 
-   const _fileTriggerOpen = useUIStore().fileTriggerOpen
    const fileTriggerRef = useRef<HTMLButtonElement>(null)
    useHotkeys(FILE_TRIGGER_HOTKEY, () => fileTriggerRef.current?.click(), {
       enableOnContentEditable: true,

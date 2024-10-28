@@ -67,7 +67,7 @@ export function FavoriteList() {
                                           }}
                                           activeProps={{
                                              className:
-                                                "md:!border-border/80 bg-border/50 max-md:scale-95 md:bg-elevated md:opacity-100",
+                                                "md:!border-border/80 md:bg-elevated md:opacity-100",
                                              "aria-current": "page",
                                           }}
                                           to={"/$slug/issue/$issueId"}

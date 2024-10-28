@@ -13,7 +13,12 @@ export const {
 } = createPushModal({
    modals: {
       create_issue: {
-         Wrapper: Modal,
+         Wrapper: (props) => (
+            <Modal
+               repositionInputs
+               {...props}
+            />
+         ),
          Component: CreateIssue,
       },
    },
