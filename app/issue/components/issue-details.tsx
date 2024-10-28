@@ -151,6 +151,11 @@ export function IssueDetails() {
    const { insertFavorite } = useInsertFavorite()
    const { deleteFavorite } = useDeleteFavorite()
 
+   useHotkeys("alt+f", (e) => {
+      e.preventDefault()
+      toggleFavorite()
+   })
+
    if (!issue) return null
 
    const onInboxPage = pathname.includes("/inbox")
@@ -175,11 +180,6 @@ export function IssueDetails() {
                },
             })
          })
-
-   useHotkeys("alt+f", (e) => {
-      e.preventDefault()
-      toggleFavorite()
-   })
 
    return (
       <>
