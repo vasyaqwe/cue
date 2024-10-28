@@ -86,11 +86,11 @@ function Component() {
                            "mx-auto",
                         )}
                      >
-                        Invite your team
+                        <Icons.plus className="size-4" /> Invite people
                      </ModalTrigger>
                      <ModalContent className="pb-safe-2">
                         <ModalHeader>
-                           <ModalTitle>Invite your team</ModalTitle>
+                           <ModalTitle>Invite people</ModalTitle>
                         </ModalHeader>
                         <div className="p-4 pb-safe-4">
                            <p>

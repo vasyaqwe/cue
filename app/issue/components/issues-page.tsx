@@ -50,6 +50,7 @@ const sortOrder = [
 
 export function IssuesPage({ ...props }: ComponentProps<"div">) {
    const { organizationId } = useAuth()
+   // const { slug } = useParams({ from: "/$slug/_layout" })
    const issues = useSuspenseQuery(issueListQuery({ organizationId }))
    const isRefreshing = useIssueStore().isRefreshing
 
@@ -70,6 +71,50 @@ export function IssuesPage({ ...props }: ComponentProps<"div">) {
          <Header>
             <HeaderBackButton />
             <HeaderTitle>Issues</HeaderTitle>
+            {/* <div className="-ml-3 flex items-center gap-0.5">
+               <Link
+                  activeProps={{
+                     className: "!border-border/80 bg-elevated opacity-100",
+                     "aria-current": "page",
+                  }}
+                  to={"/$slug/issues/$view"}
+                  params={{ view: "all", slug }}
+                  className={
+                     "group flex h-[34px] items-center gap-1.5 rounded-[11px] border border-transparent px-2 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100"
+                  }
+               >
+                  <Icons.allIssues className="size-[22px]" />
+                  All issues
+               </Link>
+               <Link
+                  activeProps={{
+                     className: "!border-border/80 bg-elevated opacity-100",
+                     "aria-current": "page",
+                  }}
+                  to={"/$slug/issues/$view"}
+                  params={{ view: "active", slug }}
+                  className={
+                     "group flex h-[34px] items-center gap-1.5 rounded-[11px] border border-transparent px-2 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100"
+                  }
+               >
+                  <Icons.issues className="size-5" />
+                  Active
+               </Link>
+               <Link
+                  activeProps={{
+                     className: "!border-border/80 bg-elevated opacity-100",
+                     "aria-current": "page",
+                  }}
+                  to={"/$slug/issues/$view"}
+                  params={{ view: "backlog", slug }}
+                  className={
+                     "group flex h-[34px] items-center gap-1.5 rounded-[11px] border border-transparent px-2 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100"
+                  }
+               >
+                  <Icons.backlog className="size-5" />
+                  Backlog
+               </Link>
+            </div> */}
             <HeaderProfileDrawer />
          </Header>
          <main className="overflow-y-auto">

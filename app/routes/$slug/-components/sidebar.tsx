@@ -213,7 +213,6 @@ export function Sidebar() {
                   <li>
                      <Link
                         params={{ slug, view: "all" }}
-                        activeOptions={{ exact: true }}
                         activeProps={{
                            onMouseUp: () =>
                               match(refreshIssues.isRefreshing).with(
