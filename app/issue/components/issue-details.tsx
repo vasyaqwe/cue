@@ -275,6 +275,17 @@ export function IssueDetails() {
                               },
                            )
                         }}
+                        onKeyDown={(e) =>
+                           match(e.key)
+                              .with("Enter", () => {
+                                 e.preventDefault()
+                                 descriptionRef.current?.commands.focus()
+                              })
+                              .with("ArrowDown", () => {
+                                 e.preventDefault()
+                                 descriptionRef.current?.commands.focus()
+                              })
+                        }
                         className="!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
                      />
                      <EditorRoot>
@@ -349,6 +360,14 @@ export function IssueDetails() {
                                        updateIssueInQueryData({ input })
                                        updateIssue.mutate(input)
                                     })
+                                 },
+                                 handleKeyDown: (_, e) => {
+                                    return match(e)
+                                       .with({ key: "ArrowUp" }, () => {
+                                          titleRef.current?.focus()
+                                          return true
+                                       })
+                                       .otherwise(() => false)
                                  },
                               }}
                               placeholder="Add description (press '/' for commands)"

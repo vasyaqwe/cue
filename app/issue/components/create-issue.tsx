@@ -178,7 +178,7 @@ export function CreateIssue() {
       },
    })
 
-   const editorRef = useRef<Editor>()
+   const descriptionRef = useRef<Editor>()
 
    const fileTriggerRef = useRef<HTMLButtonElement>(null)
    useHotkeys(FILE_TRIGGER_HOTKEY, () => fileTriggerRef.current?.click(), {
@@ -222,12 +222,23 @@ export function CreateIssue() {
                className={cn(
                   "!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-bold text-xl",
                )}
+               onKeyDown={(e) =>
+                  match(e.key)
+                     .with("Enter", () => {
+                        e.preventDefault()
+                        descriptionRef.current?.commands.focus()
+                     })
+                     .with("ArrowDown", () => {
+                        e.preventDefault()
+                        descriptionRef.current?.commands.focus()
+                     })
+               }
             />
             <EditorRoot>
                <MentionProvider value="issue">
                   <EditorContent
                      onCreate={({ editor }) => {
-                        editorRef.current = editor
+                        descriptionRef.current = editor
                      }}
                      content={description}
                      onUpdate={({ editor }) => {
@@ -244,6 +255,7 @@ export function CreateIssue() {
                      placeholder="Add description (press '/' for commands)"
                      editorProps={{
                         editable: () => !(insert.isPending || insert.isSuccess),
+
                         handlePaste: (view, event) => {
                            match(onFilePaste(view, event, uploadFile)).with(
                               true,
@@ -283,6 +295,10 @@ export function CreateIssue() {
                                     return true
                                  },
                               )
+                              .with({ key: "ArrowUp" }, () => {
+                                 titleRef.current?.focus()
+                                 return true
+                              })
                               .otherwise(() => false)
                         },
                         attributes: {
@@ -317,7 +333,7 @@ export function CreateIssue() {
                   variant={"ghost"}
                   ref={fileTriggerRef}
                   onChange={(e) => {
-                     const view = editorRef.current?.view
+                     const view = descriptionRef.current?.view
                      if (!view) return
 
                      onFileInputChange(view, e, uploadFile)
