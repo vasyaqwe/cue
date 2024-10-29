@@ -66,7 +66,6 @@ export function createPushModal<T>({ modals }: CreatePushModalOptions<T>) {
          )
          let timer: NodeJS.Timeout | undefined
          if (hasClosedModals) {
-            // @ts-expect-error
             timer = setInterval(() => {
                setState((p) => [...p.filter(filterGarbage)])
             }, 100)
