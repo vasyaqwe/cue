@@ -1,4 +1,4 @@
-import { createTable, generateId, lifecycleDates } from "@/db/utils"
+import { createTable, lifecycleDates, tableId } from "@/db/utils"
 import { issue } from "@/issue/schema"
 import { organization } from "@/organization/schema"
 import { user } from "@/user/schema"
@@ -9,7 +9,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 export const comment = createTable(
    "comment",
    {
-      id: generateId("comment"),
+      id: tableId("comment"),
       content: text().notNull().default(""),
       organizationId: text()
          .references(() => organization.id, { onDelete: "cascade" })

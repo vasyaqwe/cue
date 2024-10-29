@@ -1,4 +1,4 @@
-import { createTable, generateId, lifecycleDates } from "@/db/utils"
+import { createTable, lifecycleDates, tableId } from "@/db/utils"
 import { organization } from "@/organization/schema"
 import { user } from "@/user/schema"
 import { relations } from "drizzle-orm"
@@ -12,7 +12,7 @@ export const issueLabels = ["bug", "feature", "improvement"] as const
 export const issue = createTable(
    "issue",
    {
-      id: generateId("issue"),
+      id: tableId("issue"),
       title: text().notNull(),
       description: text().notNull().default(""),
       status: text({

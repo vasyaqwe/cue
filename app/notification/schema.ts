@@ -1,5 +1,5 @@
 import { comment } from "@/comment/schema"
-import { createTable, generateId, lifecycleDates } from "@/db/utils"
+import { createTable, lifecycleDates, tableId } from "@/db/utils"
 import { issue, issueStatuses } from "@/issue/schema"
 import { organization } from "@/organization/schema"
 import { user } from "@/user/schema"
@@ -19,7 +19,7 @@ export const notificationTypes = [
 export const notification = createTable(
    "notification",
    {
-      id: generateId("notification"),
+      id: tableId("notification"),
       receiverId: text()
          .references(() => user.id, { onDelete: "cascade" })
          .notNull(),

@@ -1,9 +1,4 @@
-import {
-   createTable,
-   generateCode,
-   generateId,
-   lifecycleDates,
-} from "@/db/utils"
+import { createTable, generateCode, lifecycleDates, tableId } from "@/db/utils"
 import { user } from "@/user/schema"
 import { relations } from "drizzle-orm"
 import { index, primaryKey, text, uniqueIndex } from "drizzle-orm/sqlite-core"
@@ -13,7 +8,7 @@ import { z } from "zod"
 export const organization = createTable(
    "organization",
    {
-      id: generateId("organization"),
+      id: tableId("organization"),
       name: text().notNull(),
       slug: text().notNull().unique(),
       inviteCode: text().notNull().$defaultFn(generateCode),

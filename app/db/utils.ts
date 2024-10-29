@@ -13,7 +13,7 @@ const prefixes = {
    favorite: "fav",
 } as const
 
-const generateIdBase = (prefix: keyof typeof prefixes) => {
+const generateId = (prefix: keyof typeof prefixes) => {
    const buf = crypto.getRandomValues(new Uint8Array(20))
 
    /**
@@ -41,10 +41,10 @@ export const generateCode = () => {
    return encoded.slice(0, 12)
 }
 
-const generateId = (prefix: keyof typeof prefixes) =>
+const tableId = (prefix: keyof typeof prefixes) =>
    text("id", { length: 256 })
       .primaryKey()
-      .$defaultFn(() => generateIdBase(prefix))
+      .$defaultFn(() => generateId(prefix))
 
 const createTable = sqliteTable
 
@@ -58,4 +58,4 @@ const lifecycleDates = {
       .$onUpdateFn(() => Date.now()),
 }
 
-export { createTable, lifecycleDates, generateId }
+export { createTable, lifecycleDates, generateId, tableId }

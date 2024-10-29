@@ -1,4 +1,4 @@
-import { createTable, generateId, lifecycleDates } from "@/db/utils"
+import { createTable, lifecycleDates, tableId } from "@/db/utils"
 import { relations } from "drizzle-orm"
 import {
    index,
@@ -13,7 +13,7 @@ import { z } from "zod"
 export const user = createTable(
    "user",
    {
-      id: generateId("user"),
+      id: tableId("user"),
       email: text().notNull().unique(),
       name: text().notNull().default("No name"),
       avatarUrl: text(),
@@ -63,7 +63,7 @@ export const oauthAccountRelations = relations(oauthAccount, ({ one }) => ({
 export const emailVerificationCode = createTable(
    "email_verification_code",
    {
-      id: generateId("verification_code"),
+      id: tableId("verification_code"),
       expiresAt: integer().notNull(),
       code: text().notNull(),
       userId: text()

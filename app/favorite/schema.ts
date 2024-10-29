@@ -1,4 +1,4 @@
-import { createTable, generateId, lifecycleDates } from "@/db/utils"
+import { createTable, lifecycleDates, tableId } from "@/db/utils"
 import { issueStatuses } from "@/issue/schema"
 import { organization } from "@/organization/schema"
 import { user } from "@/user/schema"
@@ -12,7 +12,7 @@ export type FavoriteEntityType = (typeof favoriteEntityTypes)[number]
 export const favorite = createTable(
    "favorite",
    {
-      id: generateId("favorite"),
+      id: tableId("favorite"),
       organizationId: text()
          .references(() => organization.id, { onDelete: "cascade" })
          .notNull(),
