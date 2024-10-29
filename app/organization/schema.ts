@@ -14,9 +14,9 @@ export const organization = createTable(
    "organization",
    {
       id: generateId("organization"),
-      name: text("name").notNull(),
-      slug: text("slug").notNull().unique(),
-      inviteCode: text("invite_code").notNull().$defaultFn(generateCode),
+      name: text().notNull(),
+      slug: text().notNull().unique(),
+      inviteCode: text().notNull().$defaultFn(generateCode),
       ...lifecycleDates,
    },
    (table) => {
@@ -31,10 +31,10 @@ export const organization = createTable(
 export const organizationMember = createTable(
    "organization_member",
    {
-      id: text("id")
+      id: text()
          .references(() => user.id, { onDelete: "cascade" })
          .notNull(),
-      organizationId: text("organization_id")
+      organizationId: text()
          .references(() => organization.id, { onDelete: "cascade" })
          .notNull(),
    },

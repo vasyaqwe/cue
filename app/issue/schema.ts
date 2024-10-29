@@ -13,18 +13,18 @@ export const issue = createTable(
    "issue",
    {
       id: generateId("issue"),
-      title: text("title").notNull(),
-      description: text("description").notNull().default(""),
-      status: text("status", {
+      title: text().notNull(),
+      description: text().notNull().default(""),
+      status: text({
          enum: issueStatuses,
       }).notNull(),
-      label: text("label", {
+      label: text({
          enum: issueLabels,
       }).notNull(),
-      authorId: text("author_id")
+      authorId: text()
          .references(() => user.id, { onDelete: "cascade" })
          .notNull(),
-      organizationId: text("organization_id")
+      organizationId: text()
          .references(() => organization.id, { onDelete: "cascade" })
          .notNull(),
       ...lifecycleDates,

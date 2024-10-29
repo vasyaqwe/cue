@@ -17,7 +17,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@libsql/client": "^0.7.0",
+    "@libsql/client": "^0.14.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@radix-ui/react-accordion": "^1.2.1",
@@ -55,7 +55,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
-    "drizzle-orm": "^0.32.2",
+    "drizzle-orm": "^0.35.3",
     "drizzle-zod": "^0.5.1",
     "immer": "^10.1.1",
     "mitt": "^3.0.1",
@@ -83,7 +83,7 @@
     "@types/bun": "latest",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
-    "drizzle-kit": "^0.24.2",
+    "drizzle-kit": "^0.26.2",
     "partykit": "^0.0.111",
     "tailwindcss": "^4.0.0-alpha.29",
     "typescript": "^5.6.2",

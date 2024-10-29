@@ -13,14 +13,14 @@ export const favorite = createTable(
    "favorite",
    {
       id: generateId("favorite"),
-      organizationId: text("organization_id")
+      organizationId: text()
          .references(() => organization.id, { onDelete: "cascade" })
          .notNull(),
-      userId: text("user_id")
+      userId: text()
          .references(() => user.id, { onDelete: "cascade" })
          .notNull(),
-      entityId: text("entity_id").notNull(),
-      entityType: text("entity_type", {
+      entityId: text().notNull(),
+      entityType: text({
          enum: favoriteEntityTypes,
       }).notNull(),
       ...lifecycleDates,

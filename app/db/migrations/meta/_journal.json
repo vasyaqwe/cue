@@ -43,6 +43,13 @@
       "when": 1729711741595,
       "tag": "0005_far_korvac",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1730206302933,
+      "tag": "0006_clear_ronan",
+      "breakpoints": true
     }
   ]
 }

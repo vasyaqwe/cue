@@ -223,12 +223,12 @@ export function CreateIssue() {
                   "!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-bold text-xl",
                )}
                onKeyDown={(e) =>
-                  match(e.key)
-                     .with("Enter", () => {
+                  match(e)
+                     .with({ key: "Enter", ctrlKey: false }, () => {
                         e.preventDefault()
                         descriptionRef.current?.commands.focus()
                      })
-                     .with("ArrowDown", () => {
+                     .with({ key: "ArrowDown" }, () => {
                         e.preventDefault()
                         descriptionRef.current?.commands.focus()
                      })

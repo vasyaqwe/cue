@@ -14,9 +14,9 @@ export const user = createTable(
    "user",
    {
       id: generateId("user"),
-      email: text("email").notNull().unique(),
-      name: text("name").notNull().default("No name"),
-      avatarUrl: text("avatar_url"),
+      email: text().notNull().unique(),
+      name: text().notNull().default("No name"),
+      avatarUrl: text(),
       ...lifecycleDates,
    },
    (table) => {
@@ -31,17 +31,20 @@ export const oauthProviders = z.enum(["github", "google"])
 export const oauthAccount = createTable(
    "oauth_account",
    {
-      userId: text("user_id")
+      userId: text()
          .references(() => user.id, { onDelete: "cascade" })
          .notNull(),
-      providerId: text("provider_id", {
+      providerId: text({
          enum: oauthProviders.options,
       }).notNull(),
-      providerUserId: text("provider_user_id").notNull().unique(),
+      providerUserId: text().notNull().unique(),
    },
    (table) => {
       return {
-         pk: primaryKey({ columns: [table.providerId, table.providerUserId] }),
+         pk: primaryKey({
+            name: "oauth_account_provider_user_id_unique",
+            columns: [table.providerId, table.providerUserId],
+         }),
       }
    },
 )
@@ -61,12 +64,12 @@ export const emailVerificationCode = createTable(
    "email_verification_code",
    {
       id: generateId("verification_code"),
-      expiresAt: integer("expires_at").notNull(),
-      code: text("code").notNull(),
-      userId: text("user_id")
+      expiresAt: integer().notNull(),
+      code: text().notNull(),
+      userId: text()
          .references(() => user.id, { onDelete: "cascade" })
          .notNull(),
-      email: text("email").notNull().unique(),
+      email: text().notNull().unique(),
    },
    (table) => {
       return {
@@ -82,14 +85,14 @@ const organizationMembershipsSchema = z.array(
 )
 
 export const session = createTable("session", {
-   id: text("id").primaryKey(),
-   expiresAt: integer("expires_at", {
+   id: text().primaryKey(),
+   expiresAt: integer({
       mode: "timestamp",
    }).notNull(),
-   userId: text("user_id")
+   userId: text()
       .references(() => user.id, { onDelete: "cascade" })
       .notNull(),
-   organizationMemberships: text("organization_memberships", {
+   organizationMemberships: text({
       mode: "json",
    })
       .$type<z.infer<typeof organizationMembershipsSchema>>()

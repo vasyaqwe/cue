@@ -20,26 +20,26 @@ export const notification = createTable(
    "notification",
    {
       id: generateId("notification"),
-      receiverId: text("receiver_id")
+      receiverId: text()
          .references(() => user.id, { onDelete: "cascade" })
          .notNull(),
-      senderId: text("sender_id")
+      senderId: text()
          .references(() => user.id, { onDelete: "cascade" })
          .notNull(),
-      organizationId: text("organization_id")
+      organizationId: text()
          .references(() => organization.id, { onDelete: "cascade" })
          .notNull(),
-      issueId: text("issue_id")
+      issueId: text()
          .references(() => issue.id, { onDelete: "cascade" })
          .notNull(),
-      commentId: text("comment_id").references(() => comment.id, {
+      commentId: text().references(() => comment.id, {
          onDelete: "set null",
       }),
-      type: text("type", {
+      type: text({
          enum: notificationTypes,
       }).notNull(),
-      content: text("content").notNull(), // Details about the notification
-      isRead: integer("is_read", {
+      content: text().notNull(), // Details about the notification
+      isRead: integer({
          mode: "boolean",
       })
          .notNull()

@@ -4,8 +4,8 @@ import type { Config } from "drizzle-kit"
 export default {
    schema: "./app/db/schema/index.ts",
    out: "./app/db/migrations",
-   dialect: "sqlite",
-   driver: "turso",
+   dialect: "turso",
+   casing: "snake_case",
    dbCredentials: {
       url: env.DATABASE_URL,
       authToken: env.DATABASE_AUTH_TOKEN,
