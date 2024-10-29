@@ -1,4 +1,5 @@
 import { env } from "@/env"
+import { issueListQuery } from "@/issue/queries"
 import { RESERVED_SLUGS } from "@/organization/constants"
 import { organizationMembershipsQuery } from "@/organization/queries"
 import { Button } from "@/ui/components/button"
@@ -40,8 +41,9 @@ export function CreateOrganization({
    const insertFn = useServerFn(organization.insert)
    const insert = useMutation({
       mutationFn: insertFn,
-      onSuccess: () => {
+      onSuccess: (organizationId) => {
          queryClient.invalidateQueries(organizationMembershipsQuery())
+         queryClient.invalidateQueries(issueListQuery({ organizationId }))
          navigate({ to: `/${makeSlug(name)}` })
       },
       onError: (error) => {

@@ -18,7 +18,9 @@ import { Button, buttonVariants } from "@/ui/components/button"
 import { Card } from "@/ui/components/card"
 import {
    DropdownMenu,
+   DropdownMenuCheckboxItem,
    DropdownMenuContent,
+   DropdownMenuGroup,
    DropdownMenuItem,
    DropdownMenuLabel,
    DropdownMenuSeparator,
@@ -118,20 +120,26 @@ export function Sidebar() {
                      title="Organizations"
                   >
                      <DropdownMenuLabel>Organizations</DropdownMenuLabel>
-                     {memberships.data.map((membership) => (
-                        <DropdownMenuItem
-                           key={membership.organization.id}
-                           onSelect={() =>
-                              navigate({
-                                 to: `/${membership.organization.slug}`,
-                              })
-                           }
-                           className="line-clamp-1 break-all"
-                        >
-                           {membership.organization.name}
-                        </DropdownMenuItem>
-                     ))}
-                     <DropdownMenuSeparator />
+                     <DropdownMenuGroup className="max-h-[181px] overflow-y-auto pb-1">
+                        {memberships.data.map((membership) => (
+                           <DropdownMenuCheckboxItem
+                              checked={
+                                 membership.organization.id === organization.id
+                              }
+                              key={membership.organization.id}
+                              onSelect={() =>
+                                 navigate({
+                                    to: `/${membership.organization.slug}`,
+                                 })
+                              }
+                           >
+                              <span className="line-clamp-1 break-all">
+                                 {membership.organization.name}
+                              </span>
+                           </DropdownMenuCheckboxItem>
+                        ))}
+                     </DropdownMenuGroup>
+                     <DropdownMenuSeparator className="mt-0" />
                      <DropdownMenuItem
                         onSelect={() => navigate({ to: "/new" })}
                      >

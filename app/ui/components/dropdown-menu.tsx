@@ -1,4 +1,5 @@
 import { CommandItem } from "@/ui/components/command"
+import { Icons } from "@/ui/components/icons"
 import { popoverAnimation } from "@/ui/constants"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
@@ -101,7 +102,7 @@ function DropdownMenuItem({
       <DropdownMenuPrimitive.Item
          onSelect={onSelect}
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled]:cursor-not-allowed focus:bg-border/50 data-[disabled]:opacity-75",
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
             inset && "pl-8",
             destructive
                ? "focus:bg-destructive/95 focus:text-destructive-foreground"
@@ -117,26 +118,33 @@ function DropdownMenuCheckboxItem({
    className,
    children,
    checked,
+   inset = false,
    ...props
-}: ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>) {
+}: ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem> & {
+   inset?: boolean
+}) {
    return (
       <DropdownMenuPrimitive.CheckboxItem
          className={cn(
-            "relative flex select-none items-center rounded-sm py-1 pr-2 pl-8 text-accent-foreground outline-none data-[disabled]:pointer-events-none focus:bg-popover-highlight data-[state=checked]:text-foreground focus:text-foreground data-[disabled]:opacity-50",
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
+            inset ? "pl-8" : "pl-2",
             className,
          )}
          checked={checked}
          {...props}
       >
-         <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+         {!inset ? children : null}
+         <span
+            className={cn(
+               "flex size-3.5 items-center justify-center",
+               inset ? "absolute left-2" : "ml-auto",
+            )}
+         >
             <DropdownMenuPrimitive.ItemIndicator>
-               {/* <CheckIcon
-             strokeWidth={2}
-             className="size-4 stroke-foreground"
-           /> */}
+               <Icons.check className="!size-5" />
             </DropdownMenuPrimitive.ItemIndicator>
          </span>
-         {children}
+         {inset ? children : null}
       </DropdownMenuPrimitive.CheckboxItem>
    )
 }

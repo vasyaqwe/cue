@@ -1,3 +1,4 @@
+import { issue } from "@/issue/schema"
 import {
    organizationProtectedProcedure,
    protectedProcedure,
@@ -9,6 +10,7 @@ import {
    organization,
    organizationMember,
 } from "@/organization/schema"
+import { APP_USER_ID } from "@/user/constants"
 import { session } from "@/user/schema"
 import { redirect } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/start"
@@ -129,7 +131,7 @@ export const insert = createServerFn(
 
          if (existingOrg) throw new TRPCError({ code: "CONFLICT" })
 
-         await ctx.db.transaction(async (tx) => {
+         const createdOrganization = await ctx.db.transaction(async (tx) => {
             const [createdOrganization] = await tx
                .insert(organization)
                .values({
@@ -158,7 +160,20 @@ export const insert = createServerFn(
                   ],
                })
                .where(eq(session.userId, ctx.user.id))
+
+            return createdOrganization
          })
+
+         await ctx.db.insert(issue).values({
+            organizationId: createdOrganization.id,
+            title: "Welcome to Cue 👋",
+            description: `<h3><strong>To start, press </strong><code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">C</code> to <strong>create your first issue.</strong></h3><p>Create issues from anywhere using <code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">C</code> or by clicking the <code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">New issue</code> button.</p><p>The issue editor and comments support markdown. You can also:</p><ul class="list-outside list-disc leading-3"><li class="leading-normal"><p>@mention a teammate or an issue</p></li><li class="leading-normal"><p>Drag &amp; drop images</p></li><li class="leading-normal"><p>Type <code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">/</code> to bring up more formatting options</p></li></ul>`,
+            status: "todo",
+            label: "feature",
+            authorId: APP_USER_ID,
+         })
+
+         return createdOrganization.id
       }),
 )
 

@@ -64,9 +64,11 @@ import {
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
 import { Kbd } from "@/ui/components/kbd"
+import { Logo } from "@/ui/components/logo"
 import { Tooltip } from "@/ui/components/tooltip"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
+import { APP_USER_ID } from "@/user/constants"
 import { useAuth } from "@/user/hooks"
 import { formatDateRelative } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
@@ -295,7 +297,7 @@ export function IssueDetails() {
                                  descriptionRef.current = editor
                               }}
                               key={issueId}
-                              className="mt-3"
+                              className="mt-4"
                               content={issue.description}
                               onBlur={({ editor }) => {
                                  match(editor.getHTML()).when(
@@ -415,10 +417,17 @@ export function IssueDetails() {
                      <p className="font-semibold text-lg">Activity</p>
                      <div>
                         <div className="mt-5 mb-3 flex items-center gap-1">
-                           <UserAvatar
-                              className="mr-[11px] ml-0.5 size-7"
-                              user={{ ...issue.author, id: issue.author.id }}
-                           />
+                           {issue.author.id === APP_USER_ID ? (
+                              <Logo
+                                 rounded
+                                 className="mr-[11px] ml-0.5 size-7"
+                              />
+                           ) : (
+                              <UserAvatar
+                                 className="mr-[11px] ml-0.5 size-7"
+                                 user={{ ...issue.author, id: issue.author.id }}
+                              />
+                           )}
                            <div className="md:-mt-px">
                               <strong className="font-semibold text-foreground">
                                  {issue.author.name}

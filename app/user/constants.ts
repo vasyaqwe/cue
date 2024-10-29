@@ -7,3 +7,5 @@ export const COOKIE_OPTIONS = {
    maxAge: 60 * 10,
    sameSite: "lax",
 } satisfies CookieSerializeOptions
+
+export const APP_USER_ID = "user_cue"
