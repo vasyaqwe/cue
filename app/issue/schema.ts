@@ -4,6 +4,7 @@ import { user } from "@/user/schema"
 import { relations } from "drizzle-orm"
 import { index, text } from "drizzle-orm/sqlite-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import { z } from "zod"
 
 export const issueStatuses = ["backlog", "todo", "in progress", "done"] as const
 export const issueLabels = ["bug", "feature", "improvement"] as const
@@ -49,13 +50,17 @@ export const issueRelations = relations(issue, ({ one }) => ({
    }),
 }))
 
-export const insertIssueParams = createInsertSchema(issue).omit({
+export const insertIssueParams = createInsertSchema(issue, {
+   title: z.string().min(1),
+}).omit({
    id: true,
    authorId: true,
    createdAt: true,
    updatedAt: true,
 })
-export const updateIssueParams = createSelectSchema(issue)
+export const updateIssueParams = createSelectSchema(issue, {
+   title: z.string().min(1),
+})
    .partial({
       label: true,
       status: true,

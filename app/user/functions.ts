@@ -7,7 +7,7 @@ import {
    invalidateSession,
 } from "@/user/auth"
 import { COOKIE_OPTIONS } from "@/user/constants"
-import { user } from "@/user/schema"
+import { updateUserParams, user } from "@/user/schema"
 import { createServerFn } from "@tanstack/start"
 import { generateCodeVerifier, generateState } from "arctic"
 import { eq } from "drizzle-orm"
@@ -25,7 +25,7 @@ export const me = createServerFn(
 export const update = createServerFn(
    "POST",
    protectedProcedure
-      .input(z.object({ name: z.string().min(1) }))
+      .input(updateUserParams)
       .mutation(async ({ ctx, input }) => {
          return await ctx.db
             .update(user)

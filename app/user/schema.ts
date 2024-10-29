@@ -116,7 +116,7 @@ export const insertOauthAccountParams = createInsertSchema(oauthAccount, {
 })
 
 export const updateUserParams = createSelectSchema(user, {
-   name: z.string().min(1),
+   name: z.string().min(1).max(32),
 }).partial()
 
 export const verifyLoginCodeParams = createInsertSchema(

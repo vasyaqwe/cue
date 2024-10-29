@@ -143,6 +143,8 @@ function Component() {
                            id="name"
                            className="max-w-[300px]"
                            placeholder="Your name"
+                           maxLength={32}
+                           required
                         />
                         <Button
                            disabled={updateUser.isPending}

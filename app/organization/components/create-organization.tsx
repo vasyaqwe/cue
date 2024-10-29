@@ -98,6 +98,7 @@ export function CreateOrganization({
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Required"
                   required
+                  maxLength={32}
                />
                <p className="mt-2 break-all text-foreground/75">
                   <u>
