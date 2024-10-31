@@ -20,7 +20,7 @@ export function DraftIndicator() {
             // delay due to dialog animation
             setTimeout(() => {
                setCreateIssueOpen(false)
-            }, 100),
+            }, 200),
          )
    })
 
