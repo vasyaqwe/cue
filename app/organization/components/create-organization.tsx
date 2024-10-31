@@ -17,7 +17,11 @@ import { toast } from "sonner"
 import { match } from "ts-pattern"
 import * as organization from "../functions"
 
-const makeSlug = (name: string) => name.toLowerCase().replaceAll(" ", "-")
+const makeSlug = (name: string) =>
+   name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
 
 const parseError = (error: Error) => {
    try {
