@@ -48,7 +48,10 @@ export function CreateOrganization({
       onSuccess: (organizationId) => {
          queryClient.invalidateQueries(organizationMembershipsQuery())
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
-         navigate({ to: `/${makeSlug(name)}` })
+         navigate({
+            to: `/$slug/issues/$view`,
+            params: { slug: makeSlug(name), view: "all" },
+         })
       },
       onError: (error) => {
          match(parseError(error))

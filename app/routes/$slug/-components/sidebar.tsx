@@ -129,7 +129,11 @@ export function Sidebar() {
                               key={membership.organization.id}
                               onSelect={() =>
                                  navigate({
-                                    to: `/${membership.organization.slug}`,
+                                    to: `/$slug/issues/$view`,
+                                    params: {
+                                       slug: membership.organization.slug,
+                                       view: "all",
+                                    },
                                  })
                               }
                            >
