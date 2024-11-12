@@ -77,7 +77,7 @@ export function CreateOrganization({
                   Create your first organization
                </h2>
             ) : (
-               <h1 className={"my-5 font-bold font-semibold text-2xl"}>
+               <h1 className={"my-5 font-semibold text-2xl"}>
                   Create a new organization
                </h1>
             )}
