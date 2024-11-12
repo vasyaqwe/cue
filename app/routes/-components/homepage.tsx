@@ -111,7 +111,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                            strokeLinejoin="round"
                         />
                      </svg>
-                     Report issues with a user-friendly rich-text editor.
+                     Report issues with a powerful rich-text editor.
                   </li>
                   <li className="flex flex-col gap-3 sm:flex-row sm:items-center">
                      <svg
@@ -223,7 +223,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
                      to="/"
                      className="flex items-center gap-3 font-medium font-secondary text-[1.725rem] tracking-tight"
                   >
-                     <Logo className="size-8" />
+                     <Logo className="size-9" />
                      Cue
                   </Link>
                   <p className="mt-6 text-foreground/75 text-sm transition-colors hover:text-foreground">

@@ -7,7 +7,6 @@ import { Input } from "@/ui/components/input"
 import { Label } from "@/ui/components/label"
 import { Loading } from "@/ui/components/loading"
 import { Logo } from "@/ui/components/logo"
-import { cn } from "@/ui/utils"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
@@ -67,21 +66,21 @@ export function CreateOrganization({
          <div className="-mt-8 mx-auto w-full max-w-[23rem] px-4">
             {isFirstOrganization ? (
                <div className="flex items-center gap-2.5">
-                  <Logo className="size-11" />{" "}
-                  <h1 className="font-extrabold text-2xl">Welcome to Cue,</h1>
+                  <Logo className="size-11" />
+                  <h1 className="font-semibold text-2xl">Welcome to Cue,</h1>
                </div>
             ) : (
                <Logo className="size-11" />
             )}
-            <h2
-               className={cn(
-                  "my-5 font-bold text-foreground/90",
-                  isFirstOrganization ? "text-xl" : "font-extrabold text-2xl",
-               )}
-            >
-               Create {isFirstOrganization ? "your first" : "a new"}{" "}
-               organization
-            </h2>
+            {isFirstOrganization ? (
+               <h2 className={"my-5 font-bold text-xl"}>
+                  Create your first organization
+               </h2>
+            ) : (
+               <h1 className={"my-5 font-bold font-semibold text-2xl"}>
+                  Create a new organization
+               </h1>
+            )}
             <form
                onSubmit={(e) => {
                   e.preventDefault()
