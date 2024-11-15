@@ -83,7 +83,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
                      <p
                         className={cn(
                            baseClassName,
-                           "text-foreground/40",
+                           "text-base text-foreground/40",
                            classAttr,
                         )}
                      >

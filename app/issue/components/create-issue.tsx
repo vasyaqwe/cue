@@ -51,6 +51,7 @@ import { uploadFile } from "@/ui/components/editor/file/upload"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
 import { useEditorStore } from "@/ui/components/editor/store"
+import { isOnFirstLine } from "@/ui/components/editor/utils"
 import {
    FILE_TRIGGER_HOTKEY,
    FileTrigger,
@@ -269,7 +270,7 @@ export function CreateIssue() {
                               setDescription(view.dom.innerHTML),
                            )
                         },
-                        handleKeyDown: (_, e) => {
+                        handleKeyDown: (view, e) => {
                            return match(e)
                               .with(
                                  {
@@ -296,7 +297,12 @@ export function CreateIssue() {
                                  },
                               )
                               .with({ key: "ArrowUp" }, () => {
+                                 if (!isOnFirstLine(view)) return false
                                  titleRef.current?.focus()
+                                 titleRef.current?.setSelectionRange(
+                                    titleRef.current?.value.length,
+                                    titleRef.current?.value.length,
+                                 )
                                  return true
                               })
                               .otherwise(() => false)

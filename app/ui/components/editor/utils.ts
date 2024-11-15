@@ -1,5 +1,6 @@
 import type { EditorInstance } from "@/ui/components/editor/types"
 import { Fragment, type Node } from "@tiptap/pm/model"
+import type { EditorView } from "@tiptap/pm/view"
 
 export const stripHTML = (string: string) => string.replace(/<[^>]*>/g, "")
 
@@ -43,4 +44,15 @@ export const getAllContent = (editor: EditorInstance) => {
    const doc = editor.state.doc.copy(fragment)
 
    return editor.storage.markdown.serializer.serialize(doc) as string
+}
+
+export const isOnFirstLine = (view: EditorView) => {
+   const { state } = view
+   const { selection } = state
+   const pos = selection.from
+
+   const coords = view.coordsAtPos(pos)
+   const startCoords = view.coordsAtPos(0)
+
+   return Math.abs(coords.top - startCoords.top) < 5
 }
