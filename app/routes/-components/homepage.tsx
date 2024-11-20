@@ -9,7 +9,10 @@ import { Link, useNavigate } from "@tanstack/react-router"
 import { useHotkeys } from "react-hotkeys-hook"
 import { match } from "ts-pattern"
 
-export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
+export function Homepage({
+   memberships = [],
+   isAuthed = false,
+}: { memberships?: { organization: { slug: string } }[]; isAuthed?: boolean }) {
    const navigate = useNavigate()
 
    useHotkeys("l", () =>
@@ -17,6 +20,8 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
          .with(false, () => navigate({ to: "/login" }))
          .otherwise(() => navigate({ to: "/" })),
    )
+
+   const slug = memberships?.[0]?.organization.slug
 
    return (
       <div className="max-h-svh w-full overflow-y-auto">
@@ -30,7 +35,8 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
             </Link>
             {isAuthed ? (
                <Link
-                  to="/"
+                  to={slug ? "/$slug" : "/"}
+                  params={slug ? { slug } : {}}
                   className={cn(
                      buttonVariants({ variant: "outline" }),
                      "active:scale-[98%] hover:bg-elevated/75",
