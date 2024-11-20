@@ -41,7 +41,7 @@ export function FavoriteList() {
                      useFavoriteStore.setState({ isMounted: true })
                   }
                   className={cn(
-                     "[--animation-delay:0ms] [--animation-duration:250ms]",
+                     "[--animation-duration:250ms]",
                      !isMounted ? "animate-fade-in opacity-0" : "",
                   )}
                >

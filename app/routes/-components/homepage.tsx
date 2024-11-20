@@ -22,7 +22,7 @@ export function Homepage({ isAuthed = false }: { isAuthed?: boolean }) {
       <div className="max-h-svh w-full overflow-y-auto">
          <header className="mx-auto flex w-full max-w-[68rem] items-center justify-between px-4 py-4">
             <Link
-               to="/"
+               to={!isAuthed ? "/" : "/homepage"}
                className="flex items-center gap-3 font-medium font-secondary text-[1.725rem] tracking-tight"
             >
                <Logo className="size-9" />

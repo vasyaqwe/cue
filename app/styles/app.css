@@ -25,21 +25,23 @@
    --shadow-button: 0px 3px 3px -1px rgba(24, 24, 24, 0.09), 0px 0px 0px 1px
       rgba(24, 24, 24, 0.09);
 
-   --font-family-primary: "satoshi", sans-serif;
-   --font-family-secondary: "garamond", sans-serif;
+   --font-primary: "satoshi", sans-serif;
+   --font-secondary: "garamond", sans-serif;
 
-   --font-size-xs: 0.825rem;
-   --font-size-sm: 0.895rem;
-   --font-size-sm--line-height: 1.2rem;
-   --font-size-base: 0.9525rem;
-   --font-size-base--line-height: 1.4rem;
-   --font-size-lg: 1.05rem;
-   --font-size-xl: 1.3rem;
+   --text-xs: 0.825rem;
+   --text-sm: 0.895rem;
+   --text-sm--line-height: 1.2rem;
+   --text-base: 0.9525rem;
+   --text-base--line-height: 1.4rem;
+   --text-lg: 1.05rem;
+   --text-xl: 1.3rem;
 
    --ease-vaul: cubic-bezier(0.32, 0.72, 0, 1);
 
-   --animate-fade-in: fade-in var(--animation-duration, 500ms)
-      var(--animation-delay) ease forwards;
+   --animation-duration: 500ms;
+   --animation-delay: 0ms;
+   --animate-fade-in: fade-in var(--animation-duration) var(--animation-delay)
+      ease forwards;
    --animate-accordion-down: accordion-down 0.15s var(--ease-vaul);
    --animate-accordion-up: accordion-up 0.15s var(--ease-vaul);
 
@@ -71,7 +73,7 @@
 
 @font-face {
    font-family: "satoshi";
-   src: url("/fonts/satoshi.woff2") format("woff2-variations");
+   src: url("/font/satoshi.woff2") format("woff2-variations");
    font-display: swap;
    font-style: normal;
    font-weight: 500 800;
@@ -79,25 +81,25 @@
 
 @font-face {
    font-family: "garamond";
-   src: url("/fonts/garamond.ttf") format("truetype");
+   src: url("/font/garamond.ttf") format("truetype");
    font-display: swap;
    font-style: normal;
    font-weight: 400;
 }
 @font-face {
    font-family: "garamond";
-   src: url("/fonts/garamond_italic.ttf") format("truetype");
+   src: url("/font/garamond_italic.ttf") format("truetype");
    font-display: swap;
    font-style: italic;
    font-weight: 400;
 }
 
 html {
-   font-family: var(--font-family-primary);
+   font-family: var(--font-primary);
    overflow: hidden;
 }
 body {
-   font-size: var(--font-size-base);
+   font-size: var(--text-base);
 }
 body,
 #root {
