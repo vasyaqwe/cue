@@ -289,7 +289,7 @@ export function IssueDetails() {
                                  descriptionRef.current?.commands.focus()
                               })
                         }
-                        className="!border-none !outline-none !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
+                        className="!border-none !outline-hidden !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
                      />
                      <EditorRoot>
                         <MentionProvider value="issue">
@@ -476,7 +476,7 @@ export function IssueDetails() {
          </div>
          <aside
             className={cn(
-               "sticky top-0 flex h-svh w-72 flex-col border-border/75 border-l bg-popover px-3 py-3 shadow-sm",
+               "sticky top-0 flex h-svh w-72 flex-col border-border/75 border-l bg-popover px-3 py-3 shadow-xs",
                onInboxPage ? "max-xl:hidden " : " max-lg:hidden",
             )}
          >

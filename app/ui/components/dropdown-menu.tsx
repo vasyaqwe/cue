@@ -102,7 +102,7 @@ function DropdownMenuItem({
       <DropdownMenuPrimitive.Item
          onSelect={onSelect}
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-hidden [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
             inset && "pl-8",
             destructive
                ? "focus:bg-destructive/95 focus:text-destructive-foreground"
@@ -126,7 +126,7 @@ function DropdownMenuCheckboxItem({
    return (
       <DropdownMenuPrimitive.CheckboxItem
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-hidden [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
             inset ? "pl-8" : "pl-2",
             className,
          )}

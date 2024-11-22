@@ -107,7 +107,7 @@ export function ComboboxContent({
       >
          <Command
             tabIndex={0}
-            className={cn("outline-none max-md:mt-2")}
+            className={cn("outline-hidden max-md:mt-2")}
          >
             <CommandList>
                <CommandGroup>{children}</CommandGroup>
@@ -125,7 +125,7 @@ export function ComboboxInput({
       <div className="relative">
          <CommandInput
             className={cn(
-               "h-9 w-full border-transparent bg-transparent pr-3 pl-9 placeholder:text-popover-foreground/50 focus:outline-none",
+               "h-9 w-full border-transparent bg-transparent pr-3 pl-9 placeholder:text-popover-foreground/50 focus:outline-hidden",
                className,
             )}
             {...props}

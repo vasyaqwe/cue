@@ -1,4 +1,4 @@
-@import "../ui/components/editor/style.css";
+@import "./components/editor/style.css";
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";

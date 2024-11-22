@@ -96,7 +96,7 @@ const PopoverContent = forwardRef<
                align={align}
                sideOffset={sideOffset}
                className={cn(
-                  "!p-1 z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg outline-none",
+                  "!p-1 z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg outline-hidden",
                   popoverAnimation,
                   className,
                )}

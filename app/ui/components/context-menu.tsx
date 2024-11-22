@@ -74,7 +74,7 @@ function ContextMenuSubTrigger({
    return (
       <ContextMenuPrimitive.ContextMenuSubTrigger
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed data-[state=open]:bg-border/50 focus:bg-border/50 data-[disabled=true]:opacity-75",
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-hidden [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed data-[state=open]:bg-border/50 focus:bg-border/50 data-[disabled=true]:opacity-75",
             inset && "pl-8",
             destructive
                ? "focus:bg-destructive focus:text-destructive-foreground"
@@ -201,7 +201,7 @@ function ContextMenuItem({
       <ContextMenuPrimitive.Item
          onSelect={onSelect}
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-hidden [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
             inset && "pl-8",
             destructive
                ? "focus:bg-destructive focus:text-destructive-foreground"
@@ -240,7 +240,7 @@ function ContextMenuCheckboxItem({
          checked={checked}
          onSelect={onSelect}
          className={cn(
-            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-none [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
+            "relative flex cursor-pointer select-none items-center gap-1.5 rounded-[9px] px-2 py-1.5 outline-hidden [&>svg]:size-5 data-[disabled=true]:cursor-not-allowed focus:bg-border/50 data-[disabled=true]:opacity-75",
             "pl-8",
             className,
          )}

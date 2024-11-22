@@ -1,7 +1,7 @@
-import "@/styles/app.css"
-import appCss from "@/styles/app.css?url"
+import "@/ui/styles.css"
 import { Toaster } from "@/ui/components/toast"
 import { TooltipProvider } from "@/ui/components/tooltip"
+import styles from "@/ui/styles.css?url"
 import { cn } from "@/ui/utils"
 import * as Portal from "@radix-ui/react-portal"
 import type { QueryClient } from "@tanstack/react-query"
@@ -59,7 +59,7 @@ export const Route = createRootRouteWithContext<{
       ]
    },
    links: () => [
-      { rel: "stylesheet", href: appCss },
+      { rel: "stylesheet", href: styles },
       { rel: "icon", href: "/favicon.ico" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "manifest", href: "/site.webmanifest" },

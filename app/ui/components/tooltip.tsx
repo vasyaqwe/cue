@@ -16,7 +16,7 @@ function TooltipContent({
          className={cn(
             "fade-in-0 zoom-in-[99%] data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-[99%] data-[side=bottom]:slide-in-from-top-px",
             "data-[side=left]:slide-in-from-right-px data-[side=right]:slide-in-from-left-px data-[side=top]:slide-in-from-bottom-px z-50 animate-in",
-            "overflow-hidden rounded-full border border-border bg-popover px-2 py-1 text-sm shadow-sm data-[state=closed]:animate-out",
+            "overflow-hidden rounded-full border border-border bg-popover px-2 py-1 text-sm shadow-xs data-[state=closed]:animate-out",
             className,
          )}
          {...props}

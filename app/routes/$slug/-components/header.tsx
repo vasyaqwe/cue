@@ -26,7 +26,7 @@ export function Header({
    return (
       <header
          className={cn(
-            "z-[5] flex h-[var(--header-height)] w-full shrink-0 items-center border-border/75 border-b bg-background shadow-sm md:pl-[17px]",
+            "z-[5] flex h-[var(--header-height)] w-full shrink-0 items-center border-border/75 border-b bg-background shadow-xs md:pl-[17px]",
             className,
          )}
          {...props}

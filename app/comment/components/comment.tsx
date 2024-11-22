@@ -156,7 +156,7 @@ export function Comment({
                               starterKit,
                               link,
                               mention,
-                              file({ className: "!outline-none" }),
+                              file({ className: "!outline-hidden" }),
                            ]}
                         />
                      </MentionProvider>
@@ -189,7 +189,7 @@ export function Comment({
                      </strong>{" "}
                      resolved comment
                   </span>
-                  <span className="ml-auto flex items-center gap-1">
+                  <span className="ml-auto flex min-w-[83px] items-center justify-end gap-1">
                      {isExpanded ? "Collapse" : "Expand"}
                      <Icons.chevronDown
                         data-expanded={isExpanded}
