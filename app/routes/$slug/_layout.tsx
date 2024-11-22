@@ -28,8 +28,12 @@ import { getRequestHeader } from "vinxi/http"
 import { Sidebar } from "./-components/sidebar"
 
 export const getDevice = createServerFn("GET", () => {
-   const userAgent = getRequestHeader("user-agent") ?? ""
-   return /mobile/i.test(userAgent) ? "mobile" : "desktop"
+   const userAgent = getRequestHeader("user-agent")
+   if (!userAgent) return "desktop"
+
+   return /mobile/i.test(userAgent) && !/iPad|Tablet/i.test(userAgent)
+      ? "mobile"
+      : "desktop"
 })
 
 export const Route = createFileRoute("/$slug/_layout")({
