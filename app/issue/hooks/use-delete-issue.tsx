@@ -1,3 +1,4 @@
+import { favoriteListQuery } from "@/favorite/queries"
 import * as issue from "@/issue/functions"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
@@ -32,6 +33,12 @@ export function useDeleteIssue() {
       if (isOnIssueIdPage && params.issueId === issueId) {
          navigate({ to: "/$slug", params: { slug: params.slug } })
       }
+
+      queryClient.setQueryData(
+         favoriteListQuery({ organizationId }).queryKey,
+         (oldData) =>
+            oldData?.filter((favorite) => favorite.entityId !== issueId),
+      )
 
       queryClient.setQueryData(
          issueListQuery({ organizationId }).queryKey,
