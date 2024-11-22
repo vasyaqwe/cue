@@ -29,16 +29,19 @@ export const Route = createFileRoute("/$slug/_layout/issues/$view")({
          issueListQuery({ organizationId: context.organizationId }),
       )
    },
-   meta: ({ params: { view } }) => [
-      {
-         title:
-            view === "all"
-               ? "All issues"
-               : view === "active"
-                 ? "Active issues"
-                 : "Backlog",
-      },
-   ],
+
+   head: ({ params: { view } }) => ({
+      meta: [
+         {
+            title:
+               view === "all"
+                  ? "All issues"
+                  : view === "active"
+                    ? "Active issues"
+                    : "Backlog",
+         },
+      ],
+   }),
    pendingComponent: () => (
       <Main>
          <Header>

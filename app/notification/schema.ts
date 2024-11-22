@@ -80,27 +80,30 @@ export const insertNotificationParams = createInsertSchema(notification)
          status: z.enum(issueStatuses),
       }),
       receiverIds: z.array(z.string()),
+      // TODO: rm these & add back union
+      type: z.enum(notificationTypes),
+      commentContent: z.string().optional(),
    })
-   .and(
-      z.discriminatedUnion("type", [
-         z.object({
-            type: z.literal("issue_comment_mention"),
-            commentContent: z.string(),
-         }),
-         z.object({
-            type: z
-               .enum(notificationTypes)
-               .exclude(["issue_comment_mention"] as const),
-            commentContent: z.undefined().optional(),
-         }),
-      ]),
-   )
+// .and(
+//    // commentContent is only needed if notification is issue_comment_mention
+//    z.discriminatedUnion("type", [
+//       z.object({
+//          type: z.literal("issue_comment_mention"),
+//          commentContent: z.string(),
+//       }),
+//       z.object({
+//          type: z
+//             .enum(notificationTypes)
+//             .exclude(["issue_comment_mention"] as const),
+//          commentContent: z.undefined().optional(),
+//       }),
+//    ]),
+// )
 
 export const updateNotificationParams = createSelectSchema(notification)
    .omit({
       content: true,
       issueId: true,
-      organizationId: true,
       type: true,
       receiverId: true,
       senderId: true,

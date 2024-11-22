@@ -30,7 +30,9 @@ export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
 
       return issue
    },
-   meta: ({ loaderData }) => [{ title: loaderData.title }],
+   head: ({ loaderData }) => ({
+      meta: [{ title: loaderData?.title ?? "Issue" }],
+   }),
    pendingComponent: () => (
       <Main>
          <Header>

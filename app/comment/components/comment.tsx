@@ -92,10 +92,12 @@ export function Comment({
                               <Button
                                  onClick={() => {
                                     updateComment.mutate({
-                                       id: comment.id,
-                                       organizationId,
-                                       resolvedById: null,
-                                       issueId,
+                                       data: {
+                                          id: comment.id,
+                                          organizationId,
+                                          resolvedById: null,
+                                          issueId,
+                                       },
                                     })
                                  }}
                                  aria-label="Reopen comment"
@@ -110,10 +112,12 @@ export function Comment({
                               <Button
                                  onClick={() => {
                                     updateComment.mutate({
-                                       id: comment.id,
-                                       organizationId,
-                                       resolvedById: user.id,
-                                       issueId,
+                                       data: {
+                                          id: comment.id,
+                                          organizationId,
+                                          resolvedById: user.id,
+                                          issueId,
+                                       },
                                     })
                                  }}
                                  aria-label="Resolve comment"
@@ -129,7 +133,7 @@ export function Comment({
                               <Button
                                  onClick={() =>
                                     deleteComment.mutate({
-                                       commentId: comment.id,
+                                       data: { commentId: comment.id },
                                     })
                                  }
                                  aria-label="Delete comment"

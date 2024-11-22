@@ -6,7 +6,7 @@ export const notificationListQuery = (input: {
 }) =>
    queryOptions({
       queryKey: ["notification_list", input.organizationId],
-      queryFn: () => notification.list(input),
+      queryFn: () => notification.list({ data: input }),
    })
 
 export const notificationUnreadCountQuery = (input: {
@@ -14,5 +14,5 @@ export const notificationUnreadCountQuery = (input: {
 }) =>
    queryOptions({
       queryKey: ["notification_unread_count", input.organizationId],
-      queryFn: () => notification.unreadCount(input),
+      queryFn: () => notification.unreadCount({ data: input }),
    })

@@ -100,7 +100,9 @@ export function IssueDetails() {
 
    const onCopyIssueUrl = () => {
       copy(window.location.href)
-      toast.success("Issue URL copied to clipboard")
+      toast.success("Issue URL copied to clipboard", {
+         duration: Infinity,
+      })
    }
    useHotkeys("mod+shift+c", (e) => {
       e.preventDefault()
@@ -131,7 +133,7 @@ export function IssueDetails() {
             updateIssueInQueryData({
                input,
             })
-            updateIssue.mutate(input)
+            updateIssue.mutate({ data: input })
          },
       )
    }, [pathname])
@@ -167,19 +169,23 @@ export function IssueDetails() {
       match(issue.isFavorited)
          .with(true, () => {
             deleteFavorite.mutate({
-               entityId: issue.id,
-               entityType: "issue",
-               organizationId,
+               data: {
+                  entityId: issue.id,
+                  entityType: "issue",
+                  organizationId,
+               },
             })
          })
          .otherwise(() => {
             insertFavorite.mutate({
-               entityId: issue.id,
-               organizationId,
-               entityType: "issue",
-               issue: {
-                  title: issue.title,
-                  status: issue.status,
+               data: {
+                  entityId: issue.id,
+                  organizationId,
+                  entityType: "issue",
+                  issue: {
+                     title: issue.title,
+                     status: issue.status,
+                  },
                },
             })
          })
@@ -216,7 +222,9 @@ export function IssueDetails() {
                      <DropdownMenuSeparator />
                      <DropdownMenuItem
                         onSelect={() => {
-                           deleteIssue.mutate({ issueId, organizationId })
+                           deleteIssue.mutate({
+                              data: { issueId, organizationId },
+                           })
                         }}
                         destructive
                      >
@@ -274,7 +282,7 @@ export function IssueDetails() {
                                  updateIssueInQueryData({
                                     input,
                                  })
-                                 updateIssue.mutate(input)
+                                 updateIssue.mutate({ data: input })
                               },
                            )
                         }}
@@ -314,7 +322,7 @@ export function IssueDetails() {
                                        updateIssueInQueryData({
                                           input,
                                        })
-                                       updateIssue.mutate(input)
+                                       updateIssue.mutate({ data: input })
                                     },
                                  )
                               }}
@@ -341,7 +349,7 @@ export function IssueDetails() {
                                           description,
                                        }
                                        updateIssueInQueryData({ input })
-                                       updateIssue.mutate(input)
+                                       updateIssue.mutate({ data: input })
                                     })
                                  },
                                  handleDrop: (view, event, _slice, moved) => {
@@ -361,7 +369,7 @@ export function IssueDetails() {
                                           description,
                                        }
                                        updateIssueInQueryData({ input })
-                                       updateIssue.mutate(input)
+                                       updateIssue.mutate({ data: input })
                                     })
                                  },
                                  handleKeyDown: (view, e) => {
@@ -532,10 +540,12 @@ export function IssueDetails() {
                         value={s}
                         onSelect={(value) => {
                            updateIssue.mutate({
-                              id: issueId,
-                              organizationId,
-                              status: value as never,
-                              title: issue.title,
+                              data: {
+                                 id: issueId,
+                                 organizationId,
+                                 status: value as never,
+                                 title: issue.title,
+                              },
                            })
                         }}
                         isSelected={s === issue.status}
@@ -571,10 +581,12 @@ export function IssueDetails() {
                         value={l}
                         onSelect={(value) => {
                            updateIssue.mutate({
-                              id: issueId,
-                              organizationId,
-                              label: value as never,
-                              title: issue.title,
+                              data: {
+                                 id: issueId,
+                                 organizationId,
+                                 label: value as never,
+                                 title: issue.title,
+                              },
                            })
                         }}
                         isSelected={l === issue.label}

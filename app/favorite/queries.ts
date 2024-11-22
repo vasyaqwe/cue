@@ -6,5 +6,5 @@ export const favoriteListQuery = (input: {
 }) =>
    queryOptions({
       queryKey: ["favorite_list", input.organizationId],
-      queryFn: () => favorite.list(input),
+      queryFn: () => favorite.list({ data: input }),
    })

@@ -5,7 +5,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router"
 export const Route = createFileRoute("/join/$inviteCode")({
    component: () => null,
    beforeLoad: async ({ params, context }) => {
-      const session = await context.queryClient
+      const user = await context.queryClient
          .ensureQueryData(userMeQuery())
          .catch(() => {
             throw redirect({
@@ -14,10 +14,10 @@ export const Route = createFileRoute("/join/$inviteCode")({
             })
          })
 
-      if (!session?.session || !session.user) throw redirect({ to: "/login" })
+      if (!user) throw redirect({ to: "/login" })
 
       await organization.join({
-         inviteCode: params.inviteCode,
+         data: { inviteCode: params.inviteCode },
       })
    },
 })

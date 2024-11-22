@@ -16,7 +16,9 @@ import { match } from "ts-pattern"
 
 export const Route = createFileRoute("/login")({
    component: Component,
-   meta: () => [{ title: "Log in" }],
+   head: () => ({
+      meta: [{ title: "Log in" }],
+   }),
    validateSearch: (
       search: Record<string, unknown>,
    ): {
@@ -38,7 +40,8 @@ function Component() {
    const byInviteCodeFn = useServerFn(organization.byInviteCode)
    const organizationToJoin = useQuery({
       queryKey: ["organization_by_invite_code", search.inviteCode],
-      queryFn: () => byInviteCodeFn({ inviteCode: search.inviteCode ?? "" }),
+      queryFn: () =>
+         byInviteCodeFn({ data: { inviteCode: search.inviteCode ?? "" } }),
       enabled: !!search.inviteCode,
    })
 
@@ -217,7 +220,7 @@ function Component() {
                               }
                               onClick={() =>
                                  loginWithGithub.mutate({
-                                    inviteCode: search.inviteCode,
+                                    data: { inviteCode: search.inviteCode },
                                  })
                               }
                            >
@@ -241,7 +244,7 @@ function Component() {
                               }
                               onClick={() =>
                                  loginWithGoogle.mutate({
-                                    inviteCode: search.inviteCode,
+                                    data: { inviteCode: search.inviteCode },
                                  })
                               }
                            >

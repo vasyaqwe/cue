@@ -4,7 +4,7 @@ import * as organization from "./functions"
 export const organizationBySlugQuery = ({ slug }: { slug: string }) =>
    queryOptions({
       queryKey: ["organization_by_slug", slug],
-      queryFn: () => organization.bySlug({ slug }),
+      queryFn: () => organization.bySlug({ data: { slug } }),
       staleTime: Infinity,
    })
 
@@ -13,7 +13,7 @@ export const organizationMembersQuery = ({
 }: { organizationId: string }) =>
    queryOptions({
       queryKey: ["organization_members", organizationId],
-      queryFn: () => organization.members({ organizationId }),
+      queryFn: () => organization.members({ data: { organizationId } }),
    })
 
 export const organizationTeammatesIdsQuery = ({
@@ -21,7 +21,7 @@ export const organizationTeammatesIdsQuery = ({
 }: { organizationId: string }) =>
    queryOptions({
       queryKey: ["organization_teammates_ids", organizationId],
-      queryFn: () => organization.teammatesIds({ organizationId }),
+      queryFn: () => organization.teammatesIds({ data: { organizationId } }),
    })
 
 export const organizationMembershipsQuery = () =>

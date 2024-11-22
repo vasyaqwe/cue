@@ -299,7 +299,7 @@ export function Sidebar() {
                      title="Account options"
                      align="start"
                   >
-                     <DropdownMenuItem onSelect={() => logout.mutate()}>
+                     <DropdownMenuItem onSelect={() => logout.mutate({})}>
                         <svg
                            viewBox="0 0 24 24"
                            fill="none"

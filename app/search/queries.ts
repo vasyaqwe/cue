@@ -7,5 +7,5 @@ export const searchListQuery = (input: {
 }) =>
    queryOptions({
       queryKey: ["search_list", input.query, input.organizationId],
-      queryFn: () => search.list(input),
+      queryFn: () => search.list({ data: input }),
    })

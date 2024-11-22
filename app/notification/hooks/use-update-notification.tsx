@@ -111,7 +111,7 @@ export function useUpdateNotification() {
             notificationListQuery({ organizationId }).queryKey,
          )
 
-         updateNotificationsInQueryData({ input })
+         updateNotificationsInQueryData({ input: input.data })
 
          return { data }
       },

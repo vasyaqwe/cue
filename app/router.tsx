@@ -1,3 +1,4 @@
+import type { ServerFnError } from "@/error"
 import { routeTree } from "@/routeTree.gen"
 import { Button, buttonVariants } from "@/ui/components/button"
 import { Card } from "@/ui/components/card"
@@ -13,17 +14,16 @@ import {
    useRouter,
 } from "@tanstack/react-router"
 import { routerWithQueryClient } from "@tanstack/react-router-with-query"
-import type { TRPCError } from "@trpc/server"
 import superjson from "superjson"
 import { match } from "ts-pattern"
 
 type TRPCClientError = Error & {
    data: {
-      code: TRPCError["code"]
+      code: ServerFnError["code"]
    }
 }
 
-export const isTRPCError = (
+export const isServerFnError = (
    error: Error & { body?: unknown },
 ): error is TRPCClientError =>
    "data" in error &&
@@ -52,7 +52,7 @@ export function createRouter() {
             onError: (error) =>
                match(error)
                   .when(
-                     (e): e is TRPCError => isTRPCError(e),
+                     (e): e is ServerFnError => isServerFnError(e),
                      (e) =>
                         e.code === "INTERNAL_SERVER_ERROR"
                            ? toast.error("An unknown error occurred")

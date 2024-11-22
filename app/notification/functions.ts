@@ -1,156 +1,152 @@
-import { organizationProtectedProcedure, protectedProcedure } from "@/lib/trpc"
 import {
    insertNotificationParams,
    notification,
    updateNotificationParams,
 } from "@/notification/schema"
+import {
+   authMiddleware,
+   organizationMemberMiddleware,
+} from "@/utils/middleware"
 import { createServerFn } from "@tanstack/start"
+import { zodValidator } from "@tanstack/zod-adapter"
 import { and, count, desc, eq, inArray } from "drizzle-orm"
 import { match } from "ts-pattern"
 import { z } from "zod"
 
-export const list = createServerFn(
-   "GET",
-   protectedProcedure
-      .input(z.object({ organizationId: z.string() }))
-      .query(async ({ ctx, input }) => {
-         return await ctx.db.query.notification.findMany({
-            where: and(
-               eq(notification.organizationId, input.organizationId),
-               eq(notification.receiverId, ctx.user.id),
-            ),
-            columns: {
-               id: true,
-               type: true,
-               content: true,
-               commentId: true,
-               issueId: true,
-               isRead: true,
-               createdAt: true,
-            },
-            with: {
-               issue: {
-                  columns: {
-                     title: true,
-                     status: true,
-                  },
-               },
-               sender: {
-                  columns: {
-                     id: true,
-                     name: true,
-                     avatarUrl: true,
-                  },
+export const list = createServerFn({ method: "GET" })
+   .middleware([authMiddleware])
+   .validator(zodValidator(z.object({ organizationId: z.string() })))
+   .handler(async ({ context, data }) => {
+      return await context.db.query.notification.findMany({
+         where: and(
+            eq(notification.organizationId, data.organizationId),
+            eq(notification.receiverId, context.user.id),
+         ),
+         columns: {
+            id: true,
+            type: true,
+            content: true,
+            commentId: true,
+            issueId: true,
+            isRead: true,
+            createdAt: true,
+         },
+         with: {
+            issue: {
+               columns: {
+                  title: true,
+                  status: true,
                },
             },
-            orderBy: [desc(notification.createdAt)],
-         })
-      }),
-)
+            sender: {
+               columns: {
+                  id: true,
+                  name: true,
+                  avatarUrl: true,
+               },
+            },
+         },
+         orderBy: [desc(notification.createdAt)],
+      })
+   })
 
-export const unreadCount = createServerFn(
-   "GET",
-   protectedProcedure
-      .input(z.object({ organizationId: z.string() }))
-      .query(async ({ ctx, input }) => {
-         return (
-            (await ctx.db
-               .select({ count: count() })
-               .from(notification)
-               .where(
-                  and(
-                     eq(notification.organizationId, input.organizationId),
-                     eq(notification.receiverId, ctx.user.id),
-                     eq(notification.isRead, false),
-                  ),
-               )
-               .get()) ?? { count: 0 }
-         )
-      }),
-)
+export const unreadCount = createServerFn({ method: "GET" })
+   .middleware([authMiddleware])
+   .validator(zodValidator(z.object({ organizationId: z.string() })))
+   .handler(async ({ context, data }) => {
+      return (
+         (await context.db
+            .select({ count: count() })
+            .from(notification)
+            .where(
+               and(
+                  eq(notification.organizationId, data.organizationId),
+                  eq(notification.receiverId, context.user.id),
+                  eq(notification.isRead, false),
+               ),
+            )
+            .get()) ?? { count: 0 }
+      )
+   })
 
-export const insert = createServerFn(
-   "POST",
-   organizationProtectedProcedure
-      .input(insertNotificationParams)
-      .mutation(async ({ ctx, input }) => {
-         const promises = input.receiverIds.map(async (receiverId) => {
-            return await ctx.db
-               .insert(notification)
-               .values({
-                  organizationId: input.organizationId,
-                  issueId: input.issueId,
-                  receiverId,
-                  senderId: ctx.user.id,
-                  type: input.type,
-                  content: input.content,
-                  commentId: input.commentId,
-               })
-               .returning()
-               .get()
-         })
-
-         const result = await Promise.all(promises)
-
-         const createdNotification = result[0]
-
-         if (!createdNotification) return
-
-         return {
-            ...createdNotification,
-            issue: input.issue,
-            commentContent: input.commentContent,
-         }
-      }),
-)
-
-export const update = createServerFn(
-   "POST",
-   organizationProtectedProcedure
-      .input(updateNotificationParams)
-      .mutation(async ({ ctx, input }) => {
-         return await ctx.db
-            .update(notification)
-            .set({
-               isRead: input.isRead,
+export const insert = createServerFn({ method: "POST" })
+   .middleware([organizationMemberMiddleware])
+   .validator(zodValidator(insertNotificationParams))
+   .handler(async ({ context, data }) => {
+      const promises = data.receiverIds.map(async (receiverId) => {
+         return await context.db
+            .insert(notification)
+            .values({
+               organizationId: data.organizationId,
+               issueId: data.issueId,
+               receiverId,
+               senderId: context.user.id,
+               type: data.type,
+               content: data.content,
+               commentId: data.commentId,
             })
-            .where(inArray(notification.issueId, input.issueIds))
-      }),
-)
+            .returning()
+            .get()
+      })
 
-export const deleteFn = createServerFn(
-   "POST",
-   protectedProcedure
-      .input(
+      const result = await Promise.all(promises)
+
+      const createdNotification = result[0]
+
+      if (!createdNotification) return
+
+      return {
+         ...createdNotification,
+         issue: data.issue,
+         commentContent: data.commentContent,
+      }
+   })
+
+export const update = createServerFn({ method: "POST" })
+   .middleware([organizationMemberMiddleware])
+   .validator(zodValidator(updateNotificationParams))
+   .handler(async ({ context, data }) => {
+      return await context.db
+         .update(notification)
+         .set({
+            isRead: data.isRead,
+         })
+         .where(inArray(notification.issueId, data.issueIds))
+   })
+
+export const deleteFn = createServerFn({ method: "POST" })
+   .middleware([authMiddleware])
+   .validator(
+      zodValidator(
          z.object({
             issueIds: z.array(z.string()),
             receiverIds: z.array(z.string()),
          }),
-      )
-      .mutation(async ({ ctx, input }) => {
-         match(input.receiverIds)
-            .with(
-               [],
-               async () =>
-                  await ctx.db
-                     .delete(notification)
-                     .where(
-                        and(
-                           inArray(notification.issueId, input.issueIds),
-                           eq(notification.receiverId, ctx.user.id),
-                        ),
+      ),
+   )
+   .handler(async ({ context, data }) => {
+      match(data.receiverIds)
+         .with(
+            [],
+            async () =>
+               await context.db
+                  .delete(notification)
+                  .where(
+                     and(
+                        inArray(notification.issueId, data.issueIds),
+                        eq(notification.receiverId, context.user.id),
                      ),
-            )
-            .otherwise(
-               async (receiverIds) =>
-                  await ctx.db
-                     .delete(notification)
-                     .where(
-                        and(
-                           inArray(notification.receiverId, receiverIds),
-                           eq(notification.type, "issue_mention"),
-                        ),
+                  ),
+         )
+         .otherwise(
+            async (receiverIds) =>
+               await context.db
+                  .delete(notification)
+                  .where(
+                     and(
+                        inArray(notification.receiverId, receiverIds),
+                        eq(notification.type, "issue_mention"),
                      ),
-            )
-      }),
-)
+                  ),
+         )
+   })

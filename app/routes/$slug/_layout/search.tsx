@@ -22,7 +22,9 @@ import { useRef, useState } from "react"
 
 export const Route = createFileRoute("/$slug/_layout/search")({
    component: Component,
-   meta: () => [{ title: "Search" }],
+   head: () => ({
+      meta: [{ title: "Search" }],
+   }),
    validateSearch: (search: Record<string, unknown>): { q: string } => {
       if (typeof search.q !== "string") throw new Error("Invalid search query")
 

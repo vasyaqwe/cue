@@ -87,7 +87,7 @@ export function useDeleteNotifications() {
    const deleteFn = useServerFn(notification.deleteFn)
    const deleteNotifications = useMutation({
       mutationFn: deleteFn,
-      onMutate: async ({ issueIds, receiverIds }) => {
+      onMutate: async ({ data: { issueIds, receiverIds } }) => {
          await queryClient.cancelQueries(
             notificationListQuery({ organizationId }),
          )
@@ -117,7 +117,7 @@ export function useDeleteNotifications() {
 
          return { data }
       },
-      onError: (_err, data, context) => {
+      onError: (_err, { data }, context) => {
          queryClient.setQueryData(
             notificationListQuery({ organizationId }).queryKey,
             context?.data,

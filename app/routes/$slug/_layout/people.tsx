@@ -29,7 +29,9 @@ import { toast } from "sonner"
 
 export const Route = createFileRoute("/$slug/_layout/people")({
    component: Component,
-   meta: () => [{ title: "People" }],
+   head: () => ({
+      meta: [{ title: "People" }],
+   }),
    loader: async ({ context }) => {
       context.queryClient.prefetchQuery(
          organizationMembersQuery({ organizationId: context.organizationId }),

@@ -127,26 +127,27 @@ export function useUpdateIssue() {
       onMutate: async (input) => {
          match(
             notificatons.data.filter(
-               (notification) => notification.issueId === input.id,
+               (notification) => notification.issueId === input.data.id,
             ),
          )
             .with([], () => {})
             .otherwise((notificationsWithUpdatedIssue) =>
                updateNotificationsInQueryData({
                   input: {
+                     organizationId,
                      issueIds: notificationsWithUpdatedIssue.map(
                         (n) => n.issueId,
                      ),
                      issue: {
-                        title: input.title,
-                        status: input.status,
+                        title: input.data.title,
+                        status: input.data.status,
                      },
                   },
                }),
             )
 
          updateIssueInQueryData({
-            input,
+            input: input.data,
          })
 
          await queryClient.cancelQueries(issueListQuery({ organizationId }))
@@ -200,15 +201,17 @@ export function useUpdateIssue() {
                   .with([], () => {})
                   .otherwise((receiverIds) =>
                      insertNotification.mutate({
-                        organizationId,
-                        issueId: input.id,
-                        type: "issue_mention",
-                        content: `${user.name} mentioned you in issue`,
-                        issue: {
-                           title: input.title,
-                           status: updatedIssue.status,
+                        data: {
+                           organizationId,
+                           issueId: input.data.id,
+                           type: "issue_mention",
+                           content: `${user.name} mentioned you in issue`,
+                           issue: {
+                              title: input.data.title,
+                              status: updatedIssue.status,
+                           },
+                           receiverIds,
                         },
-                        receiverIds,
                      }),
                   )
 
@@ -216,27 +219,28 @@ export function useUpdateIssue() {
                   .with([], () => {})
                   .otherwise((receiverIds) =>
                      deleteNotifications.mutate({
-                        issueIds: [input.id],
-                        receiverIds,
+                        data: { issueIds: [input.data.id], receiverIds },
                      }),
                   )
 
                clearMentions("issue")
 
-               match(input).with({ status: "done" }, (issue) =>
+               match(input.data).with({ status: "done" }, (issue) =>
                   match(teammatesIds.data ?? [])
                      .with([], () => {})
                      .otherwise((receiverIds) =>
                         insertNotification.mutate({
-                           organizationId,
-                           issueId: issue.id,
-                           type: "issue_resolved",
-                           content: `Marked as done by ${user.name}`,
-                           issue: {
-                              title: issue.title,
-                              status: issue.status,
+                           data: {
+                              organizationId,
+                              issueId: issue.id,
+                              type: "issue_resolved",
+                              content: `Marked as done by ${user.name}`,
+                              issue: {
+                                 title: issue.title,
+                                 status: issue.status,
+                              },
+                              receiverIds,
                            },
-                           receiverIds,
                         }),
                      ),
                )
@@ -245,17 +249,17 @@ export function useUpdateIssue() {
                   type: "issue_update",
                   senderId: user.id,
                   issue: {
-                     id: input.id,
-                     title: input.title,
+                     id: input.data.id,
+                     title: input.data.title,
                      status: updatedIssue.status,
                   },
                })
 
                sendIssueEvent({
                   type: "update",
-                  issueId: input.id,
+                  issueId: input.data.id,
                   issue: {
-                     ...input,
+                     ...input.data,
                      status: updatedIssue.status,
                      organizationId,
                   },

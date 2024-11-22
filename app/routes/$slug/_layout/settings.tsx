@@ -46,7 +46,9 @@ import { match } from "ts-pattern"
 
 export const Route = createFileRoute("/$slug/_layout/settings")({
    component: Component,
-   meta: () => [{ title: "Settings" }],
+   head: () => ({
+      meta: [{ title: "Settings" }],
+   }),
 })
 
 function Component() {
@@ -132,7 +134,7 @@ function Component() {
                               return toast.success("Saved")
 
                            updateUser.mutate({
-                              name: formData.name,
+                              data: { name: formData.name },
                            })
                         }}
                      >
@@ -199,7 +201,7 @@ function Component() {
                                  onSubmit={(e) => {
                                     e.preventDefault()
                                     deleteOrganization.mutate({
-                                       organizationId,
+                                       data: { organizationId },
                                     })
                                  }}
                                  id={"delete_organization"}

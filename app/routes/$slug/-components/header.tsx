@@ -97,7 +97,7 @@ export function HeaderProfileDrawer({
                <Icons.plus /> New organization
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={() => logout.mutate()}>
+            <DropdownMenuItem onSelect={() => logout.mutate({})}>
                <svg
                   viewBox="0 0 24 24"
                   fill="none"

@@ -147,15 +147,17 @@ export function CreateIssue() {
             .with([], () => {})
             .otherwise((receiverIds) =>
                insertNotification.mutate({
-                  organizationId,
-                  issueId: issue.id,
-                  type: "new_issue",
-                  content: `New issue added by ${user.name}`,
-                  issue: {
-                     title: issue.title,
-                     status: issue.status,
+                  data: {
+                     organizationId,
+                     issueId: issue.id,
+                     type: "new_issue",
+                     content: `New issue added by ${user.name}`,
+                     issue: {
+                        title: issue.title,
+                        status: issue.status,
+                     },
+                     receiverIds,
                   },
-                  receiverIds,
                }),
             )
 
@@ -163,15 +165,17 @@ export function CreateIssue() {
             .with([], () => {})
             .otherwise(() =>
                insertNotification.mutate({
-                  organizationId,
-                  issueId: issue.id,
-                  type: "issue_mention",
-                  content: `${user.name} mentioned you in a new issue`,
-                  issue: {
-                     title: issue.title,
-                     status: issue.status,
+                  data: {
+                     organizationId,
+                     issueId: issue.id,
+                     type: "issue_mention",
+                     content: `${user.name} mentioned you in a new issue`,
+                     issue: {
+                        title: issue.title,
+                        status: issue.status,
+                     },
+                     receiverIds: mentionedUserIds,
                   },
-                  receiverIds: mentionedUserIds,
                }),
             )
 
@@ -201,11 +205,7 @@ export function CreateIssue() {
                   return true
                }
                insert.mutate({
-                  title,
-                  description,
-                  label,
-                  status,
-                  organizationId,
+                  data: { title, description, label, status, organizationId },
                })
             }}
             className="flex w-full flex-col p-4 pt-3"
@@ -225,6 +225,18 @@ export function CreateIssue() {
                )}
                onKeyDown={(e) =>
                   match(e)
+                     .with({ key: "Enter", ctrlKey: true }, () => {
+                        e.preventDefault()
+                        insert.mutate({
+                           data: {
+                              title,
+                              description,
+                              label,
+                              status,
+                              organizationId,
+                           },
+                        })
+                     })
                      .with({ key: "Enter", ctrlKey: false }, () => {
                         e.preventDefault()
                         descriptionRef.current?.commands.focus()
@@ -256,7 +268,6 @@ export function CreateIssue() {
                      placeholder="Add description (press '/' for commands)"
                      editorProps={{
                         editable: () => !(insert.isPending || insert.isSuccess),
-
                         handlePaste: (view, event) => {
                            match(onFilePaste(view, event, uploadFile)).with(
                               true,
@@ -287,11 +298,13 @@ export function CreateIssue() {
                                        return true
                                     }
                                     insert.mutate({
-                                       title,
-                                       description,
-                                       label,
-                                       status,
-                                       organizationId,
+                                       data: {
+                                          title,
+                                          description,
+                                          label,
+                                          status,
+                                          organizationId,
+                                       },
                                     })
                                     return true
                                  },

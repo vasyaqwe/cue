@@ -64,9 +64,9 @@ export function useInsertFavorite() {
          insertFavoriteToQueryData({
             input: {
                id: crypto.randomUUID(),
-               entityId: input.entityId,
-               entityType: input.entityType,
-               issue: input.issue,
+               entityId: input.data.entityId,
+               entityType: input.data.entityType,
+               issue: input.data.issue,
             },
          })
          return { data }

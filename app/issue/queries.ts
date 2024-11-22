@@ -8,7 +8,7 @@ export const issueListQuery = (input: {
 }) =>
    queryOptions({
       queryKey: ["issue_list", input.organizationId, input.view],
-      queryFn: () => issue.list(input),
+      queryFn: () => issue.list({ data: input }),
    })
 
 export const issueByIdQuery = (input: {
@@ -17,5 +17,5 @@ export const issueByIdQuery = (input: {
 }) =>
    queryOptions({
       queryKey: ["issue_by_id", input.issueId],
-      queryFn: () => issue.byId(input),
+      queryFn: () => issue.byId({ data: input }),
    })

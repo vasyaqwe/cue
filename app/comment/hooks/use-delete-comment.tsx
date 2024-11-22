@@ -58,7 +58,7 @@ export function useDeleteComment() {
    const deleteFn = useServerFn(comment.deleteFn)
    const deleteComment = useMutation({
       mutationFn: deleteFn,
-      onMutate: async ({ commentId }) => {
+      onMutate: async ({ data: { commentId } }) => {
          if (!issueId)
             throw new Error(
                "deleteComment mutation must be used in an $issueId route",
@@ -88,7 +88,7 @@ export function useDeleteComment() {
          )
          toast.error("Failed to delete comment")
       },
-      onSettled: (_, error, data) => {
+      onSettled: (_, error, { data }) => {
          if (!issueId)
             throw new Error(
                "deleteComment mutation must be used in an $issueId route",

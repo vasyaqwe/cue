@@ -54,7 +54,7 @@ export function useDeleteFavorite() {
    const deleteFn = useServerFn(favorite.deleteFn)
    const deleteFavorite = useMutation({
       mutationFn: deleteFn,
-      onMutate: async ({ entityId, entityType, organizationId }) => {
+      onMutate: async ({ data: { entityId, entityType, organizationId } }) => {
          await queryClient.cancelQueries(favoriteListQuery({ organizationId }))
 
          const data = queryClient.getQueryData(

@@ -65,7 +65,7 @@ export function useDeleteIssue() {
    const deleteFn = useServerFn(issue.deleteFn)
    const deleteIssue = useMutation({
       mutationFn: deleteFn,
-      onMutate: async ({ issueId }) => {
+      onMutate: async ({ data: { issueId } }) => {
          await queryClient.cancelQueries(issueListQuery({ organizationId }))
 
          const data = queryClient.getQueryData(
@@ -76,7 +76,7 @@ export function useDeleteIssue() {
 
          return { data }
       },
-      onError: (_err, data, context) => {
+      onError: (_err, { data }, context) => {
          queryClient.setQueryData(
             issueListQuery({ organizationId }).queryKey,
             context?.data,
@@ -89,7 +89,7 @@ export function useDeleteIssue() {
                params: { slug: params.slug, issueId: data.issueId },
             })
       },
-      onSettled: (_, error, data) => {
+      onSettled: (_, error, { data }) => {
          queryClient.invalidateQueries(issueListQuery({ organizationId }))
          queryClient.invalidateQueries(
             issueByIdQuery({ issueId: data.issueId, organizationId }),

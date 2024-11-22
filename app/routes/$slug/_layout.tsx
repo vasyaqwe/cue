@@ -27,7 +27,7 @@ import { useEffect } from "react"
 import { getRequestHeader } from "vinxi/http"
 import { Sidebar } from "./-components/sidebar"
 
-export const getDevice = createServerFn("GET", () => {
+export const getDevice = createServerFn({ method: "GET" }).handler(async () => {
    const userAgent = getRequestHeader("user-agent")
    if (!userAgent) return "desktop"
 
@@ -39,12 +39,12 @@ export const getDevice = createServerFn("GET", () => {
 export const Route = createFileRoute("/$slug/_layout")({
    component: Component,
    beforeLoad: async ({ context, params }) => {
-      const session = await context.queryClient
+      const user = await context.queryClient
          .ensureQueryData(userMeQuery())
          .catch(() => {
             throw redirect({ to: "/login" })
          })
-      if (!session?.session || !session.user) throw redirect({ to: "/login" })
+      if (!user) throw redirect({ to: "/login" })
 
       const organization = await context.queryClient.ensureQueryData(
          organizationBySlugQuery({ slug: params.slug }),

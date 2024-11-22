@@ -1,4 +1,3 @@
-import type { TRPCError } from "@trpc/server"
 import { P, match } from "ts-pattern"
 import type { ZodIssue } from "zod"
 import type { ErrorCode } from "./schema"
@@ -19,29 +18,6 @@ export const statusToCode = (status: number): ErrorCode => {
          return "METHOD_NOT_ALLOWED"
       case 422:
          return "UNPROCESSABLE_ENTITY"
-      case 500:
-         return "INTERNAL_SERVER_ERROR"
-      default:
-         return "INTERNAL_SERVER_ERROR"
-   }
-}
-
-export const statusToTRPCCode = (status: number): TRPCError["code"] => {
-   switch (status) {
-      case 400:
-         return "BAD_REQUEST"
-      case 401:
-         return "UNAUTHORIZED"
-      case 403:
-         return "FORBIDDEN"
-      case 404:
-         return "NOT_FOUND"
-      case 405:
-         return "METHOD_NOT_SUPPORTED"
-      case 409:
-         return "METHOD_NOT_SUPPORTED"
-      case 422:
-         return "UNPROCESSABLE_CONTENT"
       case 500:
          return "INTERNAL_SERVER_ERROR"
       default:

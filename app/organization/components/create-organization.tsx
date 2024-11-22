@@ -1,4 +1,5 @@
 import { env } from "@/env"
+import type { ServerFnError } from "@/error"
 import { issueListQuery } from "@/issue/queries"
 import { RESERVED_SLUGS } from "@/organization/constants"
 import { organizationMembershipsQuery } from "@/organization/queries"
@@ -10,7 +11,6 @@ import { Logo } from "@/ui/components/logo"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
-import type { TRPCError } from "@trpc/server"
 import { useState } from "react"
 import { toast } from "sonner"
 import { match } from "ts-pattern"
@@ -25,7 +25,7 @@ const makeSlug = (name: string) =>
 const parseError = (error: Error) => {
    try {
       const parsedError = JSON.parse(error.message) as {
-         body: TRPCError
+         body: ServerFnError
       }
 
       return parsedError
@@ -89,8 +89,7 @@ export function CreateOrganization({
                      .with(true, () => toast.error("This name is reserved"))
                      .otherwise(() =>
                         insert.mutate({
-                           name,
-                           slug: makeSlug(name),
+                           data: { name, slug: makeSlug(name) },
                         }),
                      )
                }}

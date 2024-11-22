@@ -85,9 +85,12 @@ export function FavoriteList() {
                                           <button
                                              onClick={() => {
                                                 deleteFavorite.mutate({
-                                                   entityId: favorite.entityId,
-                                                   entityType: "issue",
-                                                   organizationId,
+                                                   data: {
+                                                      entityId:
+                                                         favorite.entityId,
+                                                      entityType: "issue",
+                                                      organizationId,
+                                                   },
                                                 })
                                              }}
                                              className="ml-auto grid size-5 shrink-0 cursor-pointer place-items-center rounded-full opacity-0 hover:bg-border/60 group-hover:opacity-85"

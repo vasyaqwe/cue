@@ -231,10 +231,12 @@ function Issue({
                         key={status}
                         onSelect={() => {
                            updateIssue.mutate({
-                              status,
-                              organizationId,
-                              id: issue.id,
-                              title: issue.title,
+                              data: {
+                                 status,
+                                 organizationId,
+                                 id: issue.id,
+                                 title: issue.title,
+                              },
                            })
                         }}
                      >
@@ -259,10 +261,12 @@ function Issue({
                         key={label}
                         onSelect={() => {
                            updateIssue.mutate({
-                              label,
-                              organizationId,
-                              id: issue.id,
-                              title: issue.title,
+                              data: {
+                                 label,
+                                 organizationId,
+                                 id: issue.id,
+                                 title: issue.title,
+                              },
                            })
                         }}
                      >
@@ -304,19 +308,23 @@ function Issue({
                   match(issue.isFavorited)
                      .with(true, () => {
                         deleteFavorite.mutate({
-                           entityId: issue.id,
-                           entityType: "issue",
-                           organizationId,
+                           data: {
+                              entityId: issue.id,
+                              entityType: "issue",
+                              organizationId,
+                           },
                         })
                      })
                      .otherwise(() => {
                         insertFavorite.mutate({
-                           entityId: issue.id,
-                           organizationId,
-                           entityType: "issue",
-                           issue: {
-                              title: issue.title,
-                              status: issue.status,
+                           data: {
+                              entityId: issue.id,
+                              organizationId,
+                              entityType: "issue",
+                              issue: {
+                                 title: issue.title,
+                                 status: issue.status,
+                              },
                            },
                         })
                      })
@@ -329,8 +337,7 @@ function Issue({
                destructive
                onSelect={() =>
                   deleteIssue.mutate({
-                     issueId: issue.id,
-                     organizationId,
+                     data: { issueId: issue.id, organizationId },
                   })
                }
             >

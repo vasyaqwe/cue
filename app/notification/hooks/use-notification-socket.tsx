@@ -41,9 +41,7 @@ export function useNotificationSocket() {
    }) => {
       if (pathname.includes(issueId))
          return updateNotification.mutate({
-            issueIds: [issueId],
-            isRead: true,
-            organizationId,
+            data: { issueIds: [issueId], isRead: true, organizationId },
          })
 
       if (!("Notification" in window))
@@ -60,9 +58,7 @@ export function useNotificationSocket() {
                activeItemIssueId: issueId,
             })
             updateNotification.mutate({
-               issueIds: [issueId],
-               isRead: true,
-               organizationId,
+               data: { issueIds: [issueId], isRead: true, organizationId },
             })
          })
       }

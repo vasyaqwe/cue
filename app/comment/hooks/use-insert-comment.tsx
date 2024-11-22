@@ -77,7 +77,7 @@ export function useInsertComment({
          insertCommentToQueryData({
             input: {
                id: crypto.randomUUID(),
-               content: input.content ?? "",
+               content: input.data.content ?? "",
                issueId,
                resolvedBy: null,
                author: {
@@ -146,16 +146,18 @@ export function useInsertComment({
                   .with([], () => {})
                   .otherwise((receiverIds) =>
                      insertNotification.mutate({
-                        organizationId,
-                        issueId: comment.issueId,
-                        type: "new_issue_comment",
-                        content: comment.content,
-                        issue: {
-                           title: issue.title,
-                           status: issue.status,
+                        data: {
+                           organizationId,
+                           issueId: comment.issueId,
+                           type: "new_issue_comment",
+                           content: comment.content,
+                           issue: {
+                              title: issue.title,
+                              status: issue.status,
+                           },
+                           commentId: comment.id,
+                           receiverIds,
                         },
-                        commentId: comment.id,
-                        receiverIds,
                      }),
                   )
 
@@ -163,17 +165,19 @@ export function useInsertComment({
                   .with([], () => {})
                   .otherwise(() =>
                      insertNotification.mutate({
-                        organizationId,
-                        issueId: comment.issueId,
-                        type: "issue_comment_mention",
-                        content: `${user.name} mentioned you in a comment`,
-                        commentContent: comment.content,
-                        issue: {
-                           title: issue.title,
-                           status: issue.status,
+                        data: {
+                           organizationId,
+                           issueId: comment.issueId,
+                           type: "issue_comment_mention",
+                           content: `${user.name} mentioned you in a comment`,
+                           commentContent: comment.content,
+                           issue: {
+                              title: issue.title,
+                              status: issue.status,
+                           },
+                           commentId: comment.id,
+                           receiverIds: mentionedUserIds,
                         },
-                        commentId: comment.id,
-                        receiverIds: mentionedUserIds,
                      }),
                   )
             },

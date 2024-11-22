@@ -39,7 +39,9 @@ import { match } from "ts-pattern"
 
 export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
    component: Component,
-   meta: () => [{ title: "Inbox" }],
+   head: () => ({
+      meta: [{ title: "Inbox" }],
+   }),
    loader: async ({ context }) => {
       context.queryClient.prefetchQuery(
          notificationListQuery({ organizationId: context.organizationId }),
@@ -117,11 +119,13 @@ function Component() {
                   <Button
                      onClick={() =>
                         updateNotification.mutate({
-                           issueIds: notifications.data
-                              .filter((n) => !n.isRead)
-                              .map((notification) => notification.issueId),
-                           isRead: true,
-                           organizationId,
+                           data: {
+                              issueIds: notifications.data
+                                 .filter((n) => !n.isRead)
+                                 .map((notification) => notification.issueId),
+                              isRead: true,
+                              organizationId,
+                           },
                         })
                      }
                      size="icon"
@@ -175,11 +179,13 @@ function Component() {
                                           .with(0, () => {})
                                           .otherwise(() =>
                                              updateNotification.mutate({
-                                                issueIds: [
-                                                   latestNotification.issueId,
-                                                ],
-                                                isRead: true,
-                                                organizationId,
+                                                data: {
+                                                   issueIds: [
+                                                      latestNotification.issueId,
+                                                   ],
+                                                   isRead: true,
+                                                   organizationId,
+                                                },
                                              }),
                                           )
                                     }}
@@ -335,9 +341,11 @@ function Notification({
             <ContextMenuItem
                onSelect={() =>
                   updateNotification.mutate({
-                     issueIds: [notification.issueId],
-                     isRead: !notification.isRead,
-                     organizationId,
+                     data: {
+                        issueIds: [notification.issueId],
+                        isRead: !notification.isRead,
+                        organizationId,
+                     },
                   })
                }
             >
@@ -371,8 +379,10 @@ function Notification({
                destructive
                onSelect={() =>
                   deleteNotifications.mutate({
-                     issueIds: [notification.issueId],
-                     receiverIds: [],
+                     data: {
+                        issueIds: [notification.issueId],
+                        receiverIds: [],
+                     },
                   })
                }
             >

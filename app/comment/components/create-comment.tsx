@@ -99,10 +99,7 @@ export function CreateComment({
          onSubmit={(e) => {
             e.preventDefault()
             insertComment.mutate({
-               content,
-               authorId: user.id,
-               issueId,
-               organizationId,
+               data: { content, authorId: user.id, issueId, organizationId },
             })
             editorRef.current?.commands.clearContent()
             setContent("")

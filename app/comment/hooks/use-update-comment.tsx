@@ -53,7 +53,7 @@ export function useUpdateComment() {
 
          updateCommentInQueryData({
             input: {
-               ...input,
+               ...input.data,
                resolvedBy: {
                   avatarUrl: user.avatarUrl,
                   name: user.name,
@@ -97,7 +97,7 @@ export function useUpdateComment() {
             sendCommentEvent({
                type: "update",
                comment: {
-                  ...comment,
+                  ...comment.data,
                   resolvedBy: {
                      avatarUrl: user.avatarUrl,
                      name: user.name,
