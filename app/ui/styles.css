@@ -219,11 +219,6 @@ body,
       );
    }
 
-   .container {
-      padding-inline: 1rem;
-      width: 100%;
-   }
-
    .pattern {
       background-size: 10px 10px;
       background-image: repeating-linear-gradient(
@@ -234,6 +229,11 @@ body,
          transparent 50%
       );
    }
+}
+
+@utility container {
+   padding-inline: 1rem;
+   width: 100%;
 }
 
 @layer utilities {

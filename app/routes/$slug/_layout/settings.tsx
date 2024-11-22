@@ -7,7 +7,7 @@ import {
    ModalTitle,
    ModalTrigger,
 } from "@/modals/dynamic"
-import * as organization from "@/organization/functions"
+import * as organizationFns from "@/organization/functions"
 import { organizationMembershipsQuery } from "@/organization/queries"
 import {
    Header,
@@ -53,7 +53,7 @@ export const Route = createFileRoute("/$slug/_layout/settings")({
 
 function Component() {
    const queryClient = useQueryClient()
-   const { user, organizationId } = useAuth()
+   const { user, organizationId, organization } = useAuth()
    const isMobile = useUIStore().isMobile
    const navigate = useNavigate()
 
@@ -70,7 +70,7 @@ function Component() {
 
    const memberships = useSuspenseQuery(organizationMembershipsQuery())
    const [confirmDeletion, setConfirmDeletion] = useState("")
-   const deleteFn = useServerFn(organization.deleteFn)
+   const deleteFn = useServerFn(organizationFns.deleteFn)
    const deleteOrganization = useMutation({
       mutationFn: deleteFn,
       onSuccess: () => {
@@ -207,16 +207,14 @@ function Component() {
                                  id={"delete_organization"}
                               >
                                  <Label htmlFor="confirmation">
-                                    To confirm, enter{" "}
-                                    <strong>delete this organization</strong>{" "}
-                                    below
+                                    To confirm, enter organization name below
                                  </Label>
                                  <Input
                                     autoComplete="off"
                                     autoFocus={!isMobile}
                                     id="confirmation"
                                     name="confirmation"
-                                    placeholder="delete this organization"
+                                    placeholder={organization.name}
                                     value={confirmDeletion}
                                     onChange={(e) =>
                                        setConfirmDeletion(e.target.value)
@@ -224,14 +222,20 @@ function Component() {
                                  />
                               </form>
                            </div>
-                           <ModalFooter>
+                           <ModalFooter className="justify-between">
+                              <ModalTrigger
+                                 className={buttonVariants({
+                                    variant: "outline",
+                                 })}
+                              >
+                                 Cancel
+                              </ModalTrigger>
                               <Button
-                                 className="ml-auto"
                                  form={"delete_organization"}
                                  type="submit"
                                  disabled={
                                     confirmDeletion.trim() !==
-                                       "delete this organization" ||
+                                       organization.name ||
                                     deleteOrganization.isPending ||
                                     deleteOrganization.isSuccess
                                  }
