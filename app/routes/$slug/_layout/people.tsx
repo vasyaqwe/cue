@@ -160,7 +160,7 @@ function Component() {
                                  <p className="line-clamp-1 break-all font-semibold">
                                     {member.user.name}
                                  </p>
-                                 <p className="line-clamp-1 break-all opacity-75">
+                                 <p className="line-clamp-1 break-all text-foreground/75">
                                     {member.user.email}
                                  </p>
                               </div>

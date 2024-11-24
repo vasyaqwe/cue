@@ -319,14 +319,14 @@ function Notification({
                      <div className="flex w-full items-center gap-2">
                         <p
                            title={stripHTML(notification.content)}
-                           className="line-clamp-1 break-all text-sm tracking-normal opacity-75"
+                           className="line-clamp-1 break-all text-foreground/75 text-sm tracking-normal"
                         >
                            {notification.type === "new_issue_comment"
                               ? `${notification.sender.name} commented: `
                               : null}
                            {stripHTML(notification.content)}
                         </p>
-                        <span className="ml-auto whitespace-nowrap text-xs opacity-75">
+                        <span className="ml-auto whitespace-nowrap text-foreground/75 text-xs">
                            {formatDateRelative(notification.createdAt, "narrow")
                               .replace("ago", "")
                               .replace("yesterday", "1d")}

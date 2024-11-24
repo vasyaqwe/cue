@@ -108,7 +108,7 @@ function NotFound() {
                </Card>
             </div>
             <h1 className="mb-1 font-semibold text-xl">Not found</h1>
-            <p className="mb-5 text-lg leading-snug opacity-70">
+            <p className="mb-5 text-foreground/70 text-lg leading-snug">
                This page does not exist — <br /> it may have been moved or
                deleted.
             </p>
@@ -142,7 +142,7 @@ function CatchBoundary({ error }: ErrorComponentProps) {
             <h1 className="mb-1 font-semibold text-xl">
                Oh, no! Something went wrong.
             </h1>
-            <p className="mb-5 text-lg leading-snug opacity-70">
+            <p className="mb-5 text-foreground/70 text-lg leading-snug">
                A technical error has occurred. <br className="sm:hidden" />{" "}
                Please try again.
             </p>

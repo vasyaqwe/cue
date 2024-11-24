@@ -205,7 +205,7 @@ function Component() {
                               </svg>
                            </Card>
                         </div>
-                        <p className="mb-1 text-center font-semibold text-lg opacity-75">
+                        <p className="mb-1 text-center font-semibold text-foreground/75 text-lg">
                            No results found
                         </p>
                      </div>
@@ -239,7 +239,7 @@ function Component() {
                                     }}
                                     className="ml-1.5 line-clamp-1 break-all font-semibold leading-snug"
                                  />
-                                 <span className="ml-auto whitespace-nowrap text-xs opacity-75">
+                                 <span className="ml-auto whitespace-nowrap text-foreground/75 text-xs">
                                     {formatDateRelative(
                                        item.createdAt,
                                        "narrow",
@@ -253,7 +253,7 @@ function Component() {
                                     dangerouslySetInnerHTML={{
                                        __html: item.highlightedContent,
                                     }}
-                                    className="line-clamp-1 break-all text-sm tracking-normal opacity-75"
+                                    className="line-clamp-1 break-all text-foreground/75 text-sm tracking-normal"
                                  />
                                  {item.isComment ? (
                                     <svg

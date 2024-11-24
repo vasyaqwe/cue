@@ -4,7 +4,7 @@ import type { ChangeEvent } from "react"
 
 const uploadKey = new PluginKey("upload-file")
 
-export const uploadFile = ({ className }: { className: string }) =>
+export const uploadFile = ({ className }: { className?: string } = {}) =>
    new Plugin({
       key: uploadKey,
       state: {
@@ -20,7 +20,7 @@ export const uploadFile = ({ className }: { className: string }) =>
                const { id, pos, src } = action.add
 
                const image = document.createElement("img")
-               image.setAttribute("class", className)
+               image.setAttribute("class", className ?? "")
                image.src = src
                const deco = Decoration.widget(pos + 1, image, {
                   id,

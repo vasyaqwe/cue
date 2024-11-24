@@ -36,9 +36,13 @@ div.ProseMirror > p.is-editor-empty:first-child::before {
    }
 }
 
-.ProseMirror:not(.dragging) .ProseMirror-selectednode {
-   outline: none !important;
-   background-color: var(--novel-highlight-blue);
-   transition: background-color 0.2s;
-   box-shadow: none;
+.ProseMirror-hideselection *::selection {
+   background-color: transparent;
+   color: inherit;
+}
+
+.ProseMirror:focus .ProseMirror-selectednode [data-link-preview-wrapper] {
+   outline: 2px solid var(--color-foreground);
+   border-radius: var(--radius-xl);
+   outline-offset: 2px;
 }

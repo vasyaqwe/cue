@@ -3,16 +3,12 @@ import { cn } from "@/ui/utils"
 import { mergeAttributes } from "@tiptap/core"
 import imageExtension from "@tiptap/extension-image"
 
-export const file = ({ className = "" }: { className?: string } = {}) =>
+export const file = ({ className }: { className?: string } = {}) =>
    imageExtension
       .extend({
          name: "image",
          addProseMirrorPlugins() {
-            return [
-               uploadFile({
-                  className: cn(""),
-               }),
-            ]
+            return [uploadFile()]
          },
          addAttributes() {
             return {
@@ -29,7 +25,7 @@ export const file = ({ className = "" }: { className?: string } = {}) =>
             return [
                "img",
                mergeAttributes(HTMLAttributes, {
-                  class: cn("active:!outline-2", className),
+                  class: cn("active:!outline-2", className ?? ""),
                }),
             ]
          },

@@ -42,11 +42,7 @@ import {
 } from "@/ui/components/editor/command/editor-command-item"
 import { slashCommand } from "@/ui/components/editor/command/extension"
 import { commandItems } from "@/ui/components/editor/command/items"
-import {
-   link,
-   placeholder,
-   starterKit,
-} from "@/ui/components/editor/extensions"
+import { placeholder, starterKit } from "@/ui/components/editor/extensions"
 import { file } from "@/ui/components/editor/file/extension"
 import {
    onFileDrop,
@@ -54,6 +50,8 @@ import {
    onFilePaste,
 } from "@/ui/components/editor/file/plugin"
 import { uploadFile } from "@/ui/components/editor/file/upload"
+import { link, linkPreview } from "@/ui/components/editor/link/extension"
+import { insertLinkPreview, isUrl } from "@/ui/components/editor/link/utils"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
 import { isOnFirstLine } from "@/ui/components/editor/utils"
@@ -332,12 +330,27 @@ export function IssueDetails() {
                                     "Add description (press '/' for commands)",
                                  ),
                                  link,
+                                 linkPreview(),
                                  slashCommand,
                                  mention,
                                  file(),
                               ]}
                               editorProps={{
                                  handlePaste: (view, event) => {
+                                    if (!descriptionRef.current) return false
+
+                                    const text =
+                                       event.clipboardData?.getData(
+                                          "text/plain",
+                                       )
+                                    if (text && isUrl(text)) {
+                                       event.preventDefault()
+                                       return insertLinkPreview(
+                                          text.trim(),
+                                          descriptionRef.current,
+                                       )
+                                    }
+
                                     match(
                                        onFilePaste(view, event, uploadFile),
                                     ).with(true, () => {

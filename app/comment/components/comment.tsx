@@ -3,8 +3,9 @@ import { useDeleteComment } from "@/comment/hooks/use-delete-comment"
 import { useUpdateComment } from "@/comment/hooks/use-update-comment"
 import { Button } from "@/ui/components/button"
 import { EditorContent, EditorRoot } from "@/ui/components/editor"
-import { link, starterKit } from "@/ui/components/editor/extensions"
+import { starterKit } from "@/ui/components/editor/extensions"
 import { file } from "@/ui/components/editor/file/extension"
+import { link, linkPreview } from "@/ui/components/editor/link/extension"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
 import { Icons } from "@/ui/components/icons"
@@ -159,6 +160,7 @@ export function Comment({
                            extensions={[
                               starterKit,
                               link,
+                              linkPreview({ className: "!outline-hidden" }),
                               mention,
                               file({ className: "!outline-hidden" }),
                            ]}

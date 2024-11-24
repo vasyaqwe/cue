@@ -6,7 +6,7 @@ const cardVariants = cva(`border border-border p-3 rounded-xl`, {
    variants: {
       variant: {
          default: `bg-secondary`,
-         secondary: "bg-background",
+         secondary: "bg-popover",
       },
    },
    defaultVariants: {
