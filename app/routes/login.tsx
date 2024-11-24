@@ -52,7 +52,7 @@ function Component() {
             toast.custom(
                () => (
                   <div className="text-popover-foreground/90">
-                     <p className="mb-2 line-clamp-1 font-medium font-semibold text-[1rem]">
+                     <p className="mb-2 line-clamp-1 font-medium text-[1rem]">
                         You are invited
                      </p>
                      <p className="line-clamp-1">

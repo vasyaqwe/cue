@@ -15,14 +15,12 @@ export const getMetadata = createServerFn({ method: "GET" })
    .middleware([authMiddleware])
    .validator(zodValidator(z.object({ url: z.string() })))
    .handler(async ({ data }) => {
-      console.log("hello I ferttchged")
       const res = await ogs({ url: data.url })
       if (res.error) throw new ServerFnError({ code: "BAD_REQUEST" })
 
       return {
          favicon: res.result.favicon,
          ogImage: res.result.ogImage,
-         dcTitle: res.result.dcTitle,
          title: res.result.ogTitle,
          description: res.result.ogDescription,
       }
@@ -41,6 +39,7 @@ export function LinkPreview({ node }: NodeViewProps) {
       refetchOnMount: false,
       retry: false,
       staleTime: Infinity,
+      retryOnMount: false,
    })
 
    if (!href) return null
