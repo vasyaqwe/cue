@@ -26,7 +26,7 @@ export const update = createServerFn({ method: "POST" })
    .middleware([authMiddleware])
    .validator(zodValidator(updateUserParams))
    .handler(async ({ context, data }) => {
-      return await context.db
+      await context.db
          .update(user)
          .set(data)
          .where(eq(user.id, context.user.id))

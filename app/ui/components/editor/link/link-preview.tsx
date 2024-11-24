@@ -95,9 +95,11 @@ export function LinkPreview({ node }: NodeViewProps) {
             )}
          </a>
 
-         <div className="absolute top-2 right-2">
-            {/* Add  control buttons here */}
-         </div>
+         {/* <div className="absolute top-2 right-2">
+         <button>
+         
+         </button>
+         </div> */}
       </NodeViewWrapper>
    )
 }
