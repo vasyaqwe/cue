@@ -84,6 +84,7 @@ export function IssuesPage({ ...props }: ComponentProps<"div">) {
    return (
       <Main {...props}>
          <div
+            aria-hidden="true"
             data-view={view}
             ref={setLastVisitedView}
          />

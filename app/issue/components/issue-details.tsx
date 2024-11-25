@@ -54,6 +54,7 @@ import { link, linkPreview } from "@/ui/components/editor/link/extension"
 import { insertLinkPreview, isUrl } from "@/ui/components/editor/link/utils"
 import { MentionProvider } from "@/ui/components/editor/mention/context"
 import { mention } from "@/ui/components/editor/mention/extension"
+import { useEditorStore } from "@/ui/components/editor/store"
 import { isOnFirstLine } from "@/ui/components/editor/utils"
 import {
    FILE_TRIGGER_HOTKEY,
@@ -93,19 +94,7 @@ export function IssueDetails() {
    const issue = query.data
    const { deleteIssue } = useDeleteIssue()
    const { updateIssue, updateIssueInQueryData } = useUpdateIssue()
-
-   const { copy } = useCopyToClipboard()
-
-   const onCopyIssueUrl = () => {
-      copy(window.location.href)
-      toast.success("Issue URL copied to clipboard", {
-         duration: Infinity,
-      })
-   }
-   useHotkeys("mod+shift+c", (e) => {
-      e.preventDefault()
-      onCopyIssueUrl()
-   })
+   const mentionPopoverOpen = useEditorStore().mentionPopoverOpen
 
    const titleRef = useRef<HTMLInputElement>(null)
    const descriptionRef = useRef<Editor>()
@@ -157,6 +146,19 @@ export function IssueDetails() {
    useHotkeys("alt+f", (e) => {
       e.preventDefault()
       toggleFavorite()
+   })
+
+   const { copy } = useCopyToClipboard()
+
+   const onCopyIssueUrl = () => {
+      copy(window.location.href)
+      toast.success("Issue URL copied to clipboard", {
+         duration: Infinity,
+      })
+   }
+   useHotkeys("mod+shift+c", (e) => {
+      e.preventDefault()
+      onCopyIssueUrl()
    })
 
    if (!issue) return null
@@ -388,7 +390,11 @@ export function IssueDetails() {
                                  handleKeyDown: (view, e) => {
                                     return match(e)
                                        .with({ key: "ArrowUp" }, () => {
-                                          if (!isOnFirstLine(view)) return false
+                                          if (
+                                             !isOnFirstLine(view) ||
+                                             mentionPopoverOpen
+                                          )
+                                             return false
                                           titleRef.current?.focus()
                                           titleRef.current?.setSelectionRange(
                                              titleRef.current?.value.length,

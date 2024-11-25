@@ -11,6 +11,7 @@ type State = {
    mentionedUsers: Record<MentionContextType, Set<string>>
    unmentionedUsers: Record<MentionContextType, Set<string>>
    pendingMentions: Record<MentionContextType, Set<string>>
+   mentionPopoverOpen: boolean
 }
 
 type Actions = {
@@ -26,6 +27,7 @@ type Actions = {
 const store = create<State & Actions>()((set, get) => ({
    query: "",
    range: null,
+   mentionPopoverOpen: false,
    mentionedUsers: {
       issue: new Set<string>(),
       comment: new Set<string>(),

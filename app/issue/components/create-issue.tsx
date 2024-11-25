@@ -95,6 +95,7 @@ export function CreateIssue() {
 
    const mentionedUserIds = useEditorStore().getMentionedUserIds("issue")
    const clearMentions = useEditorStore().clearMentions
+   const mentionPopoverOpen = useEditorStore().mentionPopoverOpen
 
    const teammatesIds = useQuery(
       organizationTeammatesIdsQuery({ organizationId }),
@@ -317,7 +318,9 @@ export function CreateIssue() {
                                  },
                               )
                               .with({ key: "ArrowUp" }, () => {
-                                 if (!isOnFirstLine(view)) return false
+                                 if (!isOnFirstLine(view) || mentionPopoverOpen)
+                                    return false
+
                                  titleRef.current?.focus()
                                  titleRef.current?.setSelectionRange(
                                     titleRef.current?.value.length,

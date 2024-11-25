@@ -13,6 +13,7 @@ import {
    EditorMentionEmpty,
    EditorMentionItem,
 } from "@/ui/components/editor/mention/editor-mention-item"
+import { useEditorStore } from "@/ui/components/editor/store"
 import { Loading } from "@/ui/components/loading"
 import { Popover, PopoverAnchor, PopoverContent } from "@/ui/components/popover"
 import { UserAvatar } from "@/ui/components/user-avatar"
@@ -66,6 +67,13 @@ export default forwardRef<
          clientRect() ?? new DOMRect(0, 0, 0, 0)
    }, [clientRect])
 
+   useEffect(() => {
+      useEditorStore.setState({ mentionPopoverOpen: true })
+      return () => {
+         useEditorStore.setState({ mentionPopoverOpen: false })
+      }
+   }, [])
+
    return (
       <Popover
          open={open}
@@ -75,7 +83,7 @@ export default forwardRef<
          <PopoverAnchor virtualRef={virtualRef} />
          <PopoverContent
             drawerOnMobile={false}
-            title="Command"
+            title="Mention"
             sideOffset={8}
             align="start"
             className="relative h-56 w-64 scroll-py-1 overflow-y-auto"
