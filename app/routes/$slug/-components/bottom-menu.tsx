@@ -1,6 +1,4 @@
 import { DraftIndicator } from "@/issue/components/draft-indicator"
-import { issueListQuery } from "@/issue/queries"
-import { useIssueStore } from "@/issue/store"
 import { pushModal } from "@/modals"
 import {
    notificationListQuery,
@@ -38,15 +36,15 @@ export function BottomMenu() {
          }),
    })
 
-   const issues = useSuspenseQuery(issueListQuery({ organizationId }))
-   const refreshIssues = useRefreshState({
-      isRefetching: issues.isRefetching,
-      refetch: issues.refetch,
-      onChange: (isRefreshing) =>
-         useIssueStore.setState({
-            isRefreshing,
-         }),
-   })
+   // const issues = useSuspenseQuery(issueListQuery({ organizationId }))
+   // const refreshIssues = useRefreshState({
+   //    isRefetching: issues.isRefetching,
+   //    refetch: issues.refetch,
+   //    onChange: (isRefreshing) =>
+   //       useIssueStore.setState({
+   //          isRefreshing,
+   //       }),
+   // })
 
    return (
       <nav className="fixed bottom-0 z-[2] h-[var(--bottom-menu-height)] w-full border-border border-t bg-background p-1.5 shadow md:hidden">
@@ -56,10 +54,10 @@ export function BottomMenu() {
                   params={{ slug }}
                   activeOptions={{ exact: true }}
                   activeProps={{
-                     onTouchEnd: () =>
-                        match(refreshIssues.isRefreshing).with(false, () =>
-                           refreshIssues.refresh(),
-                        ),
+                     // onTouchEnd: () =>
+                     //    match(refreshIssues.isRefreshing).with(false, () =>
+                     //       refreshIssues.refresh(),
+                     //    ),
                      "aria-current": "page",
                   }}
                   to={homeRoute.to}

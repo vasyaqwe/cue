@@ -1,4 +1,4 @@
-import type { issueViews } from "@/issue/constants"
+import type { issueLabels, issueStatuses, issueViews } from "@/issue/constants"
 import type { updateIssueParams } from "@/issue/schema"
 import type { z } from "zod"
 import type * as issue from "./functions"
@@ -27,3 +27,5 @@ export type IssueEvent =
      }
 
 export type IssueView = (typeof issueViews)[number]
+export type IssueStatus = (typeof issueStatuses)[number]
+export type IssueLabel = (typeof issueLabels)[number]

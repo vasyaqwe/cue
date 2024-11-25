@@ -1,6 +1,7 @@
 import { FavoriteList } from "@/favorite/components/favorite-list"
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { DraftIndicator } from "@/issue/components/draft-indicator"
+import { issueViews } from "@/issue/constants"
 import { issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import { pushModal } from "@/modals"
@@ -36,7 +37,12 @@ import { cn } from "@/ui/utils"
 import * as userFns from "@/user/functions"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
-import { Link, useNavigate, useParams } from "@tanstack/react-router"
+import {
+   Link,
+   useLocation,
+   useNavigate,
+   useParams,
+} from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
 import { useEffect } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
@@ -46,6 +52,7 @@ import { match } from "ts-pattern"
 export function Sidebar() {
    const { user } = useAuth()
    const navigate = useNavigate()
+   const { pathname } = useLocation()
    const { slug } = useParams({ from: "/$slug/_layout" })
    const { organization } = useAuth()
    const memberships = useSuspenseQuery(organizationMembershipsQuery())
@@ -93,6 +100,11 @@ export function Sidebar() {
       e.preventDefault()
       navigate({ to: "/$slug/search", params: { slug }, search: { q: "" } })
    })
+
+   const lastVisitedView = useIssueStore().lastVisitedView
+   const isOnIssuesPage = issueViews
+      .map((view) => `/issues/${view}`)
+      .some((view) => pathname.includes(view))
 
    return (
       <aside className="z-[10] h-svh w-[15.5rem] max-md:hidden">
@@ -224,20 +236,21 @@ export function Sidebar() {
                   </li>
                   <li>
                      <Link
-                        params={{ slug, view: "all" }}
+                        params={{ slug, view: lastVisitedView }}
                         activeProps={{
                            onMouseUp: () =>
                               match(refreshIssues.isRefreshing).with(
                                  false,
                                  () => refreshIssues.refresh(),
                               ),
-                           className:
-                              "!border-border/80 bg-elevated opacity-100",
-                           "aria-current": "page",
                         }}
+                        aria-current={isOnIssuesPage ? "page" : undefined}
                         to={issuesRoute.to}
                         className={cn(
                            "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all hover:opacity-100",
+                           isOnIssuesPage
+                              ? "!border-border/80 bg-elevated opacity-100"
+                              : "",
                         )}
                      >
                         <Icons.issues className="size-6" />

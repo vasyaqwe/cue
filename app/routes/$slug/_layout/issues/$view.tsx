@@ -1,5 +1,6 @@
 import { IssuesPage } from "@/issue/components/issues-page"
 import { issueListQuery } from "@/issue/queries"
+import { useIssueStore } from "@/issue/store"
 import { isIssueView } from "@/issue/utils"
 import {
    Header,
@@ -16,10 +17,15 @@ export const Route = createFileRoute("/$slug/_layout/issues/$view")({
    params: {
       parse: (params) => {
          const view = params.view
-         if (!isIssueView(view)) throw new Error(`Invalid view: ${view}`)
+         if (!isIssueView(view)) throw new Error(`Invalid $view param: ${view}`)
          return { view }
       },
       stringify: (params) => ({ view: params.view }),
+   },
+   onEnter: ({ params }) => {
+      useIssueStore.setState({
+         lastVisitedView: params.view,
+      })
    },
    onError: (error) => {
       if (error?.routerCode === "PARSE_PARAMS") throw notFound()
@@ -29,7 +35,6 @@ export const Route = createFileRoute("/$slug/_layout/issues/$view")({
          issueListQuery({ organizationId: context.organizationId }),
       )
    },
-
    head: ({ params: { view } }) => ({
       meta: [
          {

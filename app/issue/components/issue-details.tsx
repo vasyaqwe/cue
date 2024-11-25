@@ -7,10 +7,10 @@ import { useInsertFavorite } from "@/favorite/hooks/use-insert-favorite"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
+import { issueLabels, issueStatuses } from "@/issue/constants"
 import { useDeleteIssue } from "@/issue/hooks/use-delete-issue"
 import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { issueByIdQuery } from "@/issue/queries"
-import { issueLabels, issueStatuses } from "@/issue/schema"
 import { useOnPushModal } from "@/modals"
 import {
    Header,

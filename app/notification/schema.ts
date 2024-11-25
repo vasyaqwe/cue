@@ -1,6 +1,7 @@
 import { comment } from "@/comment/schema"
 import { createTable, lifecycleDates, tableId } from "@/db/utils"
-import { issue, issueStatuses } from "@/issue/schema"
+import { issueStatuses } from "@/issue/constants"
+import { issue } from "@/issue/schema"
 import { organization } from "@/organization/schema"
 import { user } from "@/user/schema"
 import { relations } from "drizzle-orm"

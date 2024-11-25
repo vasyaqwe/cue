@@ -1,13 +1,11 @@
 import { createTable, lifecycleDates, tableId } from "@/db/utils"
+import { issueLabels, issueStatuses } from "@/issue/constants"
 import { organization } from "@/organization/schema"
 import { user } from "@/user/schema"
 import { relations } from "drizzle-orm"
 import { index, text } from "drizzle-orm/sqlite-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
-
-export const issueStatuses = ["backlog", "todo", "in progress", "done"] as const
-export const issueLabels = ["bug", "feature", "improvement"] as const
 
 export const issue = createTable(
    "issue",
@@ -71,6 +69,3 @@ export const updateIssueParams = createSelectSchema(issue, {
       createdAt: true,
       updatedAt: true,
    })
-
-export type IssueStatus = (typeof issueStatuses)[number]
-export type IssueLabel = (typeof issueLabels)[number]

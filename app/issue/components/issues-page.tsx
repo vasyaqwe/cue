@@ -4,12 +4,14 @@ import { useInsertFavorite } from "@/favorite/hooks/use-insert-favorite"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
+import { issueLabels, issueStatuses } from "@/issue/constants"
 import type * as issueFns from "@/issue/functions"
 import { useDeleteIssue } from "@/issue/hooks/use-delete-issue"
 import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { issueListQuery } from "@/issue/queries"
-import { type IssueStatus, issueLabels, issueStatuses } from "@/issue/schema"
 import { useIssueStore } from "@/issue/store"
+import type { IssueStatus } from "@/issue/types"
+import { isIssueView } from "@/issue/utils"
 import {
    Header,
    HeaderBackButton,
@@ -32,6 +34,7 @@ import {
 } from "@/ui/components/context-menu"
 import { Icons } from "@/ui/components/icons"
 import RefreshControl from "@/ui/components/refresh-control"
+import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { formatDate } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
@@ -48,10 +51,22 @@ const sortOrder = [
    "done",
 ] satisfies IssueStatus[]
 
+const setLastVisitedView = (node: HTMLDivElement | null) => {
+   if (!node) return
+   const view = node.dataset.view ?? "all"
+   if (isIssueView(view)) {
+      useIssueStore.setState({ lastVisitedView: view })
+   }
+}
+
 export function IssuesPage({ ...props }: ComponentProps<"div">) {
    const { organizationId } = useAuth()
-   // const { slug } = useParams({ from: "/$slug/_layout" })
-   const issues = useSuspenseQuery(issueListQuery({ organizationId }))
+   const { view } = useParams({ from: "/$slug/_layout/issues/$view" })
+   const issues = useSuspenseQuery(
+      issueListQuery({
+         organizationId,
+      }),
+   )
    const isRefreshing = useIssueStore().isRefreshing
 
    const groupedIssues = R.groupBy(issues.data, R.prop("status"))
@@ -68,56 +83,18 @@ export function IssuesPage({ ...props }: ComponentProps<"div">) {
 
    return (
       <Main {...props}>
+         <div
+            data-view={view}
+            ref={setLastVisitedView}
+         />
          <Header>
             <HeaderBackButton />
             <HeaderTitle>Issues</HeaderTitle>
-            {/* <div className="-ml-3 flex items-center gap-0.5">
-               <Link
-                  activeProps={{
-                     className: "!border-border/80 bg-elevated opacity-100",
-                     "aria-current": "page",
-                  }}
-                  to={"/$slug/issues/$view"}
-                  params={{ view: "all", slug }}
-                  className={
-                     "group flex h-[34px] items-center gap-1.5 rounded-[11px] border border-transparent px-2 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100"
-                  }
-               >
-                  <Icons.allIssues className="size-[22px]" />
-                  All issues
-               </Link>
-               <Link
-                  activeProps={{
-                     className: "!border-border/80 bg-elevated opacity-100",
-                     "aria-current": "page",
-                  }}
-                  to={"/$slug/issues/$view"}
-                  params={{ view: "active", slug }}
-                  className={
-                     "group flex h-[34px] items-center gap-1.5 rounded-[11px] border border-transparent px-2 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100"
-                  }
-               >
-                  <Icons.issues className="size-5" />
-                  Active
-               </Link>
-               <Link
-                  activeProps={{
-                     className: "!border-border/80 bg-elevated opacity-100",
-                     "aria-current": "page",
-                  }}
-                  to={"/$slug/issues/$view"}
-                  params={{ view: "backlog", slug }}
-                  className={
-                     "group flex h-[34px] items-center gap-1.5 rounded-[11px] border border-transparent px-2 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100"
-                  }
-               >
-                  <Icons.backlog className="size-5" />
-                  Backlog
-               </Link>
-            </div> */}
-            <HeaderProfileDrawer />
+            {/* <ViewLinks className="-ml-3 max-md:hidden" /> */}
+            <HeaderProfileDrawer className="max-md:col-start-3" />
          </Header>
          <main className="overflow-y-auto">
+            {/* <ViewLinks className="border-border/75 border-b px-4 py-2 md:hidden" /> */}
             <RefreshControl isRefreshing={isRefreshing}>
                {issues.data.length === 0 ? (
                   <div className="absolute inset-0 m-auto h-fit">
@@ -165,6 +142,60 @@ export function IssuesPage({ ...props }: ComponentProps<"div">) {
             </RefreshControl>
          </main>
       </Main>
+   )
+}
+
+function _ViewLinks({ className, ...props }: ComponentProps<"div">) {
+   const { slug } = useParams({ from: "/$slug/_layout/issues/$view" })
+
+   return (
+      <div
+         className={cn("flex items-center gap-1.5", className)}
+         {...props}
+      >
+         <Link
+            activeProps={{
+               className: "!border-border/80 bg-elevated opacity-100",
+               "aria-current": "page",
+            }}
+            to={"/$slug/issues/$view"}
+            params={{ view: "all", slug }}
+            className={cn(
+               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100",
+            )}
+         >
+            <Icons.allIssues className="size-[22px]" />
+            All issues
+         </Link>
+         <Link
+            activeProps={{
+               className: "!border-border/80 bg-elevated opacity-100",
+               "aria-current": "page",
+            }}
+            to={"/$slug/issues/$view"}
+            params={{ view: "active", slug }}
+            className={cn(
+               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100",
+            )}
+         >
+            <Icons.issues className="size-5" />
+            Active
+         </Link>
+         <Link
+            activeProps={{
+               className: "!border-border/80 bg-elevated opacity-100",
+               "aria-current": "page",
+            }}
+            to={"/$slug/issues/$view"}
+            params={{ view: "backlog", slug }}
+            className={cn(
+               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100",
+            )}
+         >
+            <Icons.backlog className="size-[19px]" />
+            Backlog
+         </Link>
+      </div>
    )
 }
 
@@ -241,7 +272,7 @@ function Issue({
                         }}
                      >
                         <StatusIcon
-                           className="!size-[18px] mr-0.5 inline-block"
+                           className="!size-[19px] mr-0.5 inline-block"
                            status={status}
                         />
                         {status}

@@ -1,4 +1,4 @@
-import type { IssueStatus } from "@/issue/schema"
+import type { IssueStatus } from "@/issue/types"
 import {
    mentionLabelIssueClassName,
    mentionLabelPersonClassName,

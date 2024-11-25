@@ -1,14 +1,10 @@
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
+import { issueLabels, issueStatuses } from "@/issue/constants"
 import { issueListQuery } from "@/issue/queries"
-import {
-   type IssueLabel,
-   type IssueStatus,
-   issueLabels,
-   issueStatuses,
-} from "@/issue/schema"
 import { useIssueStore } from "@/issue/store"
+import type { IssueLabel, IssueStatus } from "@/issue/types"
 import { popModal } from "@/modals"
 import {
    ModalContent,

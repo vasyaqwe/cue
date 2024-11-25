@@ -45,8 +45,8 @@ export function createRouter() {
                // 2 max
                return failureCount < 1
             },
-            // 5 min
-            staleTime: 300 * 1000,
+            // 15 min
+            staleTime: 900 * 1000,
          },
          mutations: {
             onError: (error) =>

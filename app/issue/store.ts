@@ -1,4 +1,4 @@
-import type { IssueEvent } from "@/issue/types"
+import type { IssueEvent, IssueView } from "@/issue/types"
 import { createSelectors } from "@/utils/misc"
 import type PartySocket from "partysocket"
 import { create } from "zustand"
@@ -7,6 +7,7 @@ type State = {
    socket: PartySocket | null
    sendEvent: (event: IssueEvent) => void
    isRefreshing: boolean
+   lastVisitedView: IssueView
 }
 
 const store = create<State>()((_set, get) => ({
@@ -15,6 +16,7 @@ const store = create<State>()((_set, get) => ({
       get().socket?.send(JSON.stringify(event))
    },
    isRefreshing: false,
+   lastVisitedView: "all",
 }))
 
 export const useIssueStore = createSelectors(store)

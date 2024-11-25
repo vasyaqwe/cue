@@ -1,5 +1,5 @@
 import { createTable, lifecycleDates, tableId } from "@/db/utils"
-import { issueStatuses } from "@/issue/schema"
+import { issueStatuses } from "@/issue/constants"
 import { organization } from "@/organization/schema"
 import { user } from "@/user/schema"
 import { index, text, uniqueIndex } from "drizzle-orm/sqlite-core"

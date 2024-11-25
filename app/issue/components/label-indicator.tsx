@@ -1,4 +1,4 @@
-import type { IssueLabel } from "@/issue/schema"
+import type { IssueLabel } from "@/issue/types"
 import { cn } from "@/ui/utils"
 import type { ComponentProps } from "react"
 

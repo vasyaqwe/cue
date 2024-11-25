@@ -1,5 +1,6 @@
 import { FavoriteList } from "@/favorite/components/favorite-list"
 import { issueListQuery } from "@/issue/queries"
+import { useIssueStore } from "@/issue/store"
 import {
    Header,
    HeaderProfileDrawer,
@@ -46,6 +47,7 @@ function Component() {
    const { slug } = useParams({ from: "/$slug/_layout" })
    const { organization } = useAuth()
    const navigate = useNavigate()
+   const lastVisitedView = useIssueStore().lastVisitedView
 
    return (
       <Main>
@@ -86,7 +88,7 @@ function Component() {
             </form>
             <Link
                to="/$slug/issues/$view"
-               params={{ slug, view: "all" }}
+               params={{ slug, view: lastVisitedView }}
             >
                <Card className="mt-4 pb-2 font-semibold">
                   <div

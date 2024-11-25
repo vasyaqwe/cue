@@ -1,15 +1,24 @@
 import { favorite } from "@/favorite/schema"
+import { issueViews } from "@/issue/constants"
 import { insertIssueParams, issue, updateIssueParams } from "@/issue/schema"
 import { user } from "@/user/schema"
 import { organizationMemberMiddleware } from "@/utils/middleware"
 import { createServerFn } from "@tanstack/start"
 import { zodValidator } from "@tanstack/zod-adapter"
-import { and, desc, eq, sql } from "drizzle-orm"
+import { and, desc, eq, or, sql } from "drizzle-orm"
+import { match } from "ts-pattern"
 import { z } from "zod"
 
 export const list = createServerFn({ method: "GET" })
    .middleware([organizationMemberMiddleware])
-   .validator(zodValidator(z.object({ organizationId: z.string() })))
+   .validator(
+      zodValidator(
+         z.object({
+            organizationId: z.string(),
+            view: z.enum(issueViews).or(z.undefined()),
+         }),
+      ),
+   )
    .handler(async ({ context, data }) => {
       return await context.db
          .select({
@@ -29,7 +38,20 @@ export const list = createServerFn({ method: "GET" })
                eq(favorite.userId, context.session.userId),
             ),
          )
-         .where(eq(issue.organizationId, data.organizationId))
+         .where(
+            and(
+               eq(issue.organizationId, data.organizationId),
+               match(data.view)
+                  .with("active", () =>
+                     or(
+                        eq(issue.status, "in progress"),
+                        eq(issue.status, "todo"),
+                     ),
+                  )
+                  .with("backlog", () => eq(issue.status, "backlog"))
+                  .otherwise(() => undefined),
+            ),
+         )
          .orderBy(desc(issue.createdAt))
          .then((rows) =>
             rows.map((row) => ({

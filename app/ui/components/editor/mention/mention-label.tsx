@@ -1,6 +1,6 @@
 import { StatusIcon } from "@/issue/components/icons"
 import { issueListQuery } from "@/issue/queries"
-import type { IssueStatus } from "@/issue/schema"
+import type { IssueStatus } from "@/issue/types"
 import { organizationMembersQuery } from "@/organization/queries"
 import {
    mentionLabelIssueClassName,
