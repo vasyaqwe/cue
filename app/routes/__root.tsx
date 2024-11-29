@@ -1,4 +1,5 @@
 import "@/ui/styles.css"
+import ogImage from "@/assets/og.png"
 import { Toaster } from "@/ui/components/toast"
 import toastStyles from "@/ui/components/toast/styles.css?url"
 import { TooltipProvider } from "@/ui/components/tooltip"
@@ -54,7 +55,7 @@ export const Route = createRootRouteWithContext<{
             { name: "og:type", content: "website" },
             { name: "og:title", content: title },
             { name: "og:description", content: description },
-            { name: "og:image", content: "https://cuehq.app/og.png" },
+            { name: "og:image", content: `https://cuehq.app${ogImage}` },
             { name: "twitter:card", content: "summary_large_image" },
             { name: "twitter:creator", content: "@vasyaqwee" },
             { name: "twitter:site", content: "@vasyaqwee" },

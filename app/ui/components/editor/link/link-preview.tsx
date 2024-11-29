@@ -86,7 +86,11 @@ export function LinkPreview({ node }: NodeViewProps) {
                      />
                   ) : metadata.data?.favicon ? (
                      <img
-                        src={`https://${domain}${metadata.data?.favicon}`}
+                        src={
+                           metadata.data.favicon.startsWith("https://")
+                              ? metadata.data.favicon
+                              : `https://${domain}${metadata.data?.favicon}`
+                        }
                         alt=""
                         className="!m-4 size-9"
                      />

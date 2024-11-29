@@ -17,7 +17,7 @@ import { routerWithQueryClient } from "@tanstack/react-router-with-query"
 import superjson from "superjson"
 import { match } from "ts-pattern"
 
-type TRPCClientError = Error & {
+type ClientError = Error & {
    data: {
       code: ServerFnError["code"]
    }
@@ -25,7 +25,7 @@ type TRPCClientError = Error & {
 
 export const isServerFnError = (
    error: Error & { body?: unknown },
-): error is TRPCClientError =>
+): error is ClientError =>
    "data" in error &&
    error.data !== null &&
    typeof error.data === "object" &&
@@ -93,7 +93,7 @@ function NotFound() {
                      xmlns="http://www.w3.org/2000/svg"
                   >
                      <path
-                        opacity="0.12"
+                        opacity="0.1"
                         d="M20 11.5C20 16.1944 16.1944 20 11.5 20C6.80558 20 3 16.1944 3 11.5C3 6.80558 6.80558 3 11.5 3C16.1944 3 20 6.80558 20 11.5Z"
                         fill="currentColor"
                      />
