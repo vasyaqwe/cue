@@ -1,4 +1,4 @@
-import type { ServerFnError } from "@/error"
+import { ServerFnError } from "@/error"
 import { routeTree } from "@/routeTree.gen"
 import { Button, buttonVariants } from "@/ui/components/button"
 import { Card } from "@/ui/components/card"
@@ -15,21 +15,7 @@ import {
 } from "@tanstack/react-router"
 import { routerWithQueryClient } from "@tanstack/react-router-with-query"
 import superjson from "superjson"
-import { match } from "ts-pattern"
-
-type ClientError = Error & {
-   data: {
-      code: ServerFnError["code"]
-   }
-}
-
-export const isServerFnError = (
-   error: Error & { body?: unknown },
-): error is ClientError =>
-   "data" in error &&
-   error.data !== null &&
-   typeof error.data === "object" &&
-   "code" in error.data
+import { z } from "zod"
 
 export function createRouter() {
    const queryClient = new QueryClient({
@@ -49,16 +35,25 @@ export function createRouter() {
             staleTime: 900 * 1000,
          },
          mutations: {
-            onError: (error) =>
-               match(error)
-                  .when(
-                     (e): e is ServerFnError => isServerFnError(e),
-                     (e) =>
-                        e.code === "INTERNAL_SERVER_ERROR"
-                           ? toast.error("An unknown error occurred")
-                           : toast.error(e.message),
-                  )
-                  .otherwise(() => toast.error("An unknown error occurred")),
+            onError: (error) => {
+               try {
+                  const parsedError: unknown = JSON.parse(error.message)
+
+                  const errorSchema = z.object({
+                     body: ServerFnError.schema,
+                  })
+                  const result = errorSchema.safeParse(parsedError)
+
+                  if (!result.success || !result.data.body.message) {
+                     return toast.error("An unknown error occurred")
+                  }
+
+                  if (result.data.body.message)
+                     return toast.error(result.data.body.message)
+               } catch (_e) {
+                  return toast.error("An unknown error occurred")
+               }
+            },
          },
       },
    })

@@ -1,5 +1,4 @@
 import { env } from "@/env"
-import type { ServerFnError } from "@/error"
 import { issueListQuery } from "@/issue/queries"
 import { RESERVED_SLUGS } from "@/organization/constants"
 import { organizationMembershipsQuery } from "@/organization/queries"
@@ -22,18 +21,6 @@ const makeSlug = (name: string) =>
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "")
 
-const parseError = (error: Error) => {
-   try {
-      const parsedError = JSON.parse(error.message) as {
-         body: ServerFnError
-      }
-
-      return parsedError
-   } catch (jsonError) {
-      console.error("Failed to parse error message as JSON:", jsonError)
-   }
-}
-
 export function CreateOrganization({
    isFirstOrganization = true,
 }: { isFirstOrganization?: boolean }) {
@@ -51,13 +38,6 @@ export function CreateOrganization({
             to: `/$slug/issues/$view`,
             params: { slug: makeSlug(name), view: "all" },
          })
-      },
-      onError: (error) => {
-         match(parseError(error))
-            .with({ body: { code: "CONFLICT" } }, () =>
-               toast.error("Organization URL is not available"),
-            )
-            .otherwise(() => toast.error("An unknown error occurred"))
       },
    })
 

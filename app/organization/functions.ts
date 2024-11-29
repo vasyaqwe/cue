@@ -114,13 +114,20 @@ export const insert = createServerFn({ method: "POST" })
    .validator(zodValidator(insertOrganizationParams))
    .handler(async ({ context, data }) => {
       if (RESERVED_SLUGS.includes(data.name.trim().toLowerCase()))
-         throw new ServerFnError({ code: "CONFLICT" })
+         throw new ServerFnError({
+            code: "CONFLICT",
+            message: "Organization URL is not available",
+         })
 
       const existingOrg = await context.db.query.organization.findFirst({
          where: eq(organization.slug, data.slug),
       })
 
-      if (existingOrg) throw new ServerFnError({ code: "CONFLICT" })
+      if (existingOrg)
+         throw new ServerFnError({
+            code: "CONFLICT",
+            message: "Organization URL is not available",
+         })
 
       const createdOrganization = await context.db.transaction(async (tx) => {
          const [createdOrganization] = await tx
@@ -133,7 +140,8 @@ export const insert = createServerFn({ method: "POST" })
                id: organization.id,
             })
 
-         if (!createdOrganization) throw new Error("Error")
+         if (!createdOrganization)
+            throw new ServerFnError({ code: "INTERNAL_SERVER_ERROR" })
 
          await tx.insert(organizationMember).values({
             organizationId: createdOrganization.id,
@@ -180,7 +188,11 @@ export const join = createServerFn({ method: "POST" })
             },
          })
 
-         if (!joinedOrg) throw new Error("Organization to join not found")
+         if (!joinedOrg)
+            throw new ServerFnError({
+               code: "NOT_FOUND",
+               message: "Organization to join not found",
+            })
 
          await tx
             .insert(organizationMember)
