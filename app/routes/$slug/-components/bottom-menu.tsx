@@ -89,11 +89,7 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <button
-                  onClick={() =>
-                     pushModal("create_issue", {
-                        repositionInputs: true,
-                     })
-                  }
+                  onClick={() => pushModal("create_issue")}
                   className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-md text-foreground/55 transition-colors active:text-foreground"
                >
                   <div className="relative">

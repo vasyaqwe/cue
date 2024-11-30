@@ -211,7 +211,6 @@ export function createPushModal<T>({ modals }: CreatePushModalOptions<T>) {
                            popModal(item.name)
                         }
                      }}
-                     defaultOpen
                   >
                      <Suspense>
                         {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
