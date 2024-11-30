@@ -14,7 +14,6 @@ import {
    HeaderProfileDrawer,
    HeaderTitle,
 } from "@/routes/$slug/-components/header"
-import { Main } from "@/routes/$slug/-components/main"
 import { Button, buttonVariants } from "@/ui/components/button"
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
@@ -38,16 +37,16 @@ export const Route = createFileRoute("/$slug/_layout/people")({
       )
    },
    pendingComponent: () => (
-      <Main>
+      <>
          <Header>
             <HeaderBackButton />
             <HeaderTitle>People</HeaderTitle>
             <HeaderProfileDrawer />
          </Header>
-         <main>
+         <div>
             <Loading className="absolute inset-0 m-auto" />
-         </main>
-      </Main>
+         </div>
+      </>
    ),
 })
 
@@ -70,13 +69,13 @@ function Component() {
    }
 
    return (
-      <Main>
+      <>
          <Header>
             <HeaderBackButton />
             <HeaderTitle>People</HeaderTitle>
             <HeaderProfileDrawer />
          </Header>
-         <main className="overflow-y-auto py-5 md:py-8">
+         <div className="overflow-y-auto py-5 md:py-8">
             {members.data.length === 0 ? (
                <p className="absolute inset-0 m-auto size-fit">No members</p>
             ) : (
@@ -170,7 +169,7 @@ function Component() {
                   </div>
                </div>
             )}
-         </main>
-      </Main>
+         </div>
+      </>
    )
 }

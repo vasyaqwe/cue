@@ -6,7 +6,6 @@ import {
    HeaderProfileDrawer,
    HeaderTitle,
 } from "@/routes/$slug/-components/header"
-import { Main } from "@/routes/$slug/-components/main"
 import { Card } from "@/ui/components/card"
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
@@ -50,7 +49,7 @@ function Component() {
    const lastVisitedView = useIssueStore().lastVisitedView
 
    return (
-      <Main>
+      <>
          <Header>
             <Logo className="size-8 md:hidden" />
             <HeaderTitle className="mx-1.5 truncate">
@@ -58,7 +57,7 @@ function Component() {
             </HeaderTitle>
             <HeaderProfileDrawer className="md:hidden" />
          </Header>
-         <main className="overflow-y-auto p-4">
+         <div className="overflow-y-auto p-4">
             <form
                onSubmit={(e) => {
                   e.preventDefault()
@@ -111,8 +110,8 @@ function Component() {
                </Card>
             </Link>
             <FavoriteList />
-         </main>
-      </Main>
+         </div>
+      </>
    )
 }
 
@@ -120,14 +119,14 @@ function PendingComponent() {
    const { organization } = useAuth()
 
    return (
-      <Main>
+      <>
          <Header>
             <Logo className="size-8 md:hidden" />
             <HeaderTitle>{organization.name}</HeaderTitle>
          </Header>
-         <main>
+         <div>
             <Loading className="absolute inset-0 m-auto" />
-         </main>
-      </Main>
+         </div>
+      </>
    )
 }

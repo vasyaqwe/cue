@@ -1,7 +1,6 @@
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { StatusIcon } from "@/issue/components/icons"
 import { Header, HeaderBackButton } from "@/routes/$slug/-components/header"
-import { Main } from "@/routes/$slug/-components/main"
 import { searchListQuery } from "@/search/queries"
 import { Button, buttonVariants } from "@/ui/components/button"
 import { Card } from "@/ui/components/card"
@@ -52,7 +51,7 @@ function Component() {
    const searchResults = useQuery(searchListQuery({ query: q, organizationId }))
 
    return (
-      <Main>
+      <>
          <Header className="md:px-0">
             <HeaderBackButton />
             <form
@@ -120,7 +119,7 @@ function Component() {
                />
             </form>
          </Header>
-         <main className="relative flex-1 overflow-y-auto">
+         <div className="relative flex-1 overflow-y-auto">
             {q.length === 0 ? (
                <>
                   {!isClient || recentSearches.length === 0 ? null : (
@@ -278,7 +277,7 @@ function Component() {
                   )}
                </>
             )}
-         </main>
-      </Main>
+         </div>
+      </>
    )
 }

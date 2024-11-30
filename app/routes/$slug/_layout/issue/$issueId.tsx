@@ -6,7 +6,6 @@ import {
    HeaderBackButton,
    HeaderTitle,
 } from "@/routes/$slug/-components/header"
-import { Main } from "@/routes/$slug/-components/main"
 import { Loading } from "@/ui/components/loading"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 
@@ -34,26 +33,26 @@ export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
       meta: [{ title: loaderData?.title ?? "Issue" }],
    }),
    pendingComponent: () => (
-      <Main>
+      <>
          <Header>
             <HeaderBackButton />
             <HeaderTitle>Issue</HeaderTitle>
          </Header>
-         <main className="flex flex-1">
+         <div className="flex flex-1">
             <div className="relative flex-1">
                <Loading className="absolute inset-0 m-auto" />
             </div>
             <div className={"ml-auto max-w-72 flex-1 max-md:hidden"} />
-         </main>
-      </Main>
+         </div>
+      </>
    ),
    preload: false,
 })
 
 function Component() {
    return (
-      <main className="relative z-[6] flex w-full">
+      <div className="relative z-[6] flex h-full w-full">
          <IssueDetails />
-      </main>
+      </div>
    )
 }

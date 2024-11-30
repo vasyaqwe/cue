@@ -62,12 +62,12 @@ export const Route = createFileRoute("/$slug/_layout")({
       }
    },
    pendingComponent: () => (
-      <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full">
+      <main className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full">
          <Logo className="mx-auto animate-fade-in opacity-0 [--animation-delay:100ms]" />
          <h1 className="mt-4 animate-fade-in text-center font-medium text-foreground/80 opacity-0 duration-500 [--animation-delay:600ms]">
             Workspace is loading...
          </h1>
-      </div>
+      </main>
    ),
 })
 
@@ -120,15 +120,15 @@ function Component() {
          <Presence />
          <ModalProvider />
          <Sidebar />
-         <div
+         <main
             className={cn(
-               "h-[calc(100svh-var(--bottom-menu-height))] md:h-svh md:flex-1",
+               "flex h-[calc(100svh-var(--bottom-menu-height))] md:h-svh md:flex-1",
             )}
          >
-            <div className="flex h-full w-full">
+            <div className={cn("relative flex flex-1 flex-col")}>
                <Outlet />
             </div>
-         </div>
+         </main>
          <BottomMenu />
       </>
    )

@@ -18,7 +18,6 @@ import {
    HeaderProfileDrawer,
    HeaderTitle,
 } from "@/routes/$slug/-components/header"
-import { Main } from "@/routes/$slug/-components/main"
 import { Route as issueIdRoute } from "@/routes/$slug/_layout/issue/$issueId"
 import { Badge } from "@/ui/components/badge"
 import {
@@ -59,7 +58,7 @@ const setLastVisitedView = (node: HTMLDivElement | null) => {
    }
 }
 
-export function IssuesPage({ ...props }: ComponentProps<"div">) {
+export function IssuesPage() {
    const { organizationId } = useAuth()
    const { view } = useParams({ from: "/$slug/_layout/issues/$view" })
    const issues = useSuspenseQuery(
@@ -82,7 +81,7 @@ export function IssuesPage({ ...props }: ComponentProps<"div">) {
    )
 
    return (
-      <Main {...props}>
+      <>
          <div
             aria-hidden="true"
             data-view={view}
@@ -94,7 +93,7 @@ export function IssuesPage({ ...props }: ComponentProps<"div">) {
             {/* <ViewLinks className="-ml-3 max-md:hidden" /> */}
             <HeaderProfileDrawer className="max-md:col-start-3" />
          </Header>
-         <main className="overflow-y-auto">
+         <div className="overflow-y-auto">
             {/* <ViewLinks className="border-border/75 border-b px-4 py-2 md:hidden" /> */}
             <RefreshControl isRefreshing={isRefreshing}>
                {issues.data.length === 0 ? (
@@ -141,8 +140,8 @@ export function IssuesPage({ ...props }: ComponentProps<"div">) {
                   )
                )}
             </RefreshControl>
-         </main>
-      </Main>
+         </div>
+      </>
    )
 }
 

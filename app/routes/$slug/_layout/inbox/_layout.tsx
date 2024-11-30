@@ -9,7 +9,6 @@ import {
    HeaderBackButton,
    HeaderTitle,
 } from "@/routes/$slug/-components/header"
-import { Main } from "@/routes/$slug/-components/main"
 import { Button } from "@/ui/components/button"
 import {
    ContextMenu,
@@ -48,15 +47,15 @@ export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
       )
    },
    pendingComponent: () => (
-      <Main>
+      <>
          <Header className="md:max-w-[420px] md:border-r md:pl-0">
             <HeaderBackButton />
             <HeaderTitle>Inbox</HeaderTitle>
          </Header>
-         <main className="relative flex-1 border-border/75 md:max-w-[420px] md:border-r">
+         <div className="relative flex-1 border-border/75 md:max-w-[420px] md:border-r">
             <Loading className="absolute inset-0 m-auto" />
-         </main>
-      </Main>
+         </div>
+      </>
    ),
 })
 
@@ -97,13 +96,10 @@ function Component() {
    )
 
    return (
-      <Main
-         asMain
-         className="flex-row"
-      >
+      <div className="flex h-full flex-row">
          <div
             className={cn(
-               "flex flex-1 shrink-0 flex-col border-border/75 2xl:max-w-[400px] lg:max-w-[320px] lg:border-r",
+               "flex h-full flex-1 shrink-0 flex-col border-border/75 2xl:max-w-[400px] lg:max-w-[320px] lg:border-r",
                issueId ? "max-lg:hidden" : "",
             )}
          >
@@ -201,7 +197,7 @@ function Component() {
             </RefreshControl>
          </div>
          <Outlet />
-      </Main>
+      </div>
    )
 }
 

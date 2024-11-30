@@ -8,7 +8,6 @@ import {
    HeaderProfileDrawer,
    HeaderTitle,
 } from "@/routes/$slug/-components/header"
-import { Main } from "@/routes/$slug/-components/main"
 import { Loading } from "@/ui/components/loading"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 
@@ -48,15 +47,15 @@ export const Route = createFileRoute("/$slug/_layout/issues/$view")({
       ],
    }),
    pendingComponent: () => (
-      <Main>
+      <>
          <Header>
             <HeaderBackButton />
             <HeaderTitle>Issues</HeaderTitle>
             <HeaderProfileDrawer />
          </Header>
-         <main>
+         <div>
             <Loading className="absolute inset-0 m-auto" />
-         </main>
-      </Main>
+         </div>
+      </>
    ),
 })
