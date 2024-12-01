@@ -371,6 +371,12 @@ function NotificationPermissionCard() {
                try {
                   const permission = await Notification.requestPermission()
                   setPermissionStatus(permission)
+                  if (permission === "granted") {
+                     new Notification("Subscribed to notifications.", {
+                        body: "Push notifications are now enabled.",
+                        icon: "/logo.png",
+                     })
+                  }
                } catch (error) {
                   console.error(
                      "Error requesting notification permission:",
