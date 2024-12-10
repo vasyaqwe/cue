@@ -39,7 +39,7 @@ export function Homepage({
                   params={slug ? { slug } : {}}
                   className={cn(
                      buttonVariants({ variant: "outline" }),
-                     "active:scale-[98%] hover:bg-elevated/75",
+                     "active:scale-[98%]",
                   )}
                >
                   Open app
@@ -50,7 +50,7 @@ export function Homepage({
                   to="/login"
                   className={cn(
                      buttonVariants({ variant: "outline" }),
-                     "active:scale-[98%] hover:bg-elevated/75",
+                     "active:scale-[98%]",
                   )}
                >
                   Log in

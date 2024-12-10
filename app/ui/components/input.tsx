@@ -4,8 +4,8 @@ import { cva } from "class-variance-authority"
 import { type ComponentProps, forwardRef } from "react"
 
 const inputVariants = cva(
-   `block h-10 w-full rounded-full transition-all text-[0.95rem] border border-border focus:border-primary/90
-    px-3 bg-secondary focus:bg-muted/60 placeholder:text-foreground/40 outline-2 outline-transparent focus:outline-primary/30
+   `block h-9 w-full rounded-xl transition-all duration-50 text-[0.95rem] border border-border focus:border-brand/80
+    px-3 bg-popover shadow-[inset_0_1px_1px_0_rgb(0,0,0,0.1)] placeholder:text-foreground/40 outline-hidden 
     has-[+button[data-clearinput]:active]:border-primary
     has-[+button[data-clearinput]:active]:outline-primary/30 appearance-none`,
 )

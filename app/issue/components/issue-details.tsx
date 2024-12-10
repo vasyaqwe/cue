@@ -297,7 +297,7 @@ export function IssueDetails() {
                                  descriptionRef.current?.commands.focus()
                               })
                         }
-                        className="!border-none !outline-hidden !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl"
+                        className="!border-none !outline-hidden !bg-transparent h-8 rounded-none p-0 font-extrabold text-2xl shadow-none"
                      />
                      <EditorRoot>
                         <MentionProvider value="issue">

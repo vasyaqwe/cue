@@ -101,7 +101,7 @@ function Component() {
                   name="q"
                   autoFocus
                   placeholder="Search your workspace.."
-                  className="md:!border-none md:!outline-hidden w-full max-md:ml-1 md:bg-transparent md:focus:bg-transparent max-md:pl-10"
+                  className="md:!border-none md:!outline-hidden w-full max-md:ml-1 md:bg-transparent md:focus:bg-transparent max-md:pl-10 md:shadow-none"
                />
                <ClearInputButton
                   onClick={() => {

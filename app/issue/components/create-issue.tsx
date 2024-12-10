@@ -216,7 +216,7 @@ export function CreateIssue() {
                value={title}
                onChange={(e) => setTitle(e.target.value)}
                className={cn(
-                  "!border-none !outline-hidden !bg-transparent h-8 rounded-none p-0 font-bold text-xl",
+                  "!border-none !outline-hidden !bg-transparent h-8 rounded-none p-0 font-bold text-xl shadow-none",
                )}
                onKeyDown={(e) =>
                   match(e)

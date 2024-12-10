@@ -102,10 +102,8 @@ function Component() {
                               <Input
                                  readOnly
                                  ref={inputRef}
-                                 onClick={copyLink}
                                  value={joinLink}
                                  className={"truncate"}
-                                 onFocus={(e) => e.target.select()}
                               />
                               <Button
                                  aria-label="Copy link"
