@@ -152,9 +152,7 @@ export function IssueDetails() {
 
    const onCopyIssueUrl = () => {
       copy(window.location.href)
-      toast.success("Issue URL copied to clipboard", {
-         duration: Infinity,
-      })
+      toast.success("Issue URL copied to clipboard")
    }
    useHotkeys("mod+shift+c", (e) => {
       e.preventDefault()

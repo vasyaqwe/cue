@@ -71,10 +71,10 @@ function Component() {
                      to: "/$slug/search",
                      params: { slug },
                      search: { q: query },
+                  }).then(() => {
+                     if (!recentSearches.includes(query))
+                        setRecentSearches((prev) => [query, ...prev])
                   })
-
-                  if (!recentSearches.includes(query))
-                     setRecentSearches((prev) => [query, ...prev])
                }}
                className="relative col-span-2 flex w-full items-center"
             >
@@ -121,59 +121,55 @@ function Component() {
          </Header>
          <div className="relative flex-1 overflow-y-auto">
             {q.length === 0 ? (
-               <>
-                  {!isClient || recentSearches.length === 0 ? null : (
-                     <>
-                        <div className="my-2 flex items-center justify-between px-4 md:px-8">
-                           <p className="opacity-65">Recent searches</p>
-                           <Button
-                              onClick={() => setRecentSearches([])}
-                              size={"sm"}
-                              variant={"ghost"}
-                              className="-mr-3 text-foreground/80"
-                           >
-                              Clear
-                           </Button>
-                        </div>
-                        {recentSearches.map((q) => (
-                           <Link
-                              onClick={(e) => {
-                                 // @ts-expect-error ...
-                                 if (e.target.closest("button"))
-                                    return e.preventDefault()
+               !isClient || recentSearches.length === 0 ? null : (
+                  <>
+                     <div className="my-2 flex items-center justify-between px-4 md:px-8">
+                        <p className="opacity-65">Recent searches</p>
+                        <Button
+                           onClick={() => setRecentSearches([])}
+                           size={"sm"}
+                           variant={"ghost"}
+                           className="-mr-3 text-foreground/80"
+                        >
+                           Clear
+                        </Button>
+                     </div>
+                     {recentSearches.map((q) => (
+                        <Link
+                           onClick={(e) => {
+                              // @ts-expect-error ...
+                              if (e.target.closest("button"))
+                                 return e.preventDefault()
 
-                                 setQuery(q)
+                              setQuery(q)
+                           }}
+                           className={cn(
+                              buttonVariants({ variant: "ghost" }),
+                              "group flex h-[34px] justify-between rounded-none px-4 transition-none hover:bg-border/50 md:px-8",
+                           )}
+                           key={q}
+                           to="/$slug/search"
+                           params={{ slug }}
+                           search={{ q }}
+                        >
+                           <span className="line-clamp-1 break-all">{q}</span>
+                           <button
+                              onClick={(_e) => {
+                                 setRecentSearches((prev) =>
+                                    prev.filter((item) => item !== q),
+                                 )
                               }}
-                              className={cn(
-                                 buttonVariants({ variant: "ghost" }),
-                                 "group flex h-[34px] justify-between rounded-none px-4 transition-none hover:bg-border/50 md:px-8",
-                              )}
-                              key={q}
-                              to="/$slug/search"
-                              params={{ slug }}
-                              search={{ q }}
+                              className="hidden size-6 shrink-0 cursor-pointer place-items-center rounded-full opacity-80 group-hover:grid hover:bg-border"
                            >
-                              <span className="line-clamp-1 break-all">
-                                 {q}
-                              </span>
-                              <button
-                                 onClick={(_e) => {
-                                    setRecentSearches((prev) =>
-                                       prev.filter((item) => item !== q),
-                                    )
-                                 }}
-                                 className="hidden size-6 shrink-0 cursor-pointer place-items-center rounded-full opacity-80 group-hover:grid hover:bg-border"
-                              >
-                                 <Icons.xMark className="size-4" />
-                                 <span className="sr-only">
-                                    Remove recent search
-                                 </span>{" "}
-                              </button>
-                           </Link>
-                        ))}
-                     </>
-                  )}
-               </>
+                              <Icons.xMark className="size-4" />
+                              <span className="sr-only">
+                                 Remove recent search
+                              </span>{" "}
+                           </button>
+                        </Link>
+                     ))}
+                  </>
+               )
             ) : (
                <>
                   {searchResults.isPending ? null : searchResults.isError ||
@@ -190,7 +186,7 @@ function Component() {
                                  xmlns="http://www.w3.org/2000/svg"
                               >
                                  <path
-                                    opacity="0.12"
+                                    opacity="0.1"
                                     d="M20 11.5C20 16.1944 16.1944 20 11.5 20C6.80558 20 3 16.1944 3 11.5C3 6.80558 6.80558 3 11.5 3C16.1944 3 20 6.80558 20 11.5Z"
                                     fill="currentColor"
                                  />

@@ -178,7 +178,7 @@ export function Sidebar() {
                      search={{ q: "" }}
                      className={cn(
                         buttonVariants({ variant: "ghost", size: "icon" }),
-                        "ml-auto shrink-0 hover:bg-border/50",
+                        "ml-auto shrink-0 text-foreground/75 hover:bg-border/50",
                      )}
                   >
                      <Icons.search className="size-5" />
