@@ -17,20 +17,20 @@ import {
    useNavigate,
    useParams,
 } from "@tanstack/react-router"
+import { zodValidator } from "@tanstack/zod-adapter"
 import { useRef, useState } from "react"
+import { z } from "zod"
+
+const searchSchema = z.object({
+   q: z.string().catch(""),
+})
 
 export const Route = createFileRoute("/$slug/_layout/search")({
    component: Component,
    head: () => ({
       meta: [{ title: "Search" }],
    }),
-   validateSearch: (search: Record<string, unknown>): { q: string } => {
-      if (typeof search.q !== "string") throw new Error("Invalid search query")
-
-      return {
-         q: search.q,
-      }
-   },
+   validateSearch: zodValidator(searchSchema),
 })
 
 function Component() {

@@ -10,26 +10,23 @@ import * as userFns from "@/user/functions"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/start"
+import { zodValidator } from "@tanstack/zod-adapter"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { match } from "ts-pattern"
+import { z } from "zod"
+
+const searchSchema = z.object({
+   inviteCode: z.string().optional(),
+   error: z.string().optional(),
+})
 
 export const Route = createFileRoute("/login")({
    component: Component,
    head: () => ({
       meta: [{ title: "Log in" }],
    }),
-   validateSearch: (
-      search: Record<string, unknown>,
-   ): {
-      inviteCode?: string | undefined
-      error?: string | undefined
-   } => {
-      return {
-         inviteCode: search.inviteCode as string | undefined,
-         error: search.error as string | undefined,
-      }
-   },
+   validateSearch: zodValidator(searchSchema),
 })
 
 function Component() {
@@ -52,7 +49,45 @@ function Component() {
             toast.custom(
                () => (
                   <div className="text-popover-foreground/90">
-                     <p className="mb-2 line-clamp-1 font-medium text-[1rem]">
+                     <p className="mb-2 line-clamp-1 flex items-center gap-1.5 font-semibold text-[1.0125rem]">
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           className="size-6"
+                           viewBox="0 0 20 20"
+                        >
+                           <g fill="currentColor">
+                              <circle
+                                 cx="6.5"
+                                 cy="8"
+                                 r="2"
+                                 stroke="currentColor"
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 strokeWidth="2"
+                                 fill="currentColor"
+                              />
+                              <circle
+                                 cx="13.5"
+                                 cy="5"
+                                 r="2"
+                                 fill="currentColor"
+                                 stroke="currentColor"
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 strokeWidth="2"
+                              />
+                              <path
+                                 d="m18.16,12.226c-.744-1.96-2.573-3.226-4.66-3.226-1.509,0-2.876.669-3.803,1.776,1.498.77,2.699,2.071,3.332,3.74.058.153.092.309.127.465.115.005.229.02.344.02,1.297,0,2.594-.299,3.881-.898.711-.331,1.053-1.155.778-1.876Z"
+                                 fill="currentColor"
+                                 strokeWidth="0"
+                              />
+                              <path
+                                 d="m11.16,15.226c-.744-1.96-2.573-3.226-4.66-3.226s-3.916,1.266-4.66,3.226c-.275.722.067,1.546.778,1.877,1.288.599,2.584.898,3.881.898s2.594-.299,3.881-.898c.711-.331,1.053-1.155.778-1.876Z"
+                                 strokeWidth="0"
+                                 fill="currentColor"
+                              />
+                           </g>
+                        </svg>{" "}
                         You are invited
                      </p>
                      <p className="line-clamp-1">
