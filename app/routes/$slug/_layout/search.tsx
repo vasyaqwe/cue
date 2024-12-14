@@ -2,7 +2,7 @@ import { useLocalStorage } from "@/interactions/use-local-storage"
 import { StatusIcon } from "@/issue/components/icons"
 import { Header, HeaderBackButton } from "@/routes/$slug/-components/header"
 import { searchListQuery } from "@/search/queries"
-import { Button, buttonVariants } from "@/ui/components/button"
+import { Button } from "@/ui/components/button"
 import { Card } from "@/ui/components/card"
 import { Icons } from "@/ui/components/icons"
 import { ClearInputButton, Input } from "@/ui/components/input"
@@ -144,8 +144,7 @@ function Component() {
                               setQuery(q)
                            }}
                            className={cn(
-                              buttonVariants({ variant: "ghost" }),
-                              "group flex h-[34px] justify-between rounded-none px-4 transition-none hover:bg-border/50 md:px-8",
+                              "group flex h-[34px] items-center justify-between rounded-none px-4 transition-none hover:bg-border/50 md:px-8",
                            )}
                            key={q}
                            to="/$slug/search"

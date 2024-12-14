@@ -4,7 +4,6 @@ import pattern from "@/assets/pattern.webp"
 import { buttonVariants } from "@/ui/components/button"
 import { Kbd } from "@/ui/components/kbd"
 import { Logo } from "@/ui/components/logo"
-import { cn } from "@/ui/utils"
 import { Link, useNavigate } from "@tanstack/react-router"
 import { useHotkeys } from "react-hotkeys-hook"
 import { match } from "ts-pattern"
@@ -37,10 +36,7 @@ export function Homepage({
                <Link
                   to={slug ? "/$slug" : "/"}
                   params={slug ? { slug } : {}}
-                  className={cn(
-                     buttonVariants({ variant: "outline" }),
-                     "active:scale-[98%]",
-                  )}
+                  className={buttonVariants({ variant: "outline" })}
                >
                   Open app
                   <Kbd className="font-semibold">L</Kbd>
@@ -48,10 +44,7 @@ export function Homepage({
             ) : (
                <Link
                   to="/login"
-                  className={cn(
-                     buttonVariants({ variant: "outline" }),
-                     "active:scale-[98%]",
-                  )}
+                  className={buttonVariants({ variant: "outline" })}
                >
                   Log in
                   <Kbd className="font-semibold">L</Kbd>

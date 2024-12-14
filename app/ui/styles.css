@@ -7,7 +7,7 @@
    --header-height: 50px;
    --bottom-menu-height: calc(54px + max(env(safe-area-inset-bottom), 0px));
 
-   --color-background: #fefcfb;
+   --color-background: #fdfcfc;
    --color-foreground: #140d30;
    --color-brand: #52409c;
    --color-popover: #fff;
