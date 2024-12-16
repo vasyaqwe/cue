@@ -22,7 +22,7 @@ export function Header({
    className,
    children,
    ...props
-}: ComponentProps<"div">) {
+}: ComponentProps<"header">) {
    return (
       <header
          className={cn(
@@ -139,7 +139,7 @@ export function HeaderBackButton({
    )
 }
 
-export function HeaderTitle({ className, ...props }: ComponentProps<"h1">) {
+export function HeaderTitle({ className, ...props }: ComponentProps<"p">) {
    return (
       <p
          className={cn(
