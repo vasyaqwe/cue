@@ -12,6 +12,7 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
          {...props}
       >
          <Link
+            preload="render"
             activeProps={{
                className: "!border-border/80 bg-elevated opacity-100",
                "aria-current": "page",
@@ -26,6 +27,7 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
             All issues
          </Link>
          <Link
+            preload="render"
             activeProps={{
                className: "!border-border/80 bg-elevated opacity-100",
                "aria-current": "page",
@@ -40,6 +42,7 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
             Active
          </Link>
          <Link
+            preload="render"
             activeProps={{
                className: "!border-border/80 bg-elevated opacity-100",
                "aria-current": "page",
