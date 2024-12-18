@@ -9,6 +9,7 @@ import {
 } from "@/organization/queries"
 import { Presence } from "@/presence"
 import { BottomMenu } from "@/routes/$slug/-components/bottom-menu"
+import { Logo } from "@/ui/components/logo"
 import { MOBILE_BREAKPOINT } from "@/ui/constants"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
@@ -38,7 +39,7 @@ export const getDevice = createServerFn({ method: "GET" }).handler(async () => {
 export const Route = createFileRoute("/$slug/_layout")({
    component: Component,
    beforeLoad: async ({ context, params }) => {
-      const [user, organization] = await Promise.all([
+      const [user, organization, device] = await Promise.all([
          context.queryClient.ensureQueryData(userMeQuery()).catch(() => {
             throw redirect({ to: "/login" })
          }),
@@ -47,6 +48,7 @@ export const Route = createFileRoute("/$slug/_layout")({
             .catch(() => {
                throw redirect({ to: "/login" })
             }),
+         getDevice(),
       ])
 
       if (!user) throw redirect({ to: "/login" })
@@ -54,7 +56,7 @@ export const Route = createFileRoute("/$slug/_layout")({
 
       return {
          organizationId: organization.id,
-         device: await getDevice(),
+         device,
       }
    },
    loader: async ({ context }) => {
@@ -65,6 +67,14 @@ export const Route = createFileRoute("/$slug/_layout")({
          }),
       )
    },
+   pendingComponent: () => (
+      <main className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full">
+         <Logo className="mx-auto animate-fade-in opacity-0 [--animation-delay:100ms]" />
+         <h1 className="mt-4 animate-fade-in text-center font-medium text-foreground/80 opacity-0 duration-500 [--animation-delay:600ms]">
+            Workspace is loading...
+         </h1>
+      </main>
+   ),
 })
 
 function Component() {

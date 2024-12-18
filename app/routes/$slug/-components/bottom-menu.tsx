@@ -51,6 +51,7 @@ export function BottomMenu() {
          <ul className="flex flex-1 items-center justify-around gap-2">
             <li className="flex flex-1">
                <Link
+                  preload="render"
                   params={{ slug }}
                   activeOptions={{ exact: true }}
                   activeProps={{
@@ -68,6 +69,7 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <Link
+                  preload="render"
                   params={{ slug }}
                   activeProps={{
                      onTouchEnd: () =>
@@ -100,6 +102,7 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <Link
+                  preload="render"
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/55 transition-colors aria-[current=page]:text-foreground"
                   params={{ slug }}
                   activeProps={{
@@ -112,6 +115,7 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <Link
+                  preload="render"
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/55 transition-colors aria-[current=page]:text-foreground"
                   params={{ slug }}
                   activeProps={{

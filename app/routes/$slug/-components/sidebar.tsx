@@ -172,6 +172,7 @@ export function Sidebar() {
                   }
                >
                   <Link
+                     preload="render"
                      to="/$slug/search"
                      params={{
                         slug,
@@ -209,6 +210,7 @@ export function Sidebar() {
                <ul className="space-y-1">
                   <li>
                      <Link
+                        preload="render"
                         params={{ slug }}
                         onClick={() =>
                            useNotificationStore.setState({
@@ -237,6 +239,7 @@ export function Sidebar() {
                   </li>
                   <li>
                      <Link
+                        preload="render"
                         params={{ slug, view: lastVisitedView }}
                         activeProps={{
                            onMouseUp: () =>
@@ -260,6 +263,7 @@ export function Sidebar() {
                   </li>
                   <li>
                      <Link
+                        preload="render"
                         params={{ slug }}
                         activeProps={{
                            className:
@@ -277,6 +281,7 @@ export function Sidebar() {
                   </li>
                   <li>
                      <Link
+                        preload="render"
                         params={{ slug }}
                         activeProps={{
                            className:
