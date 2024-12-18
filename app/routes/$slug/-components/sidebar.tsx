@@ -54,6 +54,7 @@ export function Sidebar() {
    const navigate = useNavigate()
    const { pathname } = useLocation()
    const { slug } = useParams({ from: "/$slug/_layout" })
+   const { view } = useParams({ strict: false })
    const { organization } = useAuth()
    const memberships = useSuspenseQuery(organizationMembershipsQuery())
    const unreadCount = useSuspenseQuery(
@@ -72,7 +73,7 @@ export function Sidebar() {
    })
 
    const issues = useSuspenseQuery(
-      issueListQuery({ organizationId: organization.id }),
+      issueListQuery({ organizationId: organization.id, view }),
    )
    const refreshIssues = useRefreshState({
       isRefetching: issues.isRefetching,
@@ -227,7 +228,7 @@ export function Sidebar() {
                         to={inboxRoute.to}
                         data-has-unread={unreadCount.data.count > 0}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all duration-75 hover:border-border/80 hover:bg-elevated hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all duration-[50ms] hover:border-border/80 hover:bg-elevated hover:opacity-100",
                         )}
                      >
                         <Icons.inbox className="size-6" />
@@ -247,7 +248,7 @@ export function Sidebar() {
                         aria-current={isOnIssuesPage ? "page" : undefined}
                         to={issuesRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all duration-75 hover:border-border/80 hover:bg-elevated hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all duration-[50ms] hover:border-border/80 hover:bg-elevated hover:opacity-100",
                            isOnIssuesPage
                               ? "!border-border/80 bg-elevated opacity-100"
                               : "",
@@ -267,7 +268,7 @@ export function Sidebar() {
                         }}
                         to={peopleRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all duration-75 hover:border-border/80 hover:bg-elevated hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all duration-[50ms] hover:border-border/80 hover:bg-elevated hover:opacity-100",
                         )}
                      >
                         <Icons.people className="size-6" />
@@ -284,7 +285,7 @@ export function Sidebar() {
                         }}
                         to={settingsRoute.to}
                         className={cn(
-                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all duration-75 hover:border-border/80 hover:bg-elevated hover:opacity-100",
+                           "group flex h-10 items-center gap-2 rounded-[14px] border border-transparent px-2 font-semibold text-[0.95rem] leading-none opacity-75 transition-all duration-[50ms] hover:border-border/80 hover:bg-elevated hover:opacity-100",
                         )}
                      >
                         <Icons.settings className="size-6" />

@@ -1,6 +1,7 @@
 import * as favorite from "@/favorite/functions"
 import { favoriteListQuery } from "@/favorite/queries"
 import type { FavoriteEntityType } from "@/favorite/schema"
+import { issueViews } from "@/issue/constants"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import { useAuth } from "@/user/hooks"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -32,21 +33,25 @@ export function useDeleteFavorite() {
                      .with(P.nullish, (data) => data)
                      .otherwise((data) => ({ ...data, isFavorited: false })),
             )
-            queryClient.setQueryData(
-               issueListQuery({ organizationId }).queryKey,
-               (oldData) =>
-                  match(oldData)
-                     .with(undefined, (data) => data)
-                     .otherwise((data) =>
-                        produce(data, (draft) =>
-                           match(draft?.find((issue) => issue.id === entityId))
-                              .with(undefined, () => {})
-                              .otherwise((issue) => {
-                                 issue.isFavorited = false
-                              }),
+            for (const view of issueViews) {
+               queryClient.setQueryData(
+                  issueListQuery({ organizationId, view }).queryKey,
+                  (oldData) =>
+                     match(oldData)
+                        .with(undefined, (data) => data)
+                        .otherwise((data) =>
+                           produce(data, (draft) =>
+                              match(
+                                 draft?.find((issue) => issue.id === entityId),
+                              )
+                                 .with(undefined, () => {})
+                                 .otherwise((issue) => {
+                                    issue.isFavorited = false
+                                 }),
+                           ),
                         ),
-                     ),
-            )
+               )
+            }
          })
          .exhaustive()
    }

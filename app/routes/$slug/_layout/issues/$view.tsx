@@ -1,4 +1,5 @@
 import { IssuesPage } from "@/issue/components/issues-page"
+import { ViewLinks } from "@/issue/components/view-links"
 import { issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import { isIssueView } from "@/issue/utils"
@@ -29,9 +30,9 @@ export const Route = createFileRoute("/$slug/_layout/issues/$view")({
    onError: (error) => {
       if (error?.routerCode === "PARSE_PARAMS") throw notFound()
    },
-   loader: async ({ context }) => {
+   loader: async ({ context, params: { view } }) => {
       context.queryClient.prefetchQuery(
-         issueListQuery({ organizationId: context.organizationId }),
+         issueListQuery({ organizationId: context.organizationId, view }),
       )
    },
    head: ({ params: { view } }) => ({
@@ -50,7 +51,8 @@ export const Route = createFileRoute("/$slug/_layout/issues/$view")({
       <>
          <Header>
             <HeaderBackButton />
-            <HeaderTitle>Issues</HeaderTitle>
+            <HeaderTitle className="md:hidden">Issues</HeaderTitle>
+            <ViewLinks className="-ml-2.5 max-md:hidden" />
             <HeaderProfileDrawer />
          </Header>
          <div>

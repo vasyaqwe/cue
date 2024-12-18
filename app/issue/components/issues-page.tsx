@@ -4,6 +4,7 @@ import { useInsertFavorite } from "@/favorite/hooks/use-insert-favorite"
 import { useCopyToClipboard } from "@/interactions/use-copy-to-clipboard"
 import { StatusIcon } from "@/issue/components/icons"
 import { LabelIndicator } from "@/issue/components/label-indicator"
+import { ViewLinks } from "@/issue/components/view-links"
 import { issueLabels, issueStatuses } from "@/issue/constants"
 import type * as issueFns from "@/issue/functions"
 import { useDeleteIssue } from "@/issue/hooks/use-delete-issue"
@@ -11,7 +12,7 @@ import { useUpdateIssue } from "@/issue/hooks/use-update-issue"
 import { issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import type { IssueStatus } from "@/issue/types"
-import { isIssueView } from "@/issue/utils"
+import { isIssueView, isStatusActive } from "@/issue/utils"
 import {
    Header,
    HeaderBackButton,
@@ -33,12 +34,11 @@ import {
 } from "@/ui/components/context-menu"
 import { Icons } from "@/ui/components/icons"
 import RefreshControl from "@/ui/components/refresh-control"
-import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { formatDate } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { Link, useParams } from "@tanstack/react-router"
-import { type ComponentProps, memo } from "react"
+import { memo } from "react"
 import * as R from "remeda"
 import { toast } from "sonner"
 import { match } from "ts-pattern"
@@ -64,12 +64,21 @@ export function IssuesPage() {
    const issues = useSuspenseQuery(
       issueListQuery({
          organizationId,
+         view,
       }),
    )
-   const isRefreshing = useIssueStore().isRefreshing
 
-   const groupedIssues = R.groupBy(issues.data, R.prop("status"))
-   const sortedIssues = R.reduce<string, Record<string, typeof issues.data>>(
+   // to avoid adding/removing from query cache when updating optimistically
+   const filteredIssues = issues.data.filter((issue) =>
+      match(view)
+         .with("active", () => isStatusActive(issue.status))
+         .with("backlog", () => issue.status === "backlog")
+         .with("all", () => true)
+         .exhaustive(),
+   )
+
+   const groupedIssues = R.groupBy(filteredIssues, R.prop("status"))
+   const sortedIssues = R.reduce<string, Record<string, typeof filteredIssues>>(
       sortOrder,
       (acc, status) => {
          if (groupedIssues[status as never]) {
@@ -80,6 +89,8 @@ export function IssuesPage() {
       {},
    )
 
+   const isRefreshing = useIssueStore().isRefreshing
+
    return (
       <>
          <div
@@ -89,14 +100,14 @@ export function IssuesPage() {
          />
          <Header>
             <HeaderBackButton />
-            <HeaderTitle>Issues</HeaderTitle>
-            {/* <ViewLinks className="-ml-3 max-md:hidden" /> */}
+            <HeaderTitle className="md:hidden">Issues</HeaderTitle>
+            <ViewLinks className="-ml-2.5 max-md:hidden" />
             <HeaderProfileDrawer className="max-md:col-start-3" />
          </Header>
          <div className="overflow-y-auto">
-            {/* <ViewLinks className="border-border/75 border-b px-4 py-2 md:hidden" /> */}
+            <ViewLinks className="border-border/75 border-b px-4 py-2 md:hidden" />
             <RefreshControl isRefreshing={isRefreshing}>
-               {issues.data.length === 0 ? (
+               {filteredIssues.length === 0 ? (
                   <div className="absolute inset-0 m-auto h-fit">
                      <p className="flex flex-col items-center gap-4 text-center text-[#726c80] text-lg">
                         <Icons.issues className="size-20" />
@@ -142,60 +153,6 @@ export function IssuesPage() {
             </RefreshControl>
          </div>
       </>
-   )
-}
-
-function _ViewLinks({ className, ...props }: ComponentProps<"div">) {
-   const { slug } = useParams({ from: "/$slug/_layout/issues/$view" })
-
-   return (
-      <div
-         className={cn("flex items-center gap-1.5", className)}
-         {...props}
-      >
-         <Link
-            activeProps={{
-               className: "!border-border/80 bg-elevated opacity-100",
-               "aria-current": "page",
-            }}
-            to={"/$slug/issues/$view"}
-            params={{ view: "all", slug }}
-            className={cn(
-               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100",
-            )}
-         >
-            <Icons.allIssues className="size-[22px]" />
-            All issues
-         </Link>
-         <Link
-            activeProps={{
-               className: "!border-border/80 bg-elevated opacity-100",
-               "aria-current": "page",
-            }}
-            to={"/$slug/issues/$view"}
-            params={{ view: "active", slug }}
-            className={cn(
-               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100",
-            )}
-         >
-            <Icons.issues className="size-5" />
-            Active
-         </Link>
-         <Link
-            activeProps={{
-               className: "!border-border/80 bg-elevated opacity-100",
-               "aria-current": "page",
-            }}
-            to={"/$slug/issues/$view"}
-            params={{ view: "backlog", slug }}
-            className={cn(
-               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 transition-all hover:opacity-100",
-            )}
-         >
-            <Icons.backlog className="size-[19px]" />
-            Backlog
-         </Link>
-      </div>
    )
 }
 

@@ -78,8 +78,14 @@ export function useInsertFavorite() {
          )
          toast.error("Failed to favorite")
       },
-      onSettled: () => {
+      onSettled: (data) => {
          queryClient.invalidateQueries(favoriteListQuery({ organizationId }))
+         match(data).with({ entityType: "issue" }, ({ entityId }) => {
+            queryClient.invalidateQueries(issueListQuery({ organizationId }))
+            queryClient.invalidateQueries(
+               issueByIdQuery({ organizationId, issueId: entityId }),
+            )
+         })
       },
    })
 

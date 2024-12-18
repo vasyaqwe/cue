@@ -7,7 +7,9 @@ export const issueListQuery = (input: {
    view?: IssueView | undefined
 }) =>
    queryOptions({
-      queryKey: ["issue_list", input.organizationId, input.view],
+      queryKey: ["issue_list", input.organizationId, input.view].filter(
+         Boolean,
+      ),
       queryFn: () => issue.list({ data: input }),
    })
 

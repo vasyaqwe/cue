@@ -7,6 +7,7 @@ import styles from "@/ui/styles.css?url"
 import { cn } from "@/ui/utils"
 import * as Portal from "@radix-ui/react-portal"
 import type { QueryClient } from "@tanstack/react-query"
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import {
    Outlet,
    ScrollRestoration,

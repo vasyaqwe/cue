@@ -1,4 +1,5 @@
 import { favoriteListQuery } from "@/favorite/queries"
+import { issueViews } from "@/issue/constants"
 import * as issue from "@/issue/functions"
 import { issueByIdQuery, issueListQuery } from "@/issue/queries"
 import type { updateIssueParams } from "@/issue/schema"
@@ -52,28 +53,30 @@ export function useUpdateIssue() {
    }: {
       input: z.infer<typeof updateIssueParams>
    }) => {
-      queryClient.setQueryData(
-         issueListQuery({ organizationId }).queryKey,
-         (oldData) =>
-            match(oldData)
-               .with(undefined, (data) => data)
-               .otherwise((data) =>
-                  produce(data, (draft) =>
-                     match(draft?.find((issue) => issue.id === input.id))
-                        .with(undefined, () => {})
-                        .otherwise((issue) => {
-                           issue.title = input.title
+      for (const view of issueViews) {
+         queryClient.setQueryData(
+            issueListQuery({ organizationId, view }).queryKey,
+            (oldData) =>
+               match(oldData)
+                  .with(undefined, (data) => data)
+                  .otherwise((data) =>
+                     produce(data, (draft) =>
+                        match(draft?.find((issue) => issue.id === input.id))
+                           .with(undefined, () => {})
+                           .otherwise((issue) => {
+                              issue.title = input.title
 
-                           if (input.label) {
-                              issue.label = input.label
-                           }
-                           if (input.status) {
-                              issue.status = input.status
-                           }
-                        }),
+                              if (input.label) {
+                                 issue.label = input.label
+                              }
+                              if (input.status) {
+                                 issue.status = input.status
+                              }
+                           }),
+                     ),
                   ),
-               ),
-      )
+         )
+      }
 
       queryClient.setQueryData(
          issueByIdQuery({ issueId: input.id, organizationId }).queryKey,

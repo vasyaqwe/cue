@@ -1,5 +1,7 @@
+import { issueViews } from "@/issue/constants"
 import { issueListQuery } from "@/issue/queries"
 import type { InsertIssueEventInput } from "@/issue/types"
+import { isStatusActive } from "@/issue/utils"
 import { useAuth } from "@/user/hooks"
 import { useQueryClient } from "@tanstack/react-query"
 import { match } from "ts-pattern"
@@ -13,22 +15,31 @@ export function useInsertIssue() {
    }: {
       input: InsertIssueEventInput
    }) => {
-      queryClient.setQueryData(
-         issueListQuery({ organizationId }).queryKey,
-         (oldData) =>
-            match(oldData)
-               .with(undefined, (data) => data)
-               .otherwise((data) => [
-                  {
-                     ...input,
-                     id: input.id,
-                     isFavorited: false,
-                     createdAt: Date.now(),
-                     updatedAt: Date.now(),
-                  },
-                  ...data,
-               ]),
-      )
+      for (const view of issueViews) {
+         queryClient.setQueryData(
+            issueListQuery({ organizationId, view }).queryKey,
+            (oldData) =>
+               match(oldData)
+                  .with(undefined, (data) => data)
+                  .otherwise((data) => {
+                     const shouldInsert = match(view)
+                        .with("active", () => isStatusActive(input.status))
+                        .with("backlog", () => input.status === "backlog")
+                        .with("all", () => true)
+                        .otherwise(() => false)
+
+                     if (!shouldInsert) return data
+
+                     return [
+                        {
+                           ...input,
+                           isFavorited: false,
+                        },
+                        ...data,
+                     ]
+                  }),
+         )
+      }
    }
 
    return {
