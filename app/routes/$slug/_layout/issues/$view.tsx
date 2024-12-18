@@ -30,7 +30,7 @@ export const Route = createFileRoute("/$slug/_layout/issues/$view")({
    onError: (error) => {
       if (error?.routerCode === "PARSE_PARAMS") throw notFound()
    },
-   loader: async ({ context, params: { view } }) => {
+   loader: ({ context, params: { view } }) => {
       context.queryClient.prefetchQuery(
          issueListQuery({ organizationId: context.organizationId, view }),
       )

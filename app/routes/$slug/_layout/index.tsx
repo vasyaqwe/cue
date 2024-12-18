@@ -15,23 +15,24 @@ import { useAuth } from "@/user/hooks"
 import {
    Link,
    createFileRoute,
-   redirect,
+   useLoaderData,
    useNavigate,
    useParams,
 } from "@tanstack/react-router"
-import { match } from "ts-pattern"
+import { useEffect } from "react"
 
 export const Route = createFileRoute("/$slug/_layout/")({
    component: Component,
-   beforeLoad: async ({ params, context }) => {
-      match(context.device).with("desktop", () => {
-         throw redirect({
-            to: "/$slug/issues/$view",
-            params: { view: "all", slug: params.slug },
-         })
-      })
-   },
-   loader: async ({ context }) => {
+   // server-side redirect breaks pending component of /$slug/_layout
+   // beforeLoad: ({ params, context }) => {
+   //    match(context.device).with("desktop", () => {
+   //       throw redirect({
+   //          to: "/$slug/workaround",
+   //          params: { slug: params.slug },
+   //       })
+   //    })
+   // },
+   loader: ({ context }) => {
       context.queryClient.prefetchQuery(
          issueListQuery({ organizationId: context.organizationId }),
       )
@@ -43,10 +44,27 @@ export const Route = createFileRoute("/$slug/_layout/")({
 })
 
 function Component() {
+   const { device } = useLoaderData({ from: "/$slug/_layout" })
    const { slug } = useParams({ from: "/$slug/_layout" })
    const { organization } = useAuth()
    const navigate = useNavigate()
    const lastVisitedView = useIssueStore().lastVisitedView
+
+   // workaround for broken server-side redirect
+   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+   useEffect(() => {
+      if (device === "mobile") return
+
+      navigate({
+         to: "/$slug/issues/$view",
+         params: {
+            view: "all",
+            slug,
+         },
+      })
+   }, [])
+
+   if (device !== "mobile") return null
 
    return (
       <>

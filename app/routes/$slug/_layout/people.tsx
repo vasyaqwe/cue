@@ -31,7 +31,7 @@ export const Route = createFileRoute("/$slug/_layout/people")({
    head: () => ({
       meta: [{ title: "People" }],
    }),
-   loader: async ({ context }) => {
+   loader: ({ context }) => {
       context.queryClient.prefetchQuery(
          organizationMembersQuery({ organizationId: context.organizationId }),
       )

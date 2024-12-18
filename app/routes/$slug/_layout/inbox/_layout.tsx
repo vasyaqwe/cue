@@ -41,7 +41,7 @@ export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
    head: () => ({
       meta: [{ title: "Inbox" }],
    }),
-   loader: async ({ context }) => {
+   loader: ({ context }) => {
       context.queryClient.prefetchQuery(
          notificationListQuery({ organizationId: context.organizationId }),
       )
