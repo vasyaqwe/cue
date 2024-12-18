@@ -64,7 +64,17 @@ function Component() {
       })
    }, [])
 
-   if (device !== "mobile") return null
+   if (device !== "mobile")
+      return (
+         <div className="fixed inset-0 z-[999] size-full bg-background">
+            <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full">
+               <Logo className="mx-auto animate-fade-in opacity-0 [--animation-delay:100ms]" />
+               <h1 className="mt-4 animate-fade-in text-center font-medium text-foreground/80 opacity-0 duration-500 [--animation-delay:600ms]">
+                  Workspace is loading...
+               </h1>
+            </div>
+         </div>
+      )
 
    return (
       <>
