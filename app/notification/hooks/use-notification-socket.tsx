@@ -1,4 +1,5 @@
 import { env } from "@/env"
+import { logger } from "@/lib/logger"
 import { useDeleteNotifications } from "@/notification/hooks/use-delete-notifications"
 import { useInsertNotification } from "@/notification/hooks/use-insert-notification"
 import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
@@ -45,7 +46,7 @@ export function useNotificationSocket() {
          })
 
       if (!("Notification" in window))
-         return console.log(
+         return logger.warn(
             "This browser does not support desktop notification",
          )
       const onClick = () => {

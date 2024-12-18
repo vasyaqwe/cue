@@ -49,7 +49,6 @@ export const uploadFile = ({ className }: { className?: string } = {}) =>
 const findPlaceholder = (state: EditorState, id: {}) => {
    const decos = uploadKey.getState(state) as DecorationSet
    const found = decos.find(undefined, undefined, (spec) => spec.id === id)
-   console.log("Found placeholders:", found)
    return found.length ? found[0]?.from : null // Return the position of the first placeholder
 }
 
