@@ -210,6 +210,7 @@ export function Sidebar() {
                <ul className="space-y-1">
                   <li>
                      <Link
+                        preload={"render"}
                         params={{ slug }}
                         onClick={() =>
                            useNotificationStore.setState({

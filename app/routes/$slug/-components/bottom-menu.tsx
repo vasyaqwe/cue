@@ -69,6 +69,7 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <Link
+                  preload={"render"}
                   params={{ slug }}
                   activeProps={{
                      onTouchEnd: () =>

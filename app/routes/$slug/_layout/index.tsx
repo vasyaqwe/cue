@@ -106,6 +106,7 @@ function Component() {
                </div>
             </form>
             <Link
+               preload={"render"}
                to="/$slug/issues/$view"
                params={{ slug, view: lastVisitedView }}
             >
