@@ -2,7 +2,6 @@ import { FavoriteList } from "@/favorite/components/favorite-list"
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { DraftIndicator } from "@/issue/components/draft-indicator"
 import { issueViews } from "@/issue/constants"
-import { issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import { pushModal } from "@/modals"
 import {
@@ -54,7 +53,6 @@ export function Sidebar() {
    const navigate = useNavigate()
    const { pathname } = useLocation()
    const { slug } = useParams({ from: "/$slug/_layout" })
-   const { view } = useParams({ strict: false })
    const { organization } = useAuth()
    const memberships = useSuspenseQuery(organizationMembershipsQuery())
    const unreadCount = useSuspenseQuery(
@@ -68,18 +66,6 @@ export function Sidebar() {
       refetch: notifications.refetch,
       onChange: (isRefreshing) =>
          useNotificationStore.setState({
-            isRefreshing,
-         }),
-   })
-
-   const issues = useSuspenseQuery(
-      issueListQuery({ organizationId: organization.id, view }),
-   )
-   const refreshIssues = useRefreshState({
-      isRefetching: issues.isRefetching,
-      refetch: issues.refetch,
-      onChange: (isRefreshing) =>
-         useIssueStore.setState({
             isRefreshing,
          }),
    })
@@ -172,7 +158,7 @@ export function Sidebar() {
                   }
                >
                   <Link
-                     preload="render"
+                     preload={"render"}
                      to="/$slug/search"
                      params={{
                         slug,
@@ -210,7 +196,6 @@ export function Sidebar() {
                <ul className="space-y-1">
                   <li>
                      <Link
-                        preload={"render"}
                         params={{ slug }}
                         onClick={() =>
                            useNotificationStore.setState({
@@ -239,15 +224,7 @@ export function Sidebar() {
                   </li>
                   <li>
                      <Link
-                        preload={"render"}
                         params={{ slug, view: lastVisitedView }}
-                        activeProps={{
-                           onMouseUp: () =>
-                              match(refreshIssues.isRefreshing).with(
-                                 false,
-                                 () => refreshIssues.refresh(),
-                              ),
-                        }}
                         aria-current={isOnIssuesPage ? "page" : undefined}
                         to={issuesRoute.to}
                         className={cn(
@@ -263,7 +240,7 @@ export function Sidebar() {
                   </li>
                   <li>
                      <Link
-                        preload="render"
+                        preload={"render"}
                         params={{ slug }}
                         activeProps={{
                            className:
@@ -281,7 +258,7 @@ export function Sidebar() {
                   </li>
                   <li>
                      <Link
-                        preload="render"
+                        preload={"render"}
                         params={{ slug }}
                         activeProps={{
                            className:

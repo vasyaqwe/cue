@@ -31,11 +31,10 @@ export const Route = createFileRoute("/$slug/_layout/people")({
    head: () => ({
       meta: [{ title: "People" }],
    }),
-   loader: ({ context }) => {
-      context.queryClient.prefetchQuery(
+   loader: ({ context }) =>
+      context.queryClient.ensureQueryData(
          organizationMembersQuery({ organizationId: context.organizationId }),
-      )
-   },
+      ),
    pendingComponent: () => (
       <>
          <Header>

@@ -1,3 +1,4 @@
+import { commentListQuery } from "@/comment/queries"
 import { IssueDetails } from "@/issue/components/issue-details"
 import { issueByIdQuery } from "@/issue/queries"
 import {
@@ -21,6 +22,13 @@ export const Route = createFileRoute(
       )
       if (!issue) throw notFound()
 
+      context.queryClient.prefetchQuery(
+         commentListQuery({
+            issueId: params.issueId,
+            organizationId: context.organizationId,
+         }),
+      )
+
       return issue
    },
    pendingComponent: () => (
@@ -37,7 +45,6 @@ export const Route = createFileRoute(
          </div>
       </div>
    ),
-   preload: false,
 })
 
 function Component() {

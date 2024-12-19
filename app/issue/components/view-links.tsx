@@ -1,10 +1,27 @@
+import { issueListQuery } from "@/issue/queries"
+import { useIssueStore } from "@/issue/store"
 import { Icons } from "@/ui/components/icons"
+import { useRefreshState } from "@/ui/components/refresh-control/use-refresh-state"
 import { cn } from "@/ui/utils"
+import { useAuth } from "@/user/hooks"
+import { useQuery } from "@tanstack/react-query"
 import { Link, useParams } from "@tanstack/react-router"
 import type { ComponentProps } from "react"
+import { match } from "ts-pattern"
 
 export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
-   const { slug } = useParams({ from: "/$slug/_layout/issues/$view" })
+   const { organizationId } = useAuth()
+   const { slug, view } = useParams({ from: "/$slug/_layout/issues/$view" })
+
+   const issues = useQuery(issueListQuery({ organizationId, view }))
+   const refreshIssues = useRefreshState({
+      isRefetching: issues.isRefetching,
+      refetch: issues.refetch,
+      onChange: (isRefreshing) =>
+         useIssueStore.setState({
+            isRefreshing,
+         }),
+   })
 
    return (
       <div
@@ -12,10 +29,13 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
          {...props}
       >
          <Link
-            preload="render"
             activeProps={{
                className: "!border-border/80 bg-elevated opacity-100",
                "aria-current": "page",
+               onMouseUp: () =>
+                  match(refreshIssues.isRefreshing).with(false, () =>
+                     refreshIssues.refresh(),
+                  ),
             }}
             to={"/$slug/issues/$view"}
             params={{ view: "all", slug }}
@@ -27,10 +47,13 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
             All issues
          </Link>
          <Link
-            preload="render"
             activeProps={{
                className: "!border-border/80 bg-elevated opacity-100",
                "aria-current": "page",
+               onMouseUp: () =>
+                  match(refreshIssues.isRefreshing).with(false, () =>
+                     refreshIssues.refresh(),
+                  ),
             }}
             to={"/$slug/issues/$view"}
             params={{ view: "active", slug }}
@@ -42,10 +65,13 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
             Active
          </Link>
          <Link
-            preload="render"
             activeProps={{
                className: "!border-border/80 bg-elevated opacity-100",
                "aria-current": "page",
+               onMouseUp: () =>
+                  match(refreshIssues.isRefreshing).with(false, () =>
+                     refreshIssues.refresh(),
+                  ),
             }}
             to={"/$slug/issues/$view"}
             params={{ view: "backlog", slug }}

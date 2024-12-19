@@ -36,16 +36,6 @@ export function BottomMenu() {
          }),
    })
 
-   // const issues = useSuspenseQuery(issueListQuery({ organizationId }))
-   // const refreshIssues = useRefreshState({
-   //    isRefetching: issues.isRefetching,
-   //    refetch: issues.refetch,
-   //    onChange: (isRefreshing) =>
-   //       useIssueStore.setState({
-   //          isRefreshing,
-   //       }),
-   // })
-
    return (
       <nav className="fixed bottom-0 z-[2] h-[var(--bottom-menu-height)] w-full border-border border-t bg-background p-1.5 shadow md:hidden">
          <ul className="flex flex-1 items-center justify-around gap-2">
@@ -55,10 +45,6 @@ export function BottomMenu() {
                   params={{ slug }}
                   activeOptions={{ exact: true }}
                   activeProps={{
-                     // onTouchEnd: () =>
-                     //    match(refreshIssues.isRefreshing).with(false, () =>
-                     //       refreshIssues.refresh(),
-                     //    ),
                      "aria-current": "page",
                   }}
                   to={homeRoute.to}
@@ -69,7 +55,6 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <Link
-                  preload={"render"}
                   params={{ slug }}
                   activeProps={{
                      onTouchEnd: () =>
@@ -102,7 +87,7 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <Link
-                  preload="render"
+                  preload={"render"}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/55 transition-colors aria-[current=page]:text-foreground"
                   params={{ slug }}
                   activeProps={{
@@ -115,7 +100,7 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <Link
-                  preload="render"
+                  preload={"render"}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/55 transition-colors aria-[current=page]:text-foreground"
                   params={{ slug }}
                   activeProps={{

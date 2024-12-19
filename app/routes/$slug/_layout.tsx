@@ -39,7 +39,7 @@ export const getDevice = createServerFn({ method: "GET" }).handler(async () => {
 export const Route = createFileRoute("/$slug/_layout")({
    component: Component,
    beforeLoad: async ({ context, params }) => {
-      const [user, organization] = await Promise.all([
+      const [user, organization, device] = await Promise.all([
          context.queryClient.ensureQueryData(userMeQuery()).catch(() => {
             throw redirect({ to: "/login" })
          }),
@@ -48,31 +48,29 @@ export const Route = createFileRoute("/$slug/_layout")({
             .catch(() => {
                throw redirect({ to: "/login" })
             }),
+         getDevice(),
       ])
 
       if (!user) throw redirect({ to: "/login" })
       if (!organization) throw notFound()
 
       return {
+         device,
          organizationId: organization.id,
       }
    },
-   loader: async ({ context }) => {
-      context.queryClient.prefetchQuery(organizationMembershipsQuery())
-      context.queryClient.prefetchQuery(
+   loader: ({ context }) => {
+      context.queryClient.ensureQueryData(organizationMembershipsQuery())
+      context.queryClient.ensureQueryData(
          notificationUnreadCountQuery({
             organizationId: context.organizationId,
          }),
       )
-
-      return {
-         device: await getDevice(),
-      }
    },
    pendingComponent: () => (
       <main className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full">
-         <Logo className="mx-auto" />
-         <h1 className="mt-4 text-center font-medium text-foreground/80">
+         <Logo className="mx-auto animate-fade-in opacity-0 [--animation-delay:100ms]" />
+         <h1 className="mt-4 animate-fade-in text-center font-medium text-foreground/80 opacity-0 duration-500 [--animation-delay:600ms]">
             Workspace is loading...
          </h1>
       </main>

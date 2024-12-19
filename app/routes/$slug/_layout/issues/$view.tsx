@@ -30,11 +30,10 @@ export const Route = createFileRoute("/$slug/_layout/issues/$view")({
    onError: (error) => {
       if (error?.routerCode === "PARSE_PARAMS") throw notFound()
    },
-   loader: ({ context, params: { view } }) => {
-      context.queryClient.prefetchQuery(
+   loader: ({ context, params: { view } }) =>
+      context.queryClient.ensureQueryData(
          issueListQuery({ organizationId: context.organizationId, view }),
-      )
-   },
+      ),
    head: ({ params: { view } }) => ({
       meta: [
          {

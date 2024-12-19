@@ -41,11 +41,10 @@ export const Route = createFileRoute("/$slug/_layout/inbox/_layout")({
    head: () => ({
       meta: [{ title: "Inbox" }],
    }),
-   loader: ({ context }) => {
-      context.queryClient.prefetchQuery(
+   loader: ({ context }) =>
+      context.queryClient.ensureQueryData(
          notificationListQuery({ organizationId: context.organizationId }),
-      )
-   },
+      ),
    pendingComponent: () => (
       <>
          <Header className="md:max-w-[420px] md:border-r md:pl-0">

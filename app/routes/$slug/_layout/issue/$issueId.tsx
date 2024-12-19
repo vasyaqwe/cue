@@ -46,7 +46,6 @@ export const Route = createFileRoute("/$slug/_layout/issue/$issueId")({
          </div>
       </>
    ),
-   preload: false,
 })
 
 function Component() {
