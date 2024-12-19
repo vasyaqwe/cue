@@ -1,5 +1,4 @@
 import { FavoriteList } from "@/favorite/components/favorite-list"
-import { issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import {
    Header,
@@ -9,7 +8,6 @@ import {
 import { Card } from "@/ui/components/card"
 import { Icons } from "@/ui/components/icons"
 import { Input } from "@/ui/components/input"
-import { Loading } from "@/ui/components/loading"
 import { Logo } from "@/ui/components/logo"
 import { useAuth } from "@/user/hooks"
 import {
@@ -32,15 +30,9 @@ export const Route = createFileRoute("/$slug/_layout/")({
    //       })
    //    })
    // },
-   loader: ({ context }) => {
-      context.queryClient.prefetchQuery(
-         issueListQuery({ organizationId: context.organizationId }),
-      )
-   },
    head: () => ({
       meta: [{ title: "Home" }],
    }),
-   pendingComponent: PendingComponent,
 })
 
 function Component() {
@@ -143,18 +135,18 @@ function Component() {
    )
 }
 
-function PendingComponent() {
-   const { organization } = useAuth()
+// function PendingComponent() {
+//    const { organization } = useAuth()
 
-   return (
-      <>
-         <Header>
-            <Logo className="size-8 md:hidden" />
-            <HeaderTitle>{organization.name}</HeaderTitle>
-         </Header>
-         <div>
-            <Loading className="absolute inset-0 m-auto" />
-         </div>
-      </>
-   )
-}
+//    return (
+//       <>
+//          <Header>
+//             <Logo className="size-8 md:hidden" />
+//             <HeaderTitle>{organization.name}</HeaderTitle>
+//          </Header>
+//          <div>
+//             <Loading className="absolute inset-0 m-auto" />
+//          </div>
+//       </>
+//    )
+// }

@@ -210,7 +210,6 @@ export function Sidebar() {
                <ul className="space-y-1">
                   <li>
                      <Link
-                        preload="render"
                         params={{ slug }}
                         onClick={() =>
                            useNotificationStore.setState({
@@ -239,7 +238,7 @@ export function Sidebar() {
                   </li>
                   <li>
                      <Link
-                        preload="render"
+                        preload={"render"}
                         params={{ slug, view: lastVisitedView }}
                         activeProps={{
                            onMouseUp: () =>

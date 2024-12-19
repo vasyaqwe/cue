@@ -51,7 +51,7 @@ export function BottomMenu() {
          <ul className="flex flex-1 items-center justify-around gap-2">
             <li className="flex flex-1">
                <Link
-                  preload="render"
+                  preload={"render"}
                   params={{ slug }}
                   activeOptions={{ exact: true }}
                   activeProps={{
@@ -69,7 +69,6 @@ export function BottomMenu() {
             </li>
             <li className="flex flex-1">
                <Link
-                  preload="render"
                   params={{ slug }}
                   activeProps={{
                      onTouchEnd: () =>

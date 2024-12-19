@@ -228,6 +228,7 @@ function Notification({
          >
             <div>
                <Link
+                  preload={false}
                   mask={{
                      unmaskOnReload: true,
                      to: "/$slug/issue/$issueId",

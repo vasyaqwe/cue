@@ -176,6 +176,7 @@ function Issue({
          >
             <div className="">
                <Link
+                  preload={false}
                   to={issueIdRoute.to}
                   params={{ issueId: issue.id, slug }}
                   className="flex w-full items-center gap-2 py-2 pl-4 md:gap-4 md:px-8"
