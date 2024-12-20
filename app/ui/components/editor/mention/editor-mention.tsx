@@ -1,14 +1,16 @@
 import { useEventListener } from "@/interactions/use-event-listener"
-import { CommandLabel, CommandSeparator } from "@/ui/components/command"
+import {
+   Command,
+   CommandLabel,
+   CommandSeparator,
+} from "@/ui/components/command"
 import { useEditorStore } from "@/ui/components/editor/store"
-import { Command } from "cmdk"
-import { forwardRef } from "react"
-import type { ComponentPropsWithoutRef } from "react"
+import * as React from "react"
 import { P, match } from "ts-pattern"
 
-export const EditorMention = forwardRef<
+export const EditorMention = React.forwardRef<
    HTMLDivElement,
-   ComponentPropsWithoutRef<typeof Command> & { query: string }
+   React.ComponentPropsWithoutRef<typeof Command> & { query: string }
 >(({ children, query, ...props }, ref) => {
    useEventListener("keydown", (e) =>
       match(e.key).with("ArrowUp", "ArrowDown", "Enter", () => {

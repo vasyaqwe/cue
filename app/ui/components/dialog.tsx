@@ -3,7 +3,7 @@ import { Icons } from "@/ui/components/icons"
 import { cn } from "@/ui/utils"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { type VariantProps, cva } from "class-variance-authority"
-import { type ComponentProps, type ElementRef, forwardRef } from "react"
+import * as React from "react"
 
 const Dialog = DialogPrimitive.Root
 const DialogTrigger = DialogPrimitive.Trigger
@@ -29,7 +29,7 @@ const dialogVariants = cva(
    },
 )
 
-export type DialogContentProps = ComponentProps<
+export type DialogContentProps = React.ComponentProps<
    typeof DialogPrimitive.Content
 > &
    VariantProps<typeof dialogVariants>
@@ -39,7 +39,7 @@ function DialogContent({
    children,
    variant,
    ...props
-}: ComponentProps<typeof DialogPrimitive.Content> &
+}: React.ComponentProps<typeof DialogPrimitive.Content> &
    VariantProps<typeof dialogVariants>) {
    return (
       <DialogPortal>
@@ -92,9 +92,9 @@ function DialogContent({
    )
 }
 
-const DialogOverlay = forwardRef<
-   ElementRef<typeof DialogPrimitive.Overlay>,
-   ComponentProps<typeof DialogPrimitive.Overlay>
+const DialogOverlay = React.forwardRef<
+   React.ElementRef<typeof DialogPrimitive.Overlay>,
+   React.ComponentProps<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => {
    return (
       <DialogPrimitive.Overlay
@@ -108,7 +108,7 @@ const DialogOverlay = forwardRef<
    )
 })
 
-function DialogHeader({ className, ...props }: ComponentProps<"div">) {
+function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
    return (
       <div
          className={cn("!pb-0 flex flex-col space-y-2.5 p-4", className)}
@@ -117,7 +117,7 @@ function DialogHeader({ className, ...props }: ComponentProps<"div">) {
    )
 }
 
-function DialogFooter({ className, ...props }: ComponentProps<"div">) {
+function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
    return (
       <div
          style={{
@@ -135,7 +135,7 @@ function DialogFooter({ className, ...props }: ComponentProps<"div">) {
 function DialogTitle({
    className,
    ...props
-}: ComponentProps<typeof DialogPrimitive.Title>) {
+}: React.ComponentProps<typeof DialogPrimitive.Title>) {
    return (
       <DialogPrimitive.Title
          className={cn(
@@ -150,7 +150,7 @@ function DialogTitle({
 function DialogDescription({
    className,
    ...props
-}: ComponentProps<typeof DialogPrimitive.Description>) {
+}: React.ComponentProps<typeof DialogPrimitive.Description>) {
    return (
       <DialogPrimitive.Description
          className={cn("inline-block text-foreground/70", className)}

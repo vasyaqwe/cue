@@ -1,6 +1,6 @@
 import { cn } from "@/ui/utils"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
-import type { ComponentProps, ReactNode } from "react"
+import type * as React from "react"
 
 const TooltipProvider = TooltipPrimitive.Provider
 const TooltipTrigger = TooltipPrimitive.Trigger
@@ -9,7 +9,7 @@ function TooltipContent({
    className,
    sideOffset = 4,
    ...props
-}: ComponentProps<typeof TooltipPrimitive.Content>) {
+}: React.ComponentProps<typeof TooltipPrimitive.Content>) {
    return (
       <TooltipPrimitive.Content
          sideOffset={sideOffset}
@@ -33,8 +33,8 @@ function Tooltip({
    delayDuration,
    ...props
 }: Omit<TooltipPrimitive.TooltipContentProps, "content"> & {
-   children: ReactNode
-   content: ReactNode | string
+   children: React.ReactNode
+   content: React.ReactNode | string
    open?: boolean
    defaultOpen?: boolean
    onOpenChange?: (open: boolean) => void

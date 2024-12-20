@@ -1,4 +1,9 @@
-import { CommandItem, commandItemVariants } from "@/ui/components/command"
+import {
+   Command,
+   CommandItem,
+   CommandList,
+   commandItemVariants,
+} from "@/ui/components/command"
 import {
    Drawer,
    DrawerContent,
@@ -11,8 +16,7 @@ import { popoverAnimation } from "@/ui/constants"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu"
-import { Command, CommandList } from "cmdk"
-import type { ComponentProps } from "react"
+import type * as React from "react"
 
 const ContextMenuGroup = ContextMenuPrimitive.Group
 const ContextMenuPortal = ContextMenuPrimitive.Portal
@@ -53,7 +57,7 @@ function ContextMenuSubTrigger({
    inset,
    children,
    ...props
-}: ComponentProps<typeof ContextMenuPrimitive.ContextMenuSubTrigger> & {
+}: React.ComponentProps<typeof ContextMenuPrimitive.ContextMenuSubTrigger> & {
    inset?: boolean
    destructive?: boolean
 }) {
@@ -104,7 +108,9 @@ function ContextMenuContent({
    children,
    title,
    ...props
-}: ComponentProps<typeof ContextMenuPrimitive.Content> & { title: string }) {
+}: React.ComponentProps<typeof ContextMenuPrimitive.Content> & {
+   title: string
+}) {
    const isMobile = useUIStore().isMobile
 
    if (isMobile)
@@ -141,7 +147,7 @@ function ContextMenuSubContent({
    title,
    children,
    ...props
-}: ComponentProps<typeof ContextMenuPrimitive.ContextMenuSubContent> & {
+}: React.ComponentProps<typeof ContextMenuPrimitive.ContextMenuSubContent> & {
    title: string
 }) {
    const isMobile = useUIStore().isMobile
@@ -179,7 +185,7 @@ function ContextMenuItem({
    inset,
    onSelect,
    ...props
-}: ComponentProps<typeof ContextMenuPrimitive.Item> & {
+}: React.ComponentProps<typeof ContextMenuPrimitive.Item> & {
    inset?: boolean
    destructive?: boolean
    onSelect?: () => void
@@ -219,7 +225,7 @@ function ContextMenuCheckboxItem({
    checked,
    onSelect,
    ...props
-}: ComponentProps<typeof ContextMenuPrimitive.CheckboxItem> & {
+}: React.ComponentProps<typeof ContextMenuPrimitive.CheckboxItem> & {
    onSelect?: () => void
 }) {
    const isMobile = useUIStore().isMobile
@@ -260,7 +266,9 @@ function ContextMenuLabel({
    className,
    inset,
    ...props
-}: ComponentProps<typeof ContextMenuPrimitive.Label> & { inset?: boolean }) {
+}: React.ComponentProps<typeof ContextMenuPrimitive.Label> & {
+   inset?: boolean
+}) {
    return (
       <ContextMenuPrimitive.Label
          className={cn("px-2 py-1 ", inset && "pl-8", className)}
@@ -272,7 +280,7 @@ function ContextMenuLabel({
 function ContextMenuSeparator({
    className,
    ...props
-}: ComponentProps<typeof ContextMenuPrimitive.Separator>) {
+}: React.ComponentProps<typeof ContextMenuPrimitive.Separator>) {
    return (
       <ContextMenuPrimitive.Separator
          className={cn("-mx-0.5 md:-mx-1 my-1 h-px bg-border/75", className)}
@@ -284,7 +292,7 @@ function ContextMenuSeparator({
 const ContextMenuShortcut = ({
    className,
    ...props
-}: ComponentProps<"span">) => {
+}: React.ComponentProps<"span">) => {
    return (
       <span
          className={cn("ml-auto text-xs tracking-widest opacity-60", className)}

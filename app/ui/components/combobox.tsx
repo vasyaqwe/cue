@@ -1,4 +1,12 @@
-import { CommandItem } from "@/ui/components/command"
+import {
+   Command,
+   CommandEmpty,
+   CommandGroup,
+   CommandInput,
+   CommandItem,
+   CommandList,
+   CommandSeparator,
+} from "@/ui/components/command"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import type {
@@ -6,16 +14,7 @@ import type {
    PopoverProps,
    PopoverTriggerProps,
 } from "@radix-ui/react-popover"
-import {
-   Command,
-   CommandEmpty,
-   CommandGroup,
-   CommandInput,
-   CommandList,
-   CommandSeparator,
-} from "cmdk"
-import type React from "react"
-import { type ComponentProps, createContext, useState } from "react"
+import * as React from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 
@@ -38,7 +37,7 @@ type ComboboxProps = {
 
 type ComboboxContextType = ComboboxSingleProps | ComboboxMultipleProps
 
-const ComboboxContext = createContext<ComboboxContextType | null>(null)
+const ComboboxContext = React.createContext<ComboboxContextType | null>(null)
 
 function Hotkey({
    shortcut,
@@ -57,7 +56,7 @@ export function Combobox({
    nested = false,
    ...props
 }: ComboboxProps & PopoverProps & { nested?: boolean }) {
-   const [open, setOpen] = useState(false)
+   const [open, setOpen] = React.useState(false)
    const isMobile = useUIStore().isMobile
 
    return (
@@ -138,7 +137,7 @@ export function ComboboxInput({
 export function ComboboxSeparator({
    className,
    ...props
-}: ComponentProps<typeof CommandSeparator>) {
+}: React.ComponentProps<typeof CommandSeparator>) {
    return (
       <CommandSeparator
          className={cn(
@@ -150,7 +149,9 @@ export function ComboboxSeparator({
    )
 }
 
-export function ComboboxItem({ ...props }: ComponentProps<typeof CommandItem>) {
+export function ComboboxItem({
+   ...props
+}: React.ComponentProps<typeof CommandItem>) {
    return <CommandItem {...props} />
 }
 
@@ -158,7 +159,7 @@ export function ComboboxEmpty({
    className,
    children,
    ...props
-}: ComponentProps<"div">) {
+}: React.ComponentProps<"div">) {
    return (
       <CommandEmpty
          className={cn(

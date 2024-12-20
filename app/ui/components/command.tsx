@@ -2,8 +2,20 @@ import { Icons } from "@/ui/components/icons"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import { type VariantProps, cva } from "class-variance-authority"
-import { Command } from "cmdk"
-import type { ComponentProps } from "react"
+import {
+   CommandEmpty as CommandEmptyPrimitive,
+   CommandGroup as CommandGroupPrimitive,
+   CommandInput as CommandInputPrimitive,
+   CommandList as CommandListPrimitive,
+   Command as CommandPrimitive,
+} from "cmdk"
+import type * as React from "react"
+
+export const Command = CommandPrimitive
+export const CommandGroup = CommandGroupPrimitive
+export const CommandList = CommandListPrimitive
+export const CommandEmpty = CommandEmptyPrimitive
+export const CommandInput = CommandInputPrimitive
 
 export const commandItemVariants = cva(
    `relative flex cursor-pointer w-full select-none items-center gap-2.5 rounded-2xl px-4 py-1.5 outline-hidden [&_svg]:size-6 md:[&_svg]:size-5 max-md:h-12 
@@ -36,7 +48,7 @@ export function CommandItem({
    inset?: boolean
    isSelected?: boolean | undefined
    value?: string
-} & ComponentProps<typeof Command.Item> &
+} & React.ComponentProps<typeof Command.Item> &
    VariantProps<typeof commandItemVariants>) {
    const isMobile = useUIStore().isMobile
 
@@ -71,7 +83,10 @@ export function CommandItem({
    )
 }
 
-export function CommandLabel({ className, ...props }: ComponentProps<"p">) {
+export function CommandLabel({
+   className,
+   ...props
+}: React.ComponentProps<"p">) {
    return (
       <p
          className={cn(
@@ -86,7 +101,7 @@ export function CommandLabel({ className, ...props }: ComponentProps<"p">) {
 export function CommandSeparator({
    className,
    ...props
-}: ComponentProps<typeof Command.Separator>) {
+}: React.ComponentProps<typeof Command.Separator>) {
    return (
       <Command.Separator
          className={cn("-mx-1 my-1 h-px bg-border/75", className)}

@@ -6,22 +6,21 @@ import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import { EditorProvider, useEditor } from "@tiptap/react"
 import type { EditorProviderProps } from "@tiptap/react"
-import { forwardRef, useRef } from "react"
-import type { ReactNode } from "react"
+import * as React from "react"
 import { match } from "ts-pattern"
 import tunnel from "tunnel-rat"
 
 export type EditorProps = {
-   children: ReactNode
+   children: React.ReactNode
    className?: string
 }
 
 type EditorRootProps = {
-   children: ReactNode
+   children: React.ReactNode
 }
 
 export function EditorRoot({ children }: EditorRootProps) {
-   const tunnelInstance = useRef(tunnel()).current
+   const tunnelInstance = React.useRef(tunnel()).current
 
    return (
       <EditorCommandTunnelContext.Provider value={tunnelInstance}>
@@ -31,13 +30,16 @@ export function EditorRoot({ children }: EditorRootProps) {
 }
 
 export type EditorContentProps = Omit<EditorProviderProps, "content"> & {
-   children?: ReactNode
+   children?: React.ReactNode
    className?: string
    content?: string
    placeholder?: string
 }
 
-export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
+export const EditorContent = React.forwardRef<
+   HTMLDivElement,
+   EditorContentProps
+>(
    (
       {
          className,

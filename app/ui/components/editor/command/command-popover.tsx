@@ -1,7 +1,7 @@
 import { EditorCommandOut } from "@/ui/components/editor/command/editor-command"
 import { Popover, PopoverAnchor, PopoverContent } from "@/ui/components/popover"
 import type { Range } from "@tiptap/core"
-import { useEffect, useRef, useState } from "react"
+import * as React from "react"
 
 export function SlashCommandPopover({
    clientRect,
@@ -12,12 +12,12 @@ export function SlashCommandPopover({
    query: string
    range: Range
 }) {
-   const [open, setOpen] = useState(true)
-   const virtualRef = useRef({
+   const [open, setOpen] = React.useState(true)
+   const virtualRef = React.useRef({
       getBoundingClientRect: () => clientRect() ?? new DOMRect(0, 0, 0, 0),
    })
 
-   useEffect(() => {
+   React.useEffect(() => {
       virtualRef.current.getBoundingClientRect = () =>
          clientRect() ?? new DOMRect(0, 0, 0, 0)
    }, [clientRect])

@@ -1,6 +1,6 @@
 import { cn } from "@/ui/utils"
 import { type VariantProps, cva } from "class-variance-authority"
-import type { ComponentProps } from "react"
+import type * as React from "react"
 
 const badgeVariants = cva(
    "inline-flex h-[26px] items-center rounded-full border px-2.5 text-xs shadow-xs",
@@ -20,7 +20,7 @@ function Badge({
    className,
    variant,
    ...props
-}: ComponentProps<"div"> & VariantProps<typeof badgeVariants>) {
+}: React.ComponentProps<"div"> & VariantProps<typeof badgeVariants>) {
    return (
       <div
          className={cn(badgeVariants({ variant }), className)}

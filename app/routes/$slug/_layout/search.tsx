@@ -19,6 +19,7 @@ import {
 } from "@tanstack/react-router"
 import { zodValidator } from "@tanstack/zod-adapter"
 import { useRef, useState } from "react"
+import { useHotkeys } from "react-hotkeys-hook"
 import { z } from "zod"
 
 const searchSchema = z.object({
@@ -44,7 +45,9 @@ function Component() {
       `search_recent_${slug}`,
       [],
    )
+
    const inputRef = useRef<HTMLInputElement>(null)
+   useHotkeys("/", () => inputRef.current?.focus())
 
    const { isClient } = useIsClient()
 

@@ -2,22 +2,17 @@ import { Button } from "@/ui/components/button"
 import { Icons } from "@/ui/components/icons"
 import { Kbd } from "@/ui/components/kbd"
 import { useUIStore } from "@/ui/store"
-import {
-   type ChangeEvent,
-   type ComponentProps,
-   forwardRef,
-   useRef,
-} from "react"
+import * as React from "react"
 
 export const FILE_TRIGGER_HOTKEY = "mod+shift+f"
 
-export const FileTrigger = forwardRef<
+export const FileTrigger = React.forwardRef<
    HTMLButtonElement,
-   Omit<ComponentProps<typeof Button>, "onChange"> & {
-      onChange: (e: ChangeEvent<HTMLInputElement>) => void
+   Omit<React.ComponentProps<typeof Button>, "onChange"> & {
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
    }
 >(({ children, onClick, onChange, ...props }, ref) => {
-   const inputRef = useRef<HTMLInputElement>(null)
+   const inputRef = React.useRef<HTMLInputElement>(null)
    return (
       <Button
          aria-label="Add files"

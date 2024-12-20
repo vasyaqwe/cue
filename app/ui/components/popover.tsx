@@ -9,11 +9,7 @@ import { popoverAnimation } from "@/ui/constants"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
-import {
-   type ComponentPropsWithoutRef,
-   type ElementRef,
-   forwardRef,
-} from "react"
+import * as React from "react"
 
 const PopoverPortal = PopoverPrimitive.Portal
 const PopoverAnchor = PopoverPrimitive.Anchor
@@ -52,9 +48,9 @@ function PopoverTrigger({ ...props }: PopoverPrimitive.PopoverTriggerProps) {
    return <PopoverPrimitive.Trigger {...props} />
 }
 
-const PopoverContent = forwardRef<
-   ElementRef<typeof PopoverPrimitive.Content>,
-   ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & {
+const PopoverContent = React.forwardRef<
+   React.ElementRef<typeof PopoverPrimitive.Content>,
+   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & {
       title: string
       drawerOnMobile?: boolean
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>

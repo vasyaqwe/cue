@@ -1,8 +1,8 @@
 import { cn } from "@/ui/utils"
-import { type ComponentProps, type ElementRef, forwardRef } from "react"
+import * as React from "react"
 import { Drawer as DrawerPrimitive } from "vaul"
 
-function Drawer(props: ComponentProps<typeof DrawerPrimitive.Root>) {
+function Drawer(props: React.ComponentProps<typeof DrawerPrimitive.Root>) {
    return <DrawerPrimitive.Root {...props} />
 }
 
@@ -11,9 +11,9 @@ const DrawerPortal = DrawerPrimitive.Portal
 const DrawerClose = DrawerPrimitive.Close
 const DrawerNested = DrawerPrimitive.NestedRoot
 
-const DrawerOverlay = forwardRef<
-   ElementRef<typeof DrawerPrimitive.Overlay>,
-   ComponentProps<typeof DrawerPrimitive.Overlay>
+const DrawerOverlay = React.forwardRef<
+   React.ElementRef<typeof DrawerPrimitive.Overlay>,
+   React.ComponentProps<typeof DrawerPrimitive.Overlay>
 >(({ className, ...props }, ref) => {
    return (
       <DrawerPrimitive.Overlay
@@ -28,7 +28,7 @@ function DrawerContent({
    className,
    children,
    ...props
-}: ComponentProps<typeof DrawerPrimitive.Content>) {
+}: React.ComponentProps<typeof DrawerPrimitive.Content>) {
    return (
       <DrawerPortal>
          <DrawerOverlay />
@@ -57,7 +57,7 @@ function DrawerContent({
    )
 }
 
-function DrawerHeader({ className, ...props }: ComponentProps<"div">) {
+function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
    return (
       <header
          className={cn("grid gap-1.5 px-4 pt-3.5 md:pt-3", className)}
@@ -66,7 +66,7 @@ function DrawerHeader({ className, ...props }: ComponentProps<"div">) {
    )
 }
 
-function DrawerFooter({ className, ...props }: ComponentProps<"div">) {
+function DrawerFooter({ className, ...props }: React.ComponentProps<"div">) {
    return (
       <div
          style={{
@@ -84,7 +84,7 @@ function DrawerFooter({ className, ...props }: ComponentProps<"div">) {
 function DrawerTitle({
    className,
    ...props
-}: ComponentProps<typeof DrawerPrimitive.Title>) {
+}: React.ComponentProps<typeof DrawerPrimitive.Title>) {
    return (
       <DrawerPrimitive.Title
          className={cn("font-semibold text-lg leading-none", className)}
@@ -96,7 +96,7 @@ function DrawerTitle({
 function DrawerDescription({
    className,
    ...props
-}: ComponentProps<typeof DrawerPrimitive.Description>) {
+}: React.ComponentProps<typeof DrawerPrimitive.Description>) {
    return (
       <DrawerPrimitive.Description
          className={cn("text-foreground/70 text-sm", className)}

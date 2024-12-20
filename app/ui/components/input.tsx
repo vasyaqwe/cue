@@ -1,7 +1,7 @@
 import { Icons } from "@/ui/components/icons"
 import { cn } from "@/ui/utils"
 import { cva } from "class-variance-authority"
-import { type ComponentProps, forwardRef } from "react"
+import * as React from "react"
 
 const inputVariants = cva(
    `block h-9 w-full rounded-xl transition-all duration-50 text-[0.95rem] border border-border focus:border-brand/80
@@ -9,7 +9,7 @@ const inputVariants = cva(
     has-[+button[data-clearinput]:active]:border-primary
     has-[+button[data-clearinput]:active]:outline-primary/30 appearance-none`,
 )
-const Input = forwardRef<HTMLInputElement, ComponentProps<"input">>(
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
    ({ className, ...props }, ref) => {
       return (
          <input
@@ -25,7 +25,7 @@ function ClearInputButton({
    className,
    visible,
    ...props
-}: ComponentProps<"button"> & {
+}: React.ComponentProps<"button"> & {
    visible: boolean
 }) {
    return (

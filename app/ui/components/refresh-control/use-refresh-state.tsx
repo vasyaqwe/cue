@@ -1,6 +1,6 @@
 import { useThrottle } from "@/interactions/use-throttle"
 import { MIN_REFRESH_DURATION } from "@/ui/constants"
-import { useCallback, useEffect, useMemo, useRef } from "react"
+import * as React from "react"
 
 export function useRefreshState({
    refetch,
@@ -11,18 +11,18 @@ export function useRefreshState({
    isRefetching: boolean
    onChange: (isRefetching: boolean) => void
 }) {
-   const isRefreshing = useRef(false)
+   const isRefreshing = React.useRef(false)
 
-   useEffect(() => {
+   React.useEffect(() => {
       if (!isRefetching && isRefreshing.current) isRefreshing.current = false
    }, [isRefetching])
 
-   const refresh = useCallback(() => {
+   const refresh = React.useCallback(() => {
       isRefreshing.current = true
       return refetch()
    }, [refetch])
 
-   const isActiveRefresh = useMemo(
+   const isActiveRefresh = React.useMemo(
       () => isRefetching && isRefreshing.current,
       [isRefetching],
    )
@@ -30,7 +30,7 @@ export function useRefreshState({
    const isRefreshingValue = useThrottle(isActiveRefresh, MIN_REFRESH_DURATION)
 
    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-   useEffect(() => {
+   React.useEffect(() => {
       onChange(isRefreshingValue)
    }, [isRefreshingValue])
 

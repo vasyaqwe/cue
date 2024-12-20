@@ -1,13 +1,12 @@
 import { useEventListener } from "@/interactions/use-event-listener"
+import { Command } from "@/ui/components/command"
 import { useEditorStore } from "@/ui/components/editor/store"
 import type { Range } from "@tiptap/core"
-import { Command } from "cmdk"
-import { createContext, forwardRef, useEffect } from "react"
-import type { ComponentPropsWithoutRef } from "react"
+import * as React from "react"
 import { P, match } from "ts-pattern"
 import type tunnel from "tunnel-rat"
 
-export const EditorCommandTunnelContext = createContext(
+export const EditorCommandTunnelContext = React.createContext(
    {} as ReturnType<typeof tunnel>,
 )
 
@@ -18,11 +17,11 @@ export function EditorCommandOut({
    query: string
    range: Range
 }) {
-   useEffect(() => {
+   React.useEffect(() => {
       useEditorStore.setState({ query })
    }, [query])
 
-   useEffect(() => {
+   React.useEffect(() => {
       useEditorStore.setState({ range })
    }, [range])
 
@@ -50,9 +49,9 @@ export function EditorCommandOut({
    )
 }
 
-export const EditorCommand = forwardRef<
+export const EditorCommand = React.forwardRef<
    HTMLDivElement,
-   ComponentPropsWithoutRef<typeof Command>
+   React.ComponentPropsWithoutRef<typeof Command>
 >(({ children, ...props }, ref) => {
    const query = useEditorStore().query
 

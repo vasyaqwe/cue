@@ -3,10 +3,10 @@ import { Avatar, AvatarFallback } from "@/ui/components/avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import type { User } from "@/user/schema"
-import type { ComponentProps } from "react"
+import type * as React from "react"
 import { match } from "ts-pattern"
 
-type UserAvatarProps = ComponentProps<typeof Avatar> & {
+type UserAvatarProps = React.ComponentProps<typeof Avatar> & {
    user: Omit<Partial<User>, "createdAt" | "updatedAt">
    showActiveIndicator?: boolean
    size?: number

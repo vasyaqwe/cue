@@ -1,11 +1,10 @@
-import { CommandItem } from "@/ui/components/command"
+import { Command, CommandItem, CommandList } from "@/ui/components/command"
 import { Icons } from "@/ui/components/icons"
 import { popoverAnimation } from "@/ui/constants"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { Command, CommandList } from "cmdk"
-import type { ComponentProps } from "react"
+import type * as React from "react"
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "./drawer"
 
 const DropdownMenuGroup = DropdownMenuPrimitive.Group
@@ -42,7 +41,9 @@ function DropdownMenuContent({
    sideOffset = 4,
    title,
    ...props
-}: ComponentProps<typeof DropdownMenuPrimitive.Content> & { title: string }) {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Content> & {
+   title: string
+}) {
    const isMobile = useUIStore().isMobile
 
    if (isMobile)
@@ -81,7 +82,7 @@ function DropdownMenuItem({
    inset = false,
    onSelect,
    ...props
-}: ComponentProps<typeof CommandItem> & {
+}: React.ComponentProps<typeof CommandItem> & {
    inset?: boolean
    destructive?: boolean
    onSelect?: () => void
@@ -120,7 +121,7 @@ function DropdownMenuCheckboxItem({
    checked,
    inset = false,
    ...props
-}: ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem> & {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem> & {
    inset?: boolean
 }) {
    return (
@@ -153,7 +154,9 @@ function DropdownMenuLabel({
    className,
    inset,
    ...props
-}: ComponentProps<typeof DropdownMenuPrimitive.Label> & { inset?: boolean }) {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Label> & {
+   inset?: boolean
+}) {
    return (
       <DropdownMenuPrimitive.Label
          className={cn(
@@ -169,7 +172,7 @@ function DropdownMenuLabel({
 function DropdownMenuSeparator({
    className,
    ...props
-}: ComponentProps<typeof DropdownMenuPrimitive.Separator>) {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Separator>) {
    return (
       <DropdownMenuPrimitive.Separator
          className={cn("-mx-1 my-1 h-px bg-border/75", className)}
@@ -181,7 +184,7 @@ function DropdownMenuSeparator({
 const DropdownMenuShortcut = ({
    className,
    ...props
-}: ComponentProps<"span">) => {
+}: React.ComponentProps<"span">) => {
    return (
       <span
          className={cn("ml-auto text-xs tracking-widest opacity-60", className)}

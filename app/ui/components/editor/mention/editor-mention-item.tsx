@@ -1,10 +1,12 @@
-import { commandItemVariants } from "@/ui/components/command"
+import {
+   CommandEmpty,
+   CommandItem,
+   commandItemVariants,
+} from "@/ui/components/command"
 import { cn } from "@/ui/utils"
 import type { Editor, Range } from "@tiptap/core"
 import { useCurrentEditor } from "@tiptap/react"
-import { CommandEmpty, CommandItem } from "cmdk"
-import { forwardRef } from "react"
-import type { ComponentProps, ComponentPropsWithoutRef } from "react"
+import * as React from "react"
 
 type Props = {
    onSelect: ({
@@ -16,9 +18,9 @@ type Props = {
    }) => void
 }
 
-export const EditorMentionItem = forwardRef<
+export const EditorMentionItem = React.forwardRef<
    HTMLDivElement,
-   Props & ComponentPropsWithoutRef<typeof CommandItem>
+   Props & React.ComponentPropsWithoutRef<typeof CommandItem>
 >(({ children, className, ...props }, ref) => {
    const { editor } = useCurrentEditor()
 
@@ -42,7 +44,7 @@ export const EditorMentionItem = forwardRef<
 export function EditorMentionEmpty({
    className,
    ...props
-}: ComponentProps<typeof CommandEmpty>) {
+}: React.ComponentProps<typeof CommandEmpty>) {
    return (
       <CommandEmpty
          className={cn("py-6 text-center text-foreground/75", className)}

@@ -1,13 +1,13 @@
 import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
-import type { ComponentProps } from "react"
+import type * as React from "react"
 
 function RefreshControl({
    children,
    isRefreshing,
    className,
    ...props
-}: ComponentProps<"div"> & { isRefreshing: boolean }) {
+}: React.ComponentProps<"div"> & { isRefreshing: boolean }) {
    return (
       <>
          <div

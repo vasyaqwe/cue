@@ -1,4 +1,5 @@
 import { cn } from "@/ui/utils"
+import type * as React from "react"
 
 type IconProps = React.ComponentProps<"svg">
 

@@ -1,11 +1,11 @@
 import { cn } from "@/ui/utils"
-import type { ComponentProps } from "react"
+import type * as React from "react"
 
 export function Logo({
    className,
    rounded = false,
    ...props
-}: ComponentProps<"div"> & { rounded?: boolean }) {
+}: React.ComponentProps<"div"> & { rounded?: boolean }) {
    return (
       <div
          className={cn(

@@ -1,7 +1,11 @@
 import { cn } from "@/ui/utils"
-import type { ComponentProps } from "react"
+import type * as React from "react"
 
-export function Kbd({ className, children, ...props }: ComponentProps<"kbd">) {
+export function Kbd({
+   className,
+   children,
+   ...props
+}: React.ComponentProps<"kbd">) {
    const isMac =
       typeof window === "undefined"
          ? true

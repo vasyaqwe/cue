@@ -20,16 +20,10 @@ import { UserAvatar } from "@/ui/components/user-avatar"
 import { useAuth } from "@/user/hooks"
 import { useQuery } from "@tanstack/react-query"
 import type { Editor } from "@tiptap/core"
-import {
-   forwardRef,
-   useEffect,
-   useImperativeHandle,
-   useRef,
-   useState,
-} from "react"
+import * as React from "react"
 import { match } from "ts-pattern"
 
-export default forwardRef<
+export default React.forwardRef<
    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
    any,
    {
@@ -45,12 +39,12 @@ export default forwardRef<
       editor: Editor
    }
 >(({ clientRect, query, command }, ref) => {
-   const [open, setOpen] = useState(true)
+   const [open, setOpen] = React.useState(true)
    const { organizationId } = useAuth()
    const members = useQuery(organizationMembersQuery({ organizationId }))
    const issues = useQuery(issueListQuery({ organizationId }))
 
-   useImperativeHandle(ref, () => ({
+   React.useImperativeHandle(ref, () => ({
       onKeyDown: ({ event }: { event: KeyboardEvent }) => {
          return match(event.key)
             .with("ArrowUp", "ArrowDown", "Enter", () => true)
@@ -58,16 +52,16 @@ export default forwardRef<
       },
    }))
 
-   const virtualRef = useRef({
+   const virtualRef = React.useRef({
       getBoundingClientRect: () => clientRect() ?? new DOMRect(0, 0, 0, 0),
    })
 
-   useEffect(() => {
+   React.useEffect(() => {
       virtualRef.current.getBoundingClientRect = () =>
          clientRect() ?? new DOMRect(0, 0, 0, 0)
    }, [clientRect])
 
-   useEffect(() => {
+   React.useEffect(() => {
       useEditorStore.setState({ mentionPopoverOpen: true })
       return () => {
          useEditorStore.setState({ mentionPopoverOpen: false })
