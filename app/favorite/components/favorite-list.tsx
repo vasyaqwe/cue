@@ -46,7 +46,7 @@ export function FavoriteList() {
                   )}
                >
                   <AccordionItem value="favorites">
-                     <AccordionTrigger className="mt-3 w-full cursor-pointer rounded-lg py-3 pl-1 text-foreground/75 leading-none transition-colors md:mb-1.5 hover:bg-border/40 md:py-2 md:pl-3">
+                     <AccordionTrigger className="mt-3 w-full cursor-pointer rounded-lg py-3 pl-1 text-foreground/75 leading-none md:mb-1.5 hover:bg-border/40 md:py-2 md:pl-3">
                         Favorites
                      </AccordionTrigger>
                      <AccordionContent asChild>
@@ -72,7 +72,7 @@ export function FavoriteList() {
                                           }}
                                           to={"/$slug/issue/$issueId"}
                                           className={cn(
-                                             "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold transition-all md:h-9 max-md:active:scale-95 md:rounded-[12px] max-md:active:bg-border/50 md:pr-1.5 md:pl-2 md:text-[0.925rem] hover:opacity-100 md:opacity-80 max-md:transition-all max-md:duration-300",
+                                             "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold md:h-9 md:rounded-[12px] md:pr-1.5 md:pl-2 md:text-[0.925rem] hover:opacity-100 md:opacity-80",
                                           )}
                                        >
                                           <StatusIcon

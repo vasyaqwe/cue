@@ -5,7 +5,7 @@ import * as React from "react"
 const buttonVariants = cva(
    `inline-flex items-center cursor-pointer justify-center whitespace-nowrap leading-none gap-1.5 font-medium
     focus-visible:ring-3 focus-visible:ring-offset-2 focus-visible:ring-primary/30 focus-visible:outline-primary/80 shadow-xs disabled:shadow-xs
-    outline outline-transparent outline-offset-1 disabled:opacity-70 disabled:cursor-not-allowed border transition-all duration-100`,
+    outline outline-transparent outline-offset-1 disabled:opacity-70 disabled:cursor-not-allowed border transition-all duration-[50ms]`,
    {
       variants: {
          variant: {

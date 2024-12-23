@@ -40,7 +40,7 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
             to={"/$slug/issues/$view"}
             params={{ view: "all", slug }}
             className={cn(
-               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 transition-all duration-[50ms] hover:border-border/80 hover:bg-elevated hover:opacity-100",
+               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 hover:border-border/80 hover:bg-elevated hover:opacity-100",
             )}
          >
             <Icons.allIssues className="size-[22px]" />
@@ -58,7 +58,7 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
             to={"/$slug/issues/$view"}
             params={{ view: "active", slug }}
             className={cn(
-               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 transition-all duration-[50ms] hover:border-border/80 hover:bg-elevated hover:opacity-100",
+               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 hover:border-border/80 hover:bg-elevated hover:opacity-100",
             )}
          >
             <Icons.issues className="size-5" />
@@ -76,7 +76,7 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
             to={"/$slug/issues/$view"}
             params={{ view: "backlog", slug }}
             className={cn(
-               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 transition-all duration-[50ms] hover:border-border/80 hover:bg-elevated hover:opacity-100",
+               "group flex h-[31px] items-center gap-1 rounded-[10px] border border-transparent px-1.5 font-semibold text-sm leading-none opacity-75 hover:border-border/80 hover:bg-elevated hover:opacity-100",
             )}
          >
             <Icons.backlog className="size-[19px]" />

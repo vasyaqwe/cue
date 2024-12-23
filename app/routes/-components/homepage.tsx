@@ -219,7 +219,7 @@ export function Homepage({
                      <Logo className="size-9" />
                      Cue
                   </Link>
-                  <p className="mt-6 text-foreground/75 text-sm transition-colors hover:text-foreground">
+                  <p className="mt-6 text-foreground/75 text-sm hover:text-foreground">
                      Cue is fully open-source.{" "}
                      <a
                         href="https://github.com/vasyaqwe/cue"

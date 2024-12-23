@@ -23,15 +23,7 @@ const methods: Record<Method, "log" | "error"> = {
    loading: "log",
 }
 
-const logger: Record<Method, (...message: unknown[]) => void> = {
-   info: loggerFactory("info"),
-   warn: loggerFactory("warn"),
-   error: loggerFactory("error"),
-   success: loggerFactory("success"),
-   loading: loggerFactory("loading"),
-}
-
-function loggerFactory(method: Method) {
+const loggerFactory = (method: Method) => {
    return (...message: unknown[]) => {
       if (DISABLE_IN_PRODUCTION && import.meta.env.PROD) return
 
@@ -40,6 +32,14 @@ function loggerFactory(method: Method) {
 
       consoleLogger(prefix, ...message)
    }
+}
+
+const logger: Record<Method, (...message: unknown[]) => void> = {
+   info: loggerFactory("info"),
+   warn: loggerFactory("warn"),
+   error: loggerFactory("error"),
+   success: loggerFactory("success"),
+   loading: loggerFactory("loading"),
 }
 
 export { logger }
