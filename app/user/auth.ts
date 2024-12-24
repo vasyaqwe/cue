@@ -1,13 +1,7 @@
-import { type Database, db } from "@/db"
+import { db } from "@/db"
 import { env } from "@/env"
 import { organizationMember } from "@/organization/schema"
-import {
-   type Session,
-   type User,
-   emailVerificationCode,
-   session,
-   user,
-} from "@/user/schema"
+import { session, user } from "@/user/schema"
 import { sha256 } from "@oslojs/crypto/sha2"
 import {
    encodeBase32LowerCaseNoPadding,
@@ -15,8 +9,6 @@ import {
 } from "@oslojs/encoding"
 import { GitHub, Google } from "arctic"
 import { eq } from "drizzle-orm"
-import { TimeSpan, createDate, isWithinExpirationDate } from "oslo"
-import { alphabet, generateRandomString } from "oslo/crypto"
 import { getCookie, getHeader, getWebRequest, setCookie } from "vinxi/http"
 
 export const github = new GitHub(
@@ -169,72 +161,3 @@ export const invalidateSession = async (sessionId: string) =>
             encodeHexLowerCase(sha256(new TextEncoder().encode(sessionId))),
          ),
       )
-
-export type SessionValidationResult =
-   | { session: Session; user: User }
-   | { session: null; user: null }
-
-export const generateEmailVerificationCode = async ({
-   tx,
-   userId,
-   email,
-}: {
-   tx: Database
-   userId: string
-   email: string
-}) => {
-   await tx
-      .delete(emailVerificationCode)
-      .where(eq(emailVerificationCode.email, email))
-
-   const code = generateRandomString(6, alphabet("0-9"))
-
-   await tx.insert(emailVerificationCode).values({
-      userId,
-      email,
-      code,
-      expiresAt: createDate(new TimeSpan(5, "m")).getTime(), // 5 minutes
-   })
-
-   return code
-}
-
-export const verifyVerificationCode = async (
-   db: Database,
-   userId: string,
-   code: string,
-) => {
-   let isValid = true
-
-   const databaseCode = await db.transaction(async (tx) => {
-      const [databaseCode] = await tx
-         .select()
-         .from(emailVerificationCode)
-         .where(eq(emailVerificationCode.userId, userId))
-
-      if (!databaseCode || databaseCode.code !== code) {
-         isValid = false
-      }
-
-      if (
-         databaseCode &&
-         !isWithinExpirationDate(new Date(databaseCode.expiresAt))
-      ) {
-         isValid = false
-      }
-
-      if (databaseCode?.userId !== userId) {
-         isValid = false
-      }
-
-      return databaseCode
-   })
-
-   if (databaseCode && isValid) {
-      await db
-         .delete(emailVerificationCode)
-         .where(eq(emailVerificationCode.id, databaseCode.id))
-   }
-
-   return isValid
-}
