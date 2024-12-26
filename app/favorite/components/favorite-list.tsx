@@ -68,11 +68,10 @@ export function FavoriteList() {
                                           activeProps={{
                                              className:
                                                 "md:!border-border/80 md:bg-elevated md:opacity-100",
-                                             "aria-current": "page",
                                           }}
                                           to={"/$slug/issue/$issueId"}
                                           className={cn(
-                                             "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold md:h-9 md:rounded-[12px] md:pr-1.5 md:pl-2 md:text-[0.925rem] hover:opacity-100 md:opacity-80",
+                                             "group max-md:-mx-2 flex h-10 items-center gap-[11px] rounded-[13px] border border-transparent px-2 font-semibold md:h-9 md:rounded-[12px] md:hover:border-border/80 md:hover:bg-elevated md:pr-1.5 md:pl-2 md:text-[0.925rem] hover:opacity-100 md:opacity-80",
                                           )}
                                        >
                                           <StatusIcon

@@ -210,7 +210,6 @@ export function Sidebar() {
                               ),
                            className:
                               "!border-border/80 bg-elevated opacity-100",
-                           "aria-current": "page",
                         }}
                         to={inboxRoute.to}
                         data-has-unread={unreadCount.data.count > 0}
@@ -245,7 +244,6 @@ export function Sidebar() {
                         activeProps={{
                            className:
                               "!border-border/80 bg-elevated opacity-100",
-                           "aria-current": "page",
                         }}
                         to={peopleRoute.to}
                         className={cn(
@@ -263,7 +261,6 @@ export function Sidebar() {
                         activeProps={{
                            className:
                               "!border-border/80 bg-elevated opacity-100",
-                           "aria-current": "page",
                         }}
                         to={settingsRoute.to}
                         className={cn(

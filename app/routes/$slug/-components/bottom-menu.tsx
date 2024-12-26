@@ -44,9 +44,6 @@ export function BottomMenu() {
                   preload={"render"}
                   params={{ slug }}
                   activeOptions={{ exact: true }}
-                  activeProps={{
-                     "aria-current": "page",
-                  }}
                   to={homeRoute.to}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/55 transition-colors aria-[current=page]:text-foreground"
                >
@@ -62,7 +59,6 @@ export function BottomMenu() {
                            false,
                            () => refreshNotifications.refresh(),
                         ),
-                     "aria-current": "page",
                   }}
                   onClick={() =>
                      useNotificationStore.setState({ activeItemIssueId: null })
@@ -90,9 +86,6 @@ export function BottomMenu() {
                   preload={"render"}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/55 transition-colors aria-[current=page]:text-foreground"
                   params={{ slug }}
-                  activeProps={{
-                     "aria-current": "page",
-                  }}
                   to={peopleRoute.to}
                >
                   <Icons.people className="size-7" />
@@ -103,9 +96,6 @@ export function BottomMenu() {
                   preload={"render"}
                   className="group inline-flex h-10 flex-1 items-center justify-center rounded-md text-foreground/55 transition-colors aria-[current=page]:text-foreground"
                   params={{ slug }}
-                  activeProps={{
-                     "aria-current": "page",
-                  }}
                   to={settingsRoute.to}
                >
                   <Icons.settings className="size-7" />

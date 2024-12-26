@@ -31,7 +31,6 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
          <Link
             activeProps={{
                className: "!border-border/80 bg-elevated opacity-100",
-               "aria-current": "page",
                onMouseUp: () =>
                   match(refreshIssues.isRefreshing).with(false, () =>
                      refreshIssues.refresh(),
@@ -49,7 +48,6 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
          <Link
             activeProps={{
                className: "!border-border/80 bg-elevated opacity-100",
-               "aria-current": "page",
                onMouseUp: () =>
                   match(refreshIssues.isRefreshing).with(false, () =>
                      refreshIssues.refresh(),
@@ -67,7 +65,6 @@ export function ViewLinks({ className, ...props }: ComponentProps<"div">) {
          <Link
             activeProps={{
                className: "!border-border/80 bg-elevated opacity-100",
-               "aria-current": "page",
                onMouseUp: () =>
                   match(refreshIssues.isRefreshing).with(false, () =>
                      refreshIssues.refresh(),
