@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger"
 import { P, match } from "ts-pattern"
 import type { ZodIssue } from "zod"
 import type { ErrorCode } from "./schema"
@@ -68,7 +69,7 @@ export function handleAuthError(
    request: Request,
    inviteCode?: string,
 ) {
-   console.error(error)
+   logger.error(error)
 
    const redirectUrl = new URL("/login", request.url)
    redirectUrl.searchParams.set("error", "true")

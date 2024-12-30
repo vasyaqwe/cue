@@ -1,5 +1,6 @@
 import { db } from "@/db"
 import { handleAuthError } from "@/error/utils"
+import { logger } from "@/lib/logger"
 import { createSession, google } from "@/user/auth"
 import { oauthAccount, user } from "@/user/schema"
 import { createAPIFileRoute } from "@tanstack/start/api"
@@ -24,7 +25,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
             state !== storedState ||
             !codeVerifier
          ) {
-            console.error(`Invalid state or code in Google OAuth callback`)
+            logger.error(`Invalid state or code in Google OAuth callback`)
             throw new Error("Error")
          }
          const tokens = await google.validateAuthorizationCode(

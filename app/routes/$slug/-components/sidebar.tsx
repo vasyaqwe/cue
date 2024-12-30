@@ -3,6 +3,7 @@ import { useLocalStorage } from "@/interactions/use-local-storage"
 import { DraftIndicator } from "@/issue/components/draft-indicator"
 import { issueViews } from "@/issue/constants"
 import { useIssueStore } from "@/issue/store"
+import { logger } from "@/lib/logger"
 import { pushModal } from "@/modals"
 import {
    notificationListQuery,
@@ -358,7 +359,7 @@ function NotificationPermissionCard() {
                      })
                   }
                } catch (error) {
-                  console.error(
+                  logger.error(
                      "Error requesting notification permission:",
                      error,
                   )

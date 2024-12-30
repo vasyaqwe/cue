@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger"
 import { type EditorState, Plugin, PluginKey } from "@tiptap/pm/state"
 import { Decoration, DecorationSet, type EditorView } from "@tiptap/pm/view"
 import type * as React from "react"
@@ -100,7 +101,7 @@ export const createFileUpload =
 
             view.dispatch(transaction)
          } catch (error) {
-            console.error("Upload error:", error)
+            logger.error("Upload error:", error)
             const transaction = view.state.tr
                .delete(pos, pos) // Optionally delete the placeholder if upload fails
                .setMeta(uploadKey, { remove: { id } })

@@ -7,7 +7,7 @@ import {
    organizationMember,
 } from "@/organization/schema"
 import { APP_USER_ID } from "@/user/constants"
-import { session } from "@/user/schema"
+import { session, user } from "@/user/schema"
 import {
    authMiddleware,
    baseMiddleware,
@@ -160,16 +160,26 @@ export const insert = createServerFn({ method: "POST" })
             })
             .where(eq(session.userId, context.user.id))
 
-         return createdOrganization
-      })
+         //  user with APP_USER_ID must exist in the database
+         await tx
+            .insert(user)
+            .values({
+               id: APP_USER_ID,
+               email: "cue@cue.com",
+               name: "Cue",
+            })
+            .onConflictDoNothing()
 
-      await context.db.insert(issue).values({
-         organizationId: createdOrganization.id,
-         title: "Welcome to Cue 👋",
-         description: `<h3><strong>To start, press </strong><code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">C</code> to <strong>create your first issue.</strong></h3><p>Create issues from anywhere using <code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">C</code> or by clicking the <code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">New issue</code> button.</p><p>The issue editor and comments support markdown. You can also:</p><ul class="list-outside list-disc leading-3"><li class="leading-normal"><p>@mention a teammate or an issue</p></li><li class="leading-normal"><p>Drag &amp; drop images</p></li><li class="leading-normal"><p>Type <code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">/</code> to bring up more formatting options</p></li></ul>`,
-         status: "todo",
-         label: "feature",
-         authorId: APP_USER_ID,
+         await tx.insert(issue).values({
+            organizationId: createdOrganization.id,
+            title: "Welcome to Cue 👋",
+            description: `<h3><strong>To start, press </strong><code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">C</code> to <strong>create your first issue.</strong></h3><p>Create issues from anywhere using <code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">C</code> or by clicking the <code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">New issue</code> button.</p><p>The issue editor and comments support markdown. You can also:</p><ul class="list-outside list-disc leading-3"><li class="leading-normal"><p>@mention a teammate or an issue</p></li><li class="leading-normal"><p>Drag &amp; drop images</p></li><li class="leading-normal"><p>Type <code class="rounded-md border border-border bg-elevated px-1.5 py-1 font-medium font-mono" spellcheck="false">/</code> to bring up more formatting options</p></li></ul>`,
+            status: "todo",
+            label: "feature",
+            authorId: APP_USER_ID,
+         })
+
+         return createdOrganization
       })
 
       return createdOrganization.id
