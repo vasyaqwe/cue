@@ -333,7 +333,7 @@ function NotificationPermissionCard() {
       }
    }, [])
 
-   if (permissionStatus === "granted") return null
+   if (permissionStatus !== "default") return null
 
    return (
       <Card className="mb-3 animate-fade-in opacity-0 [--animation-delay:250ms]">
