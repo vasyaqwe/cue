@@ -1,5 +1,5 @@
 import type { IssueEvent, IssueView } from "@/issue/types"
-import { createSelectors } from "@/utils/misc"
+import { createSelectors } from "@/misc/utils"
 import type PartySocket from "partysocket"
 import { create } from "zustand"
 

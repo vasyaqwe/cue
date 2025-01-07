@@ -1,5 +1,6 @@
 import { useLocalStorage } from "@/interactions/use-local-storage"
 import { StatusIcon } from "@/issue/components/icons"
+import { formatDateRelative } from "@/misc/format"
 import { Header, HeaderBackButton } from "@/routes/$slug/-components/header"
 import { searchListQuery } from "@/search/queries"
 import { Button } from "@/ui/components/button"
@@ -9,7 +10,6 @@ import { ClearInputButton, Input } from "@/ui/components/input"
 import { useIsClient } from "@/ui/hooks/use-is-client"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
-import { formatDateRelative } from "@/utils/format"
 import { useQuery } from "@tanstack/react-query"
 import {
    Link,

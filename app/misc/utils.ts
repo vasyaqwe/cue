@@ -1,10 +1,5 @@
 import type { StoreApi, UseBoundStore } from "zustand"
 
-export const stripSearchParams = (url: string) => {
-   const newUrl = new URL(url)
-   return `${newUrl.origin}${newUrl.pathname}`
-}
-
 export const fileToBase64 = (file: File): Promise<string> => {
    return new Promise((resolve, reject) => {
       const reader = new FileReader()

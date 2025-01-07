@@ -6,8 +6,8 @@ import {
    invalidateSession,
 } from "@/user/auth"
 import { COOKIE_OPTIONS } from "@/user/constants"
+import { authMiddleware } from "@/user/middleware"
 import { updateUserParams, user } from "@/user/schema"
-import { authMiddleware, baseMiddleware } from "@/utils/middleware"
 import { createServerFn } from "@tanstack/start"
 import { zodValidator } from "@tanstack/zod-adapter"
 import { generateCodeVerifier, generateState } from "arctic"
@@ -33,7 +33,6 @@ export const update = createServerFn({ method: "POST" })
    })
 
 export const logInWithGithub = createServerFn({ method: "POST" })
-   .middleware([baseMiddleware])
    .validator(
       zodValidator(
          z.object({
@@ -59,7 +58,6 @@ export const logInWithGithub = createServerFn({ method: "POST" })
    })
 
 export const logInWithGoogle = createServerFn({ method: "POST" })
-   .middleware([baseMiddleware])
    .validator(
       zodValidator(
          z.object({
@@ -86,15 +84,13 @@ export const logInWithGoogle = createServerFn({ method: "POST" })
       return url.toString()
    })
 
-export const logout = createServerFn({ method: "POST" })
-   .middleware([baseMiddleware])
-   .handler(async () => {
-      return match(getSessionToken())
-         .with(undefined, () => "OK")
-         .otherwise(async (sessionId) => {
-            await invalidateSession(sessionId)
-            deleteSessionTokenCookie()
+export const logout = createServerFn({ method: "POST" }).handler(async () => {
+   return match(getSessionToken())
+      .with(undefined, () => "OK")
+      .otherwise(async (sessionId) => {
+         await invalidateSession(sessionId)
+         deleteSessionTokenCookie()
 
-            return "OK"
-         })
-   })
+         return "OK"
+      })
+})

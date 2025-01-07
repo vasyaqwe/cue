@@ -1,4 +1,4 @@
-import { createSelectors } from "@/utils/misc"
+import { createSelectors } from "@/misc/utils"
 import { create } from "zustand"
 
 type StoreState = {

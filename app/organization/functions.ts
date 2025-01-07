@@ -1,18 +1,16 @@
 import { ServerFnError } from "@/error"
 import { issue } from "@/issue/schema"
+import { baseMiddleware } from "@/misc/middleware"
 import { RESERVED_SLUGS } from "@/organization/constants"
+import { organizationMemberMiddleware } from "@/organization/middleware"
 import {
    insertOrganizationParams,
    organization,
    organizationMember,
 } from "@/organization/schema"
 import { APP_USER_ID } from "@/user/constants"
+import { authMiddleware } from "@/user/middleware"
 import { session, user } from "@/user/schema"
-import {
-   authMiddleware,
-   baseMiddleware,
-   organizationMemberMiddleware,
-} from "@/utils/middleware"
 import { redirect } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/start"
 import { zodValidator } from "@tanstack/zod-adapter"

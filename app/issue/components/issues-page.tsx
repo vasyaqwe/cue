@@ -13,6 +13,7 @@ import { issueListQuery } from "@/issue/queries"
 import { useIssueStore } from "@/issue/store"
 import type { IssueStatus } from "@/issue/types"
 import { isIssueView, isStatusActive } from "@/issue/utils"
+import { formatDate } from "@/misc/format"
 import {
    Header,
    HeaderBackButton,
@@ -35,7 +36,6 @@ import {
 import { Icons } from "@/ui/components/icons"
 import RefreshControl from "@/ui/components/refresh-control"
 import { useAuth } from "@/user/hooks"
-import { formatDate } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { Link, useParams } from "@tanstack/react-router"
 import { memo } from "react"

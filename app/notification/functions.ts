@@ -3,10 +3,8 @@ import {
    notification,
    updateNotificationParams,
 } from "@/notification/schema"
-import {
-   authMiddleware,
-   organizationMemberMiddleware,
-} from "@/utils/middleware"
+import { organizationMemberMiddleware } from "@/organization/middleware"
+import { authMiddleware } from "@/user/middleware"
 import { createServerFn } from "@tanstack/start"
 import { zodValidator } from "@tanstack/zod-adapter"
 import { and, count, desc, eq, inArray } from "drizzle-orm"

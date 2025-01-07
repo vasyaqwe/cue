@@ -1,5 +1,5 @@
+import { createSelectors } from "@/misc/utils"
 import type { MentionContextType as MentionContext } from "@/ui/components/editor/mention/context"
-import { createSelectors } from "@/utils/misc"
 import type { Range } from "@tiptap/core"
 import { create } from "zustand"
 

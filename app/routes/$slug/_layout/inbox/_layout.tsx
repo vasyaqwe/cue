@@ -1,4 +1,5 @@
 import { StatusIcon } from "@/issue/components/icons"
+import { formatDateRelative } from "@/misc/format"
 import type * as notificationFns from "@/notification/functions"
 import { useDeleteNotifications } from "@/notification/hooks/use-delete-notifications"
 import { useUpdateNotification } from "@/notification/hooks/use-update-notification"
@@ -24,7 +25,6 @@ import { Tooltip } from "@/ui/components/tooltip"
 import { UserAvatar } from "@/ui/components/user-avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
-import { formatDateRelative } from "@/utils/format"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import {
    Link,

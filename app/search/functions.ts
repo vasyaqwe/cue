@@ -1,6 +1,6 @@
 import { comment } from "@/comment/schema"
 import { issue } from "@/issue/schema"
-import { organizationMemberMiddleware } from "@/utils/middleware"
+import { organizationMemberMiddleware } from "@/organization/middleware"
 import { createServerFn } from "@tanstack/start"
 import { zodValidator } from "@tanstack/zod-adapter"
 import { and, desc, eq, or, sql } from "drizzle-orm"

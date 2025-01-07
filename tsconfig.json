@@ -16,11 +16,9 @@
 
       /* Bundled projects */
       "lib": ["dom", "dom.iterable", "ES2023"],
-      "noEmit": true,
       "module": "ESNext",
       "moduleResolution": "Bundler",
       "jsx": "react-jsx",
-      "plugins": [{ "name": "next" }],
       "incremental": true,
 
       /* Path Aliases */
