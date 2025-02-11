@@ -1,7 +1,6 @@
 import { logger } from "@/lib/logger"
 import { type EditorState, Plugin, PluginKey } from "@tiptap/pm/state"
 import { Decoration, DecorationSet, type EditorView } from "@tiptap/pm/view"
-import type * as React from "react"
 
 const uploadKey = new PluginKey("upload-file")
 

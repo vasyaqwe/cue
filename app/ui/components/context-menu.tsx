@@ -16,7 +16,6 @@ import { popoverAnimation } from "@/ui/constants"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu"
-import type * as React from "react"
 
 const ContextMenuGroup = ContextMenuPrimitive.Group
 const ContextMenuPortal = ContextMenuPrimitive.Portal

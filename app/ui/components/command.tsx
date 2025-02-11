@@ -9,7 +9,6 @@ import {
    CommandList as CommandListPrimitive,
    Command as CommandPrimitive,
 } from "cmdk"
-import type * as React from "react"
 
 export const Command = CommandPrimitive
 export const CommandGroup = CommandGroupPrimitive

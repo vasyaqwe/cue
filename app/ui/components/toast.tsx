@@ -1,6 +1,6 @@
 import { buttonVariants } from "@/ui/components/button"
 import { cn } from "@/ui/utils"
-import type * as React from "react"
+
 import { Toaster as Sonner, toast } from "sonner"
 
 function Toaster(props: React.ComponentProps<typeof Sonner>) {

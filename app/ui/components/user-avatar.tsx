@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from "@/ui/components/avatar"
 import { cn } from "@/ui/utils"
 import { useAuth } from "@/user/hooks"
 import type { User } from "@/user/schema"
-import type * as React from "react"
+
 import { match } from "ts-pattern"
 
 type UserAvatarProps = React.ComponentProps<typeof Avatar> & {

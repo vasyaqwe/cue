@@ -4,7 +4,7 @@ import { popoverAnimation } from "@/ui/constants"
 import { useUIStore } from "@/ui/store"
 import { cn } from "@/ui/utils"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import type * as React from "react"
+
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "./drawer"
 
 const DropdownMenuGroup = DropdownMenuPrimitive.Group

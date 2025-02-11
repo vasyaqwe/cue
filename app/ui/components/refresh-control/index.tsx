@@ -1,6 +1,5 @@
 import { Loading } from "@/ui/components/loading"
 import { cn } from "@/ui/utils"
-import type * as React from "react"
 
 function RefreshControl({
    children,

@@ -16,17 +16,15 @@ import { toast } from "sonner"
 import { match } from "ts-pattern"
 import { z } from "zod"
 
-const searchSchema = z.object({
-   inviteCode: z.string().optional(),
-   error: z.string().optional(),
-})
-
 export const Route = createFileRoute("/login")({
    component: Component,
    head: () => ({
       meta: [{ title: "Log in" }],
    }),
-   validateSearch: zodValidator(searchSchema),
+   validateSearch: zodValidator(z.object({
+      inviteCode: z.string().optional(),
+      error: z.string().optional(),
+   })),
 })
 
 function Component() {

@@ -22,16 +22,14 @@ import { useRef, useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { z } from "zod"
 
-const searchSchema = z.object({
-   q: z.string().catch(""),
-})
-
 export const Route = createFileRoute("/$slug/_layout/search")({
    component: Component,
    head: () => ({
       meta: [{ title: "Search" }],
    }),
-   validateSearch: zodValidator(searchSchema),
+   validateSearch: zodValidator(z.object({
+      q: z.string().catch(""),
+   })),
 })
 
 function Component() {
