@@ -4,7 +4,7 @@ import { logger } from "@/lib/logger"
 import { createSession, google } from "@/user/auth"
 import { oauthAccount, user } from "@/user/schema"
 import { createAPIFileRoute } from "@tanstack/start/api"
-import { and, eq } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import { parseCookies } from "vinxi/http"
 
 export const Route = createAPIFileRoute("/api/auth/callback/google")({
@@ -50,11 +50,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
          }
 
          const existingAccount = await db.query.oauthAccount.findFirst({
-            where: (fields) =>
-               and(
-                  eq(fields.providerId, "google"),
-                  eq(fields.providerUserId, googleUserProfile.id),
-               ),
+            where: (fields) => eq(fields.providerUserId, googleUserProfile.id),
          })
 
          if (existingAccount) {

@@ -4,7 +4,7 @@ import { logger } from "@/lib/logger"
 import { createSession, github } from "@/user/auth"
 import { oauthAccount, user } from "@/user/schema"
 import { createAPIFileRoute } from "@tanstack/start/api"
-import { and, eq } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import { parseCookies } from "vinxi/http"
 
 export const Route = createAPIFileRoute("/api/auth/callback/github")({
@@ -41,10 +41,7 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
          //  email can be null if user has made it private.
          const existingAccount = await db.query.oauthAccount.findFirst({
             where: (fields) =>
-               and(
-                  eq(fields.providerId, "github"),
-                  eq(fields.providerUserId, githubUserProfile.id.toString()),
-               ),
+               eq(fields.providerUserId, githubUserProfile.id.toString()),
          })
 
          if (existingAccount) {
