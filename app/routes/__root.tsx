@@ -55,7 +55,7 @@ export const Route = createRootRouteWithContext<{
             { name: "og:type", content: "website" },
             { name: "og:title", content: title },
             { name: "og:description", content: description },
-            { name: "og:image", content: `https://cuehq.app${ogImage}` },
+            { name: "og:image", content: `https://cue.vasyaqwe.com${ogImage}` },
             { name: "twitter:card", content: "summary_large_image" },
             { name: "twitter:creator", content: "@vasyaqwee" },
             { name: "twitter:site", content: "@vasyaqwee" },

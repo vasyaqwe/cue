@@ -46,7 +46,7 @@ export const env = createEnv({
       VITE_BASE_URL:
          process.env.NODE_ENV === "development"
             ? "http://localhost:3000"
-            : "https://cuehq.app",
+            : "https://cue.vasyaqwe.com",
       VITE_PARTYKIT_URL: "cue.vasyaqwe.partykit.dev",
    },
 
