@@ -21,10 +21,12 @@ export const Route = createFileRoute("/login")({
    head: () => ({
       meta: [{ title: "Log in" }],
    }),
-   validateSearch: zodValidator(z.object({
-      inviteCode: z.string().optional(),
-      error: z.string().optional(),
-   })),
+   validateSearch: zodValidator(
+      z.object({
+         inviteCode: z.string().optional(),
+         error: z.string().optional(),
+      }),
+   ),
 })
 
 function Component() {

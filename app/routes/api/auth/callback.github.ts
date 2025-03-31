@@ -90,34 +90,58 @@ export const Route = createAPIFileRoute("/api/auth/callback/github")({
             }
          }
 
-         // If no existing account check if the a user with the email exists and link the account.
          const result = await db.transaction(async (tx) => {
-            const [newUser] = await tx
-               .insert(user)
-               .values({
-                  email: githubUserProfile.email,
-                  name: githubUserProfile.name || githubUserProfile.login,
-                  avatarUrl: githubUserProfile.avatar_url,
+            const existingUser = await tx
+               .select()
+               .from(user)
+               .where(eq(user.email, githubUserProfile.email))
+               .get()
+
+            let userId: string | undefined
+
+            if (existingUser) {
+               userId = existingUser.id
+            } else {
+               const createdUser = await tx
+                  .insert(user)
+                  .values({
+                     email: githubUserProfile.email,
+                     name: githubUserProfile.name || githubUserProfile.login,
+                     avatarUrl: githubUserProfile.avatar_url,
+                  })
+                  .returning({ id: user.id })
+                  .get()
+
+               if (!createdUser) throw new Error("Failed to create user")
+               userId = createdUser.id
+            }
+
+            const existingOAuth = await tx
+               .select()
+               .from(oauthAccount)
+               .where(
+                  and(
+                     eq(oauthAccount.providerId, "github"),
+                     eq(
+                        oauthAccount.providerUserId,
+                        githubUserProfile.id.toString(),
+                     ),
+                  ),
+               )
+               .get()
+
+            if (!existingOAuth)
+               await tx.insert(oauthAccount).values({
+                  providerId: "github",
+                  providerUserId: githubUserProfile.id.toString(),
+                  userId: userId,
                })
-               .returning({
-                  id: user.id,
-               })
-               .onConflictDoNothing()
-
-            if (!newUser) throw new Error("Error")
-
-            await tx.insert(oauthAccount).values({
-               providerId: "github",
-               providerUserId: githubUserProfile.id.toString(),
-               userId: newUser.id,
-            })
-
-            return { newUser }
+            return { userId }
          })
 
-         if (!result.newUser) throw new Error("Error")
+         if (!result.userId) throw new Error("Error")
 
-         await createSession(result.newUser.id)
+         await createSession(result.userId)
 
          return new Response(null, {
             status: 302,

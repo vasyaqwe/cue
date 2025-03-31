@@ -69,32 +69,55 @@ export const Route = createAPIFileRoute("/api/auth/callback/google")({
          }
 
          const result = await db.transaction(async (tx) => {
-            const [newUser] = await tx
-               .insert(user)
-               .values({
-                  email: googleUserProfile.email,
-                  name: googleUserProfile.name,
-                  avatarUrl: googleUserProfile.picture,
+            const existingUser = await tx
+               .select()
+               .from(user)
+               .where(eq(user.email, googleUserProfile.email))
+               .get()
+
+            let userId: string | undefined
+
+            if (existingUser) {
+               userId = existingUser.id
+            } else {
+               const createdUser = await tx
+                  .insert(user)
+                  .values({
+                     email: googleUserProfile.email,
+                     name: googleUserProfile.name,
+                     avatarUrl: googleUserProfile.picture,
+                  })
+                  .returning({ id: user.id })
+                  .get()
+
+               if (!createdUser) throw new Error("Failed to create user")
+               userId = createdUser.id
+            }
+
+            const existingOAuth = await tx
+               .select()
+               .from(oauthAccount)
+               .where(
+                  and(
+                     eq(oauthAccount.providerId, "google"),
+                     eq(oauthAccount.providerUserId, googleUserProfile.id),
+                  ),
+               )
+               .get()
+
+            if (!existingOAuth)
+               await tx.insert(oauthAccount).values({
+                  providerId: "google",
+                  providerUserId: googleUserProfile.id,
+                  userId: userId,
                })
-               .returning({
-                  id: user.id,
-               })
-               .onConflictDoNothing()
 
-            if (!newUser) throw new Error("Failed to create user")
-
-            await tx.insert(oauthAccount).values({
-               providerId: "google",
-               providerUserId: googleUserProfile.id,
-               userId: newUser.id,
-            })
-
-            return { newUser }
+            return { userId }
          })
 
-         if (!result.newUser) throw new Error("Failed to create user")
+         if (!result.userId) throw new Error("Failed to create user")
 
-         await createSession(result.newUser.id)
+         await createSession(result.userId)
 
          return new Response(null, {
             status: 302,

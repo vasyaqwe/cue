@@ -27,9 +27,11 @@ export const Route = createFileRoute("/$slug/_layout/search")({
    head: () => ({
       meta: [{ title: "Search" }],
    }),
-   validateSearch: zodValidator(z.object({
-      q: z.string().catch(""),
-   })),
+   validateSearch: zodValidator(
+      z.object({
+         q: z.string().catch(""),
+      }),
+   ),
 })
 
 function Component() {
